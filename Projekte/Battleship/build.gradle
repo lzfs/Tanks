@@ -1,0 +1,33 @@
+import org.javamodularity.moduleplugin.tasks.ModularJavaExec
+import org.javamodularity.moduleplugin.tasks.ModularCreateStartScripts
+
+defaultTasks 'clean', 'installDist'
+
+apply plugin: 'application'
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version = "$openjfx_version"
+    modules = [ 'javafx.fxml', 'javafx.controls' ]
+}
+
+dependencies {
+    implementation project(':common')
+}
+
+description = 'Battleship'
+
+application {
+    mainClassName = "$moduleName/pp.battleship.client.BattleshipApp"
+}
+
+task runServer(type: ModularJavaExec) {
+    main = "$moduleName/pp.battleship.server.BattleshipServer"
+}
+
+task createStartScriptsServer(type: ModularCreateStartScripts) {
+    runTask = tasks.runServer
+    applicationName = 'server'
+}
+
+installDist.finalizedBy tasks.createStartScriptsServer

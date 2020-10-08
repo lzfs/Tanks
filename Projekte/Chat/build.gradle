@@ -1,0 +1,19 @@
+defaultTasks 'clean', 'installDist'
+
+apply plugin: 'application'
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version = "$openjfx_version"
+    modules = [ 'javafx.fxml', 'javafx.controls' ]
+}
+
+dependencies {
+    implementation project(':common')
+}
+
+description = 'Chat'
+
+application {
+    mainClassName = "$moduleName/pp.chat.ChatApp"
+}

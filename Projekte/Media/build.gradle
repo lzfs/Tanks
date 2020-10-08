@@ -1,0 +1,12 @@
+description = 'Media'
+
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version = "$openjfx_version"
+    modules = [ 'javafx.media' ]
+}
+
+dependencies {
+    implementation project(':common')
+}

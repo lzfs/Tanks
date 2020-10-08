@@ -1,0 +1,20 @@
+defaultTasks 'clean', 'installDist'
+
+apply plugin: 'application'
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version = "$openjfx_version"
+    modules = [ 'javafx.controls', 'javafx.media' ]
+}
+
+dependencies {
+    implementation project(':common')
+    implementation project(':media')
+}
+
+description = 'Droids'
+
+application {
+    mainClassName = "$moduleName/pp.droids.DroidsApp"
+}

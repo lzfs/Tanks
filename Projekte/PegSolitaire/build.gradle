@@ -1,0 +1,15 @@
+defaultTasks 'clean', 'installDist'
+
+apply plugin: 'application'
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version = "$openjfx_version"
+    modules = [ 'javafx.graphics' ]
+}
+
+description = 'Peg Solitaire'
+
+application {
+    mainClassName = "$moduleName/pp.pegsolitaire.PegSolitaireApp"
+}

@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath "org.javamodularity:moduleplugin:1.7.0"
+    }
+}
+
+plugins {
+    id 'idea'
+    id 'org.openjfx.javafxplugin' version '0.0.9' apply false
+}
+
+defaultTasks 'clean', 'installDist'
+
+ext.openjfx_version = '14.0.2.1'
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.javamodularity.moduleplugin'
+    apply plugin: 'idea'
+
+    idea.module.outputDir = file("out/production/classes")
+
+    repositories {
+        mavenCentral()
+    }
+
+    group = 'pp.examples'
+    version = '1.0-SNAPSHOT'
+    sourceCompatibility = 14
+    targetCompatibility = 14
+
+    compileJava.options.encoding = 'UTF-8'
+
+    test {
+        useJUnitPlatform()
+
+        testLogging {
+            events 'PASSED', 'FAILED', 'SKIPPED'
+        }
+    }
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+        testImplementation 'org.junit.jupiter:junit-jupiter-params:5.3.1'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    }
+}

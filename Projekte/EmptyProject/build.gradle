@@ -1,0 +1,19 @@
+defaultTasks 'clean', 'installDist'
+
+apply plugin: 'application'
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version = "$openjfx_version"
+    modules = [ 'javafx.fxml', 'javafx.media', 'javafx.controls' ]
+}
+
+dependencies {
+    implementation project(':common')
+}
+
+description = 'Empty Project'
+
+application {
+    mainClassName = "$moduleName/pp.empty.SampleApp"
+}
