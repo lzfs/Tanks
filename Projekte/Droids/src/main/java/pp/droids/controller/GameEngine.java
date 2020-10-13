@@ -181,6 +181,8 @@ public class GameEngine implements EventHandler<Event>,     DroidsNotificationRe
                     sound.play(DroidsSoundProperty.destroyedSound);
                     break;
                 case ENEMY_DESTROYED:
+                    sound.play(DroidsSoundProperty.destroyedSound);
+                    break;
                 case ROCKET_STARTS:
                     sound.play(DroidsSoundProperty.rocketSound);
                     break;

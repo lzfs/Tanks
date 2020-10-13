@@ -65,7 +65,14 @@ class DroidsMapCreator {
         for (int i = 0; i < NUM_OBSTACLES; i++) {
             final Obstacle obs = new Obstacle(model, it.next());
             map.addObstacle(obs);
-            map.addMoon(new Moon(model, obs.getPos()));
+            double rdm = Math.random();
+            if (rdm < 0.8) {
+                map.addMoon(new Moon(model, obs.getPos()));
+            }
+            else {
+                map.addMoon(new Moon(model, obs.getPos()));
+                map.addMoon(new Moon(model, obs.getPos()));
+            }
         }
         // add enemies at random positions
         for (int i = 0; i < NUM_ENEMIES; i++)

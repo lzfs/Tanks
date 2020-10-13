@@ -5,7 +5,6 @@ import pp.util.DoubleVec;
 
 public class Moon extends Mover {
     private DoubleVec pos;
-    private Obstacle asteroid;
     private final double distance;
     private double dg;
 
@@ -50,7 +49,7 @@ public class Moon extends Mover {
      */
     @Override
     public void accept(Visitor v) {
-        v.visit(this); //TODO
+        v.visit(this);
     }
 
     /*@Override
