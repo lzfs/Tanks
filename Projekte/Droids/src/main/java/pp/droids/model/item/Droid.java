@@ -26,6 +26,10 @@ public class Droid extends Shooter {
     private boolean moveForward;
     private boolean turnLeft;
     private boolean turnRight;
+    private boolean moveBackward;
+    private boolean accelerationF = false;
+    private boolean accelerationB = false;
+    private double currentSpeed = 0;
 
     /**
      * Creates a droid.
@@ -41,6 +45,13 @@ public class Droid extends Shooter {
      */
     public void setMoveForward(boolean moveForward) {
         this.moveForward = moveForward;
+    }
+
+    /**
+     * Sets whether the droid shall move backward in the next frame or not depending on the argument.
+     */
+    public void setMoveBackward(boolean moveBackward) {
+        this.moveBackward = moveBackward;
     }
 
     /**
@@ -82,6 +93,7 @@ public class Droid extends Shooter {
     public void update(double delta) {
         updateMovement(delta);
         moveForward = false;
+        moveBackward = false;
         turnLeft = false;
         turnRight = false;
         super.update(delta);
@@ -102,10 +114,29 @@ public class Droid extends Shooter {
      * @param delta time in seconds since the last update call
      */
     private void updateMovement(double delta) {
+
+        computeCurrentSpeed(delta);
+
         if (moveForward) {
-            setPos(getPos().add(DoubleVec.polar(FORWARD_SPEED * delta, getRotation())));
+            accelerationF = true;
+            if (currentSpeed > 0) setPos(getPos().add(DoubleVec.polar(currentSpeed * delta, getRotation())));
             path.clear();
         }
+        else {
+            accelerationF = false;
+            if (currentSpeed > 0) setPos(getPos().add(DoubleVec.polar(currentSpeed * delta, getRotation())));
+        }
+
+        if (moveBackward) {
+            accelerationB = true;
+            if (currentSpeed < 0) setPos(getPos().add(DoubleVec.polar(currentSpeed * delta, getRotation())));
+            path.clear();
+        }
+        else {
+            accelerationB = false;
+            if (currentSpeed < 0) setPos(getPos().add(DoubleVec.polar(currentSpeed * delta, getRotation())));
+        }
+
         if (turnLeft) {
             setRotation(getRotation() - TURN_SPEED * delta);
             path.clear();
@@ -194,5 +225,29 @@ public class Droid extends Shooter {
     @Override
     public void accept(Visitor v) {
         v.visit(this);
+    }
+
+    private void computeCurrentSpeed(double delta) {
+        if (accelerationF && !moveBackward) {
+            if (currentSpeed < FORWARD_SPEED) {
+                currentSpeed = Math.min(currentSpeed += delta * 4, FORWARD_SPEED);
+            }
+        }
+        else {
+            if (currentSpeed > 0) {
+                currentSpeed = Math.max(currentSpeed -= delta * 4, 0);
+            }
+        }
+
+        if (accelerationB && !moveForward) {
+            if (currentSpeed > -FORWARD_SPEED) {
+                currentSpeed = Math.max(currentSpeed -= delta * 4, -FORWARD_SPEED);
+            }
+        }
+        else {
+            if (currentSpeed < 0) {
+                currentSpeed = Math.min(currentSpeed += delta * 4, 0);
+            }
+        }
     }
 }
