@@ -13,4 +13,6 @@ public interface Visitor {
     void visit(Projectile proj);
 
     void visit(Rocket rocket);
+
+    void visit(Moon moon);
 }

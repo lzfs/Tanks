@@ -2,6 +2,7 @@ package pp.droids.model;
 
 import pp.droids.model.item.Enemy;
 import pp.droids.model.item.Item;
+import pp.droids.model.item.Moon;
 import pp.droids.model.item.Obstacle;
 import pp.droids.model.item.Rocket;
 import pp.util.DoubleVec;
@@ -24,6 +25,7 @@ class DroidsMapCreator {
     private static final int NUM_ENEMIES = 5;
     private static final int NUM_OBSTACLES = 5;
     private static final int NUM_ROCKETS = 2;
+    private static final int NUM_MOONS = 2;
 
     private final DroidsGameModel model;
 
@@ -60,8 +62,11 @@ class DroidsMapCreator {
         map.getDroid().setPos(new DoubleVec(dx, dh));
 
         // add obstacles at random positions
-        for (int i = 0; i < NUM_OBSTACLES; i++)
-            map.addObstacle(new Obstacle(model, it.next()));
+        for (int i = 0; i < NUM_OBSTACLES; i++) {
+            final Obstacle obs = new Obstacle(model, it.next());
+            map.addObstacle(obs);
+            map.addMoon(new Moon(model, obs.getPos()));
+        }
         // add enemies at random positions
         for (int i = 0; i < NUM_ENEMIES; i++)
             map.addEnemy(new Enemy(model, it.next()));

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * The game engine using the state pattern to control the game in its different states, i.e., playing the game,
  * showing that the game has been won or lost, and the menu.
  */
-public class GameEngine implements EventHandler<Event>, DroidsNotificationReceiver {
+public class GameEngine implements EventHandler<Event>,     DroidsNotificationReceiver {
     private static final Logger LOGGER = Logger.getLogger(GameEngine.class.getName());
 
     // set up controllers according to state pattern

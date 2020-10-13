@@ -1,6 +1,7 @@
 package pp.droids.model;
 
 import pp.droids.model.item.Enemy;
+import pp.droids.model.item.Moon;
 import pp.droids.model.item.Obstacle;
 import pp.droids.model.item.Rocket;
 import pp.util.DoubleVec;
@@ -88,7 +89,8 @@ class DroidsMapFileReader {
             // load position
             final int x = getIntAttribute("x", 0);
             final int y = getIntAttribute("y", 0);
-            if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight())
+            // old version: if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight())
+            if (x < 0 || x > map.getWidth() || y < 0 || y > map.getHeight())
                 warning(elemName + " is outside of playable area.");
             // create object
             final DoubleVec pos = new DoubleVec(x, y);
@@ -111,6 +113,14 @@ class DroidsMapFileReader {
                     final Rocket rocket = new Rocket(model, pos);
                     rocket.setTarget(new DoubleVec(tx, ty));
                     map.addRocket(rocket);
+                    break;
+                }
+
+                case "moon": {
+                    final int tx = getIntAttribute("tx", 0);
+                    final int ty = getIntAttribute("ty", 0);
+                    final Moon moon = new Moon(model, new DoubleVec(tx, ty));
+                    map.addMoon(moon);
                     break;
                 }
 
