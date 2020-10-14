@@ -115,6 +115,8 @@ public class Droid extends Shooter {
      */
     private void updateMovement(double delta) {
 
+        processCollision();
+
         computeCurrentSpeed(delta);
 
         if (moveForward) {
@@ -249,5 +251,13 @@ public class Droid extends Shooter {
                 currentSpeed = Math.min(currentSpeed += delta * 4, 0);
             }
         }
+    }
+
+    private void processCollision() {
+        for (Obstacle obs : model.getDroidsMap().getObstacles())
+            if (collisionWith(obs)) {
+               double bearing = obs.getPos().sub(getPos()).angle();
+               setRotation(-bearing);
+            }
     }
 }

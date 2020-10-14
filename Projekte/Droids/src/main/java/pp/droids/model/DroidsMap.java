@@ -150,6 +150,9 @@ public class DroidsMap extends AbstractList<Item> {
      * @param deltaTime time in seconds since the last update call
      */
     void update(double deltaTime) {
+        // checks if the Droid is not in the field and gives it a new position
+        keepDroidInField();
+
         for (Item item : this)
             item.update(deltaTime);
 
@@ -221,5 +224,17 @@ public class DroidsMap extends AbstractList<Item> {
 
     public void addMoon(Moon m) {
         moons.add(m);
+    }
+
+    /**
+     * If the Droid leaves the Map it will be set the position of the droid to the exact opposite of the map
+     */
+    private void keepDroidInField() {
+        if (isWithinBorders(getDroid().getPos())) {
+            if (getDroid().getPos().x < 0) getDroid().setPos(new DoubleVec(getWidth(), getDroid().getPos().y));
+            else if (getDroid().getPos().x > getWidth()) getDroid().setPos(new DoubleVec(0, getDroid().getPos().y));
+            else if (getDroid().getPos().y > getHeight()) getDroid().setPos(new DoubleVec(getDroid().getPos().x, 0));
+            else if (getDroid().getPos().y < 0) getDroid().setPos(new DoubleVec(getDroid().getPos().x, getHeight()));
+        }
     }
 }
