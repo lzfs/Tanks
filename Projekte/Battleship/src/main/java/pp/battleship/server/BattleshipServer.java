@@ -29,6 +29,7 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
     private final Model model;
     private final BattleshipAutomaton auto = new BattleshipAutomaton(this);
     private IServer<ClientMessage, ? extends IConnection<ServerMessage>> server;
+    private Thread serverThread;
 
     /**
      * Starts the battleships server.
@@ -47,6 +48,25 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
             System.err.println(e.getLocalizedMessage());
             System.exit(1);
         }
+    }
+
+    public static BattleshipServer mkBsServer(String[] args) {
+        BattleshipServer bs = null;
+        try {
+            ServerSocket serverSocket = new ServerSocket(getPort(args));
+            serverSocket.setSoTimeout(1000);
+            Server<ServerMessage, ClientMessage> server = new Server<>(serverSocket, 2);
+            Config config = new Config();
+            bs = new BattleshipServer(config, server);
+            server.setReceiver(bs);
+            bs.serverThread = new Thread(server);
+            bs.serverThread.start();
+        }
+        catch (IllegalArgumentException | IOException e) {
+            System.err.println(e.getLocalizedMessage());
+            System.exit(1);
+        }
+        return bs;
     }
 
     /**

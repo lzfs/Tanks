@@ -8,6 +8,7 @@ import pp.util.IntVec;
 
 class SelectShip extends BattleshipState {
     private final PlayerXPlacingShips parent;
+    private boolean firstTime= true;
 
     public SelectShip(PlayerXPlacingShips parent) {
         this.parent = parent;
@@ -26,14 +27,22 @@ class SelectShip extends BattleshipState {
         super.entry();
         parent.selected = null;
         parent.getPlayer().setPreview(null);
-        if (parent.getPlayer().getHarbor().getShips().isEmpty())
+        if (parent.getPlayer().getHarbor().getShips().isEmpty()) {
             getAuto().setClientState(parent.getPlayer(),
                                      Resources.getString("select.a.ship.or.press.ready"),
                                      ClientState.ALL_PLACED);
-        else
+        }
+        else if (firstTime) {
+            getAuto().setClientState(parent.getPlayer(),
+                                     Resources.getString("player.found.select"),
+                                     ClientState.SELECT_SHIP);
+            firstTime = false;
+        }
+        else {
             getAuto().setClientState(parent.getPlayer(),
                                      Resources.getString("select.a.ship"),
                                      ClientState.SELECT_SHIP);
+        }
     }
 
     /**
