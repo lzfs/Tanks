@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Player {
     private final Model model;
-    private final ShipMap map;
-    private final ShipMap harbor;
+    private ShipMap map;
+    private ShipMap harbor;
     private final String name;
     private final IConnection<ServerMessage> connection;
     private String infoText = "";
@@ -159,5 +159,17 @@ public class Player {
      */
     public ModelMessage makeGameOverMapModel() {
         return new ModelMessage(map, harbor, opponent().map, infoText, state);
+    }
+
+    public void resetGame() {
+        final Config config = model.getConfig();
+        map = new ShipMap(config.getMapWidth(), config.getMapHeight());
+        harbor = new ShipMap(config.getHarborWidth(), config.getHarborHeight());
+        config.getShipYard().forEach((len, num) -> {
+            for (int i = 0; i < num; i++)
+                harbor.getShips().add(new Battleship(len));
+        });
+        harbor.orderShips();
+        setState(ClientState.WAIT);
     }
 }

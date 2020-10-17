@@ -13,6 +13,8 @@ public class BattleshipAutomaton extends BattleshipStatemachine {
     static final Logger LOGGER = Logger.getLogger(BattleshipAutomaton.class.getName());
     final BattleshipServer bs;
     private Player activePlayer;
+    private boolean newRound = false;
+    private boolean oneConnected = false;
 
     final BattleshipState lobbyState = new LobbyState(this);
     final BattleshipState waitingForPlayer2 = new WaitingForPlayer2(this);
@@ -68,4 +70,24 @@ public class BattleshipAutomaton extends BattleshipStatemachine {
      */
     @Override
     public BattleshipState init() { return lobbyState; }
+
+    public BattleshipState getLobbyState() {
+        return lobbyState;
+    }
+
+    public boolean isNewRound() {
+        return newRound;
+    }
+
+    public void setNewRound(boolean newRound) {
+        this.newRound = newRound;
+    }
+
+    public boolean isOneConnected() {
+        return oneConnected;
+    }
+
+    public void setOneConnected(boolean oneConnected) {
+        this.oneConnected = oneConnected;
+    }
 }

@@ -183,6 +183,10 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
 
     @Override
     public void visit(ClientReadyMessage msg, IConnection<ServerMessage> from) {
+        if (auto.isNewRound() && !auto.isOneConnected()) {
+            auto.goToState(auto.getLobbyState());
+            model.resetPlayerMaps();
+        }
         auto.playerConnected(from);
     }
 

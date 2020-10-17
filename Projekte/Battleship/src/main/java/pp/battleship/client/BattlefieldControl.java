@@ -19,12 +19,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -165,6 +167,16 @@ class BattlefieldControl extends GridPane {
             confirmation.showAndWait();
             app.send(new ConfirmMessage());
         }
+        if (model.state == ClientState.LOST || model.state == ClientState.WON) {
+            final Alert confirmation = new Alert(AlertType.CONFIRMATION);
+            confirmation.setContentText("Möchtest du ein Revenge");
+            confirmation.initOwner(app.getStage());
+            final Optional<ButtonType> result = confirmation.showAndWait();
+            if (result.orElse(ButtonType.NO) == ButtonType.OK) {
+                app.newGame();
+            }
+            else app.toLobby();
+        }
     }
 
     /**
@@ -222,5 +234,9 @@ class BattlefieldControl extends GridPane {
             LOGGER.fine(() -> "preview moved to " + c); //NON-NLS
             updateView();
         }
+    }
+
+    public ModelMessage getModel() {
+        return model;
     }
 }

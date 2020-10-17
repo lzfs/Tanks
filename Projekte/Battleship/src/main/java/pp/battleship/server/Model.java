@@ -87,4 +87,10 @@ public class Model {
         LOGGER.severe("no player found with connection " + conn); //NON-NLS
         return null;
     }
+
+    public void resetPlayerMaps() {
+        for (Player p : players) {
+            p.resetGame();
+        }
+    }
 }

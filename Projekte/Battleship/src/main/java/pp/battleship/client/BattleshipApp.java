@@ -174,4 +174,22 @@ public class BattleshipApp extends Application implements MessageReceiver<Server
     void send(ClientMessage message) {
         connection.send(message);
     }
+
+    public void newGame() {
+        connection.send(new ClientReadyMessage());
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public Connection<ClientMessage, ServerMessage> getConnection() {
+        return connection;
+    }
+
+    public void toLobby() {
+        if (connection != null) connection.shutdown();
+        this.menuControl = new MenuControl(this);
+        stage.setScene(new Scene(menuControl));
+    }
 }
