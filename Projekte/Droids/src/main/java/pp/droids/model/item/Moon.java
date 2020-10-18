@@ -52,10 +52,6 @@ public class Moon extends Mover {
         v.visit(this);
     }
 
-    /*@Override
-    public void setMoving(boolean moving) {
-       TODO
-    }*/
 
     /**
      * The actual method to move a moving item. Rotating around the target position
@@ -69,7 +65,4 @@ public class Moon extends Mover {
 
     }
 
-
-
-    //CollistionWith überschreiben? Destroyed?
 }

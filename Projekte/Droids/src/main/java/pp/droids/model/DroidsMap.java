@@ -222,6 +222,10 @@ public class DroidsMap extends AbstractList<Item> {
         addedProjectiles.add(p);
     }
 
+    /**
+     * Adds a moon to this map.
+     * @param m moon to be added
+     */
     public void addMoon(Moon m) {
         moons.add(m);
     }

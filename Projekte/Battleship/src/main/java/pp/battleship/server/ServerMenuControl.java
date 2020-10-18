@@ -30,7 +30,10 @@ public class ServerMenuControl extends GridPane {
     @FXML
     private TextField portF;
 
-
+    /**
+     * creates the Control Menu for the Server GUI
+     * @param bs the App in which this class is used
+     */
     ServerMenuControl(ServerApp bs) {
         this.bs = bs;
         final URL location = getClass().getResource(SERVER_MENU_CONTROL_FXML);
@@ -46,15 +49,25 @@ public class ServerMenuControl extends GridPane {
         }
     }
 
+    /**
+     * calls the App to start the Server
+     */
     @FXML
     private void confirmPort() {
         bs.startSever();
     }
 
+    /**
+     * Getter method for the port given in the text field of the GUI
+     * @return the port as string
+     */
     String getPort() {
         return portF.getText().trim();
     }
 
+    /**
+     * is called when the server is created to prohibit changes
+     */
     void setCreated() {
         portF.setEditable(false);
         portConf.setDisable(true);

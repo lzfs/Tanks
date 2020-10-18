@@ -296,6 +296,10 @@ class BattlefieldControl extends GridPane {
         }
     }
 
+    /**
+     * getter method for the current ModelMessage
+     * @return the current ModelMessage
+     */
     public ModelMessage getModel() {
         return model;
     }

@@ -71,22 +71,42 @@ public class BattleshipAutomaton extends BattleshipStatemachine {
     @Override
     public BattleshipState init() { return lobbyState; }
 
+    /**
+     * getter method for the lobbyState
+     * @return the lobbyState
+     */
     public BattleshipState getLobbyState() {
         return lobbyState;
     }
 
+    /**
+     * checks if a game is in its first Round or already in a another game against the same player
+     * @return true if this is already a new Round
+     */
     public boolean isNewRound() {
         return newRound;
     }
 
+    /**
+     * setter method for the newRound value
+     * @param newRound value for the newRound boolean
+     */
     public void setNewRound(boolean newRound) {
         this.newRound = newRound;
     }
 
+    /**
+     * checks after a game if one player already wants to play another round against the same enemy
+     * @return true if one of the players already wants to play another game
+     */
     public boolean isOneConnected() {
         return oneConnected;
     }
 
+    /**
+     * is set when after a game one player wants to play anther game against the same enemy
+     * @param oneConnected value to be set
+     */
     public void setOneConnected(boolean oneConnected) {
         this.oneConnected = oneConnected;
     }

@@ -88,6 +88,9 @@ public class Model {
         return null;
     }
 
+    /**
+     * resets the maps of the players in the player list of this model
+     */
     public void resetPlayerMaps() {
         for (Player p : players) {
             p.resetGame();

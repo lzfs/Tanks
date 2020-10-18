@@ -22,6 +22,10 @@ public class ServerApp extends Application {
         launch(args);
     }
 
+    /**
+     * start method for Java FX, sets up the GUI for the Server and is automatically called
+     * @param stage provided by Java JX
+     */
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -34,12 +38,19 @@ public class ServerApp extends Application {
         stage.show();
     }
 
+    /**
+     * creates the Server with the given Port from the GUI
+     */
     void startSever() {
         String[] s = {serverMenuControl.getPort()};
         bs = BattleshipServer.mkBsServer(s);
         serverMenuControl.setCreated();
     }
 
+    /**
+     * shuts down the Server after it gets the confirmation from its produced alert
+     * @param e WindowEvent from pressing the close button in the GUI
+     */
     private void shutdown(WindowEvent e) {
         if (bs == null)
             System.exit(0);

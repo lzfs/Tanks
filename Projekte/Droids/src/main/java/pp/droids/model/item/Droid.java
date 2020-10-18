@@ -229,6 +229,12 @@ public class Droid extends Shooter {
         v.visit(this);
     }
 
+    /**
+     * this method computes the current Speed depending on the state of acceleration,
+     * it is called in the update method
+     *
+     * @param delta time in seconds since the last update call
+     */
     private void computeCurrentSpeed(double delta) {
         if (accelerationF && !moveBackward) {
             if (currentSpeed < FORWARD_SPEED) {
@@ -253,6 +259,10 @@ public class Droid extends Shooter {
         }
     }
 
+    /**
+     * this method is called in update() and detects collisions with obstacles,
+     * when the droid collides with an obstacle, it computes the new rotation of the droid
+     */
     private void processCollision() {
         for (Obstacle obs : model.getDroidsMap().getObstacles())
             if (collisionWith(obs)) {

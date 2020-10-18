@@ -51,6 +51,12 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
         }
     }
 
+    /**
+     * factory method to start a Battleship Server and return it
+     *
+     * @param args string of the port packed in an array
+     * @return the produced BattleshipServer
+     */
     public static BattleshipServer mkBsServer(String[] args) {
         BattleshipServer bs = null;
         try {

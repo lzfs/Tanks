@@ -154,35 +154,73 @@ public class Player {
         this.state = state;
     }
 
+    /**
+     * getter method for the available amount of ammunition type 1
+     *
+     * @return available amount of ammunition type 1
+     */
     public int getAmountType1() {
         return amountType1;
     }
 
+    /**
+     * getter method for the available amount of ammunition type 2
+     *
+     * @return available amount of ammunition type 2
+     */
     public int getAmountType2() {
         return amountType2;
     }
 
+    /**
+     * setter method for ammunition type 1
+     *
+     * @param amountType1 the amount of ammunition to set to
+     */
     public void setAmountType1(int amountType1) {
         this.amountType1 = amountType1;
     }
 
+    /**
+     * setter method for ammunition type 2
+     *
+     * @param amountType2 the amount of ammunition type 2 to set to
+     */
     public void setAmountType2(int amountType2) {
         this.amountType2 = amountType2;
     }
 
+    /**
+     * returns 0 if an even amount and more than zero ships are destroyed by this player
+     *
+     * @return 0 for even amount, -1 or 1 if not
+     */
     public int getDestroyed() {
         if(destroyed == 0) return -1;
         else return destroyed % 2;
     }
 
+    /**
+     * setter method for the amount of destroyed ships, automatically increments by + 1
+     */
     public void setDestroyed() {
         this.destroyed = destroyed + 1;
     }
 
+    /**
+     * setter method for the used projectile of this player
+     *
+     * @param typeUsed the type of projectile to be set
+     */
     public void setTypeUsed(Projectile typeUsed) {
         this.typeUsed = typeUsed;
     }
 
+    /**
+     * getter method for the used projectile type
+     *
+     * @return the used projectile Type
+     */
     public Projectile getTypeUsed() {
         return typeUsed;
     }
@@ -204,6 +242,9 @@ public class Player {
         return new ModelMessage(map, harbor, opponent().map, infoText, state, amountType1, amountType2);
     }
 
+    /**
+     * resets the map of the player to the initial state
+     */
     public void resetGame() {
         final Config config = model.getConfig();
         map = new ShipMap(config.getMapWidth(), config.getMapHeight());
