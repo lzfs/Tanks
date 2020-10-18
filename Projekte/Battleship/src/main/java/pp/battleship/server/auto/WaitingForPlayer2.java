@@ -1,6 +1,7 @@
 package pp.battleship.server.auto;
 
 import pp.battleship.message.server.ServerMessage;
+import pp.battleship.server.Player;
 import pp.network.IConnection;
 
 class WaitingForPlayer2 extends BattleshipState {
@@ -22,7 +23,8 @@ class WaitingForPlayer2 extends BattleshipState {
      */
     @Override
     public void playerConnected(IConnection<ServerMessage> conn) {
-        getAuto().bs.getModel().addPlayer(conn);
+        if (!getAuto().isNewRound()) getAuto().bs.getModel().addPlayer(conn);
+        else getAuto().setOneConnected(false);
         parent.goToState(parent.setupState);
     }
 }

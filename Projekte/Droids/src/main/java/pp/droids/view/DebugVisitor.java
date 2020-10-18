@@ -3,6 +3,7 @@ package pp.droids.view;
 import pp.droids.model.item.Droid;
 import pp.droids.model.item.Enemy;
 import pp.droids.model.item.Item;
+import pp.droids.model.item.Moon;
 import pp.droids.model.item.Obstacle;
 import pp.droids.model.item.Projectile;
 import pp.droids.model.item.Rocket;
@@ -55,6 +56,11 @@ class DebugVisitor implements Visitor {
 
     @Override
     public void visit(Rocket rocket) {}
+
+    @Override
+    public void visit(Moon moon) {
+
+    }
 
     /**
      * Draws a Circle

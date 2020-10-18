@@ -28,5 +28,9 @@ public enum DroidsImageProperty {
     /**
      * Path of the image of a projectile shot by the droid
      */
-    droidProjectileImage
+    droidProjectileImage,
+    /**
+     * Path of the image of a moon
+     */
+    moonImage
 }

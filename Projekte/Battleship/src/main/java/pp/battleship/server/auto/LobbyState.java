@@ -18,8 +18,11 @@ class LobbyState extends BattleshipState {
 
     @Override
     public void playerConnected(IConnection<ServerMessage> conn) {
-        final Player player = getAuto().bs.getModel().addPlayer(conn);
-        getAuto().setActivePlayer(player);
+        if (!getAuto().isNewRound()) {
+            final Player player = getAuto().bs.getModel().addPlayer(conn);
+            getAuto().setActivePlayer(player);
+        }
+        else getAuto().setOneConnected(true);
         parent.goToState(parent.waitingForPlayer2);
     }
 }

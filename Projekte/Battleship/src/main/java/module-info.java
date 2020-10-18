@@ -8,4 +8,5 @@ module pp.battleship {
     requires javafx.graphics;
     requires javafx.fxml;
     opens pp.battleship.client to javafx.fxml, javafx.graphics;
+    opens pp.battleship.server to javafx.fxml, javafx.graphics;
 }

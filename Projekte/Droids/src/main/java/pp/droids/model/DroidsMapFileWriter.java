@@ -3,6 +3,7 @@ package pp.droids.model;
 import pp.droids.model.item.Droid;
 import pp.droids.model.item.Enemy;
 import pp.droids.model.item.Item;
+import pp.droids.model.item.Moon;
 import pp.droids.model.item.Mover;
 import pp.droids.model.item.Obstacle;
 import pp.droids.model.item.Projectile;
@@ -83,6 +84,11 @@ class DroidsMapFileWriter {
                 @Override
                 public void visit(Rocket rocket) {
                     writeMovingItem("rocket", rocket, rocket.getPos());
+                }
+
+                @Override
+                public void visit(Moon moon) {
+                    writeMovingItem("moon", moon, moon.getPos());
                 }
             });
 

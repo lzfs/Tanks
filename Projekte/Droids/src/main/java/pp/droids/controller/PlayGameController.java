@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 class PlayGameController extends Controller {
     public static final KeyCode TURN_LEFT = KeyCode.LEFT;
     public static final KeyCode TURN_RIGHT = KeyCode.RIGHT;
+    public static final KeyCode MOVE_BACKWARD = KeyCode.DOWN;
     public static final KeyCode MOVE_FORWARD = KeyCode.UP;
     public static final KeyCode FIRE = KeyCode.SPACE;
     public static final KeyCode TOGGLE_DEBUG = KeyCode.D;
@@ -138,6 +139,8 @@ class PlayGameController extends Controller {
             getDroid().setTurnRight(true);
         else if (kc == MOVE_FORWARD)
             getDroid().setMoveForward(true);
+        else if (kc == MOVE_BACKWARD)
+            getDroid().setMoveBackward(true);
         else if (kc == FIRE)
             getDroid().fire();
         else if (kc == TOGGLE_DEBUG) {

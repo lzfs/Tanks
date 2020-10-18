@@ -30,4 +30,16 @@ task createStartScriptsServer(type: ModularCreateStartScripts) {
     applicationName = 'server'
 }
 
+
+
+task runServer2(type: ModularJavaExec){
+    main = "$moduleName/pp.battleship.server.ServerApp"
+}
+
+task createStartScriptsServer2(type: ModularCreateStartScripts) {
+    runTask = tasks.runServer2
+    applicationName = 'server2'
+}
+
 installDist.finalizedBy tasks.createStartScriptsServer
+installDist.finalizedBy tasks.createStartScriptsServer2

@@ -4,6 +4,7 @@ import pp.battleship.message.server.ModelMessage;
 import pp.battleship.message.server.ServerMessage;
 import pp.battleship.model.Battleship;
 import pp.battleship.model.ClientState;
+import pp.battleship.model.Projectile;
 import pp.battleship.model.ShipMap;
 import pp.network.IConnection;
 
@@ -14,12 +15,16 @@ import java.util.List;
  */
 public class Player {
     private final Model model;
-    private final ShipMap map;
-    private final ShipMap harbor;
+    private ShipMap map;
+    private ShipMap harbor;
     private final String name;
     private final IConnection<ServerMessage> connection;
     private String infoText = "";
     private ClientState state = ClientState.WAIT;
+    private int amountType1;
+    private int amountType2;
+    private int destroyed;
+    private Projectile typeUsed;
 
     /**
      * Creates new Player
@@ -40,6 +45,10 @@ public class Player {
                 harbor.getShips().add(new Battleship(len));
         });
         harbor.orderShips();
+        this.amountType1 = 0;
+        this.amountType2 = 0;
+        this.destroyed = 0;
+        this.typeUsed = Projectile.NORMAL; // default
     }
 
     /**
@@ -146,11 +155,83 @@ public class Player {
     }
 
     /**
+     * getter method for the available amount of ammunition type 1
+     *
+     * @return available amount of ammunition type 1
+     */
+    public int getAmountType1() {
+        return amountType1;
+    }
+
+    /**
+     * getter method for the available amount of ammunition type 2
+     *
+     * @return available amount of ammunition type 2
+     */
+    public int getAmountType2() {
+        return amountType2;
+    }
+
+    /**
+     * setter method for ammunition type 1
+     *
+     * @param amountType1 the amount of ammunition to set to
+     */
+    public void setAmountType1(int amountType1) {
+        this.amountType1 = amountType1;
+    }
+
+    /**
+     * setter method for ammunition type 2
+     *
+     * @param amountType2 the amount of ammunition type 2 to set to
+     */
+    public void setAmountType2(int amountType2) {
+        this.amountType2 = amountType2;
+    }
+
+    /**
+     * returns 0 if an even amount and more than zero ships are destroyed by this player
+     *
+     * @return 0 for even amount, -1 or 1 if not
+     */
+    public int getDestroyed() {
+        if(destroyed == 0) return -1;
+        else return destroyed % 2;
+    }
+
+    /**
+     * setter method for the amount of destroyed ships, automatically increments by + 1
+     */
+    public void setDestroyed() {
+        this.destroyed = destroyed + 1;
+    }
+
+    /**
+     * setter method for the used projectile of this player
+     *
+     * @param typeUsed the type of projectile to be set
+     */
+    public void setTypeUsed(Projectile typeUsed) {
+        this.typeUsed = typeUsed;
+    }
+
+    /**
+     * getter method for the used projectile type
+     *
+     * @return the used projectile Type
+     */
+    public Projectile getTypeUsed() {
+        return typeUsed;
+    }
+
+
+    /**
      * Creates a message object that also contains all information known so far about the
      * opponent's ships  (i.e., no information about ships that have not been hit yet) to the client.
      */
     public ModelMessage makeModel() {
-        return new ModelMessage(map, harbor, opponent().map.knownSoFar(), infoText, state);
+        return new ModelMessage(map, harbor, opponent().map.knownSoFar(), infoText, state, amountType1, amountType2);
     }
 
     /**
@@ -158,6 +239,21 @@ public class Player {
      * opponent's ships to the client.
      */
     public ModelMessage makeGameOverMapModel() {
-        return new ModelMessage(map, harbor, opponent().map, infoText, state);
+        return new ModelMessage(map, harbor, opponent().map, infoText, state, amountType1, amountType2);
+    }
+
+    /**
+     * resets the map of the player to the initial state
+     */
+    public void resetGame() {
+        final Config config = model.getConfig();
+        map = new ShipMap(config.getMapWidth(), config.getMapHeight());
+        harbor = new ShipMap(config.getHarborWidth(), config.getHarborHeight());
+        config.getShipYard().forEach((len, num) -> {
+            for (int i = 0; i < num; i++)
+                harbor.getShips().add(new Battleship(len));
+        });
+        harbor.orderShips();
+        setState(ClientState.WAIT);
     }
 }

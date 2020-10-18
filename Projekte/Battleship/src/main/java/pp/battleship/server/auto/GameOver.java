@@ -44,5 +44,6 @@ class GameOver extends BattleshipState {
         BattleshipAutomaton.LOGGER.info(getAuto().getActivePlayer() + " has won"); //NON-NLS
         hasWon(getAuto().getActivePlayer());
         hasLost(getAuto().getActivePlayer().opponent());
+        getAuto().setNewRound(true);
     }
 }

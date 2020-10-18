@@ -3,6 +3,7 @@ package pp.droids.model;
 import pp.droids.model.item.Droid;
 import pp.droids.model.item.Enemy;
 import pp.droids.model.item.Item;
+import pp.droids.model.item.Moon;
 import pp.droids.model.item.Obstacle;
 import pp.droids.model.item.Projectile;
 import pp.droids.model.item.Rocket;
@@ -27,6 +28,7 @@ public class DroidsMap extends AbstractList<Item> {
     private final List<Enemy> enemies = new ArrayList<>();
     private final List<Rocket> rockets = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
+    private final List<Moon> moons = new ArrayList<>();
     // list for collecting new projectiles
     private final List<Projectile> addedProjectiles = new ArrayList<>();
 
@@ -58,6 +60,8 @@ public class DroidsMap extends AbstractList<Item> {
         i -= enemies.size();
         if (i < rockets.size()) return rockets.get(i);
         i -= rockets.size();
+        if (i < moons.size()) return moons.get(i);
+        i -= moons.size();
         return projectiles.get(i);
     }
 
@@ -66,7 +70,7 @@ public class DroidsMap extends AbstractList<Item> {
      */
     @Override
     public int size() {
-        return 1 + obstacles.size() + enemies.size() + rockets.size() + projectiles.size();
+        return 1 + obstacles.size() + enemies.size() + rockets.size() + moons.size() + projectiles.size();
     }
 
     /**
@@ -115,6 +119,13 @@ public class DroidsMap extends AbstractList<Item> {
     }
 
     /**
+     * Returns all moons.
+     *
+     * @return the list of all moons
+     */
+    public List<Moon> getMoons() {return Collections.unmodifiableList(moons);}
+
+    /**
      * Returns the height (i.e., the number of rows) of the map
      *
      * @return height
@@ -139,6 +150,9 @@ public class DroidsMap extends AbstractList<Item> {
      * @param deltaTime time in seconds since the last update call
      */
     void update(double deltaTime) {
+        // checks if the Droid is not in the field and gives it a new position
+        keepDroidInField();
+
         for (Item item : this)
             item.update(deltaTime);
 
@@ -206,5 +220,25 @@ public class DroidsMap extends AbstractList<Item> {
      */
     public void add(Projectile p) {
         addedProjectiles.add(p);
+    }
+
+    /**
+     * Adds a moon to this map.
+     * @param m moon to be added
+     */
+    public void addMoon(Moon m) {
+        moons.add(m);
+    }
+
+    /**
+     * If the Droid leaves the Map it will be set the position of the droid to the exact opposite of the map
+     */
+    private void keepDroidInField() {
+        if (getDroid() == null) {
+            if (getDroid().getPos().x < 0) getDroid().setPos(new DoubleVec(getWidth(), getDroid().getPos().y));
+            else if (getDroid().getPos().x > getWidth()) getDroid().setPos(new DoubleVec(0, getDroid().getPos().y));
+            else if (getDroid().getPos().y > getHeight()) getDroid().setPos(new DoubleVec(getDroid().getPos().x, 0));
+            else if (getDroid().getPos().y < 0) getDroid().setPos(new DoubleVec(getDroid().getPos().x, getHeight()));
+        }
     }
 }

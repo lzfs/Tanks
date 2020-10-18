@@ -10,7 +10,9 @@ public class Projectile extends Item {
 
     private DoubleVec pos;
     private final DoubleVec direction;
-    private final double speed;
+    private double speed;
+    private final double time;
+    private final double MAX_END_SPEED;
 
     /**
      * Creates a projectile shot by the droid.
@@ -36,7 +38,9 @@ public class Projectile extends Item {
         super(model, effectiveRadius);
         this.pos = pos;
         this.direction = direction;
-        this.speed = speed;
+        this.speed = 0;
+        this.time = System.nanoTime();
+        this.MAX_END_SPEED = speed;
     }
 
     /**
@@ -65,6 +69,10 @@ public class Projectile extends Item {
      */
     @Override
     public void update(double delta) {
+        double timePassed = System.nanoTime() - time;
+        if (speed < MAX_END_SPEED) {
+            speed = Math.min((5 * timePassed / 1_000_000_000.0) + 2, MAX_END_SPEED);
+        }
         pos = pos.add(direction.mult(delta * speed));
         if (!model.getDroidsMap().isWithinBorders(pos))
             destroy();

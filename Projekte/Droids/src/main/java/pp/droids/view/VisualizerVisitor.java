@@ -4,6 +4,7 @@ import pp.droids.DroidsImageProperty;
 import pp.droids.model.item.Droid;
 import pp.droids.model.item.Enemy;
 import pp.droids.model.item.Item;
+import pp.droids.model.item.Moon;
 import pp.droids.model.item.Obstacle;
 import pp.droids.model.item.Projectile;
 import pp.droids.model.item.Rocket;
@@ -60,6 +61,11 @@ class VisualizerVisitor implements Visitor {
     public void visit(Rocket rocket) {
         if (rocket.isMoving())
             drawItem(rocket, DroidsImageProperty.rocketImage, Shape.RECTANGLE, Color.BLUE);
+    }
+
+    @Override
+    public void visit(Moon moon) {
+        drawItem(moon, DroidsImageProperty.moonImage, Shape.OVAL, Color.GRAY);
     }
 
     /**

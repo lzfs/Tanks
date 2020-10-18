@@ -174,4 +174,36 @@ public class BattleshipApp extends Application implements MessageReceiver<Server
     void send(ClientMessage message) {
         connection.send(message);
     }
+
+    /**
+     * used to start a new game after a finished game
+     */
+    public void newGame() {
+        if (connection != null) connection.send(new ClientReadyMessage());
+    }
+
+    /**
+     * getter method for the stage
+     * @return the stage of the GUI
+     */
+    public Stage getStage() {
+        return stage;
+    }
+
+    /**
+     * getter method for the established connection to the server
+     * @return the connection to the Server
+     */
+    public Connection<ClientMessage, ServerMessage> getConnection() {
+        return connection;
+    }
+
+    /**
+     * called after a finished game when a Player doesn't want to play another time against the same enemy
+     */
+    public void toLobby() {
+        if (connection != null) connection.shutdown();
+        this.menuControl = new MenuControl(this);
+        stage.setScene(new Scene(menuControl));
+    }
 }

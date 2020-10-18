@@ -4,11 +4,14 @@ import pp.droids.model.DroidsGameModel;
 import pp.droids.notifications.DroidsNotification;
 import pp.util.DoubleVec;
 
+import java.util.logging.Logger;
+
 /**
  * Represents an enemy
  */
 public class Enemy extends LivingItem {
     private final DoubleVec pos;
+    private static final Logger LOGGER = Logger.getLogger(Enemy.class.getName());
 
     /**
      * Creates an enemy
@@ -44,6 +47,12 @@ public class Enemy extends LivingItem {
     @Override
     public void destroy() {
         model.notifyReceivers(DroidsNotification.ENEMY_DESTROYED);
+        try {
+            Thread.sleep(2000);
+        }
+        catch (InterruptedException e) {
+            LOGGER.fine(e.getMessage());
+        }
         super.destroy();
     }
 

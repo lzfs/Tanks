@@ -1,6 +1,7 @@
 package pp.battleship.server;
 
 import pp.battleship.Resources;
+import pp.battleship.message.client.ChangedProjectileType;
 import pp.battleship.message.client.ClickHarborMessage;
 import pp.battleship.message.client.ClickOpponentMapMessage;
 import pp.battleship.message.client.ClickOwnMapMessage;
@@ -29,6 +30,7 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
     private final Model model;
     private final BattleshipAutomaton auto = new BattleshipAutomaton(this);
     private IServer<ClientMessage, ? extends IConnection<ServerMessage>> server;
+    private Thread serverThread;
 
     /**
      * Starts the battleships server.
@@ -47,6 +49,31 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
             System.err.println(e.getLocalizedMessage());
             System.exit(1);
         }
+    }
+
+    /**
+     * factory method to start a Battleship Server and return it
+     *
+     * @param args string of the port packed in an array
+     * @return the produced BattleshipServer
+     */
+    public static BattleshipServer mkBsServer(String[] args) {
+        BattleshipServer bs = null;
+        try {
+            ServerSocket serverSocket = new ServerSocket(getPort(args));
+            serverSocket.setSoTimeout(1000);
+            Server<ServerMessage, ClientMessage> server = new Server<>(serverSocket, 2);
+            Config config = new Config();
+            bs = new BattleshipServer(config, server);
+            server.setReceiver(bs);
+            bs.serverThread = new Thread(server);
+            bs.serverThread.start();
+        }
+        catch (IllegalArgumentException | IOException e) {
+            System.err.println(e.getLocalizedMessage());
+            System.exit(1);
+        }
+        return bs;
     }
 
     /**
@@ -163,7 +190,16 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
 
     @Override
     public void visit(ClientReadyMessage msg, IConnection<ServerMessage> from) {
+        if (auto.isNewRound() && !auto.isOneConnected()) {
+            auto.goToState(auto.getLobbyState());
+            model.resetPlayerMaps();
+        }
         auto.playerConnected(from);
+    }
+
+    @Override
+    public void visit(ChangedProjectileType changedProjectileType, IConnection<ServerMessage> from) {
+        model.getPlayer(from).setTypeUsed(changedProjectileType.typeUsed);
     }
 
     /**
