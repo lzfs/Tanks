@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -24,13 +25,18 @@ class MapView {
     private static final Color MISS_COLOR = Color.LIGHTSTEELBLUE;
     private static final Color SHIP_BORDER_COLOR = Color.WHITE;
     private static final Color PREVIEW_COLOR = Color.GRAY;
+    private static final Color SPOTTED_COLOR = Color.ORANGE;
     private static final double FIELD_SIZE = 20;
+
+    private final BattleshipImages images = new BattleshipImages();
 
     private final Canvas canvas;
     private final int width;
     private final int height;
     private ShipMap map;
     private boolean grid;
+
+    private ArrayList<Shot> shooted = new ArrayList<>();
 
     /**
      * Creates a MapView
@@ -156,11 +162,22 @@ class MapView {
                 DoubleVec p = modelToView(shot.x, shot.y);
                 context.setFill(shot.hit ? HIT_COLOR : MISS_COLOR);
                 context.fillRect(p.x + 1, p.y + 1, FIELD_SIZE - 2, FIELD_SIZE - 2);
+
+                if(shot.hit){
+                    shooted.add(shot);
+                }
             }
             context.setStroke(SHIP_BORDER_COLOR);
             context.setLineWidth(2.);
             for (Battleship ship : map.getShips())
                 drawShip(context, ship.getAllParts());
+
+            for(Shot shot:shooted){
+                DoubleVec p = modelToView(shot.x, shot.y);
+                context.drawImage(images.getImage(StringProperty.imghit), p.x, p.y, 20, 20);
+            }
+            shooted=new ArrayList<>();
+
             context.setStroke(PREVIEW_COLOR);
             if (map.getPreview() != null)
                 drawShip(context, map.getPreview().getAllParts());
@@ -182,7 +199,32 @@ class MapView {
         int yMax = Math.max(first.y, last.y);
         DoubleVec p1 = modelToView(xMin, yMin);
         DoubleVec p2 = modelToView(xMax + 1, yMax + 1);
-        context.strokeRect(p1.x + 2, p1.y + 2,
-                           p2.x - p1.x - 4, p2.y - p1.y - 4);
+        //context.strokeRect(p1.x + 2, p1.y + 2,
+        //                   p2.x - p1.x - 4, p2.y - p1.y - 4);
+        context.save();
+        //rotate
+        if (xMax - xMin == 0) {
+            context.translate(p1.x +20, p1.y);
+            context.rotate(90);
+        }
+        else {
+            context.translate(p1.x, p1.y);
+        }
+
+        if (parts.size()==1) {
+            context.drawImage(images.getImage(StringProperty.imgship1), 0, 0, 20, 20);
+        }
+        else if (parts.size()==2) {
+            context.drawImage(images.getImage(StringProperty.imgship2), 0, 0, 40, 20);
+        }
+        else if (parts.size()==3) {
+            context.drawImage(images.getImage(StringProperty.imgship3), 0, 0, 60, 20);
+        }
+        else if (parts.size()==4) {
+            context.drawImage(images.getImage(StringProperty.imgship4), 0, 0, 80, 20);
+        }
+
+        //restore
+        context.restore();
     }
 }
