@@ -46,6 +46,7 @@ public abstract class Item {
      * @param other the item which is checked for a collision
      */
     public boolean collisionWith(Item other) {
+        if (getPos() == null) return false;
         return !other.isDestroyed() &&
                 getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
     }

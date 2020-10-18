@@ -234,9 +234,11 @@ public class DroidsMap extends AbstractList<Item> {
      * If the Droid leaves the Map it will be set the position of the droid to the exact opposite of the map
      */
     private void keepDroidInField() {
+        if (getDroid() == null) {
             if (getDroid().getPos().x < 0) getDroid().setPos(new DoubleVec(getWidth(), getDroid().getPos().y));
             else if (getDroid().getPos().x > getWidth()) getDroid().setPos(new DoubleVec(0, getDroid().getPos().y));
             else if (getDroid().getPos().y > getHeight()) getDroid().setPos(new DoubleVec(getDroid().getPos().x, 0));
             else if (getDroid().getPos().y < 0) getDroid().setPos(new DoubleVec(getDroid().getPos().x, getHeight()));
+        }
     }
 }
