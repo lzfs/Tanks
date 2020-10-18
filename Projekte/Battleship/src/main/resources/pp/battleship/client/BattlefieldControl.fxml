@@ -40,6 +40,11 @@
                 <Button fx:id="removeButton" mnemonicParsing="false" onAction="#remove" text="%button.remove"/>
                 <Button fx:id="readyButton" mnemonicParsing="false" onAction="#ready" text="%button.ready"/>
             </children>
+            <children>
+                <Button fx:id="normalButton" mnemonicParsing="false" onAction="#normalShot" text="%button.normal.shot"/>
+                <Button fx:id="type1Button" mnemonicParsing="false" onAction="#type1Shot" text="%button.type1.shot"/>
+                <Button fx:id="type2Button" mnemonicParsing="false" onAction="#type2Shot" text="%button.type2.shot"/>
+            </children>
         </FlowPane>
     </children>
     <padding>

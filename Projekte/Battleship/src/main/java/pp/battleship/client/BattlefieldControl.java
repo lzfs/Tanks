@@ -1,6 +1,7 @@
 package pp.battleship.client;
 
 import pp.battleship.Resources;
+import pp.battleship.message.client.ChangedProjectileType;
 import pp.battleship.message.client.ClickHarborMessage;
 import pp.battleship.message.client.ClickOpponentMapMessage;
 import pp.battleship.message.client.ClickOwnMapMessage;
@@ -11,6 +12,7 @@ import pp.battleship.message.client.RemoveMessage;
 import pp.battleship.message.client.RotateMessage;
 import pp.battleship.message.server.ModelMessage;
 import pp.battleship.model.ClientState;
+import pp.battleship.model.Projectile;
 import pp.util.IntVec;
 
 import javafx.fxml.FXML;
@@ -44,6 +46,7 @@ class BattlefieldControl extends GridPane {
     private final MapView ownView;
     private final MapView opponentView;
     private final MapView harborView;
+    private boolean flag = false;
 
     private ModelMessage model;
 
@@ -61,6 +64,12 @@ class BattlefieldControl extends GridPane {
     private Button removeButton;
     @FXML
     private Label infoText;
+    @FXML
+    private Button normalButton;
+    @FXML
+    private Button type1Button;
+    @FXML
+    private Button type2Button;
 
     /**
      * Creates a new BattlefieldControl.
@@ -123,9 +132,48 @@ class BattlefieldControl extends GridPane {
      */
     @FXML
     private void ready() {
+        normalButton.setStyle("-fx-text-fill: #ff0000;");
+        flag = true;
         app.send(new ReadyMessage());
         LOGGER.info("ReadyMessage sent"); //NON-NLS
     }
+
+    /**
+     * Saves which projectile is selected in a variable and changes button appearance.
+     */
+    @FXML
+    private void normalShot() {
+        type1Button.setStyle("-fx-text-fill: #00ff00;");
+        type2Button.setStyle("-fx-text-fill: #00ff00;");
+        normalButton.setStyle("-fx-text-fill: #ff0000;");
+        app.send(new ChangedProjectileType(Projectile.NORMAL));
+        LOGGER.info("Normal projectile selected."); //NON-NLS
+    }
+
+    /**
+     * Saves which projectile is selected in a variable and changes button appearance.
+     */
+    @FXML
+    private void type1Shot() {
+        normalButton.setStyle("-fx-text-fill: #00ff00;");
+        type2Button.setStyle("-fx-text-fill: #00ff00;");
+        type1Button.setStyle("-fx-text-fill: #ff0000;");
+        app.send(new ChangedProjectileType(Projectile.TYPE1));
+        LOGGER.info("Type 1 projectile selected."); //NON-NLS
+    }
+
+    /**
+     * Saves which projectile is selected in a variable and changes button appearance.
+     */
+    @FXML
+    private void type2Shot() {
+        type1Button.setStyle("-fx-text-fill: #00ff00;");
+        normalButton.setStyle("-fx-text-fill: #00ff00;");
+        type2Button.setStyle("-fx-text-fill: #ff0000;");
+        app.send(new ChangedProjectileType(Projectile.TYPE2));
+        LOGGER.info("Type 2 projectile selected."); //NON-NLS
+    }
+
 
     /**
      * Updates all views.
@@ -156,6 +204,18 @@ class BattlefieldControl extends GridPane {
         readyButton.setVisible(model.state == ClientState.ALL_PLACED);
         rotateButton.setVisible(model.state == ClientState.PLACE_SHIP);
         removeButton.setVisible(model.state == ClientState.PLACE_SHIP);
+        normalButton.setVisible(flag);
+        normalButton.setDefaultButton(true);
+        type1Button.setVisible(flag);
+        type2Button.setVisible(flag);
+        type1Button.setDisable(!(model.amountType1 > 0));
+        type2Button.setDisable(!(model.amountType2 > 0));
+        if(model.amountType1 == 0 && model.amountType2 == 0)
+            normalButton.setStyle("-fx-text-fill: #ff0000;");
+        if(model.amountType1 == 0)
+            type1Button.setStyle("-fx-text-fill: #00ff00;");
+        if (model.amountType2 == 0)
+            type2Button.setStyle("-fx-text-fill: #00ff00;");
         ownView.setMap(model.ownMap);
         opponentView.setMap(model.opponentMap);
         harborView.setMap(model.harbor);
@@ -169,7 +229,7 @@ class BattlefieldControl extends GridPane {
         }
         if (model.state == ClientState.LOST || model.state == ClientState.WON) {
             final Alert confirmation = new Alert(AlertType.CONFIRMATION);
-            confirmation.setContentText("Möchtest du ein Revenge");
+            confirmation.setContentText("Revanche?");
             confirmation.initOwner(app.getStage());
             final Optional<ButtonType> result = confirmation.showAndWait();
             if (result.orElse(ButtonType.NO) == ButtonType.OK) {

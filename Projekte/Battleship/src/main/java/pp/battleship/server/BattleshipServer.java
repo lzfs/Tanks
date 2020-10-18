@@ -1,6 +1,7 @@
 package pp.battleship.server;
 
 import pp.battleship.Resources;
+import pp.battleship.message.client.ChangedProjectileType;
 import pp.battleship.message.client.ClickHarborMessage;
 import pp.battleship.message.client.ClickOpponentMapMessage;
 import pp.battleship.message.client.ClickOwnMapMessage;
@@ -188,6 +189,11 @@ public class BattleshipServer implements MessageReceiver<ClientMessage, IConnect
             model.resetPlayerMaps();
         }
         auto.playerConnected(from);
+    }
+
+    @Override
+    public void visit(ChangedProjectileType changedProjectileType, IConnection<ServerMessage> from) {
+        model.getPlayer(from).setTypeUsed(changedProjectileType.typeUsed);
     }
 
     /**

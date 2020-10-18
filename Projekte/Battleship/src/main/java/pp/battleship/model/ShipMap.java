@@ -76,9 +76,9 @@ public class ShipMap implements Serializable {
      */
     public Battleship findShipAt(IntVec pos) {
         return ships.stream()
-                .filter(ship -> ship.contains(pos))
-                .findAny()
-                .orElse(null);
+                    .filter(ship -> ship.contains(pos))
+                    .findAny()
+                    .orElse(null);
     }
 
     /**
@@ -103,11 +103,49 @@ public class ShipMap implements Serializable {
      * @param pos where the shot goes
      * @return the new shot added to this map. It contains the information whether the shot hit a ship.
      */
-    public Shot shoot(IntVec pos) {
-        final boolean hit = ships.stream().anyMatch(ship -> ship.hit(pos));
-        final Shot shot = new Shot(pos, hit);
-        shots.add(shot);
-        return shot;
+    public Shot shoot(IntVec pos, Projectile typeUsed) {
+        if (typeUsed == Projectile.NORMAL) {
+            final boolean hit = ships.stream().anyMatch(ship -> ship.hit(pos));
+            final Shot shot = new Shot(pos, hit);
+            shots.add(shot);
+            return shot;
+        }
+        else if (typeUsed == Projectile.TYPE1) {
+            final boolean hit = ships.stream().anyMatch(ship -> ship.hit(pos));
+            final Shot shot = new Shot(pos, hit);
+            if (Math.random() > 0.5) {
+                for (int i = 1; i < 4; i++) {
+                    int finalI = i;
+                    boolean hit2 = ships.stream().anyMatch(ship -> ship.hit(new IntVec(pos.x + finalI, pos.y)));
+                    shots.add(new Shot(pos.x + i, pos.y, hit2));
+                }
+            }
+            else {
+                for (int i = 1; i < 4; i++) {
+                    int finalI = i;
+                    boolean hit2 = ships.stream().anyMatch(ship -> ship.hit(new IntVec(pos.x, pos.y + finalI)));
+                    shots.add(new Shot(pos.x, pos.y + i, hit2));
+                }
+            }
+            shots.add(shot);
+            return shot;
+        }
+        else {  // type 2
+            final boolean hit = ships.stream().anyMatch(ship -> ship.hit(pos));
+            final Shot shot = new Shot(pos, hit);
+            if (hit) {
+                for (int i = -1; i < 2; i++) {
+                    for (int j = -1; j < 2; j++) {
+                        int finalI = i;
+                        int finalJ = j;
+                        boolean hit2 = ships.stream().anyMatch(ship -> ship.hit(new IntVec(pos.x + finalJ, pos.y + finalI)));
+                        shots.add(new Shot(pos.x + i, pos.y + j, hit2));
+                    }
+                }
+            }
+            shots.add(shot);
+            return shot;
+        }
     }
 
     /**
@@ -132,7 +170,7 @@ public class ShipMap implements Serializable {
      */
     public boolean placedCorrectly(Battleship ship) {
         return ship.getAllParts().stream()
-                .allMatch(c -> isValid(c) && ships.stream().noneMatch(s -> s.tooClose(c)));
+                   .allMatch(c -> isValid(c) && ships.stream().noneMatch(s -> s.tooClose(c)));
     }
 
     /**

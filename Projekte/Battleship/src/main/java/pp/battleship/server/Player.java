@@ -4,6 +4,7 @@ import pp.battleship.message.server.ModelMessage;
 import pp.battleship.message.server.ServerMessage;
 import pp.battleship.model.Battleship;
 import pp.battleship.model.ClientState;
+import pp.battleship.model.Projectile;
 import pp.battleship.model.ShipMap;
 import pp.network.IConnection;
 
@@ -20,6 +21,10 @@ public class Player {
     private final IConnection<ServerMessage> connection;
     private String infoText = "";
     private ClientState state = ClientState.WAIT;
+    private int amountType1;
+    private int amountType2;
+    private int destroyed;
+    private Projectile typeUsed;
 
     /**
      * Creates new Player
@@ -40,6 +45,10 @@ public class Player {
                 harbor.getShips().add(new Battleship(len));
         });
         harbor.orderShips();
+        this.amountType1 = 0;
+        this.amountType2 = 0;
+        this.destroyed = 0;
+        this.typeUsed = Projectile.NORMAL; // default
     }
 
     /**
@@ -145,12 +154,46 @@ public class Player {
         this.state = state;
     }
 
+    public int getAmountType1() {
+        return amountType1;
+    }
+
+    public int getAmountType2() {
+        return amountType2;
+    }
+
+    public void setAmountType1(int amountType1) {
+        this.amountType1 = amountType1;
+    }
+
+    public void setAmountType2(int amountType2) {
+        this.amountType2 = amountType2;
+    }
+
+    public int getDestroyed() {
+        if(destroyed == 0) return -1;
+        else return destroyed % 2;
+    }
+
+    public void setDestroyed() {
+        this.destroyed = destroyed + 1;
+    }
+
+    public void setTypeUsed(Projectile typeUsed) {
+        this.typeUsed = typeUsed;
+    }
+
+    public Projectile getTypeUsed() {
+        return typeUsed;
+    }
+
+
     /**
      * Creates a message object that also contains all information known so far about the
      * opponent's ships  (i.e., no information about ships that have not been hit yet) to the client.
      */
     public ModelMessage makeModel() {
-        return new ModelMessage(map, harbor, opponent().map.knownSoFar(), infoText, state);
+        return new ModelMessage(map, harbor, opponent().map.knownSoFar(), infoText, state, amountType1, amountType2);
     }
 
     /**
@@ -158,7 +201,7 @@ public class Player {
      * opponent's ships to the client.
      */
     public ModelMessage makeGameOverMapModel() {
-        return new ModelMessage(map, harbor, opponent().map, infoText, state);
+        return new ModelMessage(map, harbor, opponent().map, infoText, state, amountType1, amountType2);
     }
 
     public void resetGame() {

@@ -22,4 +22,6 @@ public interface ClientInterpreter {
     void visit(ConfirmMessage msg, IConnection<ServerMessage> from);
 
     void visit(ClientReadyMessage msg, IConnection<ServerMessage> from);
+
+    void visit(ChangedProjectileType msg, IConnection<ServerMessage> from);
 }
