@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<fx:root hgap="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+         styleClass="window" stylesheets="@battlefield.css" type="GridPane" vgap="5.0"
+         xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="SOMETIMES"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <Label fx:id="infoText" text="info text" GridPane.columnSpan="3"/>
+        <Label alignment="CENTER" text="%my.map" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+               GridPane.valignment="CENTER"/>
+        <Label text="%harbor.map" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
+        <Label alignment="CENTER" text="%opponent.map" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+               GridPane.rowIndex="1"/>
+        <Canvas fx:id="ownMap" height="200.0" width="200.0" GridPane.rowIndex="2" GridPane.valignment="TOP"/>
+        <Canvas fx:id="harbor" height="180.0" width="90.0" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                GridPane.valignment="TOP"/>
+        <Canvas fx:id="opponentMap" height="200.0" width="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2"
+                GridPane.valignment="TOP"/>
+        <FlowPane hgap="5.0" vgap="5.0" GridPane.columnSpan="3" GridPane.rowIndex="3">
+            <children>
+                <Button fx:id="rotateButton" mnemonicParsing="false" onAction="#rotate" text="%button.rotate"/>
+                <Button fx:id="removeButton" mnemonicParsing="false" onAction="#remove" text="%button.remove"/>
+                <Button fx:id="readyButton" mnemonicParsing="false" onAction="#ready" text="%button.ready"/>
+            </children>
+            <children>
+                <Button fx:id="normalButton" mnemonicParsing="false" onAction="#normalShot" text="%button.normal.shot"/>
+                <Button fx:id="type1Button" mnemonicParsing="false" onAction="#type1Shot" text="%button.type1.shot"/>
+                <Button fx:id="type2Button" mnemonicParsing="false" onAction="#type2Shot" text="%button.type2.shot"/>
+            </children>
+        </FlowPane>
+    </children>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    </padding>
+</fx:root>
