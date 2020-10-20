@@ -30,6 +30,7 @@ public class Droid extends Shooter {
     private boolean accelerationF = false;
     private boolean accelerationB = false;
     private double currentSpeed = 0;
+    private Obstacle obstacle = null;
 
     /**
      * Creates a droid.
@@ -80,6 +81,13 @@ public class Droid extends Shooter {
      * Sets the position of the droid
      */
     public void setPos(DoubleVec pos) {
+        boolean collide = false;
+        for (Obstacle obs : model.getDroidsMap().getObstacles()) {
+            if (collisionWith(obs)) {
+                collide = true;
+            }
+        }
+        if (!collide) obstacle = null;
         this.pos = pos;
     }
 
@@ -266,8 +274,13 @@ public class Droid extends Shooter {
     private void processCollision() {
         for (Obstacle obs : model.getDroidsMap().getObstacles())
             if (collisionWith(obs)) {
-               double bearing = obs.getPos().sub(getPos()).angle();
-               setRotation(-bearing);
+              if (obstacle == null || obs != obstacle) {
+                  obstacle = obs;
+                  DoubleVec lot = obs.getPos().sub(getPos());
+                  double bearing = lot.angle() + 90;
+                  double diff = getRotation() - bearing;
+                  setRotation(bearing - diff);
+              }
             }
     }
 }

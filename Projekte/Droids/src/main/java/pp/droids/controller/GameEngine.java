@@ -8,6 +8,7 @@ import pp.droids.notifications.DroidsNotificationReceiver;
 import pp.droids.view.DroidsMapView;
 import pp.media.ImageSupport;
 import pp.media.SoundSupport;
+import pp.util.StopWatch;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
@@ -39,6 +40,7 @@ public class GameEngine implements EventHandler<Event>, DroidsNotificationReceiv
     private final Stage stage;
     private final ImageSupport<DroidsImageProperty> images;
     private final SoundSupport<DroidsSoundProperty> sound;
+    private AnimationTimer timer;
 
     private Controller controller;
 
@@ -64,6 +66,7 @@ public class GameEngine implements EventHandler<Event>, DroidsNotificationReceiv
             }
         };
         model = new DroidsGameModel(properties);
+        model.setEngine(this);
         view = new DroidsMapView(model, images);
         model.addReceiver(this);
         model.loadRandomMap();
@@ -135,13 +138,31 @@ public class GameEngine implements EventHandler<Event>, DroidsNotificationReceiv
      * The game loop, which checks user inputs and updates the view periodically.
      */
     public void gameLoop() {
-        new AnimationTimer() {
+        this.timer = new AnimationTimer() {
             @Override
             public void handle(long time) {
                 controller.update();
                 view.update();
             }
-        }.start();
+        };
+        timer.start();
+    }
+
+    public void pauseLoop(long time) {
+        StopWatch stopWatch = controller.getStopWatch();
+        if (stopWatch != null) stopWatch.stop();
+        timer.stop();
+        try {
+            Thread.sleep(time);
+        }
+        catch (InterruptedException e) {
+            LOGGER.fine(e.getMessage());
+        }
+        timer.start();
+        if(stopWatch != null) {
+            stopWatch.start();
+            controller.setLastUpdate(stopWatch.getTime());
+        }
     }
 
     /**

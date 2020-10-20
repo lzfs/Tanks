@@ -1,5 +1,7 @@
 package pp.droids.controller;
 
+import pp.util.StopWatch;
+
 import javafx.event.Event;
 
 /**
@@ -33,4 +35,10 @@ class Controller {
      * @param event the event that happened and that is passed to this controller.
      */
     public void handle(Event event) { }
+
+    public StopWatch getStopWatch() {
+        return null;
+    }
+
+    public void setLastUpdate(double lastUpdate) { }
 }

@@ -80,7 +80,7 @@ class DroidsMapCreator {
         // add rockets at fixed positions
         for (int i = 0; i < NUM_ROCKETS; i++) {
             final double y = i * (map.getHeight() / NUM_ROCKETS);
-            final Rocket rocket = new Rocket(model, new DoubleVec(map.getWidth() - i, y));
+            final Rocket rocket = new Rocket(model, new DoubleVec(map.getWidth() - (i + 1), y));
             rocket.setTarget(new DoubleVec(-1., y));
             map.addRocket(rocket);
         }

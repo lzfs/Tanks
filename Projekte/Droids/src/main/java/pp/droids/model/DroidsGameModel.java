@@ -1,6 +1,7 @@
 package pp.droids.model;
 
 import pp.droids.DroidsIntProperty;
+import pp.droids.controller.GameEngine;
 import pp.droids.notifications.DroidsNotification;
 import pp.droids.notifications.DroidsNotificationReceiver;
 
@@ -25,6 +26,7 @@ public class DroidsGameModel {
     private final Properties props;
     private final Preferences prefs = Preferences.userNodeForPackage(DroidsGameModel.class);
     private final List<DroidsNotificationReceiver> receivers = new ArrayList<>();
+    private GameEngine engine = null;
 
     private DroidsMap droidsMap;
     private boolean debugMode = prefs.getBoolean(DEBUG_MODE, false);
@@ -201,5 +203,23 @@ public class DroidsGameModel {
      */
     public boolean gameWon() {
         return droidsMap.getEnemies().isEmpty();
+    }
+
+    /**
+     * setter method for the game engine this model is part of
+     *
+     * @param engine the game engine this model is a part of
+     */
+    public void setEngine(GameEngine engine) {
+        this.engine = engine;
+    }
+
+    /**
+     * getter method for the game engine this moadel is a part of
+     *
+     * @return the game engine
+     */
+    public GameEngine getEngine() {
+        return engine;
     }
 }
