@@ -162,4 +162,24 @@ class PlayGameController extends Controller {
             }
         }
     }
+
+    /**
+     * getter methode for the stopwatch
+     *
+     * @return the Stopwatch
+     */
+    @Override
+    public StopWatch getStopWatch() {
+        return stopWatch;
+    }
+
+    /**
+     * setter method for the last updated time
+     *
+     * @param lastUpdate the new last updated time
+     */
+    @Override
+    public void setLastUpdate(double lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 }

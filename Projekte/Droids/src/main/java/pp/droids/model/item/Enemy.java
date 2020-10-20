@@ -47,12 +47,7 @@ public class Enemy extends LivingItem {
     @Override
     public void destroy() {
         model.notifyReceivers(DroidsNotification.ENEMY_DESTROYED);
-        try {
-            Thread.sleep(2000);
-        }
-        catch (InterruptedException e) {
-            LOGGER.fine(e.getMessage());
-        }
+        if (model.getEngine() != null) model.getEngine().pauseLoop(2000);
         super.destroy();
     }
 
