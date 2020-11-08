@@ -1,15 +1,16 @@
 package pp.tanks.client;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.util.DoubleVec;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +29,10 @@ public class MiniController extends GridPane {
     @FXML
     private Button shootBtn;
 
-    MiniController(TanksApp app) {
+    @FXML
+    private Button join;
+
+    public MiniController(TanksApp app) {
         this.app = app;
         final URL location = getClass().getResource(MENU_CONTROL_FXML);
         FXMLLoader fxmlLoader = new FXMLLoader(location);
@@ -50,7 +54,12 @@ public class MiniController extends GridPane {
 
     @FXML
     private void moveTank() {
-        TankData d = new TankData(new DoubleVec(1, 1), 0);
+        TankData d = new TankData(new DoubleVec(1, 1), 0, 100);
         app.getConnection().send(new MoveMessage(new DataTimeItem(d, System.nanoTime() + app.getOffset())));
+    }
+
+    @FXML
+    private void joinServer(){
+        app.joinGame();
     }
 }
