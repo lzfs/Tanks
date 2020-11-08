@@ -12,8 +12,8 @@ dependencies {
     implementation project(':common')
 }
 
-description = 'Empty Project'
+description = 'Tanks'
 
 application {
-    mainClassName = "$moduleName/pp.empty.SampleApp"
+    mainClassName = "$moduleName/pp.tanks.TanksApp"
 }

@@ -1,7 +1,7 @@
 /**
  * The module used to realize your own game.
  */
-module pp.empty {
+module pp.tanks {
     requires pp.common;
     requires java.xml;
     requires java.logging;
@@ -9,5 +9,5 @@ module pp.empty {
     requires javafx.controls;
     requires javafx.media;
     requires javafx.fxml;
-    opens pp.empty to javafx.fxml, javafx.graphics;
+    opens pp.tanks.client to javafx.fxml, javafx.graphics;
 }
