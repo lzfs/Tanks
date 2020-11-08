@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map>
+	<playersTank x="6" y="5"></playersTank>
+	<enemy x="1" y="2"></enemy>
+	<enemy x="3" y="4"></enemy>
+	<enemy x="6" y="1"></enemy>
+	<rocket x="8" y="2"></rocket>
+	<obstacle x="1" y="1"></obstacle>
+	<obstacle x="6" y="4"></obstacle>
+	<obstacle x="9" y="7"></obstacle>
+</map>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map w="25" h="15">
+   <playersTank x="13" y="1"></playersTank>
+   <obstacle x="12" y="2"></obstacle>
+   <obstacle x="1" y="13"></obstacle>
+   <obstacle x="6" y="7"></obstacle>
+   <obstacle x="0" y="8"></obstacle>
+   <obstacle x="0" y="1"></obstacle>
+   <enemy x="6" y="6"></enemy>
+   <enemy x="16" y="3"></enemy>
+   <enemy x="9" y="6"></enemy>
+   <enemy x="7" y="13"></enemy>
+   <enemy x="24" y="2"></enemy>
+   <rocket x="9" y="7" tx="0" ty="7"></rocket>
+   <rocket x="9" y="5" tx="0" ty="5"></rocket>
+</map>

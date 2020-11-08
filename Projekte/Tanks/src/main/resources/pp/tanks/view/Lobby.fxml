@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="window" stylesheets="@tank.css" type="GridPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.33333333333334" minWidth="10.0" prefWidth="227.66666666666666" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="145.66666666666666" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="256.0" minWidth="10.0" prefWidth="227.33333333333331" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="98.99999618530273" minHeight="10.0" prefHeight="98.99999618530273" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="154.33333333333331" minHeight="10.0" prefHeight="127.66666666666667" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="132.0" minHeight="10.0" prefHeight="98.33333333333331" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="95.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Lobby wählen" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+            <font>
+                <Font name="System Bold" size="48.0" />
+            </font>
+        </Text>
+        <Button fx:id="back" mnemonicParsing="false" onAction="#back" text="Zurück" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <font>
+                <Font size="17.0" />
+            </font>
+        </Button>
+        <Button fx:id="searchForGame" mnemonicParsing="false" onAction="#searchForGame" text="Spiel suchen" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <font>
+                <Font size="17.0" />
+            </font>
+        </Button>
+        <Button fx:id="createGame" mnemonicParsing="false" onAction="#createGame" text="Spiel erstellen" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+            <font>
+                <Font size="17.0" />
+            </font>
+        </Button>
+    </children>
+</fx:root>
