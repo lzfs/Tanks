@@ -1,50 +1,114 @@
 package pp.tanks.client;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import pp.network.Connection;
 import pp.network.IConnection;
 import pp.network.MessageReceiver;
-import pp.tanks.message.client.ClientReadyMsg;
 import pp.tanks.message.client.IClientMessage;
+import pp.tanks.message.client.ClientReadyMsg;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.PingMsg;
 import pp.tanks.message.server.SynchronizeMsg;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import pp.tanks.controller.Engine;
+import pp.tanks.controller.MainMenuController;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.logging.Logger;
 
 /**
- * Main class of the tanks app
+ * Main class of the Tank app
  */
-public class TanksApp extends Application implements MessageReceiver<IServerMessage, IConnection<IClientMessage>>, IServerInterpreter {
+public class TanksApp extends Application implements MessageReceiver<IServerMessage, IConnection<IClientMessage>>, IServerInterpreter{
+    private static final String PROPERTIES_FILE = "tanks.properties";
     private static final Logger LOGGER = Logger.getLogger(TanksApp.class.getName());
-    private Stage stage;
     private Connection<IClientMessage, IServerMessage> connection;
+    public final Sounds sounds = new Sounds();
     private long offset;
 
+    private final Properties properties = new Properties();
+
+    private Stage stage;
+    private MainMenuController mainMenuControl;
+
     /**
-     * starts the tanks application
+     * create a new TankApp
+     */
+    public TanksApp() {
+        load(PROPERTIES_FILE);
+    }
+
+    /**
+     * Main Method
+     *
+     * @param args input args
      */
     public static void main(String[] args) {
         launch(args);
     }
 
     /**
-     * Actually starts the game within the menu. This method is automatically called when JavaFX starts up.
+     * start Method for JavaFX
      *
-     * @param stage the main stage provided by JavaFX
+     * @param stage the stage to show
+     * @throws Exception if something goes wrong
      */
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
+
+        Engine engine = new Engine(stage, this, properties);
         this.stage = stage;
-        joinGame();
-        stage.setScene(new Scene(new MiniController(this)));
+
+        stage.setResizable(false);
+        stage.setTitle("Tanks");
         stage.show();
+        engine.gameLoop();
+
+        sounds.setMusic(sounds.mainMenu);
+    }
+
+    /**
+     * load a specified file
+     *
+     * @param fileName the name of the file as a String
+     */
+    private void load(String fileName) {
+        // first load properties using class loader
+        try {
+            final InputStream resource = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
+            if (resource == null)
+                LOGGER.info("Class loader cannot find " + fileName);
+            else
+                try (Reader reader = new InputStreamReader(resource, StandardCharsets.UTF_8)) {
+                    properties.load(reader);
+                }
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, e.getMessage(), e);
+        }
+
+        // and now try to read the properties file
+        final File file = new File(fileName);
+        if (file.exists() && file.isFile() && file.canRead()) {
+            LOGGER.info("try to read file " + fileName);
+            try (FileReader reader = new FileReader(file)) {
+                properties.load(reader);
+            } catch (FileNotFoundException e) {
+                LOGGER.log(Level.INFO, e.getMessage(), e);
+            } catch (IOException e) {
+                LOGGER.log(Level.WARNING, e.getMessage(), e);
+            }
+        } else
+            LOGGER.info("There is no file " + fileName);
+        LOGGER.fine(() -> "properties: " + properties);
     }
 
     /**
@@ -105,7 +169,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
 
     /**
      * methode used by the visitor to react to this message
-     * @param msg 
+     * @param msg
      */
     @Override
     public void visit(SynchronizeMsg msg) {
@@ -118,3 +182,4 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         connection.send(new PingResponse(System.nanoTime()));
     }
 }
+

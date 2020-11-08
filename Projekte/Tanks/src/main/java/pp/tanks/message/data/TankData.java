@@ -11,13 +11,15 @@ public class TankData extends Data{
     private DoubleVec turretDir;
     private boolean move;
     private double rotation;
+    private int lifepoints;
 
-    public TankData(DoubleVec pos, int id) {
+    public TankData(DoubleVec pos, int id, int lifepoints) {
         super(pos, id);
         this.moveDir = MoveDirection.RIGHT;
         this.turretDir = new DoubleVec(0,0);
         this.move = false;
         this.rotation = 0;
+        this.lifepoints = lifepoints;
     }
 
     /**
@@ -38,6 +40,19 @@ public class TankData extends Data{
 
     public double getRotation() {
         return rotation;
+    }
+
+    /**
+     * updates the lifepoints of the tank
+     * @param lifepoints
+     */
+    public void setLifepoints(int lifepoints) {
+        this.lifepoints = lifepoints;
+    }
+
+
+    public int getLifepoints() {
+        return lifepoints;
     }
 
     /**

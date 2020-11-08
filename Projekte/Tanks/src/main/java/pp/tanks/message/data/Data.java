@@ -7,9 +7,8 @@ import java.io.Serializable;
 /**
  * base class of the data which is sent to the server
  */
-public class Data implements Serializable {
+public class Data implements Serializable{
     private DoubleVec pos;
-    private boolean destroyed;
     private int id;
 
     public Data(DoubleVec pos, int id) {
@@ -17,6 +16,7 @@ public class Data implements Serializable {
         this.pos = pos;
         this.id = id;
     }
+    private boolean destroyed;
 
     public void setPos(DoubleVec pos) {
         this.pos = pos;
