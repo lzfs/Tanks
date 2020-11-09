@@ -9,12 +9,6 @@ import pp.tanks.model.Model;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 import pp.tanks.view.MenuView;
-import pp.media.ImageSupport;
-import pp.media.SoundSupport;
-import pp.tanks.TanksImageProperty;
-import pp.tanks.TanksSoundProperty;
-import pp.tanks.client.TanksApp;
-import pp.tanks.view.MenuView;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
@@ -25,7 +19,6 @@ import javafx.stage.Stage;
 import pp.tanks.view.TanksMapView;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -34,11 +27,11 @@ import java.util.logging.Logger;
  * The game engine using the state pattern to control the game in its different states, i.e., playing the game,
  * showing that the game has been won or lost, and the menu.
  */
-public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*/ {
+public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private static final Logger LOGGER = Logger.getLogger(Engine.class.getName());
     private final TanksApp tankApp;
     private MenuView menuView;
-    //private TanksMapView view;
+    private TanksMapView view;
     public final MainMenuController mainMenuController;
     public final CreditsController creditsController;
     public final SettingsController settingsController;
@@ -49,10 +42,11 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
     //public final GameOverController gameLostController;
     public final LobbyController lobbyController;
     public final GameOverController gameOverController;
+    public final PlayGameController playGameController;
     public final MiniController miniController; //for tests
 
     private final Stage stage;
-    //private final Model model;
+    private final Model model;
     private final ImageSupport<TanksImageProperty> images;
     private final SoundSupport<TanksSoundProperty> sound;
 
@@ -63,7 +57,7 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
      *
      * @param stage the game stage where the game is played and the menu is shown
      */
-    public Engine(Stage stage, TanksApp tankApp, Properties properties) throws MalformedURLException {
+    public Engine(Stage stage, TanksApp tankApp, Properties properties) {
         this.mainMenuController = new MainMenuController(this);
         this.creditsController = new CreditsController(this);
         this.settingsController = new SettingsController(this);
@@ -74,10 +68,12 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
         //this.gameLostController = new GameOverController(this, "Verloren");
         this.lobbyController = new LobbyController(this);
         this.gameOverController = new GameOverController(this);
+        this.playGameController = new PlayGameController(this);
         this.tankApp = tankApp;
         this.stage = stage;
         this.miniController = new MiniController(tankApp);
-        //model = new Model(properties);
+        this.model = new Model(properties);
+        model.addReceiver(this);
 
         images = new ImageSupport<>(TanksImageProperty.class, properties) {
             @Override
@@ -94,6 +90,7 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
 
         setController(mainMenuController);
         this.menuView = MenuView.makeView(stage, mainMenuController.getFileName(), mainMenuController);
+        this.view = new TanksMapView(model, images);
         stage.addEventHandler(InputEvent.ANY, this);
     /*
         //setController(mainMenuController);
@@ -204,6 +201,13 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
     }
 
     /**
+     * activates the playGameController
+     */
+    public void activatePlayGameController() {
+        setController(playGameController);
+    }
+
+    /**
      * Selects the specified controller, i.e., switches the game into the state realized by this controller
      *
      * @param controller the controller realizing the new state of the game
@@ -252,19 +256,18 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
     }
 
     /**
-     * @return the view
+     * @return the menuView
      */
-    public MenuView getView() {
+    public MenuView getMenuView() {
         return menuView;
     }
 
     /*
      * @return the view
-     *//*
+     */
     public TanksMapView getView() {
         return view;
     }
-    */
 
     /**
      * @return the tank app
@@ -283,11 +286,10 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
     /*
      *
      * @return the model of the game
-     */ /*
+     */
     public Model getModel() {
         return model;
     }
-
 
     @Override
     public void notify(TanksNotification notification) {
@@ -305,7 +307,5 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
                     break;
             }
     }
-    */
-
 
 }

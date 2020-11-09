@@ -33,6 +33,7 @@ public class Model {
     public Model(Properties props) {
         this.props = props;
         //make tanks map
+        setTanksMap(new TanksMapCreator(this).makeEmptyMap());
     }
 
     /**
@@ -69,7 +70,7 @@ public class Model {
     /**
      * Sets the specified game map as the current one.
      *
-     * @param map droids map
+     * @param map tanks map
      */
     public void setTanksMap(TanksMap map) {
         this.map = map;

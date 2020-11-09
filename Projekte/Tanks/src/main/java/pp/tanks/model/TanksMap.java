@@ -7,7 +7,9 @@ import pp.util.IntVec;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -16,11 +18,11 @@ import java.util.logging.Logger;
  */
 public class TanksMap extends AbstractList<Item> {
     private static final Logger LOGGER = Logger.getLogger(TanksMap.class.getName());
-    private List<Tank> tanks;
-    private List<ReflectableBlock> reflectableBlocks;
-    private List<BreakableBlock> breakableBlocks;
-    private List<UnbreakableBlock> unbreakableBlocks;
-    private List<Projectile> projectiles;
+    private List<Tank> tanks = new ArrayList<>();
+    private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
+    private List<BreakableBlock> breakableBlocks = new ArrayList<>();
+    private List<UnbreakableBlock> unbreakableBlocks = new ArrayList<>();
+    private List<Projectile> projectiles = new ArrayList<>(); // TODO use map instead of list
     private final List<Projectile> addedProjectiles = new ArrayList<>();
     private final int width;
     private final int height;

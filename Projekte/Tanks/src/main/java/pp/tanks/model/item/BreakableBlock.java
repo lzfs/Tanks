@@ -13,7 +13,7 @@ public class BreakableBlock extends Block{
 
     public BreakableBlock(DoubleVec pos, Model model) {
         super(model);
-        data = new BBData(pos, 300, 0);
+        this.data = new BBData(pos, 300, 0);
     }
 
     /**

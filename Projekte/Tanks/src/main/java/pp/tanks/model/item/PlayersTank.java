@@ -6,7 +6,7 @@ import pp.tanks.model.Model;
  * Represents the tank of the current player
  */
 public class PlayersTank extends Tank{
-    protected PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret) {
+    public PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret) {
         super(model, effectiveRadius, armor, turret);
     }
 

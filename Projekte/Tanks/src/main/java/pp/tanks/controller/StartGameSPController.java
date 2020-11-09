@@ -68,6 +68,7 @@ public class StartGameSPController extends Controller {
      */
     @FXML
     private void startGameSP() {
+        engine.activatePlayGameController();
         System.out.println("START GAME SP");
     }
 }

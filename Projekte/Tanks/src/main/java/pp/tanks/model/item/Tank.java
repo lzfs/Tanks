@@ -18,7 +18,7 @@ public abstract class Tank extends Item {
         super(model, effectiveRadius);
         this.armor = armor;
         this.turret = turret;
-        data = new TankData(new DoubleVec(1,1), 1, armor.getArmorPoints());
+        this.data = new TankData(new DoubleVec(1,1), 1, armor.getArmorPoints());
     }
 
     /**

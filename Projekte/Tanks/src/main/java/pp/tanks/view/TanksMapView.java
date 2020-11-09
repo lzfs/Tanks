@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.model.Model;
@@ -134,4 +135,3 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         }
     }
 }
-
