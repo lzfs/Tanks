@@ -138,7 +138,7 @@ public class ShipMap implements Serializable {
                     for (int j = -1; j < 2; j++) {
                         int finalI = i;
                         int finalJ = j;
-                        boolean hit2 = ships.stream().anyMatch(ship -> ship.hit(new IntVec(pos.x + finalJ, pos.y + finalI)));
+                        boolean hit2 = ships.stream().anyMatch(ship -> ship.hit(new IntVec(pos.x + finalI, pos.y + finalJ)));
                         shots.add(new Shot(pos.x + i, pos.y + j, hit2));
                     }
                 }

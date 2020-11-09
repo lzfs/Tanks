@@ -1,0 +1,20 @@
+defaultTasks 'clean', 'installDist'
+
+apply plugin: 'application'
+apply plugin: 'org.openjfx.javafxplugin'
+
+javafx {
+    version = "$openjfx_version"
+    modules = [ 'javafx.fxml', 'javafx.media', 'javafx.controls' ]
+}
+
+dependencies {
+    implementation project(':common')
+    implementation project(':media')
+}
+
+description = 'Tanks'
+
+application {
+    mainClassName = "$moduleName/pp.tanks.TanksApp"
+}
