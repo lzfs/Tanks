@@ -34,10 +34,9 @@ public class VisualizerVisitor implements Visitor {
         context.rotate((playersTank.getRotation()+90)%360);
         context.scale(0.75,0.75);
         drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
-
-        //direction iwie in angle umwandeln und entsprechend rotieren
-        //context.rotate();
         context.rotate(-playersTank.getRotation());
+
+
         context.rotate(playersTank.getTurret().getDirection().angle());
         drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
 
@@ -73,7 +72,15 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(LightProjectile lightProjectile) {
+        //bullets drehen
+        //final GraphicsContext context = view.getGraphicsContext2D();
+        //final Affine ori = context.getTransform();
+        //final DoubleVec pos = view.modelToView(lightProjectile.getPos());
+        //context.translate(pos.x, pos.y);
+        //context.rotate(lightProjectile.getProjectileData().getDir().angle());
         drawItem(lightProjectile, TanksImageProperty.lightBullet, Shape.RECTANGLE, Color.BLUE);
+
+        //context.setTransform(ori);
     }
 
     @Override
@@ -101,6 +108,7 @@ public class VisualizerVisitor implements Visitor {
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(item.getPos());
+        //System.out.println(item.getPos());
         context.translate(pos.x, pos.y);
         drawImage(prop, shape, color);
         context.setTransform(ori);

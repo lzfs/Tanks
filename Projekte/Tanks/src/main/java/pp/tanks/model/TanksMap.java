@@ -202,6 +202,8 @@ public class TanksMap extends AbstractList<Item> {
      * @param deltaTime time in seconds since the last update call
      */
     void update(double deltaTime) {
+
+
         for (Item item : this)
             item.update(deltaTime);
 
@@ -254,6 +256,8 @@ public class TanksMap extends AbstractList<Item> {
      * Adds a projectile to this map.
      */
     public void addProjectile(Projectile p) {
+
         addedProjectiles.add(p);
+        System.out.println(addedProjectiles.toString());
     }
 }

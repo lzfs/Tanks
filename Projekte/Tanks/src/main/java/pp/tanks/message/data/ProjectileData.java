@@ -9,9 +9,10 @@ public class ProjectileData extends Data {
     private DoubleVec dir;
     private int bounce;
 
-    public ProjectileData(DoubleVec pos, int id, int bounce) {
+    public ProjectileData(DoubleVec pos, int id, int bounce,DoubleVec dir) {
         super(pos, id);
         this.bounce = bounce;
+        this.dir=dir;
     }
 
     public void setDir(DoubleVec dir) {

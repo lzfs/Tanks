@@ -14,9 +14,9 @@ public abstract class Projectile extends Item<ProjectileData> {
     protected final Double speed;
     protected final ProjectileData data;
 
-    public Projectile(Model model, double effectiveRadius, int damage, Double speed, DoubleVec pos, ProjectileData data) {
+    public Projectile(Model model, double effectiveRadius, int damage, Double speed, ProjectileData data) {
         super(model, effectiveRadius, data);
-        this.data = new ProjectileData(pos, 0, 0);
+        this.data = data;
         this.damage = damage;
         this.speed = speed;
     }
@@ -33,6 +33,10 @@ public abstract class Projectile extends Item<ProjectileData> {
         return this.damage;
     }
 
+    public ProjectileData getProjectileData(){
+        return this.data;
+    }
+
     /**
      * Updates the projectile
      *
@@ -40,7 +44,9 @@ public abstract class Projectile extends Item<ProjectileData> {
      */
     @Override
     public void update(double delta) {
+        //System.out.println("Projectile " + data.getPos());
         data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
+
     }
 
     /**

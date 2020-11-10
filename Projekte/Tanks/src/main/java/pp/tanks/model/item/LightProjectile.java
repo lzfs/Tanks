@@ -9,8 +9,8 @@ import pp.util.DoubleVec;
  */
 public class LightProjectile extends Projectile {
 
-    public LightProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec pos, ProjectileData data) {
-        super(model, effectiveRadius, damage, speed, pos,data);
+    public LightProjectile(Model model, double effectiveRadius, int damage, double speed, ProjectileData data) {
+        super(model, effectiveRadius, damage, speed,data);
     }
 
     /**
@@ -28,4 +28,7 @@ public class LightProjectile extends Projectile {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() { return "Light";}
 }

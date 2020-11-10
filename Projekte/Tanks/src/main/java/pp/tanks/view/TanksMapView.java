@@ -75,8 +75,9 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         if (bgImage != null) context.drawImage(bgImage, 0, 0);
 
         // render items
+        System.out.println(model.getTanksMap().size());
+
         for (Item p : model.getTanksMap()) {
-            //System.out.println("ITEM");
             p.accept(visualizer);
         }
 

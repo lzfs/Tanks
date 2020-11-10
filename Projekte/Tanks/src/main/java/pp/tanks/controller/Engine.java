@@ -205,6 +205,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      * activates the playGameController
      */
     public void activatePlayGameController() {
+
         setController(playGameController);
     }
 
@@ -252,29 +253,29 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      * @return the newly created view
      */
     public MenuView getViewForController(String nameOfFile, Controller controller) {
-        menuView = MenuView.makeView(stage, nameOfFile, controller);
-        return menuView;
+        this.menuView = MenuView.makeView(stage, nameOfFile, controller);
+        return this.menuView;
     }
 
     /**
      * @return the menuView
      */
     public MenuView getMenuView() {
-        return menuView;
+        return this.menuView;
     }
 
     /*
      * @return the view
      */
     public TanksMapView getView() {
-        return view;
+        return this.view;
     }
 
     /**
      * @return the tank app
      */
     public TanksApp getTankApp(){
-        return tankApp;
+        return this.tankApp;
     }
 
     /**
@@ -289,7 +290,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      * @return the model of the game
      */
     public Model getModel() {
-        return model;
+        return this.model;
     }
 
     @Override

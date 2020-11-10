@@ -76,9 +76,6 @@ class PlayGameController extends Controller {
             final MouseEvent me = (MouseEvent) e;
             DoubleVec pos = engine.getView().viewToModel(me.getX(), me.getY());
             getTank().shoot(pos);
-
-
-
         }
         else if(e.getEventType() == MouseEvent.MOUSE_MOVED){
             //System.out.println("handle mouse moved");
@@ -86,8 +83,9 @@ class PlayGameController extends Controller {
             Double x1 = event.getX();
             Double y1 = event.getY();
             DoubleVec dir = engine.getView().viewToModel(x1,y1).sub(getTank().getPos());
-            //System.out.println(dir.angle());
+            //System.out.println(dir);
 
+            //maybe norm
             getTank().getTurret().setDirection(dir);
 
             //System.out.println(engine.getView().viewToModel(x1,y1));
@@ -102,11 +100,13 @@ class PlayGameController extends Controller {
      */
     @Override
     public void update() {
-
         // process input events that occurred since the last game step
-
         //List<KeyCode> list = new ArrayList<String>();
         //System.out.println(pressed.toString());
+        //System.out.println("Tank Pos "+getTank().getPos());
+
+        //System.out.println("DIR  "+getTank().getTurret().getDirection());
+
         if (pressed.size() >= 2) {
             keyPressed(pressed.get(0), pressed.get(1));
         }
@@ -116,7 +116,6 @@ class PlayGameController extends Controller {
         else {
             getTank().setMove(false);
         }
-       //System.out.println(getTank().isMoving());
 
         // update the model
         final double delta = stopWatch.getTime() - lastUpdate;

@@ -4,6 +4,7 @@ package pp.tanks.model.item;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.tanks.message.data.TankData;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 /**
@@ -149,9 +150,10 @@ public abstract class Tank extends Item<TankData> {
      */
     public void shoot(DoubleVec pos) {
         if(canShoot()) {
-            System.out.println("shooted");
+            //System.out.println("shooted");
             turret.shoot();
-            makeProjectile(pos);
+            Projectile projectile=makeProjectile(pos);
+            model.getTanksMap().addProjectile(projectile);
         }
     }
 
@@ -171,9 +173,15 @@ public abstract class Tank extends Item<TankData> {
     private Projectile makeProjectile(DoubleVec targetPos) {
         //model.notifyReceivers(DroidsNotification.DROID_FIRED);
 
-        ProjectileData data = new ProjectileData(new DoubleVec(1,1),1234,4);  //TODO
+        //  pos, id,bounce, direction
+        //pos vom Tank
+        //direction brauche ich aus dem turret
+        System.out.println("Make projectile  "+this.data.getPos());
+        System.out.println("TURR "+ turret.getDirection());
+        ProjectileData data = new ProjectileData(this.data.getPos(), 1234,4, turret.getDirection());  //TODO
 
-        final DoubleVec dir = DoubleVec.polar(1., getRotation()); //???
+        /*
+        //final DoubleVec dir = DoubleVec.polar(1., getRotation()); //???
         if (turret instanceof LightTurret) {
             return new LightProjectile(model, 1, turret.getDamage(), 4, this.getPos(),data);  //TODO
         }
@@ -183,7 +191,11 @@ public abstract class Tank extends Item<TankData> {
         else if (turret instanceof HeavyTurret) {
             return new HeavyProjectile(model, 5, turret.getDamage(), 1, this.getPos(), targetPos,data); //TODO
         }
-        return null;
+        //System.out.println(this.getPos());
+
+         */
+        model.notifyReceivers(TanksNotification.TANK_FIRED);
+        return new LightProjectile(model, 1, turret.getDamage(), 4, data);
     }
 
     /**

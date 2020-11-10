@@ -11,7 +11,7 @@ public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
     public HeavyProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec pos, DoubleVec targetPos, ProjectileData data ){
-        super(model, effectiveRadius, damage, speed, pos,data);
+        super(model, effectiveRadius, damage, speed,data);
     }
 
     /**

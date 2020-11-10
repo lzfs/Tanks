@@ -1,11 +1,13 @@
 package pp.tanks.model;
 
+import pp.tanks.message.data.Data;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.Armor;
 import pp.tanks.model.item.Howitzer;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Tank;
 import pp.tanks.model.item.Turret;
+import pp.tanks.model.item.UnbreakableBlock;
 import pp.util.DoubleVec;
 
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ class TanksMapCreator {
         // changes were made below
         TanksMap map = new TanksMap(model, width, height);
         map.addTanks(new PlayersTank(model, 1, new Armor(5, 5), new Turret(2, 2, 2, 2, 2),new TankData(new DoubleVec(5,5),1000,500)));
+        map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(5,5),1111)));
         System.out.println("here");
         return map;
     }
