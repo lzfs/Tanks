@@ -66,8 +66,26 @@ public abstract class Item<T extends Data> {
      */
     public boolean collisionWith(Item other) {
         if (getPos() == null) return false;
-        return !other.isDestroyed() &&
-                getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+        if(other instanceof Projectile) {
+            return !other.isDestroyed() &&
+                   getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+        } else if(other instanceof Block) {
+            return !other.isDestroyed() && isInRectangle(other.getPos(), ((Block<?>) other).getHeight(), ((Block<?>) other).getWidth(), this.getPos());
+        } else if(other instanceof Tank) {
+            //TODO Tank not static width, height
+            return !other.isDestroyed() && isInRectangle(other.getPos(), 1, 1, this.getPos());
+        } else {
+            //return false;
+            return !other.isDestroyed() &&
+                   getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+        }
+    }
+
+    public boolean isInRectangle(DoubleVec obsPos, int height, int width, DoubleVec otherPos) {
+        if((otherPos.x <= (obsPos.x + width)) && (otherPos.x >= (obsPos.x - width))) {
+            if((otherPos.y <= (obsPos.y + height)) && (otherPos.y >= (obsPos.y - width))) return true;
+        }
+        return false;
     }
 
     /**

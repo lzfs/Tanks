@@ -40,8 +40,6 @@ public class VisualizerVisitor implements Visitor {
         context.rotate(playersTank.getTurret().getDirection().angle());
         drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
 
-
-
         context.setTransform(ori);
     }
 

@@ -86,7 +86,7 @@ class PlayGameController extends Controller {
             //System.out.println(dir);
 
             //maybe norm
-            getTank().getTurret().setDirection(dir);
+            getTank().getTurret().setDirection(dir.normalize());
 
             //System.out.println(engine.getView().viewToModel(x1,y1));
 

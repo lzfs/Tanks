@@ -18,4 +18,9 @@ public class UnbreakableBlock extends Block<Data> {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public void update(double delta) {
+        super.update(delta);
+    }
 }

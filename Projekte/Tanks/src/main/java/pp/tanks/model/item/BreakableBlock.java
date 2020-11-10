@@ -10,7 +10,7 @@ import pp.util.DoubleVec;
  */
 public class BreakableBlock extends Block<BBData>{
 
-    public BreakableBlock(DoubleVec pos, Model model, BBData data) {
+    public BreakableBlock(Model model, BBData data) {
         super(model, data);
     }
 

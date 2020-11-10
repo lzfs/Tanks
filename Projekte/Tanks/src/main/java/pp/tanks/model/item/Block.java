@@ -12,9 +12,19 @@ public abstract class Block<T extends Data> extends Item<T> {
 
     public Block(Model model, T data) {
         super(model, 1, data);
-        this.width = 3;
-        this.height = 3;
+        this.width = 1;
+        this.height = 1;
     }
+
+    public int getHeight(){
+        return height;
+    }
+
+    public int getWidth(){
+        return width;
+    }
+
+
 
     /**
      * Indicates that this block has been destroyed.

@@ -98,7 +98,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         // accept all events, which are forwarded to the current controller
         stage.addEventHandler(InputEvent.ANY, this);
         stage.show();
-
      */
     }
 

@@ -108,7 +108,7 @@ public abstract class Tank extends Item<TankData> {
 
             //schauen ob rotation über die movedirection drüber gehen würde. wenn ja dann direkt auf movedir setzen
 
-            Double tmp3 = Math.abs(aktuelleRotation-moveDirRotation);
+            Double tmp3 = Math.abs(aktuelleRotation-moveDirRotation); //TODO
             if(tmp3<1){
                 setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
             }
@@ -176,9 +176,10 @@ public abstract class Tank extends Item<TankData> {
         //  pos, id,bounce, direction
         //pos vom Tank
         //direction brauche ich aus dem turret
-        System.out.println("Make projectile  "+this.data.getPos());
+        System.out.println("Make projectile  "+this.getPos());
         System.out.println("TURR "+ turret.getDirection());
-        ProjectileData data = new ProjectileData(this.data.getPos(), 1234,4, turret.getDirection());  //TODO
+        DoubleVec dir = targetPos.sub(this.getPos()).normalize();
+        ProjectileData data = new ProjectileData(this.getPos(), 1234,4, dir);  //TODO
 
         /*
         //final DoubleVec dir = DoubleVec.polar(1., getRotation()); //???
@@ -195,6 +196,7 @@ public abstract class Tank extends Item<TankData> {
 
          */
         model.notifyReceivers(TanksNotification.TANK_FIRED);
+
         return new LightProjectile(model, 1, turret.getDamage(), 4, data);
     }
 

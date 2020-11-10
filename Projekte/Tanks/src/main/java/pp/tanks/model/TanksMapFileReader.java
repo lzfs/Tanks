@@ -98,7 +98,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock(tmpPos, model, new BBData(tmpPos, 1, 500))); //TODO
+                    map.addBreakableBlock(new BreakableBlock( model, new BBData(tmpPos, 1, 500))); //TODO
                     break;
 
                 case "unbreakableBlock":
