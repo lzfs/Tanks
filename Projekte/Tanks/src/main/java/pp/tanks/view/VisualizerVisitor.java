@@ -10,12 +10,30 @@ import pp.util.DoubleVec;
 
 public class VisualizerVisitor implements Visitor {
 
+    private enum Shape {RECTANGLE, OVAL, DIRECTED_OVAL}
+
+    private final TanksMapView view;
+
+    public VisualizerVisitor(TanksMapView view) {
+        this.view = view;
+    }
+
     // TODO Save tank config and uses variable images
     //This class isnt finished yet
 
     @Override
     public void visit(PlayersTank playersTank) {
-        drawItem(playersTank, TanksImageProperty.armor1, Shape.RECTANGLE, Color.BLUE);
+
+        //---------
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        final DoubleVec pos = view.modelToView(playersTank.getPos());
+        //System.out.println(pos.x + "  " + pos.y);
+        context.translate(pos.x, pos.y);
+        context.rotate(playersTank.getRotation());
+        drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+        drawImage(TanksImageProperty.turret1,Shape.RECTANGLE,Color.GREEN);
+        context.setTransform(ori);
     }
 
     @Override
@@ -58,13 +76,7 @@ public class VisualizerVisitor implements Visitor {
         drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.RECTANGLE, Color.BLUE);
     }
 
-    private enum Shape {RECTANGLE, OVAL, DIRECTED_OVAL}
 
-    private final TanksMapView view;
-
-    public VisualizerVisitor(TanksMapView view) {
-        this.view = view;
-    }
 
 
     /**

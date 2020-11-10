@@ -12,13 +12,14 @@ import pp.util.DoubleVec;
 public abstract class Tank extends Item<TankData> {
     protected Turret turret;
     protected Armor armor;
-    protected double speed;
+    protected double speed=4;
     protected TankData data;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, data);
         this.armor = armor;
         this.turret = turret;
+        this.data=data;
     }
 
     /**
@@ -34,6 +35,7 @@ public abstract class Tank extends Item<TankData> {
      * @param move
      */
     public void setMove(boolean move) {
+
         data.setMove(move);
     }
 
@@ -69,6 +71,7 @@ public abstract class Tank extends Item<TankData> {
     public void setPos(DoubleVec pos) {
         super.setPos(pos);
         data.setPos(pos);
+        //System.out.println("Position  "+pos.x +"  " +pos.y);
     }
 
     /**
@@ -79,6 +82,7 @@ public abstract class Tank extends Item<TankData> {
     public void update(double delta) {
         turret.update(delta);
         updateMove(delta);
+        data.setMove(false);
     }
 
     /**
@@ -86,9 +90,13 @@ public abstract class Tank extends Item<TankData> {
      * @param delta
      */
     public void updateMove(double delta) {
+        //System.out.println("Pos davor = " + data.getPos().x + "  "  + data.getPos().y);
         if (isMoving()) {
+
             setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
             collide();
+
+            //System.out.println("Pos danach = " + data.getPos().x + "  "  + data.getPos().y);
         }
     }
 

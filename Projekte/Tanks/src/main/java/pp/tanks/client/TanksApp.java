@@ -73,7 +73,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.show();
         engine.gameLoop();
 
-        sounds.setMusic(sounds.mainMenu);
+        //sounds.setMusic(sounds.mainMenu);
     }
 
     /**

@@ -60,12 +60,16 @@ class PlayGameController extends Controller {
     public void handle(Event e) {
         if (e.getEventType() == KeyEvent.KEY_PRESSED) {
             final KeyCode code = ((KeyEvent) e).getCode();
-            pressed.add(code);
+            if(!pressed.contains(code) ){
+                pressed.add(code);
+            }
+
         }
         else if (e.getEventType() == KeyEvent.KEY_RELEASED) {
             final KeyCode code = ((KeyEvent) e).getCode();
             pressed.remove(code);
             processed.remove(code);
+            System.out.println("KEY RELEASED");
         }
         else if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
             final MouseEvent me = (MouseEvent) e;
@@ -82,7 +86,11 @@ class PlayGameController extends Controller {
     public void update() {
 
         // process input events that occurred since the last game step
+
+        //List<KeyCode> list = new ArrayList<String>();
+        //System.out.println(pressed.toString());
         if (pressed.size() >= 2) {
+
             keyPressed(pressed.get(0), pressed.get(1));
             getTank().setMove(true);
         }
@@ -93,6 +101,7 @@ class PlayGameController extends Controller {
         else {
             getTank().setMove(false);
         }
+       //System.out.println(getTank().isMoving());
 
         // update the model
         final double delta = stopWatch.getTime() - lastUpdate;
@@ -104,7 +113,8 @@ class PlayGameController extends Controller {
         else if (engine.getModel().gameLost())
             engine.activateGameLostController();
         else if (pressed.contains(KeyCode.ESCAPE))
-            engine.activateGameSettingsController();
+            engine.activateGameSettingsController(); //TODO
+        //stopwatch anhalten
     }
 
     /**
@@ -151,8 +161,10 @@ class PlayGameController extends Controller {
      * @param k1 key code
      **/
     private void keyPressed(KeyCode k1) {
-        if (k1 == W)
+        if (k1 == W) {
+            //System.out.println("W");
             getTank().setMoveDirection(MoveDirection.UP);
+        }
         else if (k1 == A)
             getTank().setMoveDirection(MoveDirection.LEFT);
         else if (k1 == S)
