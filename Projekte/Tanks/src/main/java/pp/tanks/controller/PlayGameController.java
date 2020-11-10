@@ -54,6 +54,11 @@ class PlayGameController extends Controller {
         return engine.getModel().getTanksMap();
     }
 
+
+    //Bei änderungen System outs einfügen
+    //jedes mal wenn richtung ändert
+    //bei jeder änderung
+    //änderungen in der liste monitoren und dementsprechend reagieren
     /**
      * The handle method of the state pattern. This method is called by the game engine whenever an event happens.
      */
@@ -69,7 +74,6 @@ class PlayGameController extends Controller {
             final KeyCode code = ((KeyEvent) e).getCode();
             pressed.remove(code);
             processed.remove(code);
-            //System.out.println("KEY RELEASED");
         }
         else if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
             //System.out.println("Mouse clicked");
@@ -87,8 +91,6 @@ class PlayGameController extends Controller {
 
             //maybe norm
             getTank().getTurret().setDirection(dir.normalize());
-
-            //System.out.println(engine.getView().viewToModel(x1,y1));
 
             //für model umwandeln und turret als DoubleVec übergeben
         }
@@ -175,7 +177,6 @@ class PlayGameController extends Controller {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.LEFTDOWN);
         }
-
     }
 
     /**
@@ -185,7 +186,6 @@ class PlayGameController extends Controller {
      **/
     private void keyPressed(KeyCode k1) {
         if (k1 == W) {
-            //System.out.println("W");
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.UP);
         }
@@ -198,7 +198,6 @@ class PlayGameController extends Controller {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.DOWN);
         }
-
         else if (k1 == D){
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHT);

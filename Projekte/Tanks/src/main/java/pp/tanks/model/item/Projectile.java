@@ -44,9 +44,9 @@ public abstract class Projectile extends Item<ProjectileData> {
      */
     @Override
     public void update(double delta) {
-        System.out.println("Projectile " + data.getPos());
+        //System.out.println("Projectile " + data.getPos());
         data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
-        System.out.println("!!!!! " + data.getPos());
+        //System.out.println("!!!!! " + data.getPos());
 
     }
 

@@ -176,10 +176,12 @@ public abstract class Tank extends Item<TankData> {
         //  pos, id,bounce, direction
         //pos vom Tank
         //direction brauche ich aus dem turret
-        System.out.println("Make projectile  "+this.getPos());
-        System.out.println("TURR "+ turret.getDirection());
+        //System.out.println("Make projectile  "+this.getPos());
+        //System.out.println("TURR "+ turret.getDirection().normalize());
         DoubleVec dir = targetPos.sub(this.getPos()).normalize();
-        ProjectileData data = new ProjectileData(this.getPos(), 1234,4, dir);  //TODO
+        //System.out.println(dir +"  " +turret.getDirection());
+        DoubleVec position = this.getPos().add(dir.mult(1.01));
+        ProjectileData data = new ProjectileData(position, 1234,4, dir);  //TODO
 
         /*
         //final DoubleVec dir = DoubleVec.polar(1., getRotation()); //???

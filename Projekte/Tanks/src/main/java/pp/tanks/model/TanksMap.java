@@ -1,5 +1,6 @@
 package pp.tanks.model;
 
+import pp.tanks.message.data.Data;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
 import pp.util.IntVec;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  * Represents the entire game map. It can be accessed as an unmodifiable {@linkplain java.util.List}
  * of all items consisting of the tanks, blocks and projectiles.
  */
-public class TanksMap extends AbstractList<Item> {
+public class TanksMap extends AbstractList<Item <? extends Data>> {
     private static final Logger LOGGER = Logger.getLogger(TanksMap.class.getName());
     private List<Tank> tanks = new ArrayList<>();
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
@@ -44,9 +45,8 @@ public class TanksMap extends AbstractList<Item> {
      * @param index the index in the list of all items.
      */
     @Override
-    public Item get(int index) {
-        if (index == 0) return tanks.get(0);
-        int i = index - 1;
+    public Item<? extends Data> get(int index) {
+        int i = index ;
         if (i < tanks.size()) return tanks.get(i);
         i -= tanks.size();
         if (i < breakableBlocks.size()) return breakableBlocks.get(i);
@@ -204,8 +204,9 @@ public class TanksMap extends AbstractList<Item> {
     void update(double deltaTime) {
 
 
-        for (Item item : this)
+        for (Item item : this){
             item.update(deltaTime);
+        }
 
         // last update loop or user action may have created new projectiles
         projectiles.addAll(addedProjectiles);
@@ -258,6 +259,6 @@ public class TanksMap extends AbstractList<Item> {
     public void addProjectile(Projectile p) {
 
         addedProjectiles.add(p);
-        System.out.println(addedProjectiles.toString());
+        //System.out.println(addedProjectiles.toString());
     }
 }
