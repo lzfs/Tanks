@@ -21,6 +21,7 @@ public class Turret {
         this.weight = weight;
         this.reloadTime = reloadTime;
         this.mag = new double[mag];
+        this.direction =new DoubleVec(0,0);
         Arrays.fill(this.mag, 0.0);
     }
 

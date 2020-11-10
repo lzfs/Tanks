@@ -30,13 +30,17 @@ public class VisualizerVisitor implements Visitor {
         final DoubleVec pos = view.modelToView(playersTank.getPos());
         //System.out.println(pos.x + "  " + pos.y);
         context.translate(pos.x, pos.y);
-        context.rotate(playersTank.getRotation());
+        //context.rotate(-90);
+        context.rotate((playersTank.getRotation()+90)%360);
+        context.scale(0.75,0.75);
         drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
         //direction iwie in angle umwandeln und entsprechend rotieren
         //context.rotate();
-        //context.rotate(-playersTank.getRotation());
-        drawImage(TanksImageProperty.turret1,Shape.RECTANGLE,Color.GREEN);
+        context.rotate(-playersTank.getRotation());
+        context.rotate(playersTank.getTurret().getDirection().angle());
+        drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
+
 
 
         context.setTransform(ori);

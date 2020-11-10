@@ -32,6 +32,10 @@ public abstract class Tank extends Item<TankData> {
         return data.isMoving();
     }
 
+    public Turret getTurret(){
+        return this.turret;
+    }
+
     /**
      * updates the move of a tank
      * @param move
@@ -101,6 +105,7 @@ public abstract class Tank extends Item<TankData> {
             Double tmp1 = (moveDirRotation-aktuelleRotation+360)%360;
             //System.out.println(aktuelleRotation  + "  " +moveDirRotation);
 
+            //schauen ob rotation über die movedirection drüber gehen würde. wenn ja dann direkt auf movedir setzen
 
             Double tmp3 = Math.abs(aktuelleRotation-moveDirRotation);
             if(tmp3<1){
@@ -144,6 +149,7 @@ public abstract class Tank extends Item<TankData> {
      */
     public void shoot(DoubleVec pos) {
         if(canShoot()) {
+            System.out.println("shooted");
             turret.shoot();
             makeProjectile(pos);
         }

@@ -76,12 +76,22 @@ class PlayGameController extends Controller {
             final MouseEvent me = (MouseEvent) e;
             DoubleVec pos = engine.getView().viewToModel(me.getX(), me.getY());
             getTank().shoot(pos);
+
+
+
         }
         else if(e.getEventType() == MouseEvent.MOUSE_MOVED){
-            System.out.println("handle mouse moved");
+            //System.out.println("handle mouse moved");
             MouseEvent event= (MouseEvent) e;
-            System.out.println(event.getX());
-            System.out.println(event.getY());
+            Double x1 = event.getX();
+            Double y1 = event.getY();
+            DoubleVec dir = engine.getView().viewToModel(x1,y1).sub(getTank().getPos());
+            //System.out.println(dir.angle());
+
+            getTank().getTurret().setDirection(dir);
+
+            //System.out.println(engine.getView().viewToModel(x1,y1));
+
             //für model umwandeln und turret als DoubleVec übergeben
         }
     }
