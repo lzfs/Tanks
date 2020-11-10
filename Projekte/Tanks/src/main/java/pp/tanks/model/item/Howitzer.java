@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
@@ -12,14 +13,12 @@ import pp.util.DoubleVec;
 public class Howitzer extends COMEnemy {
     private int movingCounter;
 
-    protected Howitzer(Model model) {
-        super(model, 3, new Armor(1000, 10), new HeavyTurret());
+    protected Howitzer(Model model, TankData data) {
+        super(model, 3, new Armor(1000, 10), new HeavyTurret(), data);
         movingCounter = 2;
     }
 
-    @Override
-    public void update(double delta) {
-        turret.update(delta);
+    public void behaviour(double delta) {
 
         if(isMoving()) {
             super.update(delta);
@@ -46,7 +45,6 @@ public class Howitzer extends COMEnemy {
                 } while(model.getTanksMap().accessibleFrom(getPos(), tmpPos));
 
                 setMoveDirection(movingDirs[idx]);
-
             }
         }
     }

@@ -41,7 +41,7 @@ class TanksMapCreator {
         final int height = fieldSizeY.value(model.getProperties());
         // changes were made below
         TanksMap map = new TanksMap(model, width, height);
-        map.addTanks(new PlayersTank(model, 1, new Armor(5, 5), new Turret(2, 2, 2, 2, 2)));
+        //map.addTanks(new PlayersTank(model, 1, new Armor(5, 5), new Turret(2, 2, 2, 2, 2)));
         System.out.println("here");
         return map;
     }

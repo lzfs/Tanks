@@ -1,5 +1,7 @@
 package pp.tanks.model;
 
+import pp.tanks.message.data.BBData;
+import pp.tanks.message.data.Data;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
 
@@ -25,7 +27,6 @@ class TanksMapFileReader {
     private final Model model;
     private TanksMap map;
     private final Set<DoubleVec> occupied = new HashSet<>();
-    private boolean droidSet = false;
     private XMLStreamReader xtr = null;
     private final List<String> errors = new ArrayList<>();
 
@@ -74,8 +75,7 @@ class TanksMapFileReader {
             final int w = getIntAttribute("w", 100);
             final int h = getIntAttribute("h", 100);
             map = new TanksMap(model, w, h);
-            occupied.clear();
-            droidSet = false;
+            occupied.clear();;
         }
         else if (map == null)
             error("unexpected XML element '" + elemName + "'");
@@ -98,7 +98,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock(tmpPos, model));
+                    map.addBreakableBlock(new BreakableBlock(tmpPos, model, new BBData(tmpPos, 1, 500))); //TODO
                     break;
 
                 case "unbreakableBlock":
@@ -107,7 +107,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    UnbreakableBlock uB = new UnbreakableBlock(model);
+                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, 1)); //TODO
                     uB.setPos(tmpPos);
                     map.addUnbreakableBlock(uB);
                     break;
@@ -118,7 +118,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    ReflectableBlock rB = new ReflectableBlock(model);
+                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, 1)); //TODO
                     rB.setPos(tmpPos);
                     map.addReflectableBlocks(rB);
                     break;

@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
@@ -17,17 +18,13 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
 
     private final List<DoubleVec> path = new LinkedList<>();
 
-    protected ArmoredPersonnelCarrier(Model model) {
-        super(model, 3, new Armor(1000, 10), new HeavyTurret());
+    protected ArmoredPersonnelCarrier(Model model, TankData data) {
+        super(model, 3, new Armor(1000, 10), new HeavyTurret(), data);
     }
 
-    @Override
-    public void update(double delta) {
-        turret.update(delta);
+    public void behaviour(double delta) {
 
-        if(isMoving()) {
-            super.update(delta);
-        } else if(canShoot() && Math.random() < 0.8) {
+        if(canShoot() && Math.random() < 0.8) {
             turret.setDirection(model.getTanksMap().getTank().getPos().sub(this.getPos()));
             for(int i = 0; i < turret.getMagSize(); i++) {
                 if(canShoot()) {

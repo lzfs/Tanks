@@ -1,6 +1,7 @@
 package pp.tanks.model.item;
 
 
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.tanks.message.data.TankData;
 import pp.util.DoubleVec;
@@ -8,17 +9,16 @@ import pp.util.DoubleVec;
 /**
  * abstract base class of all tanks in a {@linkplain pp.tanks.model.TanksMap}
  */
-public abstract class Tank extends Item {
+public abstract class Tank extends Item<TankData> {
     protected Turret turret;
     protected Armor armor;
-    protected TankData data;
     protected double speed;
+    protected TankData data;
 
-    protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret) {
-        super(model, effectiveRadius);
+    protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
+        super(model, effectiveRadius, data);
         this.armor = armor;
         this.turret = turret;
-        this.data = new TankData(new DoubleVec(1,1), 1, armor.getArmorPoints());
     }
 
     /**
@@ -87,7 +87,7 @@ public abstract class Tank extends Item {
      */
     public void updateMove(double delta) {
         if (isMoving()) {
-            setPos(getPos().add(getMoveDir().getVec().mult(delta)));
+            setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
             collide();
         }
     }
@@ -123,15 +123,18 @@ public abstract class Tank extends Item {
      */
     private Projectile makeProjectile(DoubleVec targetPos) {
         //model.notifyReceivers(DroidsNotification.DROID_FIRED);
-        final DoubleVec dir = DoubleVec.polar(1., getRotation()); //?
+
+        ProjectileData data = new ProjectileData(new DoubleVec(1,1),1234,4);  //TODO
+
+        final DoubleVec dir = DoubleVec.polar(1., getRotation()); //???
         if (turret instanceof LightTurret) {
-            return new LightProjectile(model, 1, turret.getDamage(), 4, this.getPos());
+            return new LightProjectile(model, 1, turret.getDamage(), 4, this.getPos(),data);  //TODO
         }
         else if (turret instanceof NormalTurret) {
-            return new NormalProjectile(model, 1,turret.getDamage(), 2, this.getPos());
+            return new NormalProjectile(model, 1,turret.getDamage(), 2, this.getPos(),data); //TODO
         }
         else if (turret instanceof HeavyTurret) {
-            return new HeavyProjectile(model, 5, turret.getDamage(), 1, this.getPos(), targetPos);
+            return new HeavyProjectile(model, 5, turret.getDamage(), 1, this.getPos(), targetPos,data); //TODO
         }
         return null;
     }

@@ -8,11 +8,11 @@ import pp.util.DoubleVec;
 /**
  * Abstract base class of all items in a {@linkplain pp.tanks.model.TanksMap}
  */
-public abstract class Item {
+public abstract class Item<T extends Data> {
     protected final Model model;
     protected final double effectiveRadius;
     protected boolean destroyed = false;
-    protected Data data;
+    protected T data;
 
     /**
      * Creates a new item for the specified game model.
@@ -21,9 +21,10 @@ public abstract class Item {
      * @param effectiveRadius the radius of the bounding circle of this item.
      *                        It is used to compute collisions between two items with circular bounds.
      */
-    protected Item(Model model, double effectiveRadius) {
+    protected Item(Model model, double effectiveRadius, T data) {
         this.model = model;
         this.effectiveRadius = effectiveRadius;
+        this.data = data;
     }
 
     /**

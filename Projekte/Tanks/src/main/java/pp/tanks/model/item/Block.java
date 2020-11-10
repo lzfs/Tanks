@@ -1,16 +1,17 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.Data;
 import pp.tanks.model.Model;
 
 /**
  * base class for blocks
  */
-public abstract class Block extends Item {
+public abstract class Block<T extends Data> extends Item<T> {
     private int width;
     private int height;
 
-    public Block(Model model) {
-        super(model, 1);
+    public Block(Model model, T data) {
+        super(model, 1, data);
         this.width = 3;
         this.height = 3;
     }

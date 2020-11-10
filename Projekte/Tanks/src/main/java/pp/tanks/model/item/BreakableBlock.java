@@ -8,12 +8,10 @@ import pp.util.DoubleVec;
 /**
  * Represents a block that can be destroyed by getting hit by a projectile
  */
-public class BreakableBlock extends Block{
-    private final BBData data;
+public class BreakableBlock extends Block<BBData>{
 
-    public BreakableBlock(DoubleVec pos, Model model) {
-        super(model);
-        this.data = new BBData(pos, 300, 0);
+    public BreakableBlock(DoubleVec pos, Model model, BBData data) {
+        super(model, data);
     }
 
     /**

@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
@@ -8,8 +9,8 @@ import pp.util.DoubleVec;
  */
 public class NormalProjectile extends Projectile {
 
-    public NormalProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec pos) {
-        super(model, effectiveRadius, damage, speed, pos);
+    public NormalProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec pos, ProjectileData data) {
+        super(model, effectiveRadius, damage, speed, pos,data);
     }
 
     /**

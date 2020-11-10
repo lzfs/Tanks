@@ -9,13 +9,13 @@ import pp.util.DoubleVec;
 /**
  * abstract base class for all types of projectiles
  */
-public abstract class Projectile extends Item {
+public abstract class Projectile extends Item<ProjectileData> {
     protected final int damage;
     protected final Double speed;
     protected final ProjectileData data;
 
-    public Projectile(Model model, double effectiveRadius, int damage, Double speed, DoubleVec pos) {
-        super(model, effectiveRadius);
+    public Projectile(Model model, double effectiveRadius, int damage, Double speed, DoubleVec pos, ProjectileData data) {
+        super(model, effectiveRadius, data);
         this.data = new ProjectileData(pos, 0, 0);
         this.damage = damage;
         this.speed = speed;
@@ -64,6 +64,7 @@ public abstract class Projectile extends Item {
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
             if (collisionWith(rBlock)) {
                 reflect();
+                return;
             }
         }
         for (UnbreakableBlock uBlock : model.getTanksMap().getUnbreakableBlocks()) {

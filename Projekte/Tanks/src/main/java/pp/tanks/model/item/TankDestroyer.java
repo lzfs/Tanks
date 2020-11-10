@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
@@ -15,8 +16,8 @@ import java.util.List;
 public class TankDestroyer extends COMEnemy {
     private final List<DoubleVec> path = new LinkedList<>();
 
-    protected TankDestroyer(Model model) {
-        super(model, 3, new Armor(1000, 10), new HeavyTurret());
+    protected TankDestroyer(Model model, TankData data) {
+        super(model, 3, new Armor(1000, 10), new HeavyTurret(), data);
     }
 
     @Override

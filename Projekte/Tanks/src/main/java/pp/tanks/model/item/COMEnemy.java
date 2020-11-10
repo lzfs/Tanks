@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
@@ -8,8 +9,8 @@ import pp.util.DoubleVec;
  */
 public class COMEnemy extends Enemy{
 
-    protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret) {
-        super(model, effectiveRadius, armor, turret);
+    protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
+        super(model, effectiveRadius, armor, turret, data);
     }
 
     /**
@@ -27,6 +28,19 @@ public class COMEnemy extends Enemy{
     }
 
     public void blockMovement() {}
+
+    @Override
+    public void update(double delta) {
+        turret.update(delta);
+        if(isMoving()) {
+            super.update(delta);
+        }
+        else {
+            behaviour();
+        }
+    }
+
+    public void behaviour() {}
 
     /**
      * Accept method of the visitor pattern.
