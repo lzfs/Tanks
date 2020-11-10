@@ -50,12 +50,12 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
                     // we need to turn the droid such that its rotation coincides with the bearing of the next path point
                     if (Math.abs(needToTurnBy) >= delta * speed) {
                         // we are turning during the rest of this time slot
-                        setRotation(getRotation() + Math.signum(needToTurnBy) * delta * speed);
+                        setRotation((int) (getRotation() + Math.signum(needToTurnBy) * delta * speed));
                         delta = 0.;
                     }
                     else {
                         // we first turn the droid
-                        setRotation(bearing);
+                        setRotation((int) bearing);
                         // and there is some time left in this time slot
                         delta -= Math.abs(needToTurnBy) / speed;
                         final double distanceToGo = getPos().distance(target);

@@ -13,7 +13,9 @@ public abstract class Tank extends Item<TankData> {
     protected Turret turret;
     protected Armor armor;
     protected double speed=4;
+    protected double rotgeschwind=150;
     protected TankData data;
+    //protected double angle = 90;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, data);
@@ -44,7 +46,7 @@ public abstract class Tank extends Item<TankData> {
      * @param rotation
      */
     public void setRotation(double rotation) {
-        data.setRotation(rotation);
+        data.setRotation(rotation%180);
     }
 
     public MoveDirection getMoveDir() {
@@ -93,7 +95,38 @@ public abstract class Tank extends Item<TankData> {
         //System.out.println("Pos davor = " + data.getPos().x + "  "  + data.getPos().y);
         if (isMoving()) {
 
-            setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
+            Double aktuelleRotation = data.getRotation();
+            Double moveDirRotation = data.getMoveDir().getRotation();
+            Double tmp = (aktuelleRotation-moveDirRotation+360)%360;
+            Double tmp1 = (moveDirRotation-aktuelleRotation+360)%360;
+            //System.out.println(aktuelleRotation  + "  " +moveDirRotation);
+
+
+            Double tmp3 = Math.abs(aktuelleRotation-moveDirRotation);
+            if(tmp3<1){
+                setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
+            }
+            else if(tmp>tmp1){
+                data.setRotation(aktuelleRotation+delta*rotgeschwind);
+            }else{
+                data.setRotation(aktuelleRotation-delta*rotgeschwind);
+            }
+            /*
+            Double tmp3 = Math.abs(aktuelleRotation-moveDirRotation);
+            if( tmp3>1){
+                //Double tmp = aktuelleRotation-moveDirRotation;
+                //Double tmp1 = moveDirRotation-aktuelleRotation;
+                if(aktuelleRotation< moveDirRotation ){
+                    data.setRotation(aktuelleRotation+delta*rotgeschwind);
+                }else{
+                    data.setRotation(aktuelleRotation-delta*rotgeschwind);
+                }
+            }else{
+                setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
+
+            }
+
+             */
             collide();
 
             //System.out.println("Pos danach = " + data.getPos().x + "  "  + data.getPos().y);

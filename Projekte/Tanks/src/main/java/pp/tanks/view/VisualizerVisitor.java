@@ -32,7 +32,13 @@ public class VisualizerVisitor implements Visitor {
         context.translate(pos.x, pos.y);
         context.rotate(playersTank.getRotation());
         drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+
+        //direction iwie in angle umwandeln und entsprechend rotieren
+        //context.rotate();
+        //context.rotate(-playersTank.getRotation());
         drawImage(TanksImageProperty.turret1,Shape.RECTANGLE,Color.GREEN);
+
+
         context.setTransform(ori);
     }
 

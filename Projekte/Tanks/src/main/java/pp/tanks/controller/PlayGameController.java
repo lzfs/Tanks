@@ -17,6 +17,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 
 /**
@@ -63,18 +64,25 @@ class PlayGameController extends Controller {
             if(!pressed.contains(code) ){
                 pressed.add(code);
             }
-
         }
         else if (e.getEventType() == KeyEvent.KEY_RELEASED) {
             final KeyCode code = ((KeyEvent) e).getCode();
             pressed.remove(code);
             processed.remove(code);
-            System.out.println("KEY RELEASED");
+            //System.out.println("KEY RELEASED");
         }
         else if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
+            //System.out.println("Mouse clicked");
             final MouseEvent me = (MouseEvent) e;
             DoubleVec pos = engine.getView().viewToModel(me.getX(), me.getY());
             getTank().shoot(pos);
+        }
+        else if(e.getEventType() == MouseEvent.MOUSE_MOVED){
+            System.out.println("handle mouse moved");
+            MouseEvent event= (MouseEvent) e;
+            System.out.println(event.getX());
+            System.out.println(event.getY());
+            //für model umwandeln und turret als DoubleVec übergeben
         }
     }
 
@@ -90,13 +98,10 @@ class PlayGameController extends Controller {
         //List<KeyCode> list = new ArrayList<String>();
         //System.out.println(pressed.toString());
         if (pressed.size() >= 2) {
-
             keyPressed(pressed.get(0), pressed.get(1));
-            getTank().setMove(true);
         }
         else if (pressed.size() == 1) {
             keyPressed(pressed.get(0));
-            getTank().setMove(true);
         }
         else {
             getTank().setMove(false);
@@ -145,14 +150,23 @@ class PlayGameController extends Controller {
      * @param k2 key code
      **/
     private void keyPressed(KeyCode k1, KeyCode k2) {
-        if ((k1 == W && k2 == A) || (k1 == A && k2 == W))
+        if ((k1 == W && k2 == A) || (k1 == A && k2 == W)){
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.LEFTUP);
-        else if ((k1 == W && k2 == D) || (k1 == D && k2 == W))
+        }
+        else if ((k1 == W && k2 == D) || (k1 == D && k2 == W)){
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHTUP);
-        else if ((k1 == D && k2 == S) || (k1 == S && k2 == D))
+        }
+        else if ((k1 == D && k2 == S) || (k1 == S && k2 == D)){
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHTDOWN);
-        else if ((k1 == S && k2 == A) || (k1 == A && k2 == S))
+        }
+        else if ((k1 == S && k2 == A) || (k1 == A && k2 == S)){
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.LEFTDOWN);
+        }
+
     }
 
     /**
@@ -163,14 +177,24 @@ class PlayGameController extends Controller {
     private void keyPressed(KeyCode k1) {
         if (k1 == W) {
             //System.out.println("W");
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.UP);
         }
-        else if (k1 == A)
+        else if (k1 == A){
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.LEFT);
-        else if (k1 == S)
+        }
+
+        else if (k1 == S){
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.DOWN);
-        else if (k1 == D)
+        }
+
+        else if (k1 == D){
+            getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHT);
+        }
+
     }
 
     /**

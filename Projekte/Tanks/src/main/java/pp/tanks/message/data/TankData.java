@@ -68,7 +68,7 @@ public class TankData extends Data{
      * @param rotation
      */
     public void setRotation(double rotation) {
-        this.rotation = rotation;
+        this.rotation = rotation%360;
     }
 
     /**
