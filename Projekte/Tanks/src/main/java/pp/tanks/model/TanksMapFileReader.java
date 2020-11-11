@@ -2,6 +2,7 @@ package pp.tanks.model;
 
 import pp.tanks.message.data.BBData;
 import pp.tanks.message.data.Data;
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
 
@@ -92,18 +93,18 @@ class TanksMapFileReader {
             int tx;
             int ty;
             switch (elemName) {
-                case "breakableBlock":
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                case "bBlock":
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
                     map.addBreakableBlock(new BreakableBlock( model, new BBData(tmpPos, 1, 500))); //TODO
                     break;
 
-                case "unbreakableBlock":
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                case "uBlock":
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
@@ -112,9 +113,9 @@ class TanksMapFileReader {
                     map.addUnbreakableBlock(uB);
                     break;
 
-                case "reflectableBlock": {
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                case "rBlock": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
@@ -125,18 +126,21 @@ class TanksMapFileReader {
                 }
 
                 case "playersTank": {
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    //PlayersTank pT = new PlayersTank(model);
+
+                    //für übungszwecke
+                    PlayersTank pT =new PlayersTank(model, 1, new Armor(5, 5), new Turret(2, 2, 2, 2, 2),new TankData(tmpPos, 1000, 500));
+
                     //pT.setPos(tmpPos);
-                    //map.addTanks(pT);
+                    map.addTanks(pT);
                     break;
                 }
 
                 case "enemy": {
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     //Enemy e= new Enemy(model);
                     //e.setPos(tmpPos);

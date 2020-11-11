@@ -33,7 +33,20 @@ public class Model {
     public Model(Properties props) {
         this.props = props;
         //make tanks map
-        setTanksMap(new TanksMapCreator(this).makeEmptyMap());
+        //setTanksMap(new TanksMapCreator(this).makeEmptyMap());
+
+        try{
+            File file = new File("C:\\Users\\there\\Desktop\\test_environment\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map.xml");
+            loadMap(file);
+        }catch(IOException  | XMLStreamException ex ){
+            System.out.println(ex.getMessage());
+            setTanksMap(new TanksMapCreator(this).makeEmptyMap());
+        }
+
+
+
+        //setTanksMap(new TanksMapCreator(this).makeEmptyMap());
+
     }
 
     /**

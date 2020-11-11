@@ -48,13 +48,14 @@ class TanksMapCreator {
         // changes were made below
         TanksMap map = new TanksMap(model, width, height);
         map.addTanks(new PlayersTank(model, 1, new Armor(5, 5), new Turret(2, 2, 2, 2, 2),new TankData(new DoubleVec(5,5),1000,500)));
-        map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(10,10),1)));
-        map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(5,5),1)));
+        //map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(10,10),1)));
+        //map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(5,5),1)));
         map.addReflectableBlocks(new ReflectableBlock(model, new Data(new DoubleVec(5, 10), 1)));
         map.addReflectableBlocks(new ReflectableBlock(model, new Data(new DoubleVec(5, 11), 1)));
         map.addReflectableBlocks(new ReflectableBlock(model, new Data(new DoubleVec(5, 12), 1)));
 
-        map.addBreakableBlock(new BreakableBlock(model,new BBData(new DoubleVec(10,12),1,100)));
+        //map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(20,10),1)));
+        //map.addBreakableBlock(new BreakableBlock(model,new BBData(new DoubleVec(10,12),1,100)));
         System.out.println("here");
         return map;
     }

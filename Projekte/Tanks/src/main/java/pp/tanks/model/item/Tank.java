@@ -98,6 +98,7 @@ public abstract class Tank extends Item<TankData> {
      */
     public void updateMove(double delta) {
         //System.out.println("Pos davor = " + data.getPos().x + "  "  + data.getPos().y);
+        collide();
         if (isMoving()) {
 
             Double aktuelleRotation = data.getRotation();
@@ -133,7 +134,7 @@ public abstract class Tank extends Item<TankData> {
             }
 
              */
-            collide();
+
 
             //System.out.println("Pos danach = " + data.getPos().x + "  "  + data.getPos().y);
         }
@@ -199,7 +200,7 @@ public abstract class Tank extends Item<TankData> {
          */
         model.notifyReceivers(TanksNotification.TANK_FIRED);
 
-        return new LightProjectile(model, 1, turret.getDamage(), 4, data);
+        return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);
     }
 
     /**
@@ -207,14 +208,17 @@ public abstract class Tank extends Item<TankData> {
      */
     private void collide() {
         for (Tank tank : model.getTanksMap().getTanks()) {
-            if (collisionWith(tank)) {
+            if (this!=tank &&collisionWith(tank)) {
+                System.out.println("fail");
                 setMove(false);
                 return;
             }
         }
-        for (Block block : model.getTanksMap().getBreakableBlocks()) {
+        for (Block block : model.getTanksMap().getBlocks()) {
             if (collisionWith(block)) {
+                System.out.println("collision");
                 setMove(false);
+                setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
                 return;
             }
         }

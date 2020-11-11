@@ -28,7 +28,6 @@ public abstract class Item<T extends Data> {
     }
 
     /**
-     *
      * @return The effective Radius of the Item
      */
     public double getEffectiveRadius() {
@@ -37,6 +36,7 @@ public abstract class Item<T extends Data> {
 
     /**
      * Sets the position of the item
+     *
      * @param pos the new position of the item
      */
     public void setPos(DoubleVec pos) {
@@ -44,7 +44,6 @@ public abstract class Item<T extends Data> {
     }
 
     /**
-     *
      * @return the actual position of the item
      */
     public DoubleVec getPos() {
@@ -52,12 +51,13 @@ public abstract class Item<T extends Data> {
     }
 
     /**
-     *
      * @return returns true if the item is destroyed and false if not
      */
     public boolean isDestroyed() {
         return data.isDestroyed();
-    };
+    }
+
+    ;
 
     /**
      * Checks whether there is a collision with another item
@@ -65,25 +65,33 @@ public abstract class Item<T extends Data> {
      * @param other the item which is checked for a collision
      */
     public boolean collisionWith(Item other) {
-        if (getPos() == null) return false;
-        if(other instanceof Projectile) {
-            return !other.isDestroyed() &&
-                   getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
-        } else if(other instanceof Block) {
-            return !other.isDestroyed() && isInRectangle(other.getPos(), ((Block<?>) other).getHeight(), ((Block<?>) other).getWidth(), this.getPos());
-        } else if(other instanceof Tank) {
-            //TODO Tank not static width, height
-            return !other.isDestroyed() && isInRectangle(other.getPos(), 1, 1, this.getPos());
-        } else {
-            //return false;
-            return !other.isDestroyed() &&
-                   getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+
+        //Tank and block have same size?
+        if (getPos() == null || other.isDestroyed()) return false;
+
+        double height = 0.6;
+        double width = 0.6;
+
+        if (other instanceof Projectile && this instanceof Projectile) {
+            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
+        else if (other instanceof Projectile) {
+            return (Math.abs(getPos().x - other.getPos().x) <= width + other.getEffectiveRadius())
+                   && (Math.abs(getPos().y - other.getPos().y) <= height + other.getEffectiveRadius());
+        }
+        else if (this instanceof Projectile) {
+            return (Math.abs(getPos().x - other.getPos().x) <= width + this.getEffectiveRadius())
+                   && (Math.abs(getPos().y - other.getPos().y) <= height + this.getEffectiveRadius());
+        }
+        else {
+            return (Math.abs(getPos().x - other.getPos().x) <=  2*width) && (Math.abs(getPos().y - other.getPos().y) <= 2*height);
+        }
+        //return false;
     }
 
     public boolean isInRectangle(DoubleVec obsPos, int height, int width, DoubleVec otherPos) {
-        if((otherPos.x <= (obsPos.x + width)) && (otherPos.x >= (obsPos.x - width))) {
-            if((otherPos.y <= (obsPos.y + height)) && (otherPos.y >= (obsPos.y - width))) return true;
+        if ((otherPos.x <= (obsPos.x + width)) && (otherPos.x >= (obsPos.x - width))) {
+            if ((otherPos.y <= (obsPos.y + height)) && (otherPos.y >= (obsPos.y - width))) return true;
         }
         return false;
     }
