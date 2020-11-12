@@ -105,8 +105,6 @@ public enum TanksImageProperty {
      */
     soundOff,
 
-    turrettest,
-
     tankDestroyed,
 
 }

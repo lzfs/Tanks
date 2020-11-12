@@ -36,11 +36,14 @@ public class COMEnemy extends Enemy{
             super.update(delta);
         }
         else {
-            behaviour();
+            if(!this.isDestroyed()){
+                behaviour(delta);
+            }
+
         }
     }
 
-    public void behaviour() {}
+    public void behaviour(double delta) {}
 
     /**
      * Accept method of the visitor pattern.

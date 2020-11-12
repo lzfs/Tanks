@@ -141,6 +141,16 @@ public abstract class Projectile extends Item<ProjectileData> {
                 destroy();
             }
         }
+        /*
+        for (Projectile p : model.getTanksMap().getProjectiles()) {
+            if ( p!=this&&collisionWith(p)) {
+                destroy();
+                p.destroy();
+                return;
+            }
+        }
+
+         */
     }
 
     /**

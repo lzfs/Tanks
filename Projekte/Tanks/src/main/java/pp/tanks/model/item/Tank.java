@@ -37,6 +37,10 @@ public abstract class Tank extends Item<TankData> {
         return this.turret;
     }
 
+    public Armor getArmor(){
+        return armor;
+    }
+
     /**
      * updates the move of a tank
      * @param move
@@ -150,7 +154,7 @@ public abstract class Tank extends Item<TankData> {
      * @param pos
      */
     public void shoot(DoubleVec pos) {
-        if(canShoot()) {
+        if(canShoot() && !this.isDestroyed()) {
             //System.out.println("shooted");
             turret.shoot();
             Projectile projectile=makeProjectile(pos);
@@ -184,20 +188,21 @@ public abstract class Tank extends Item<TankData> {
         DoubleVec position = this.getPos().add(dir.mult(1.01));
         ProjectileData data = new ProjectileData(position, 1234,4, dir);  //TODO
 
-        /*
+
         //final DoubleVec dir = DoubleVec.polar(1., getRotation()); //???
         if (turret instanceof LightTurret) {
-            return new LightProjectile(model, 1, turret.getDamage(), 4, this.getPos(),data);  //TODO
+            return new LightProjectile(model, 0.3, turret.getDamage(), 4,data);  //TODO
         }
         else if (turret instanceof NormalTurret) {
-            return new NormalProjectile(model, 1,turret.getDamage(), 2, this.getPos(),data); //TODO
+            System.out.println("NORMAL");
+            return new NormalProjectile(model, 1,turret.getDamage(), 2,data); //TODO
         }
         else if (turret instanceof HeavyTurret) {
-            return new HeavyProjectile(model, 5, turret.getDamage(), 1, this.getPos(), targetPos,data); //TODO
+            System.out.println("HEAVY");
+            //EFFECTIVE RADIUS
+            return new HeavyProjectile(model, 5, turret.getDamage(), 1, targetPos,data); //TODO
         }
-        //System.out.println(this.getPos());
 
-         */
         model.notifyReceivers(TanksNotification.TANK_FIRED);
 
         return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);

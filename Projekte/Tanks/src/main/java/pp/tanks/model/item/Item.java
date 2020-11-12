@@ -100,6 +100,7 @@ public abstract class Item<T extends Data> {
      * Indicates that this item has been destroyed.
      */
     public void destroy() {
+        System.out.println("destroy");
         data.destroy();
     }
 

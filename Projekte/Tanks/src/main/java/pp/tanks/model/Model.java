@@ -34,7 +34,7 @@ public class Model {
         this.props = props;
         //make tanks map
         //setTanksMap(new TanksMapCreator(this).makeEmptyMap());
-
+        /*
         try{
             File file = new File("C:\\Users\\there\\Desktop\\test_environment\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map.xml");
             loadMap(file);
@@ -42,6 +42,8 @@ public class Model {
             System.out.println(ex.getMessage());
             setTanksMap(new TanksMapCreator(this).makeEmptyMap());
         }
+
+         */
 
 
 
@@ -98,7 +100,21 @@ public class Model {
      * @throws XMLStreamException if the file is no valid xml file
      */
     public void loadMap(File file) throws IOException, XMLStreamException {
-        setTanksMap(new TanksMapFileReader(this).readFile(file));
+
+
+        //setTanksMap(new TanksMapFileReader(this).readFile(file));
+
+        try{
+            File file2 = new File("C:\\Users\\there\\Desktop\\test_environment\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map.xml");
+            setTanksMap(new TanksMapFileReader(this).readFile(file2));
+        }catch(IOException  | XMLStreamException ex ){
+            System.out.println(ex.getMessage());
+            setTanksMap(new TanksMapCreator(this).makeEmptyMap());
+        }
+    }
+
+    public void setTank(Tank tank){
+        map.setPlayerTank(tank);
     }
 
     /**

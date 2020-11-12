@@ -42,9 +42,12 @@ public class Turret {
      * fills up the magazine of the tank
      * @param idx
      */
+    /*
     public void reload(int idx) {
         //TODO set Timer
     }
+     */
+
 
     /**
      * @return s the size of the magazin
@@ -60,7 +63,7 @@ public class Turret {
         for(int i = 0; i < mag.length; i++) {
             if(mag[i] == 0.0) {
                 mag[i] = reloadTime;
-                reload(i);
+                //reload(i);
                 return;
             }
         }

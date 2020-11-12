@@ -18,14 +18,16 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
 
     private final List<DoubleVec> path = new LinkedList<>();
 
-    protected ArmoredPersonnelCarrier(Model model, TankData data) {
-        super(model, 3, new Armor(1000, 10), new HeavyTurret(), data);
+    public ArmoredPersonnelCarrier(Model model, TankData data) {
+        super(model, 3, new LightArmor(), new LightTurret(), data);
     }
 
-    public void behaviour(double delta) {
 
+
+    @Override
+    public void behaviour(double delta) {
+        turret.setDirection(model.getTanksMap().getTank().getPos().sub(this.getPos()));
         if(canShoot() && Math.random() < 0.8) {
-            turret.setDirection(model.getTanksMap().getTank().getPos().sub(this.getPos()));
             for(int i = 0; i < turret.getMagSize(); i++) {
                 if(canShoot()) {
                     shoot(model.getTanksMap().getTank().getPos());

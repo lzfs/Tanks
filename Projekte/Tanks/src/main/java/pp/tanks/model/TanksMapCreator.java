@@ -48,7 +48,10 @@ class TanksMapCreator {
         final int height = fieldSizeY.value(model.getProperties());
         // changes were made below
         TanksMap map = new TanksMap(model, width, height);
-        map.addTanks(new PlayersTank(model, 1, new Armor(5, 5), new LightTurret(), new TankData(new DoubleVec(5, 5), 1000, 20)));
+
+        //map.addTanks(new PlayersTank(model, 1, new Armor(5, 5), new LightTurret(), new TankData(new DoubleVec(5, 5), 1000, 20)));
+
+
         //map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(10,10),1)));
         //map.addUnbreakableBlock(new UnbreakableBlock(model,new Data(new DoubleVec(5,5),1)));
         map.addReflectableBlocks(new ReflectableBlock(model, new Data(new DoubleVec(5, 10), 1)));

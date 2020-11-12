@@ -14,7 +14,7 @@ public class Howitzer extends COMEnemy {
     private int movingCounter;
 
     protected Howitzer(Model model, TankData data) {
-        super(model, 3, new Armor(1000, 10), new HeavyTurret(), data);
+        super(model, 3, new HeavyArmor(), new HeavyTurret(), data);
         movingCounter = 2;
     }
 

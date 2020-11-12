@@ -1,7 +1,18 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.message.data.TankData;
+import pp.tanks.model.item.Armor;
+import pp.tanks.model.item.HeavyArmor;
+import pp.tanks.model.item.HeavyTurret;
+import pp.tanks.model.item.LightArmor;
+import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.NormalArmor;
+import pp.tanks.model.item.NormalTurret;
+import pp.tanks.model.item.PlayersTank;
+import pp.tanks.model.item.Turret;
 import pp.tanks.view.TanksMapView;
+import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -10,6 +21,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +39,8 @@ public class TankConfigSPController extends Controller {
     private final List<Image> charts = new ArrayList<>();
     private final List<Integer> magazine = new ArrayList<>(Arrays.asList(5, 3, 1));
     private final List<Integer> cadence = new ArrayList<>(Arrays.asList(1, 3, 5));
+    private final List<Armor> armorList = new ArrayList<>(Arrays.asList(new LightArmor(),new NormalArmor(),new HeavyArmor()));
+    private final List<Turret> turretsList = new ArrayList<>(Arrays.asList(new LightTurret(),new NormalTurret(),new HeavyTurret()));
 
     /**
      * create a new TankConfigSPController
@@ -160,12 +176,22 @@ public class TankConfigSPController extends Controller {
      * method for the confirm button
      */
     @FXML
-    private void confirm() {
+    private void confirm() throws IOException, XMLStreamException {
         System.out.println("CONFIRM");
-        engine.activateStartSPController();
-        //map laden und view besetzten
+
+
+        engine.getModel().loadMap(new File("iwas"));
+
+        DoubleVec position = new DoubleVec(5,5);
+
+
+        engine.getModel().setTank(new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 1000, 20)));
+
+
+
         TanksMapView mapview = new TanksMapView(engine.getModel(),engine.getImages());
         engine.setView(mapview);
+        engine.activateStartSPController();
     }
 
     /**

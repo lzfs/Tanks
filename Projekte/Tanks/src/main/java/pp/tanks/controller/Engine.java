@@ -121,7 +121,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
             public void handle(long now) {
                 controller.update();
                 menuView.update();
-                System.out.println(view);
                 if (view!=null){
                     view.update();
                 }

@@ -111,6 +111,11 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         return tanks.get(0);
     }
 
+    public void setPlayerTank(Tank tank){
+        tanks.set(0,tank);
+
+    }
+
     /**
      * Returns all blocks placed in the map
      *

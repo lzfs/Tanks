@@ -147,6 +147,18 @@ class TanksMapFileReader {
                     //map.addTanks(e);
                     break;
                 }
+                case "apc": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
+                    tmpPos = new DoubleVec(tx, ty);
+                    //Enemy e= new Enemy(model);
+                    //e.setPos(tmpPos);
+
+                    TankData data = new TankData(tmpPos,0100,20);
+                    ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model,data);
+                    map.addTanks(apc);
+                    break;
+                }
 
                 default:
                     error("unknown XML element '" + elemName + "'");

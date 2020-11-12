@@ -17,7 +17,7 @@ public class TankDestroyer extends COMEnemy {
     private final List<DoubleVec> path = new LinkedList<>();
 
     protected TankDestroyer(Model model, TankData data) {
-        super(model, 3, new Armor(1000, 10), new HeavyTurret(), data);
+        super(model, 3, new NormalArmor(), new NormalTurret(), data);
     }
 
     @Override
