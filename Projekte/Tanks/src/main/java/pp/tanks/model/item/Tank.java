@@ -13,7 +13,7 @@ import pp.util.DoubleVec;
 public abstract class Tank extends Item<TankData> {
     protected Turret turret;
     protected Armor armor;
-    protected double speed=4;
+    protected double speed=2;
     protected double rotgeschwind=150;
     protected TankData data;
     //protected double angle = 90;
@@ -109,12 +109,8 @@ public abstract class Tank extends Item<TankData> {
             Double moveDirRotation = data.getMoveDir().getRotation();
             Double tmp = (aktuelleRotation-moveDirRotation+360)%360;
             Double tmp1 = (moveDirRotation-aktuelleRotation+360)%360;
-            //System.out.println(aktuelleRotation  + "  " +moveDirRotation);
-
-            //schauen ob rotation über die movedirection drüber gehen würde. wenn ja dann direkt auf movedir setzen
-
             Double tmp3 = Math.abs(aktuelleRotation-moveDirRotation); //TODO
-            if(tmp3<1){
+            if(tmp3<2){
                 setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
             }
             else if(tmp>tmp1){
@@ -122,22 +118,7 @@ public abstract class Tank extends Item<TankData> {
             }else{
                 data.setRotation(aktuelleRotation-delta*rotgeschwind);
             }
-            /*
-            Double tmp3 = Math.abs(aktuelleRotation-moveDirRotation);
-            if( tmp3>1){
-                //Double tmp = aktuelleRotation-moveDirRotation;
-                //Double tmp1 = moveDirRotation-aktuelleRotation;
-                if(aktuelleRotation< moveDirRotation ){
-                    data.setRotation(aktuelleRotation+delta*rotgeschwind);
-                }else{
-                    data.setRotation(aktuelleRotation-delta*rotgeschwind);
-                }
-            }else{
-                setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
-
-            }
-
-             */
+            /**/
 
 
             //System.out.println("Pos danach = " + data.getPos().x + "  "  + data.getPos().y);
@@ -155,7 +136,6 @@ public abstract class Tank extends Item<TankData> {
      */
     public void shoot(DoubleVec pos) {
         if(canShoot() && !this.isDestroyed()) {
-            //System.out.println("shooted");
             turret.shoot();
             Projectile projectile=makeProjectile(pos);
             model.getTanksMap().addProjectile(projectile);
@@ -194,13 +174,11 @@ public abstract class Tank extends Item<TankData> {
             return new LightProjectile(model, 0.3, turret.getDamage(), 4,data);  //TODO
         }
         else if (turret instanceof NormalTurret) {
-            System.out.println("NORMAL");
-            return new NormalProjectile(model, 1,turret.getDamage(), 2,data); //TODO
+            return new NormalProjectile(model, 0.3,turret.getDamage(), 4,data); //TODO
         }
         else if (turret instanceof HeavyTurret) {
-            System.out.println("HEAVY");
             //EFFECTIVE RADIUS
-            return new HeavyProjectile(model, 5, turret.getDamage(), 1, targetPos,data); //TODO
+            return new HeavyProjectile(model, 0.3, turret.getDamage(), 4, targetPos,data); //TODO
         }
 
         model.notifyReceivers(TanksNotification.TANK_FIRED);
@@ -214,14 +192,13 @@ public abstract class Tank extends Item<TankData> {
     private void collide() {
         for (Tank tank : model.getTanksMap().getTanks()) {
             if (this!=tank &&collisionWith(tank)) {
-                System.out.println("fail");
+                setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
                 setMove(false);
                 return;
             }
         }
         for (Block block : model.getTanksMap().getBlocks()) {
             if (collisionWith(block)) {
-                System.out.println("collision");
                 setMove(false);
                 setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
                 return;
@@ -237,10 +214,8 @@ public abstract class Tank extends Item<TankData> {
         System.out.println("DAMAGE " + damage);
         System.out.println("armor" + armor.getArmorPoints());
         if (armor.getArmorPoints() - damage <= 0) {
-            System.out.println("Falsch");
             armor.setArmorPoints(0);
             destroy();
-
             System.out.println("TANK DESTROYED");
         }
         else {

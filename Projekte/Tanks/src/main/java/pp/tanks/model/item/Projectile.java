@@ -20,7 +20,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         this.data = data;
         this.damage = damage;
         this.speed = speed;
-        this.flag = 0.5;
+        this.flag = 0.1;
         for(Block i : model.getTanksMap().getBlocks()) {
             if(collisionWith(i)) {
                 System.out.println("destroy");
@@ -97,6 +97,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     @Override
     public void update(double delta) {
         //System.out.println("Projectile " + data.getPos());
+        //System.out.println(flag);
         data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
         if(flag>0){
             flag-=delta;
@@ -114,7 +115,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     public void processHits() {
         for (Tank tank : model.getTanksMap().getTanks()) {
             if (collisionWith(tank)&& flag==0) {
-                System.out.println("HIT tank");
+                //System.out.println("HIT tank");
                 tank.processDamage(damage);
                 destroy();
                 return;
@@ -122,7 +123,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         }
         for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
             if (collisionWith(bblock)) {
-                System.out.println("HIT bblock");
+                //System.out.println("HIT bblock");
                 bblock.reduce(damage);
                 destroy();
                 return;
@@ -130,18 +131,18 @@ public abstract class Projectile extends Item<ProjectileData> {
         }
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
             if (collisionWith(rBlock)) {
-                System.out.println("HIT rblock");
+                //System.out.println("HIT rblock");
                 reflect();
                 return;
             }
         }
         for (UnbreakableBlock uBlock : model.getTanksMap().getUnbreakableBlocks()) {
             if (collisionWith(uBlock)) {
-                System.out.println("HIT ublock");
+                //System.out.println("HIT ublock");
                 destroy();
             }
         }
-        /*
+
         for (Projectile p : model.getTanksMap().getProjectiles()) {
             if ( p!=this&&collisionWith(p)) {
                 destroy();
@@ -150,7 +151,7 @@ public abstract class Projectile extends Item<ProjectileData> {
             }
         }
 
-         */
+
     }
 
     /**

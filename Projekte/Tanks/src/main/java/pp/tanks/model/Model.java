@@ -156,15 +156,17 @@ public class Model {
      * Returns true if amd only if own tank is dead.
      */
     public boolean gameLost() {
-        //TODO
-        return false;
+        return map.getTank().isDestroyed();
     }
 
     /**
      * Returns true if and only if there are no tanks left.
      */
     public boolean gameWon() {
-        //TODO
-        return false;
+        if(map.getTank().isDestroyed()) return false;
+        for(Tank tanks : map.getTanks()){
+            if(tanks!= map.getTank()&&!tanks.isDestroyed()) return false;
+        }
+        return true;
     }
 }

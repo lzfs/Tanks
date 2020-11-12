@@ -5,6 +5,6 @@ package pp.tanks.model.item;
  */
 public class LightTurret extends Turret {
     public LightTurret() {
-        super(10, 3, 5, 5, 5);
+        super(10, 3, 5, 5, 5,1);
     }
 }

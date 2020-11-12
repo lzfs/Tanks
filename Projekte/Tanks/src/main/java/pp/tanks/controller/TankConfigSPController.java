@@ -153,7 +153,7 @@ public class TankConfigSPController extends Controller {
 
     @Override
     public void exit() {
-        System.out.println("EXIT");
+        System.out.println("EXIT SP config");
     }
 
     /**
@@ -179,14 +179,11 @@ public class TankConfigSPController extends Controller {
     private void confirm() throws IOException, XMLStreamException {
         System.out.println("CONFIRM");
 
-
         engine.getModel().loadMap(new File("iwas"));
 
         DoubleVec position = new DoubleVec(5,5);
 
-
         engine.getModel().setTank(new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 1000, 20)));
-
 
 
         TanksMapView mapview = new TanksMapView(engine.getModel(),engine.getImages());
@@ -210,7 +207,6 @@ public class TankConfigSPController extends Controller {
         magazineSizeText.setText(magazine.get(counterTurret).toString());
         cadenceText.setText(cadence.get(counterTurret).toString() + "s");
 
-        System.out.println("TURRET_BUTTON_RIGHT");
     }
 
     /**
@@ -227,7 +223,6 @@ public class TankConfigSPController extends Controller {
         magazineSizeText.setText(magazine.get(counterTurret).toString());
         cadenceText.setText(cadence.get(counterTurret).toString() + "s");
 
-        System.out.println("TURRET_BUTTON_LEFT");
     }
 
     /**
@@ -244,7 +239,6 @@ public class TankConfigSPController extends Controller {
 
         changeCharts();
 
-        System.out.println("ARMOR_BUTTON_RIGHT");
     }
 
     /**
@@ -262,7 +256,6 @@ public class TankConfigSPController extends Controller {
 
         changeCharts();
 
-        System.out.println("ARMOR_BUTTON_LEFT");
     }
 
     /**

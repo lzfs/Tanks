@@ -23,9 +23,6 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(PlayersTank playersTank) {
-
-        //---------
-
         Boolean destroyed = playersTank.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();
@@ -50,10 +47,9 @@ public class VisualizerVisitor implements Visitor {
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
 
-
-
             context.rotate(-playersTank.getRotation());
             context.rotate(playersTank.getTurret().getDirection().angle());
+
 
             Turret turret = playersTank.getTurret();
             if(turret instanceof LightTurret){
@@ -69,9 +65,6 @@ public class VisualizerVisitor implements Visitor {
         }else{
             drawImage(TanksImageProperty.tankDestroyed,Shape.DIRECTED_OVAL, Color.GREEN);
         }
-
-
-
 
         context.setTransform(ori);
     }
@@ -129,9 +122,6 @@ public class VisualizerVisitor implements Visitor {
             }
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
-
-
-
             context.rotate(-comEnemy.getRotation());
             context.rotate(comEnemy.getTurret().getDirection().angle());
 
@@ -150,9 +140,6 @@ public class VisualizerVisitor implements Visitor {
             drawImage(TanksImageProperty.tankDestroyed,Shape.DIRECTED_OVAL, Color.GREEN);
         }
 
-
-
-
         context.setTransform(ori);
 
 
@@ -163,7 +150,11 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(BreakableBlock bBlock) {
-        drawItem(bBlock, TanksImageProperty.bBlock, Shape.RECTANGLE, Color.BLUE);
+        System.out.println(bBlock.isDestroyed());
+        if(!bBlock.isDestroyed()){
+            drawItem(bBlock, TanksImageProperty.bBlock, Shape.RECTANGLE, Color.BLUE);
+        }
+
     }
 
     @Override

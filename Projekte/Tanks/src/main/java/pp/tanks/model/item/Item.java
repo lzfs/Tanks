@@ -10,7 +10,7 @@ import pp.util.DoubleVec;
  */
 public abstract class Item<T extends Data> {
     protected final Model model;
-    protected final double effectiveRadius;
+    protected double effectiveRadius;
     protected boolean destroyed = false;
     protected T data;
 

@@ -124,10 +124,14 @@ class PlayGameController extends Controller {
         lastUpdate = stopWatch.getTime();
         engine.getModel().update(delta);
 
-        if (engine.getModel().gameWon())
+        if (engine.getModel().gameWon()){
+            engine.setView(null);
             engine.activateGameWonController();
-        else if (engine.getModel().gameLost())
+        }
+        else if (engine.getModel().gameLost()){
+            engine.setView(null);
             engine.activateGameLostController();
+        }
         else if (pressed.contains(KeyCode.ESCAPE))
             engine.activateGameSettingsController(); //TODO
         //stopwatch anhalten
@@ -153,6 +157,7 @@ class PlayGameController extends Controller {
      */
     @Override
     void exit() {
+        scene=null;
         stopWatch.stop();
     }
 

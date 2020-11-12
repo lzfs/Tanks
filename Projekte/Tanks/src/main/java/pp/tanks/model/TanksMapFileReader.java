@@ -99,7 +99,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock( model, new BBData(tmpPos, 1, 500))); //TODO
+                    map.addBreakableBlock(new BreakableBlock( model, new BBData(tmpPos, 1, 20))); //TODO
                     break;
 
                 case "uBlock":
@@ -157,6 +157,31 @@ class TanksMapFileReader {
                     TankData data = new TankData(tmpPos,0100,20);
                     ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model,data);
                     map.addTanks(apc);
+                    break;
+                }
+                case "howitzer": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
+                    tmpPos = new DoubleVec(tx, ty);
+                    //Enemy e= new Enemy(model);
+                    //e.setPos(tmpPos);
+
+                    TankData data = new TankData(tmpPos,0100,20);
+                    Howitzer howitzer = new Howitzer(model,data);
+                    map.addTanks(howitzer);
+                    break;
+                }
+
+                case "tankDestroyer": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
+                    tmpPos = new DoubleVec(tx, ty);
+                    //Enemy e= new Enemy(model);
+                    //e.setPos(tmpPos);
+
+                    TankData data = new TankData(tmpPos,0100,20);
+                    TankDestroyer tankDestroyer = new TankDestroyer(model,data);
+                    map.addTanks(tankDestroyer);
                     break;
                 }
 

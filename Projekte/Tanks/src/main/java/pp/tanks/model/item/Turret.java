@@ -14,8 +14,10 @@ public class Turret {
     private double reloadTime;
     private double[] mag;
     private DoubleVec direction;
+    private double cadence;
+    private final double cadence2;
 
-    public Turret(int damage, int bounced, int weight, double reloadTime, int mag) {
+    public Turret(int damage, int bounced, int weight, double reloadTime, int mag,double cadence) {
         this.damage = damage;
         this.bounced = bounced;
         this.weight = weight;
@@ -23,6 +25,8 @@ public class Turret {
         this.mag = new double[mag];
         this.direction =new DoubleVec(0,0);
         Arrays.fill(this.mag, 0.0);
+        this.cadence=0;
+        this.cadence2=cadence;
     }
 
     /**
@@ -31,6 +35,12 @@ public class Turret {
      * @param delta time in seconds since the last update call
      */
     public void update(double delta) {
+
+        cadence-=delta;
+        if(cadence<0){
+            cadence=0;
+        }
+
         for(int i = 0; i < mag.length; i++) {
             mag[i] -= delta;
             if(mag[i] < 0)
@@ -63,6 +73,7 @@ public class Turret {
         for(int i = 0; i < mag.length; i++) {
             if(mag[i] == 0.0) {
                 mag[i] = reloadTime;
+                cadence=cadence2;
                 //reload(i);
                 return;
             }
@@ -75,7 +86,7 @@ public class Turret {
      */
     public boolean canShoot() {
         for (double d : mag) {
-            if(d == 0.0) {
+            if(d == 0.0 && cadence==0) {
                 return true;
             }
         }

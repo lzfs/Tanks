@@ -73,7 +73,14 @@
     <uBlock x="20" y="12"></uBlock>
     <uBlock x="21" y="12"></uBlock>
 
-    <apc x="15" y="5"></apc>
-    <apc x="15" y="8"></apc>
+    <uBlock x="8" y="5"></uBlock>
+    <uBlock x="9" y="5"></uBlock>
+    <uBlock x="7" y="5"></uBlock>
+    <bBlock x="10" y="5"></bBlock>
+
+    <howitzer x="18" y="5"></howitzer>
+    <!--<tankDestroyer x="15" y="10"></tankDestroyer>-->
+    <!--<apc x="15" y="5"></apc>-->
+
 
 </map>

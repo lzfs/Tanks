@@ -30,6 +30,7 @@ public class BreakableBlock extends Block<BBData>{
         if(getLifepoints() - points <= 0) {
             data.reduceLifepoints(data.getLifepoints());
             destroy();
+            return;
         }
         data.reduceLifepoints(points);
     }

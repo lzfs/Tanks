@@ -31,7 +31,7 @@ public abstract class Block<T extends Data> extends Item<T> {
      */
     @Override
     public void destroy() {
-
+        data.destroy();
     }
 
     /**
