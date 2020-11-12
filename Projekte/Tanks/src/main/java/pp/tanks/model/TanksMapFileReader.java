@@ -131,7 +131,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
 
                     //für übungszwecke
-                    PlayersTank pT =new PlayersTank(model, 1, new Armor(5, 5), new Turret(2, 2, 2, 2, 2),new TankData(tmpPos, 1000, 500));
+                    PlayersTank pT =new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(),new TankData(tmpPos, 1000, 20));
 
                     //pT.setPos(tmpPos);
                     map.addTanks(pT);

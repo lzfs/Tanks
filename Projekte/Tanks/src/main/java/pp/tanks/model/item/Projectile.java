@@ -20,7 +20,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         this.data = data;
         this.damage = damage;
         this.speed = speed;
-        this.flag = 2000;
+        this.flag = 0.5;
         for(Block i : model.getTanksMap().getBlocks()) {
             if(collisionWith(i)) {
                 System.out.println("destroy");

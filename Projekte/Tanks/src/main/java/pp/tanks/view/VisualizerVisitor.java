@@ -25,20 +25,31 @@ public class VisualizerVisitor implements Visitor {
     public void visit(PlayersTank playersTank) {
 
         //---------
+
+        Boolean destroyed = playersTank.isDestroyed();
+
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(playersTank.getPos());
         //System.out.println(pos.x + "  " + pos.y);
         context.translate(pos.x, pos.y);
-        //context.rotate(-90);
-        context.rotate((playersTank.getRotation()+90)%360);
-        context.scale(0.75,0.75);
-        drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
-        context.rotate(-playersTank.getRotation());
+
+        if(!destroyed){
+            //context.rotate(-90);
+            context.rotate((playersTank.getRotation()+90)%360);
+            context.scale(0.75,0.75);
+            drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+            context.rotate(-playersTank.getRotation());
 
 
-        context.rotate(playersTank.getTurret().getDirection().angle());
-        drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
+            context.rotate(playersTank.getTurret().getDirection().angle());
+            drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
+        }else{
+            drawImage(TanksImageProperty.tankDestroyed,Shape.DIRECTED_OVAL, Color.GREEN);
+        }
+
+
+
 
         context.setTransform(ori);
     }

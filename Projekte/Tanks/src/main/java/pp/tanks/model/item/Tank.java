@@ -99,7 +99,7 @@ public abstract class Tank extends Item<TankData> {
     public void updateMove(double delta) {
         //System.out.println("Pos davor = " + data.getPos().x + "  "  + data.getPos().y);
         collide();
-        if (isMoving()) {
+        if (isMoving() && !data.isDestroyed()) {
 
             Double aktuelleRotation = data.getRotation();
             Double moveDirRotation = data.getMoveDir().getRotation();
@@ -229,9 +229,14 @@ public abstract class Tank extends Item<TankData> {
      * @param damage
      */
     public void processDamage(int damage) {
+        System.out.println("DAMAGE " + damage);
+        System.out.println("armor" + armor.getArmorPoints());
         if (armor.getArmorPoints() - damage <= 0) {
+            System.out.println("Falsch");
             armor.setArmorPoints(0);
             destroy();
+
+            System.out.println("TANK DESTROYED");
         }
         else {
             armor.takeDamage(damage);
