@@ -144,6 +144,8 @@ class PlayGameController extends Controller {
         if (scene == null)
             scene = new Scene(new Group(engine.getView()));
         engine.setScene(scene);
+
+
     }
 
     /**

@@ -1,6 +1,7 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.view.TanksMapView;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -161,7 +162,10 @@ public class TankConfigSPController extends Controller {
     @FXML
     private void confirm() {
         System.out.println("CONFIRM");
-        engine.activateSPController();
+        engine.activateStartSPController();
+        //map laden und view besetzten
+        TanksMapView mapview = new TanksMapView(engine.getModel(),engine.getImages());
+        engine.setView(mapview);
     }
 
     /**

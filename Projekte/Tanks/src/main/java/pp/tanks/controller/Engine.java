@@ -36,7 +36,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final CreditsController creditsController;
     public final SettingsController settingsController;
     public final LevelController levelController;
-    public final StartGameSPController GameSPController;
+    public final StartGameSPController StartGameSPController;
     public final TankConfigSPController tankConfigSPController;
     //public final GameOverController gameWonController;
     //public final GameOverController gameLostController;
@@ -62,7 +62,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.creditsController = new CreditsController(this);
         this.settingsController = new SettingsController(this);
         this.levelController = new LevelController(this);
-        this.GameSPController = new StartGameSPController(this);
+        this.StartGameSPController = new StartGameSPController(this);
         this.tankConfigSPController = new TankConfigSPController(this);
         //this.gameWonController = new GameOverController(this, "Gewonnen");
         //this.gameLostController = new GameOverController(this, "Verloren");
@@ -90,7 +90,10 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
         setController(mainMenuController);
         this.menuView = MenuView.makeView(stage, mainMenuController.getFileName(), mainMenuController);
-        this.view = new TanksMapView(model, images);
+
+        this.view = null;
+        //new TanksMapView(model, images)
+
         stage.addEventHandler(InputEvent.ANY, this);
     /*
         //setController(mainMenuController);
@@ -118,8 +121,11 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
             public void handle(long now) {
                 controller.update();
                 menuView.update();
-                //if view==null oder sowas
-                view.update();
+                System.out.println(view);
+                if (view!=null){
+                    view.update();
+                }
+
             }
         }.start();
     }
@@ -155,8 +161,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     /**
      * activates the activateSPController
      */
-    public void activateSPController() {
-        setController(GameSPController);
+    public void activateStartSPController() {
+        setController(StartGameSPController);
     }
 
     /**
@@ -269,6 +275,10 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     public TanksMapView getView() {
         return this.view;
+    }
+
+    public void setView(TanksMapView view){
+        this.view=view;
     }
 
     /**
