@@ -6,5 +6,10 @@ package pp.tanks;
  */
 public enum TanksSoundProperty {
 
+    tanksProjectileSound,
+
+    destroyedSound,
+
+    blockDestroyedSound,
 }
 

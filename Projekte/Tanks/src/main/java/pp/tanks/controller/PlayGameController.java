@@ -53,12 +53,7 @@ class PlayGameController extends Controller {
     private TanksMap getTanksMap() {
         return engine.getModel().getTanksMap();
     }
-
-
-    //Bei änderungen System outs einfügen
-    //jedes mal wenn richtung ändert
-    //bei jeder änderung
-    //änderungen in der liste monitoren und dementsprechend reagieren
+    
     /**
      * The handle method of the state pattern. This method is called by the game engine whenever an event happens.
      */
@@ -125,7 +120,15 @@ class PlayGameController extends Controller {
 
         if (engine.getModel().gameWon()){
             engine.setView(null);
-            engine.activateMission1CompleteController();
+            if(engine.getMode()=="Tutorial"){
+                //TODO
+                engine.activateLevelController();
+            }else if(engine.getMode()=="Singleplayer"){
+                //TODO  unterscheidung in level und dann nächster controller laden // vielleicht generisch
+                engine.activateMission1CompleteController();
+            }else{
+                //Multiplayer TODO
+            }
         }
         else if (engine.getModel().gameLost()){
             engine.setView(null);
@@ -133,7 +136,6 @@ class PlayGameController extends Controller {
         }
         else if (pressed.contains(KeyCode.ESCAPE))
             engine.activatePauseMenuSPController(); //TODO
-        //stopwatch anhalten
     }
 
     /**
@@ -147,8 +149,6 @@ class PlayGameController extends Controller {
         if (scene == null)
             scene = new Scene(new Group(engine.getView()));
         engine.setScene(scene);
-
-
     }
 
     /**

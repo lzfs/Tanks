@@ -1,8 +1,19 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.data.TankData;
+import pp.tanks.model.item.LightArmor;
+import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.PlayersTank;
+import pp.tanks.model.item.Tank;
+import pp.tanks.view.TanksMapView;
+import pp.util.DoubleVec;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 
 public class LevelController extends Controller {
 
@@ -72,7 +83,18 @@ public class LevelController extends Controller {
      * method for the tutorial button
      */
     @FXML
-    private void tutorial() {
+    private void tutorial() throws IOException, XMLStreamException {
+
+        engine.setMode("Tutorial");
+
+        engine.getModel().loadMap("tutorialMap.xml");
+        PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(5, 5), 1000, 20));
+        engine.getModel().setTank(tank);
+        TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
+        engine.setView(mapview);
+
+        engine.activatePlayGameController();
+
         System.out.println("TUTORIAL");
     }
 

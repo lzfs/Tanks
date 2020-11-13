@@ -1,9 +1,15 @@
 package pp.tanks.controller;
 
+import pp.tanks.view.TanksMapView;
+import pp.util.DoubleVec;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 
 public class StartGameSPController extends Controller {
 
@@ -67,7 +73,16 @@ public class StartGameSPController extends Controller {
      * method for the startGameSP button
      */
     @FXML
-    private void startGameSP() {
+    private void startGameSP() throws IOException, XMLStreamException {
+
+        engine.setMode("Singleplayer");
+
+        engine.getModel().loadMap("map1.xml");
+
+        engine.getModel().setTank(engine.getSaveTank());
+        TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
+        engine.setView(mapview);
+
         engine.activatePlayGameController();
         System.out.println("START GAME SP");
     }

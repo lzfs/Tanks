@@ -179,19 +179,10 @@ public class TankConfigSPController extends Controller {
     private void confirm() throws IOException, XMLStreamException {
         System.out.println("CONFIRM");
 
-
-        //könnte man nach hinten auf den startSP controller verlagern TODO
-
-
-        engine.getModel().loadMap("map1.xml");
-        DoubleVec position = new DoubleVec(5,5);
-
+        DoubleVec position = new DoubleVec(5, 5);
         PlayersTank tank = new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 1000, 20));
         engine.setSaveTank(tank);
 
-        engine.getModel().setTank(tank);
-        TanksMapView mapview = new TanksMapView(engine.getModel(),engine.getImages());
-        engine.setView(mapview);
         engine.activateStartSPController();
     }
 

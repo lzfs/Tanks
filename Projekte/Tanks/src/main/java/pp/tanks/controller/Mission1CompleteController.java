@@ -1,8 +1,13 @@
 package pp.tanks.controller;
 
+import pp.tanks.view.TanksMapView;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 
 /**
  * controller class for the mission complete page
@@ -49,8 +54,15 @@ public class Mission1CompleteController extends Controller {
     }
 
     @FXML
-    private void next() {
+    private void next() throws IOException, XMLStreamException {
         System.out.println("NEXT");
+
+        engine.getModel().loadMap("map2.xml");
+
+        engine.getModel().setTank(engine.getSaveTank());
+        TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
+        engine.setView(mapview);
+
         engine.activatePlayGameController();
     }
 }

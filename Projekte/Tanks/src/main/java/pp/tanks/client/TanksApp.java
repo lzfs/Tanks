@@ -33,12 +33,15 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     private static final Logger LOGGER = Logger.getLogger(TanksApp.class.getName());
     private Connection<IClientMessage, IServerMessage> connection;
     public final Sounds sounds = new Sounds();
+
     private long offset;
 
     private final Properties properties = new Properties();
 
     private Stage stage;
     private MainMenuController mainMenuControl;
+
+
 
     /**
      * create a new TankApp
@@ -72,8 +75,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.setTitle("Tanks");
         stage.show();
         engine.gameLoop();
+        sounds.setMusic(sounds.mainMenu);
 
-        //sounds.setMusic(sounds.mainMenu);
+
     }
 
     /**

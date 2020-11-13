@@ -2,6 +2,7 @@ package pp.tanks.controller;
 
 import pp.tanks.*;
 import pp.tanks.client.MiniController;
+import pp.tanks.client.Sounds;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
@@ -55,8 +56,10 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private final ImageSupport<TanksImageProperty> images;
     private final SoundSupport<TanksSoundProperty> sound;
 
+
     private Controller controller;
     private Tank saveTank=null;
+    private String mode="";
 
     /**
      * Creates a new game engine
@@ -84,6 +87,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.miniController = new MiniController(tankApp);
         this.model = new Model(properties);
         model.addReceiver(this);
+
+
 
         images = new ImageSupport<>(TanksImageProperty.class, properties) {
             @Override
@@ -192,6 +197,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      * activates the TankConfigSPController
      */
     public void activateGameLostController() {
+
         setController(tankConfigSPController);
     }
 
@@ -275,6 +281,14 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     public Tank getSaveTank(){
         return this.saveTank;
+    }
+
+    public void setMode(String string){
+        this.mode=string;
+    }
+
+    public String getMode() {
+        return this.mode;
     }
 
 
@@ -363,15 +377,14 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         if (!getModel().isMuted())
             switch (notification) {
                 case TANK_FIRED:
-                    //sound.play(TanksSoundProperty.tanksProjectileSound);
+                    sound.play(TanksSoundProperty.tanksProjectileSound);
                     break;
                 case TANK_DESTROYED:
-                    //sound.play(TanksSoundProperty.destroyedSound);
+                    sound.play(TanksSoundProperty.destroyedSound);
                     break;
                 case BLOCK_DESTROYED:
-                    //sound.play(TanksSoundProperty.blockDestroyedSound);
+                    sound.play(TanksSoundProperty.blockDestroyedSound);
                     break;
             }
     }
-
 }

@@ -168,7 +168,7 @@ public abstract class Tank extends Item<TankData> {
         DoubleVec position = this.getPos().add(dir.mult(1.01));
         ProjectileData data = new ProjectileData(position, 1234,4, dir);  //TODO
 
-
+        model.notifyReceivers(TanksNotification.TANK_FIRED);
         //final DoubleVec dir = DoubleVec.polar(1., getRotation()); //???
         if (turret instanceof LightTurret) {
             return new LightProjectile(model, 0.3, turret.getDamage(), 4,data);  //TODO
@@ -181,7 +181,7 @@ public abstract class Tank extends Item<TankData> {
             return new HeavyProjectile(model, 0.3, turret.getDamage(), 4, targetPos,data); //TODO
         }
 
-        model.notifyReceivers(TanksNotification.TANK_FIRED);
+
 
         return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);
     }

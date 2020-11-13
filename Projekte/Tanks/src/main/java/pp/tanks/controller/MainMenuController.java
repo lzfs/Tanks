@@ -81,6 +81,7 @@ public class MainMenuController extends Controller {
      */
     @FXML
     private void multiPlayer() {
+        engine.setMode("Multiplayer");
         System.out.println("MULTIPLAYER");
         engine.activateLobbyController();
     }
