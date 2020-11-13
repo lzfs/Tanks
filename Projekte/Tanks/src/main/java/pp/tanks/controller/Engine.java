@@ -38,11 +38,15 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final LevelController levelController;
     public final StartGameSPController StartGameSPController;
     public final TankConfigSPController tankConfigSPController;
-    //public final GameOverController gameWonController;
-    //public final GameOverController gameLostController;
+    public final Mission1CompleteController mission1CompleteController;
+    public final Mission2CompleteController mission2CompleteController;
+    public final PauseMenuSPController pauseMenuSPController;
     public final LobbyController lobbyController;
-    public final GameOverController gameOverController;
+    public final GameOverSPController gameOverSPController;
+    public final GameOverMPController gameOverMPController;
+    public final GameWonMPController gameWonMPController;
     public final PlayGameController playGameController;
+    public final ConnectionLostController connectionLostController;
     public final MiniController miniController; //for tests
 
     private final Stage stage;
@@ -64,11 +68,15 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.levelController = new LevelController(this);
         this.StartGameSPController = new StartGameSPController(this);
         this.tankConfigSPController = new TankConfigSPController(this);
-        //this.gameWonController = new GameOverController(this, "Gewonnen");
-        //this.gameLostController = new GameOverController(this, "Verloren");
+        this.mission1CompleteController = new Mission1CompleteController(this);
+        this.mission2CompleteController = new Mission2CompleteController(this);
+        this.pauseMenuSPController = new PauseMenuSPController(this);
         this.lobbyController = new LobbyController(this);
-        this.gameOverController = new GameOverController(this);
+        this.gameOverSPController = new GameOverSPController(this);
+        this.gameOverMPController = new GameOverMPController(this);
+        this.gameWonMPController = new GameWonMPController(this);
         this.playGameController = new PlayGameController(this);
+        this.connectionLostController = new ConnectionLostController(this);
         this.tankApp = tankApp;
         this.stage = stage;
         this.miniController = new MiniController(tankApp);
@@ -137,81 +145,115 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * activates the activateMainMenuController
+     * activates the MainMenuController
      */
     public void activateMainMenuController() {
         setController(mainMenuController);
     }
 
     /**
-     * activates the activateSettingsController
+     * activates the SettingsController
      */
     public void activateSettingsController() {
         setController(settingsController);
     }
 
     /**
-     * activates the activateLevelController
+     * activates the LevelController
      */
     public void activateLevelController() {
         setController(levelController);
     }
 
     /**
-     * activates the activateSPController
+     * activates the SPController
      */
     public void activateStartSPController() {
         setController(StartGameSPController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activates the TankConfigSPController
      */
     public void activateTankConfigSPController() {
         setController(tankConfigSPController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activates the PauseMenuSPController
      */
-    public void activateGameSettingsController() {
-        setController(tankConfigSPController);
+    public void activatePauseMenuSPController() {
+        setController(pauseMenuSPController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activates the TankConfigSPController
      */
     public void activateGameLostController() {
         setController(tankConfigSPController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activates the TankConfigSPController
      */
     public void activateGameWonController() {
-        setController(tankConfigSPController);
+        setController(mission1CompleteController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activates the TankConfigMPController
+     */
+    public void activateGameWonMPController() {
+        setController(gameWonMPController);
+    }
+
+    /**
+     * activates the TankConfigSPController
      */
     public void activateLobbyController() {
         setController(lobbyController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activates the GameOverSPController
      */
-    public void activateGameOverController() {
-        setController(gameOverController);
+    public void activateGameOverSPController() {
+        setController(gameOverSPController);
+    }
+
+    /**
+     * activates the GameOverMPController
+     */
+    public void activateGameOverMPController() {
+        setController(gameOverMPController);
+    }
+
+    /**
+     * activates the Mission1CompleteSPController
+     */
+    public void activateMission1CompleteController() {
+        setController(mission1CompleteController);
+    }
+
+    /**
+     * activates the Mission2CompleteSPController
+     */
+    public void activateMission2CompleteController() {
+        setController(mission2CompleteController);
     }
 
     /**
      * activates the playGameController
      */
     public void activatePlayGameController() {
-
         setController(playGameController);
+    }
+
+    /**
+     * activates the connectionLostController
+     */
+    public void activateConnectionLostController() {
+        setController(connectionLostController);
     }
 
     /**

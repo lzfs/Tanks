@@ -14,7 +14,7 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Mission abgeschlossen!" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Mission 1 abgeschlossen!" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <font>
             <Font name="System Bold" size="45.0" />
          </font>

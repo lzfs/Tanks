@@ -4,16 +4,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
-public class GameOverMPController extends Controller {
-    private static final String GAME_OVER_MP_FXML = "GameOverMP.fxml"; //NON-NLS
+public class ConnectionLostController extends Controller {
+    private static final String CONNECTION_LOST_FXML = "ConnectionLost.fxml"; //NON-NLS
     private Scene scene;
 
     /**
-     * create a new GameOverMPController
+     * create a new ConnectionLostController
      *
      * @param engine the engine of the game that switches between controllers
      */
-    public GameOverMPController(Engine engine) {
+    public ConnectionLostController(Engine engine) {
         super(engine);
     }
 
@@ -24,8 +24,9 @@ public class GameOverMPController extends Controller {
     private Button lobbyButton;
 
     public Scene makeScene() {
-        return new Scene(engine.getViewForController(GAME_OVER_MP_FXML, this));
+        return new Scene(engine.getViewForController(CONNECTION_LOST_FXML, this));
     }
+
     /**
      * This method is called whenever this controller is activated, i.e., when the game is over.
      */
@@ -45,7 +46,7 @@ public class GameOverMPController extends Controller {
      * @return the name of the file as a String
      */
     public String getFileName() {
-        return GAME_OVER_MP_FXML;
+        return CONNECTION_LOST_FXML;
     }
 
     /**

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="399.0" prefWidth="510.0" styleClass="window" stylesheets="@tank.css" type="GridPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="509.0" styleClass="window" stylesheets="@tank.css" type="GridPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="515.0" minWidth="10.0" prefWidth="515.0" />
     </columnConstraints>
@@ -24,10 +25,13 @@
                 <Font size="18.0" />
             </font>
         </Button>
-      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Georg Haindl  Laurenz Fuchs Leonhard Ziegler Tammo Pahlke Thomas Ottenhus Hannes Ludwig Hans-Wilhelm Knoren" textAlignment="CENTER" wrappingWidth="203.49804735183716" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Georg Haindl (Dokumentar)              Laurenz Fuchs                                   Leonhard Ziegler                                 Tammo Pahlke (Teamchef)                   Thomas Ottenhus (Test-Koordinator)                              Hannes Ludwig                              Hans-Wilhelm Knoren" wrappingWidth="326.4980561733246" GridPane.halignment="CENTER" GridPane.rowIndex="1">
          <font>
-            <Font size="21.0" />
+            <Font size="19.0" />
          </font>
+         <GridPane.margin>
+            <Insets left="60.0" />
+         </GridPane.margin>
       </Text>
     </children>
 </fx:root>

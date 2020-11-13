@@ -24,7 +24,7 @@
                 <Font name="System Bold" size="48.0" />
             </font>
         </Text>
-      <Button fx:id="mainMenuButton" mnemonicParsing="false" onAction="#mainMenu" text="Hauptmenü" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+      <Button fx:id="lobbyButton" mnemonicParsing="false" onAction="#lobby" text="Lobby" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets top="60.0" />
          </GridPane.margin>

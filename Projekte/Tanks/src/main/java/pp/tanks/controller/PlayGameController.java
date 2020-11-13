@@ -126,14 +126,14 @@ class PlayGameController extends Controller {
 
         if (engine.getModel().gameWon()){
             engine.setView(null);
-            engine.activateGameWonController();
+            engine.activateMission1CompleteController();
         }
         else if (engine.getModel().gameLost()){
             engine.setView(null);
             engine.activateGameLostController();
         }
         else if (pressed.contains(KeyCode.ESCAPE))
-            engine.activateGameSettingsController(); //TODO
+            engine.activatePauseMenuSPController(); //TODO
         //stopwatch anhalten
     }
 

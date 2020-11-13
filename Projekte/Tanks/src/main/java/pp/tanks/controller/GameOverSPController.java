@@ -4,16 +4,16 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
-public class GameOverController extends Controller {
-    private static final String GAME_OVER_FXML = "GameOver.fxml"; //NON-NLS
+public class GameOverSPController extends Controller {
+    private static final String GAME_OVER_SP_FXML = "GameOverSP.fxml"; //NON-NLS
     private Scene scene;
 
     /**
-     * create a new GameOverController
+     * create a new GameOverSPController
      *
      * @param engine the engine of the game that switches between controllers
      */
-    public GameOverController(Engine engine) {
+    public GameOverSPController(Engine engine) {
         super(engine);
     }
 
@@ -24,7 +24,7 @@ public class GameOverController extends Controller {
     private Button mainMenuButton;
 
     public Scene makeScene() {
-        return new Scene(engine.getViewForController(GAME_OVER_FXML, this));
+        return new Scene(engine.getViewForController(GAME_OVER_SP_FXML, this));
     }
     /**
      * This method is called whenever this controller is activated, i.e., when the game is over.
@@ -45,7 +45,7 @@ public class GameOverController extends Controller {
      * @return the name of the file as a String
      */
     public String getFileName() {
-        return GAME_OVER_FXML;
+        return GAME_OVER_SP_FXML;
     }
 
     /**

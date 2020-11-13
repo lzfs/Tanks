@@ -7,16 +7,16 @@ import javafx.scene.control.Button;
 /**
  * controller class for the mission complete page
  */
-public class MissionCompleteSPController extends Controller {
+public class Mission1CompleteController extends Controller {
 
-    private static final String MISSION_COMPLETE_SP_FXML = "MissionCompleteSP.fxml"; //NON-NLS
+    private static final String MISSION_1_COMPLETE_SP_FXML = "Mission1Complete.fxml"; //NON-NLS
     private Scene scene;
 
     /**
-     * create a new MissionCompleteSPController
+     * create a new Mission1CompleteSPController
      * @param engine the engine of the game that switches between controllers
      */
-    public MissionCompleteSPController(Engine engine) {
+    public Mission1CompleteController(Engine engine) {
         super(engine);
     }
 
@@ -31,7 +31,7 @@ public class MissionCompleteSPController extends Controller {
      * @return the scene
      */
     public Scene makeScene() {
-        return new Scene(engine.getViewForController(MISSION_COMPLETE_SP_FXML, this));
+        return new Scene(engine.getViewForController(MISSION_1_COMPLETE_SP_FXML, this));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class MissionCompleteSPController extends Controller {
      * @return the name of the used file as a String
      */
     public String getFileName() {
-        return MISSION_COMPLETE_SP_FXML;
+        return MISSION_1_COMPLETE_SP_FXML;
     }
 
     @FXML

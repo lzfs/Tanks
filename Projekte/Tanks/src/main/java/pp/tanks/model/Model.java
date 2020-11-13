@@ -36,7 +36,7 @@ public class Model {
         //setTanksMap(new TanksMapCreator(this).makeEmptyMap());
         /*
         try{
-            File file = new File("C:\\Users\\there\\Desktop\\test_environment\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map.xml");
+            File file = new File("C:\\Users\\there\\Desktop\\test_environment\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map1.xml");
             loadMap(file);
         }catch(IOException  | XMLStreamException ex ){
             System.out.println(ex.getMessage());
@@ -105,7 +105,7 @@ public class Model {
         //setTanksMap(new TanksMapFileReader(this).readFile(file));
 
         try{
-            File file2 = new File("C:\\Users\\there\\Desktop\\test_environment\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map.xml");
+            File file2 = new File("C:\\Users\\laure\\projects\\ProgProjekt\\test\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map1.xml");
             setTanksMap(new TanksMapFileReader(this).readFile(file2));
         }catch(IOException  | XMLStreamException ex ){
             System.out.println(ex.getMessage());
