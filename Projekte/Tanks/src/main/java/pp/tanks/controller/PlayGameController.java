@@ -88,7 +88,6 @@ class PlayGameController extends Controller {
             Double y1 = event.getY();
             DoubleVec dir = engine.getView().viewToModel(x1,y1).sub(getTank().getPos());
             //System.out.println(dir);
-
             //maybe norm
             getTank().getTurret().setDirection(dir.normalize());
 

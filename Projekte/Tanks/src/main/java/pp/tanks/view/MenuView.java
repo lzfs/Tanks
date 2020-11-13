@@ -38,35 +38,3 @@ public class MenuView extends GridPane implements View {
         //System.out.println("MENU VIEW UPDATE");
     }
 }
-    /*
-    public Scene test(Controller controller)  {
-        final URL location = getClass().getResource(MENU_CONTROL_FXML);
-        System.out.println(location);
-        FXMLLoader fxmlLoader = new FXMLLoader(location, Resources.RESOURCE_BUNDLE);
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(controller);
-        try {
-            return new Scene(fxmlLoader.load());
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-     */
-    /*
-            final URL location = getClass().getResource(MENU_CONTROL_FXML);
-        System.out.println(location);
-        FXMLLoader fxmlLoader = new FXMLLoader(location, Resources.RESOURCE_BUNDLE);
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(controller);
-        try {
-            fxmlLoader.load();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-     */
-
-//on action in FXML
-//und noch hier funktionen rein
-

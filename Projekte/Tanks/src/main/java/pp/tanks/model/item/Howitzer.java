@@ -24,8 +24,6 @@ public class Howitzer extends COMEnemy {
         movingCounter = 2;
     }
 
-
-
     @Override
     public void behaviour(double delta) {
         turret.setDirection(model.getTanksMap().getTank().getPos().sub(this.getPos()));
@@ -49,11 +47,11 @@ public class Howitzer extends COMEnemy {
 
             //letzen double vec vielleicht anpassen
             DoubleVec targetPos = getPos().add(movingDirs[idx].getVec().mult(7));
-            System.out.println(idx);
+            //System.out.println(idx);
 
             //What if pos is blocked??
             navigateTo(targetPos);
-            System.out.println("PATH  " + path);
+            //System.out.println("PATH  " + path);
             // as long as there is a path to follow and this time slot has still some time left
             while (path.size() > 0 && delta > 0.) {
                 final DoubleVec target = path.get(0);
@@ -67,7 +65,7 @@ public class Howitzer extends COMEnemy {
                     //TODO
                     final double bearing = target.sub(getPos()).angle() % 180;
                     double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
-                    System.out.println("winkel " + needToTurnBy);
+                    //System.out.println("winkel " + needToTurnBy);
                     // we need to turn the droid such that its rotation coincides with the bearing of the next path point
                     if (Math.abs(needToTurnBy) > 2) {
                         //TODO
@@ -87,7 +85,7 @@ public class Howitzer extends COMEnemy {
                         delta = 0.;
                     }
                     else {
-                        System.out.println("2");
+                        //System.out.println("2");
                         // we first turn the droid
                         setRotation((int) bearing);
                         // and there is some time left in this time slot

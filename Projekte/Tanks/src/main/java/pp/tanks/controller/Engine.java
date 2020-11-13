@@ -6,6 +6,7 @@ import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 import pp.tanks.view.MenuView;
@@ -55,6 +56,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private final SoundSupport<TanksSoundProperty> sound;
 
     private Controller controller;
+    private Tank saveTank=null;
 
     /**
      * Creates a new game engine
@@ -266,6 +268,15 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.controller = controller;
         this.controller.entry();
     }
+
+    public void setSaveTank(Tank tank){
+        this.saveTank=tank;
+    }
+
+    public Tank getSaveTank(){
+        return this.saveTank;
+    }
+
 
     /**
      * The handle method of the state pattern. Any event is forwarded to the currently active controller, which then

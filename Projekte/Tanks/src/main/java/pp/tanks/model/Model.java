@@ -7,6 +7,10 @@ import pp.tanks.notification.TanksNotificationReceiver;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -24,6 +28,8 @@ public class Model {
     private final List<TanksNotificationReceiver> receivers = new ArrayList<>();
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
+
+    static final ClassLoader loader = Model.class.getClassLoader();
 
     /**
      * Creates a game model
@@ -95,19 +101,17 @@ public class Model {
     /**
      * Loads a game map from the specified xml file and sets it as the current one.
      *
-     * @param file xml file representing a droids map
+     * @param string xml file name representing a tanks map
      * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
      * @throws XMLStreamException if the file is no valid xml file
      */
-    public void loadMap(File file) throws IOException, XMLStreamException {
-
-
-        //setTanksMap(new TanksMapFileReader(this).readFile(file));
-
+    public void loadMap(String string) throws IOException, XMLStreamException {
+        String path = "Tanks/src/main/resources/pp/tanks/maps/"+string;
+        String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try{
-            File file2 = new File("C:\\Users\\laure\\projects\\ProgProjekt\\test\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map1.xml");
+            File file2 = new File(absolutePath);
             setTanksMap(new TanksMapFileReader(this).readFile(file2));
-        }catch(IOException  | XMLStreamException ex ){
+        }catch(IOException | XMLStreamException ex ){
             System.out.println(ex.getMessage());
             setTanksMap(new TanksMapCreator(this).makeEmptyMap());
         }
