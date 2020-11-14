@@ -24,7 +24,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * the init state of this automaton
      */
-    private final TankState init = new TankState() {
+    public final TankState init = new TankState() {
         @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
@@ -64,26 +64,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * the state where the players choose their tank
      */
-    public final TankState playerReady = new TankState() {
-        @Override
-        public TankAutomaton containingState() {
-            return TankAutomaton.this;
-        }
-
-        @Override
-        public void entry() {
-            System.out.println("Silence - I kill u");
-        }
-
-        @Override
-        public void back(BackMessage msg) {
-            for (Player p : players) {
-                p.getConnection().shutdown();
-            }
-            players.clear();
-            containingState().goToState(init);
-        }
-    };
+    public final TankState playerReady = new PlayerReadyState(this);
 
     public final TankState playingState = new PlayingState(this);
 

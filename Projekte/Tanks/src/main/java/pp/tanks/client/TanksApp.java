@@ -133,7 +133,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void onConnectionClosed(IConnection<IClientMessage> conn) {
         //System.exit(0);
-        System.out.println("You infidel");
+        System.out.println("quit connection");
         connection.shutdown();
         connection = null;
     }
