@@ -5,6 +5,7 @@ import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
+import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
@@ -60,6 +61,6 @@ public class MiniController extends GridPane {
 
     @FXML
     private void joinServer() {
-        app.joinGame();
+        app.joinGame(GameMode.MULTIPLAYER);
     }
 }

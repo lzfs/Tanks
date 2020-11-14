@@ -1,5 +1,10 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.client.ClientReadyMessage;
+import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.server.GameMode;
+import pp.tanks.server.TanksServer;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -17,6 +22,7 @@ public class MainMenuController extends Controller {
 
     /**
      * create a new MainMenuController
+     * in order to start correct, the methode creates a new TankServer
      *
      * @param engine the engine this controller belongs to
      */
@@ -25,13 +31,13 @@ public class MainMenuController extends Controller {
     }
 
     /**
-     * the button for the singlePlayer
+     * the button for the Singleplayer
      */
     @FXML
     private Button singlePlayer;
 
     /**
-     * the button for the multiPlayer
+     * the button for the Multiplayer
      */
     @FXML
     private Button multiPlayer;
@@ -113,6 +119,11 @@ public class MainMenuController extends Controller {
     @FXML
     private void singlePlayer() {
         LOGGER.log(Level.INFO, "clicked SINGLEPLAYER");
+        engine.getTankApp().joinGame(GameMode.SINGLEPLAYER);
+        while (true) {
+            if (engine.getTankApp().getConnection().isConnected()) break;
+        }
+        System.out.println("Client connected to SP");
         engine.activateLevelController();
     }
 

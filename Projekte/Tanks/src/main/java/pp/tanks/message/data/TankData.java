@@ -11,16 +11,23 @@ public class TankData extends Data {
     private DoubleVec turretDir;
     private boolean move;
     private double rotation;
-    private int lifepoints;
+    private int lifePoints;
 
-    public TankData(DoubleVec pos, int id, int lifepoints) {
+    public TankData(DoubleVec pos, int id, int lifePoints) {
         super(pos, id);
         this.moveDir = MoveDirection.RIGHT;
         this.turretDir = new DoubleVec(0,0);
         this.move = false;
         this.rotation = 0;
-        this.lifepoints = lifepoints;
+        this.lifePoints = lifePoints;
     }
+
+    /**
+     * creates a similar copy of the current TankData-class for working processes
+     * @return returns the copy
+     */
+    public TankData mkCopy(){ return new TankData(this.getPos(), this.getId(), this.lifePoints);}
+
 
     /**
      * checks if the tank is moving
@@ -43,16 +50,15 @@ public class TankData extends Data {
     }
 
     /**
-     * updates the lifepoints of the tank
-     * @param lifepoints
+     * updates the life points of the tank
+     * @param lifePoints
      */
-    public void setLifepoints(int lifepoints) {
-        this.lifepoints = lifepoints;
+    public void setLifePoints(int lifePoints) {
+        this.lifePoints = lifePoints;
     }
 
-
-    public int getLifepoints() {
-        return lifepoints;
+    public int getLifePoints() {
+        return lifePoints;
     }
 
     /**

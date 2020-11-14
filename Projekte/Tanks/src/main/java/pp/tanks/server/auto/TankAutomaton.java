@@ -1,8 +1,10 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
+import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 import pp.tanks.server.TanksServer;
 
@@ -31,10 +33,10 @@ public class TankAutomaton extends TankStateMachine {
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn));
-            if (msg.message.equals("Singleplayer")) {
-                containingState().goToState(synchronize);
+            if (msg.mode == GameMode.SINGLEPLAYER) {
+                containingState().goToState(playerReady);
             }
-            if (msg.message.equals("multiplayer")) {
+            if (msg.mode == GameMode.MULTIPLAYER) {
                 containingState().goToState(waitingFor2Player);
             }
             //else containingState().goToState();
@@ -70,15 +72,23 @@ public class TankAutomaton extends TankStateMachine {
 
         @Override
         public void entry() {
-            System.out.println("Der Hamster liegt hier");
+            System.out.println("Silence - I kill u");
+        }
+
+        @Override
+        public void back(BackMessage msg) {
+            for (Player p : players) {
+                p.getConnection().shutdown();
+            }
+            players.clear();
+            containingState().goToState(init);
         }
     };
 
-
     public final TankState playingState = new PlayingState(this);
 
-
     // has to be in Model
+
     /**
      * Returns the player representing the client with the specified connection.
      *
@@ -111,7 +121,6 @@ public class TankAutomaton extends TankStateMachine {
     }
     */
 
-
     @Override
     public TankState containingState() {
         return null;
@@ -126,5 +135,4 @@ public class TankAutomaton extends TankStateMachine {
     public TankState init() {
         return init;
     }
-
 }

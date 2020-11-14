@@ -57,21 +57,21 @@ public class Player {
      * @return the nanoOffset at the computed index
      */
     public long getOffset() {
-        long i = ping.get(0);
-        int j = 0;
+        long smallestPing = ping.get(0);
+        int indexPing = 0; //describes the index of the smallestPing
         for (int k = 0; k < ping.size(); k++) {
-            if (ping.get(k) < i) {
-                j = k;
-                i = ping.get(k);
+            if (ping.get(k) < smallestPing) {
+                indexPing = k;
+                smallestPing = ping.get(k);
             }
         }
-        System.out.println("ping:");  // used for visual test of the serverteam
+        /*System.out.println("ping:");  // used for visual test of the serverteam
         for (long p : ping) System.out.println(p);
         System.out.println(ping.size());
         System.out.println("\nnano:");
         for (long p : nano) System.out.println(p);
-        System.out.println(nano.size());
-        return nano.get(j);
+        System.out.println(nano.size());*/
+        return nano.get(indexPing);
     }
 
 

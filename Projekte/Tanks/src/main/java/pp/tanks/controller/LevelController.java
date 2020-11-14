@@ -1,5 +1,6 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
@@ -90,6 +91,7 @@ public class LevelController extends Controller {
     @FXML
     private void back() {
         LOGGER.log(Level.INFO, "clicked BACK");
+        engine.getTankApp().getConnection().send(new BackMessage());
         engine.activateMainMenuController();
     }
 

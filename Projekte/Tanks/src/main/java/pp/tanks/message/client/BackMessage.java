@@ -2,17 +2,11 @@ package pp.tanks.message.client;
 
 import pp.network.IConnection;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.server.GameMode;
 
 /**
- * Message used to establish the connection to the server
+ * Message used to go back on the server aswell on the client
  */
-public class ClientReadyMessage implements IClientMessage {
-    public final GameMode mode;
-
-    public ClientReadyMessage(GameMode mode) {
-        this.mode = mode;
-    }
+public class BackMessage implements  IClientMessage{
 
     /**
      * Method to accept a visitor

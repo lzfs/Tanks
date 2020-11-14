@@ -8,14 +8,15 @@ import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.PingMsg;
-import pp.tanks.message.server.SynchronizeMsg;
+import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.SynchronizeMessage;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import pp.tanks.controller.Engine;
 import pp.tanks.controller.MainMenuController;
+import pp.tanks.server.GameMode;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -37,6 +38,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     private long offset;
 
     private final Properties properties = new Properties();
+    private Engine engine;
 
     private Stage stage;
     private MainMenuController mainMenuControl;
@@ -64,7 +66,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      */
     @Override
     public void start(Stage stage) {
-        Engine engine = new Engine(stage, this, properties);
+        this.engine = new Engine(stage, this, properties);
         this.stage = stage;
 
         stage.setResizable(false);
@@ -130,13 +132,17 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      */
     @Override
     public void onConnectionClosed(IConnection<IClientMessage> conn) {
-        System.exit(0);
+        //System.exit(0);
+        System.out.println("You infidel");
+        connection.shutdown();
+        connection = null;
     }
 
     /**
      * Establishes a connection to an online server
+     * @param mode given Player-mode
      */
-    public void joinGame() {
+    public void joinGame(GameMode mode) {
         if (connection != null) {
             LOGGER.severe("trying to join a game again"); //NON-NLS
             return;
@@ -148,7 +154,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             socket.setSoTimeout(1000);
             connection = new Connection<>(socket, this);
             if (connection.isConnected()) {
-                connection.send(new ClientReadyMessage("multiplayer"));
+                connection.send(new ClientReadyMessage(mode));
                 new Thread(connection).start();
             }
             else {
@@ -175,9 +181,10 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * @param msg the SynchronizeMsg to send
      */
     @Override
-    public void visit(SynchronizeMsg msg) {
-        System.out.println(msg.nanoOffset);
+    public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
+        engine.setPlayerEnum(msg.player);
+        System.out.println(msg.player + " offset: " + msg.nanoOffset);
     }
 
     /**
@@ -186,7 +193,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * @param msg the PingMsg to send
      */
     @Override
-    public void visit(PingMsg msg) {
+    public void visit(PingMessage msg) {
         connection.send(new PingResponse(System.nanoTime()));
     }
 }

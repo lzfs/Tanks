@@ -32,4 +32,6 @@ public interface IClientInterpreter {
 
     void visit(UpdateTankConfigMessage msg, IConnection<IServerMessage> from);
 
+    void visit(BackMessage msg, IConnection<IServerMessage> from);
+
 }

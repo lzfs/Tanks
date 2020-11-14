@@ -1,6 +1,6 @@
 package pp.tanks.message.server;
 
-public class PingMsg implements IServerMessage{
+public class PingMessage implements IServerMessage{
 
 
     @Override

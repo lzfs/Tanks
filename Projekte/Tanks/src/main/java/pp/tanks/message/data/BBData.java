@@ -12,6 +12,11 @@ public class BBData extends Data {
         super(pos, id);
         this.lifepoints = lifepoints;
     }
+    /**
+     * creates a similar copy of the current BBData-class for working processes
+     * @return returns the copy
+     */
+    public BBData mkCopy(){ return new BBData(this.getPos(), this.getId(), this.lifepoints);}
 
     public int getLifepoints() {
         return lifepoints;

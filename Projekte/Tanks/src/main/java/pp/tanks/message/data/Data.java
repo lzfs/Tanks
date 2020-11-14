@@ -1,5 +1,6 @@
 package pp.tanks.message.data;
 
+import pp.tanks.model.item.MoveDirection;
 import pp.util.DoubleVec;
 
 import java.io.Serializable;
@@ -18,6 +19,10 @@ public class Data implements Serializable{
         this.id = id;
     }
 
+    /**
+     * update the position of the tank
+     * @param pos
+     */
     public void setPos(DoubleVec pos) {
         this.pos = pos;
     }
@@ -30,6 +35,10 @@ public class Data implements Serializable{
         return pos;
     }
 
+    /**
+     * checks if the current item is destroyed
+     * @return boolean-value
+     */
     public boolean isDestroyed() {
         return destroyed;
     }
@@ -37,4 +46,11 @@ public class Data implements Serializable{
     public int getId() {
         return id;
     }
+
+    /**
+     * creates a similar copy of the current Data-class for working processes
+     * @return returns the copy
+     */
+    public Data mkCopy() { return  new Data(this.pos, this.id); }
+
 }

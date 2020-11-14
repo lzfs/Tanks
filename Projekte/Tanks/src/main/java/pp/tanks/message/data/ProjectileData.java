@@ -1,5 +1,6 @@
 package pp.tanks.message.data;
 
+import pp.tanks.model.item.Projectile;
 import pp.util.DoubleVec;
 
 /**
@@ -15,6 +16,16 @@ public class ProjectileData extends Data {
         this.dir=dir;
     }
 
+    /**
+     * creates a similar copy of the current ProjectileData-class for working processes
+     * @return returns the copy
+     */
+    public ProjectileData mkCopy(){ return new ProjectileData(this.getPos(), this.getId(), this.bounce, this.dir);}
+
+    /**
+     * updates the direction of the projectile
+     * @param dir
+     */
     public void setDir(DoubleVec dir) {
         this.dir = dir;
     }
@@ -24,7 +35,7 @@ public class ProjectileData extends Data {
     }
 
     /**
-     * if the projectile hit a reflectable block, the @bounce counter is reduced by one place
+     * if the projectile hit a reflect-able block, the @bounce counter is reduced by one place
      */
     public void bounced() {
         this.bounce -= 1;

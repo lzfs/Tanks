@@ -7,6 +7,7 @@ import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
@@ -63,6 +64,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private Controller controller;
     private Tank saveTank = null;
     private String mode = "";
+    private PlayerEnum playerEnum;
 
     /**
      * Creates a new engine
@@ -395,5 +397,13 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
                     sound.play(TanksSoundProperty.blockDestroyedSound);
                     break;
             }
+    }
+
+    public PlayerEnum getPlayerEnum() {
+        return playerEnum;
+    }
+
+    public void setPlayerEnum(PlayerEnum playerEnum) {
+        this.playerEnum = playerEnum;
     }
 }

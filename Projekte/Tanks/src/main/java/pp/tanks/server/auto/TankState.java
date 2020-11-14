@@ -2,6 +2,7 @@ package pp.tanks.server.auto;
 
 import pp.automaton.StateSupport;
 import pp.network.IConnection;
+import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.PingResponse;
@@ -51,5 +52,9 @@ public abstract class TankState extends StateSupport<TankState> {
      */
     public void shoot(ShootMessage msg) {
         handle(s -> s.shoot(msg));
+    }
+
+    public void back(BackMessage msg) {
+        handle(s -> s.back(msg));
     }
 }

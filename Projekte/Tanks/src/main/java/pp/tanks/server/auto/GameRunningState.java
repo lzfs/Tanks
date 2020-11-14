@@ -35,11 +35,7 @@ public class GameRunningState extends TankState {
      * only printing out the data
      */
     public void workBuff(){
-        for (DataTimeItem data : working){
-            System.out.println(data);
-        }
-        System.out.println(working.length + "\n");
-        working = null;
+
     }
 
     /**

@@ -195,6 +195,6 @@ public abstract class Tank extends Item<TankData> {
         else {
             armor.takeDamage(damage);
         }
-        data.setLifepoints(armor.getArmorPoints());
+        data.setLifePoints(armor.getArmorPoints());
     }
 }
