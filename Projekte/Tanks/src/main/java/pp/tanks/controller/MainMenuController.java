@@ -120,9 +120,6 @@ public class MainMenuController extends Controller {
     private void singlePlayer() {
         LOGGER.log(Level.INFO, "clicked SINGLEPLAYER");
         engine.getTankApp().joinGame(GameMode.SINGLEPLAYER);
-        while (true) {
-            if (engine.getTankApp().getConnection().isConnected()) break;
-        }
         System.out.println("Client connected to SP");
         engine.activateLevelController();
     }
