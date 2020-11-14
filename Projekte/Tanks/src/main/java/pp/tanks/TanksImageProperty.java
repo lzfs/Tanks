@@ -5,6 +5,7 @@ package pp.tanks;
  * configuration stored in a {@link java.util.Properties} object.
  */
 public enum TanksImageProperty {
+
     /**
      * Path of the turret1 image
      */
@@ -61,32 +62,32 @@ public enum TanksImageProperty {
     backgroundImage,
 
     /**
-     * Path of the breakableBlock image
+     * Path of the "breakable block" image
      */
     bBlock,
 
     /**
-     * Path of the reflectable Block image
+     * Path of the "reflectable block" image
      */
     rBlock,
 
     /**
-     * Path of the unbreakable Block image
+     * Path of the "unbreakable block" image
      */
     uBlock,
 
     /**
-     * Path of the lightProjectile Block image
+     * Path of the "light projectile" image
      */
     lightBullet,
 
     /**
-     * Path of the normalProjectile Block image
+     * Path of the "normal projectile" image
      */
     normalBullet,
 
     /**
-     * Path of the heavyProjectile image
+     * Path of the "heavy projectile" image
      */
     heavyBullet,
 
@@ -105,7 +106,9 @@ public enum TanksImageProperty {
      */
     soundOff,
 
+    /**
+     * Path of the "tank destroyed" image
+     */
     tankDestroyed,
-
 }
 

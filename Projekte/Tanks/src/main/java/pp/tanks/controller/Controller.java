@@ -3,7 +3,7 @@ package pp.tanks.controller;
 import javafx.event.Event;
 
 /**
- * Base class of all controllers of the droids game
+ * Base class of all controllers of the tanks game
  */
 public class Controller {
     final Engine engine;

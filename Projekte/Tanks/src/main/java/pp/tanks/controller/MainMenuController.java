@@ -4,14 +4,21 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
-public class MainMenuController extends Controller {
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * The controller realizing the main menu of the game.
+ */
+public class MainMenuController extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(MainMenuController.class.getName());
     private static final String MENU_CONTROL_FXML = "MainMenu.fxml"; //NON-NLS
     private Scene scene;
 
     /**
      * create a new MainMenuController
-     * @param engine the engine of the game that switches between controllers
+     *
+     * @param engine the engine this controller belongs to
      */
     public MainMenuController(Engine engine) {
         super(engine);
@@ -42,27 +49,41 @@ public class MainMenuController extends Controller {
     private Button credits;
 
     /**
-     * the button to leave the game
+     * the button to quit the game
      */
     @FXML
     private Button quitGame;
 
+    /**
+     * Create the scene displaying the main menu.
+     */
     public Scene makeScene() {
         return new Scene(engine.getViewForController(MENU_CONTROL_FXML, this));
     }
 
+    /**
+     * This method is called whenever this controller is activated, i.e., when the game is started.
+     */
     @Override
     public void entry() {
+        LOGGER.log(Level.INFO, "ENTRY MainMenuController");
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
     }
 
+    /**
+     * This method is called whenever this controller is deactivated,
+     * i.e., when the users clicked any of the buttons.
+     */
     @Override
     public void exit() {
-        System.out.println("EXIT");
+        LOGGER.log(Level.INFO, "EXIT MainMenuController");
     }
 
+    /**
+     * @return the name of the file as a String
+     */
     public String getFileName() {
         return MENU_CONTROL_FXML;
     }
@@ -72,7 +93,7 @@ public class MainMenuController extends Controller {
      */
     @FXML
     private void settings() {
-        System.out.println("SETTINGS");
+        LOGGER.log(Level.INFO, "clicked Settings");
         engine.activateSettingsController();
     }
 
@@ -82,7 +103,7 @@ public class MainMenuController extends Controller {
     @FXML
     private void multiPlayer() {
         engine.setMode("Multiplayer");
-        System.out.println("MULTIPLAYER");
+        LOGGER.log(Level.INFO, "clicked MULTIPLAYER");
         engine.activateLobbyController();
     }
 
@@ -91,7 +112,7 @@ public class MainMenuController extends Controller {
      */
     @FXML
     private void singlePlayer() {
-        System.out.println("SINGLEPLAYER");
+        LOGGER.log(Level.INFO, "clicked SINGLEPLAYER");
         engine.activateLevelController();
     }
 
@@ -100,7 +121,7 @@ public class MainMenuController extends Controller {
      */
     @FXML
     private void credits() {
-        System.out.println("CREDITS");
+        LOGGER.log(Level.INFO, "clicked CREDITS");
         engine.activateCreditsController();
     }
 
@@ -109,7 +130,7 @@ public class MainMenuController extends Controller {
      */
     @FXML
     private void quitGame() {
-        System.out.println("QUIT_GAME");
+        LOGGER.log(Level.INFO, "clicked QUIT_GAME");
         System.exit(0);
     }
 }
