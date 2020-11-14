@@ -24,86 +24,60 @@ public class Howitzer extends COMEnemy {
         movingCounter = 2;
     }
 
+    /**
+     * specifies the behaviour of an Howitzer (driving in their half of the map to avoid getting a contact with faster tanks)
+     * @param delta
+     */
     @Override
     public void behaviour(double delta) {
         turret.setDirection(model.getTanksMap().getTank().getPos().sub(this.getPos()));
         if (canShoot() && Math.random() < 0.8) {
-            //for(int i = 0; i < turret.getMagSize(); i++) {
             if (canShoot()) {
                 shoot(model.getTanksMap().getTank().getPos());
             }
-            //}
         }
         else {
-            Tank playersTank = model.getTanksMap().getTank();
-
-
-            DoubleVec tmpPos;
             MoveDirection[] movingDirs;
             int idx;
             movingDirs = MoveDirection.values();
-            idx = (int) (Math.random()*movingDirs.length);
-
-
-            //letzen double vec vielleicht anpassen
+            idx = (int) (Math.random() * movingDirs.length);
             DoubleVec targetPos = getPos().add(movingDirs[idx].getVec().mult(7));
-            //System.out.println(idx);
-
-            //What if pos is blocked??
             navigateTo(targetPos);
-            //System.out.println("PATH  " + path);
-            // as long as there is a path to follow and this time slot has still some time left
             while (path.size() > 0 && delta > 0.) {
                 final DoubleVec target = path.get(0);
                 if (getPos().distanceSq(target) < 1e-4) {
-                    // we arte so close... let's jump to the next path point
                     setPos(target);
                     path.remove(0);
                 }
                 else {
-
                     //TODO
                     final double bearing = target.sub(getPos()).angle() % 180;
                     double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
-                    //System.out.println("winkel " + needToTurnBy);
-                    // we need to turn the droid such that its rotation coincides with the bearing of the next path point
                     if (Math.abs(needToTurnBy) > 2) {
                         //TODO
-
-                        Double aktuelleRotation = getRotation();
+                        Double currentRot = getRotation();
                         Double moveDirRotation = target.sub(getPos()).normalize().angle();
-                        Double tmp = (aktuelleRotation - moveDirRotation + 360) % 360;
-                        Double tmp1 = (moveDirRotation - aktuelleRotation + 360) % 360;
+                        Double tmp = (currentRot - moveDirRotation + 360) % 360;
+                        Double tmp1 = (moveDirRotation - currentRot + 360) % 360;
                         if (tmp > tmp1) {
-                            setRotation(aktuelleRotation + delta * rotgeschwind);
+                            setRotation(currentRot + delta * rotationspeed);
                         }
                         else {
-                            setRotation(aktuelleRotation - delta * rotgeschwind);
+                            setRotation(currentRot - delta * rotationspeed);
                         }
-
-                        //setRotation((int) (getRotation() + Math.signum(needToTurnBy) * delta * speed));
                         delta = 0.;
                     }
                     else {
-                        //System.out.println("2");
-                        // we first turn the droid
                         setRotation((int) bearing);
-                        // and there is some time left in this time slot
-                        //delta -= Math.abs(needToTurnBy) / speed;
                         final double distanceToGo = getPos().distance(target);
                         if (distanceToGo >= delta * speed) {
-                            // we do not reach the next path point in this time slot
                             DoubleVec dir = target.sub(getPos()).normalize();
                             setPos(getPos().add(dir.mult(delta * speed)));
-                            //setPos(getPos().add(DoubleVec.polar(speed * delta, getRotation())));
-                            //setPos(getPos().add(getMoveDir().getVec().mult(-1*speed*delta)));
                             delta = 0.;
                         }
                         else {
-                            // we have reached the next path pint in this time slot
                             setPos(target);
                             path.remove(0);
-                            // and there is some time left in this time slot
                             delta -= distanceToGo / speed;
                         }
                     }
@@ -124,12 +98,9 @@ public class Howitzer extends COMEnemy {
         if (pPath != null) {
             for (IntVec v : pPath)
                 path.add(v.toFloatVec());
-            // remove first path point as this represents the field where the droid is currently stying
             if (path.size() > 1) path.remove(0);
         }
     }
-
-
 
     /**
      * Normalizes the specified angle such the returned angle lies in the range -180 degrees

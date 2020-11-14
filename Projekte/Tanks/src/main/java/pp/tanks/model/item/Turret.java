@@ -15,9 +15,9 @@ public class Turret {
     private double[] mag;
     private DoubleVec direction;
     private double cadence;
-    private final double cadence2;
+    private final double currentcadence;
 
-    public Turret(int damage, int bounced, int weight, double reloadTime, int mag,double cadence) {
+    public Turret(int damage, int bounced, int weight, double reloadTime, int mag, double cadence) {
         this.damage = damage;
         this.bounced = bounced;
         this.weight = weight;
@@ -25,8 +25,8 @@ public class Turret {
         this.mag = new double[mag];
         this.direction =new DoubleVec(0,0);
         Arrays.fill(this.mag, 0.0);
-        this.cadence=0;
-        this.cadence2=cadence;
+        this.cadence = 0;
+        this.currentcadence = cadence;
     }
 
     /**
@@ -35,28 +35,16 @@ public class Turret {
      * @param delta time in seconds since the last update call
      */
     public void update(double delta) {
-
-        cadence-=delta;
-        if(cadence<0){
-            cadence=0;
+        cadence -= delta;
+        if (cadence < 0) {
+            cadence = 0;
         }
-
-        for(int i = 0; i < mag.length; i++) {
+        for (int i = 0; i < mag.length; i++) {
             mag[i] -= delta;
-            if(mag[i] < 0)
+            if (mag[i] < 0)
                 mag[i] = 0;
         }
     }
-
-    /**
-     * fills up the magazine of the tank
-     * @param idx
-     */
-    /*
-    public void reload(int idx) {
-        //TODO set Timer
-    }
-     */
 
 
     /**
@@ -70,11 +58,10 @@ public class Turret {
      * fires a projectile, reduces magazine by one place
      */
     public void shoot() {
-        for(int i = 0; i < mag.length; i++) {
-            if(mag[i] == 0.0) {
+        for (int i = 0; i < mag.length; i++) {
+            if (mag[i] == 0.0) {
                 mag[i] = reloadTime;
-                cadence=cadence2;
-                //reload(i);
+                cadence = currentcadence;
                 return;
             }
         }
@@ -86,7 +73,7 @@ public class Turret {
      */
     public boolean canShoot() {
         for (double d : mag) {
-            if(d == 0.0 && cadence==0) {
+            if (d == 0.0 && cadence == 0) {
                 return true;
             }
         }

@@ -24,8 +24,6 @@ public abstract class Block<T extends Data> extends Item<T> {
         return width;
     }
 
-
-
     /**
      * Indicates that this block has been destroyed.
      */
@@ -39,15 +37,7 @@ public abstract class Block<T extends Data> extends Item<T> {
      */
     @Override
     public void isVisible() {
-
-    }
-
-    /**
-     * Accept method of the visitor pattern.
-     */
-    @Override
-    public void accept(Visitor v) {
-        //??
+        //TODO
     }
 
     /**
@@ -56,7 +46,5 @@ public abstract class Block<T extends Data> extends Item<T> {
      * @param delta time in seconds since the last update call
      */
     @Override
-    public void update(double delta) {
-
-    }
+    public void update(double delta) {}
 }

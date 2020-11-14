@@ -29,8 +29,6 @@ public class Model {
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
 
-    static final ClassLoader loader = Model.class.getClassLoader();
-
     /**
      * Creates a game model
      *
@@ -38,23 +36,6 @@ public class Model {
      */
     public Model(Properties props) {
         this.props = props;
-        //make tanks map
-        //setTanksMap(new TanksMapCreator(this).makeEmptyMap());
-        /*
-        try{
-            File file = new File("C:\\Users\\there\\Desktop\\test_environment\\Projekte\\Tanks\\src\\main\\resources\\pp\\tanks\\maps\\map1.xml");
-            loadMap(file);
-        }catch(IOException  | XMLStreamException ex ){
-            System.out.println(ex.getMessage());
-            setTanksMap(new TanksMapCreator(this).makeEmptyMap());
-        }
-
-         */
-
-
-
-        //setTanksMap(new TanksMapCreator(this).makeEmptyMap());
-
     }
 
     /**
@@ -102,18 +83,15 @@ public class Model {
      * Loads a game map from the specified xml file and sets it as the current one.
      *
      * @param string xml file name representing a tanks map
-     * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
-     * @throws XMLStreamException if the file is no valid xml file
      */
     public void loadMap(String string) throws IOException, XMLStreamException {
-        String path = "Tanks/src/main/resources/pp/tanks/maps/"+string;
+        String path = "Tanks/src/main/resources/pp/tanks/maps/" + string;
         String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
-        try{
-            File file2 = new File(absolutePath);
-            setTanksMap(new TanksMapFileReader(this).readFile(file2));
-        }catch(IOException | XMLStreamException ex ){
+        try {
+            File currentFile = new File(absolutePath);
+            setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
+        } catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
-            setTanksMap(new TanksMapCreator(this).makeEmptyMap());
         }
     }
 
@@ -167,9 +145,9 @@ public class Model {
      * Returns true if and only if there are no tanks left.
      */
     public boolean gameWon() {
-        if(map.getTank().isDestroyed()) return false;
-        for(Tank tanks : map.getTanks()){
-            if(tanks!= map.getTank()&&!tanks.isDestroyed()) return false;
+        if (map.getTank().isDestroyed()) return false;
+        for (Tank tanks : map.getTanks()) {
+            if (tanks != map.getTank() && !tanks.isDestroyed()) return false;
         }
         return true;
     }

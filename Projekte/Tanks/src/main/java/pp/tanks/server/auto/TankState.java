@@ -2,7 +2,7 @@ package pp.tanks.server.auto;
 
 import pp.automaton.StateSupport;
 import pp.network.IConnection;
-import pp.tanks.message.client.ClientReadyMsg;
+import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.client.ShootMessage;
@@ -23,7 +23,7 @@ public abstract class TankState extends StateSupport<TankState> {
      * @param msg the ClientReadyMsg
      * @param conn the Connection the message was sent from
      */
-    public void playerConnected(ClientReadyMsg msg, IConnection<IServerMessage> conn) {
+    public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
         handle(s -> s.playerConnected(msg, conn));
     }
 

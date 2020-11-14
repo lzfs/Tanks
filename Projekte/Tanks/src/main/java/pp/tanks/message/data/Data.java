@@ -10,13 +10,13 @@ import java.io.Serializable;
 public class Data implements Serializable{
     private DoubleVec pos;
     private int id;
+    private boolean destroyed;
 
     public Data(DoubleVec pos, int id) {
         this.destroyed = false;
         this.pos = pos;
         this.id = id;
     }
-    private boolean destroyed;
 
     public void setPos(DoubleVec pos) {
         this.pos = pos;

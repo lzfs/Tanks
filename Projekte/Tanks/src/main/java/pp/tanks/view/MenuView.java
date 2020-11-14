@@ -34,7 +34,5 @@ public class MenuView extends GridPane implements View {
     }
 
     @Override
-    public void update() {
-        //System.out.println("MENU VIEW UPDATE");
-    }
+    public void update() {}
 }

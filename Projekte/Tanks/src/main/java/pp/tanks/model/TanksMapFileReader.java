@@ -129,11 +129,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-
-                    //für übungszwecke
-                    PlayersTank pT =new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(),new TankData(tmpPos, 1000, 20));
-
-                    //pT.setPos(tmpPos);
+                    PlayersTank pT = new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(),new TankData(tmpPos, 1000, 20));
                     map.addTanks(pT);
                     break;
                 }
@@ -142,20 +138,14 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    //Enemy e= new Enemy(model);
-                    //e.setPos(tmpPos);
-                    //map.addTanks(e);
                     break;
                 }
                 case "apc": {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    //Enemy e= new Enemy(model);
-                    //e.setPos(tmpPos);
-
                     TankData data = new TankData(tmpPos,0100,20);
-                    ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model,data);
+                    ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model, data);
                     map.addTanks(apc);
                     break;
                 }
@@ -163,11 +153,8 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    //Enemy e= new Enemy(model);
-                    //e.setPos(tmpPos);
-
                     TankData data = new TankData(tmpPos,0100,20);
-                    Howitzer howitzer = new Howitzer(model,data);
+                    Howitzer howitzer = new Howitzer(model, data);
                     map.addTanks(howitzer);
                     break;
                 }
@@ -176,15 +163,11 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    //Enemy e= new Enemy(model);
-                    //e.setPos(tmpPos);
-
                     TankData data = new TankData(tmpPos,0100,20);
                     TankDestroyer tankDestroyer = new TankDestroyer(model,data);
                     map.addTanks(tankDestroyer);
                     break;
                 }
-
                 default:
                     error("unknown XML element '" + elemName + "'");
             }

@@ -20,7 +20,7 @@ public class Enemy extends Tank {
      */
     @Override
     public void isVisible() {
-
+        //TODO
     }
 
     /**

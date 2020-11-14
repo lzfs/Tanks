@@ -6,7 +6,7 @@ import pp.util.DoubleVec;
 /**
  * Represents the data of a tank that is sent to the server
  */
-public class TankData extends Data{
+public class TankData extends Data {
     private MoveDirection moveDir;
     private DoubleVec turretDir;
     private boolean move;

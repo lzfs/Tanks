@@ -18,7 +18,7 @@ public class NormalProjectile extends Projectile {
      */
     @Override
     public void isVisible() {
-
+        //TODO
     }
 
     /**

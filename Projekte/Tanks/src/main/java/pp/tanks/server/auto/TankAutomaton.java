@@ -1,7 +1,7 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
-import pp.tanks.message.client.ClientReadyMsg;
+import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.server.Player;
 import pp.tanks.server.TanksServer;
@@ -29,7 +29,7 @@ public class TankAutomaton extends TankStateMachine {
         }
 
         @Override
-        public void playerConnected(ClientReadyMsg msg, IConnection<IServerMessage> conn) {
+        public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn));
             if (msg.nachricht.equals("Singleplayer")) {
                 containingState().goToState(synchronize);
@@ -51,7 +51,7 @@ public class TankAutomaton extends TankStateMachine {
         }
 
         @Override
-        public void playerConnected(ClientReadyMsg msg, IConnection<IServerMessage> conn) {
+        public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn));
             containingState().goToState(synchronize);
         }

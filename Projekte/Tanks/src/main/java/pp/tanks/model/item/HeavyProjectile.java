@@ -20,7 +20,9 @@ public class HeavyProjectile extends Projectile {
      * method for test cases
      */
     @Override
-    public void isVisible() {}
+    public void isVisible() {
+        //TODO
+    }
 
     /**
      * Accept method of the visitor pattern.
@@ -37,52 +39,29 @@ public class HeavyProjectile extends Projectile {
      */
     @Override
     public void update(double delta) {
-        if(flag>0){
-            flag-=delta;
+        if (flag > 0) {
+            flag -= delta;
         }
-        if(flag<0){
-            flag=0;
+        if (flag < 0) {
+            flag = 0;
         }
         data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
-        //TODO schiesst übers ziel hinaus
-        if(getPos().distance(targetPos)<=0.3){
+        if (getPos().distance(targetPos) <= 0.3) {
             setPos(targetPos);
         }
-        if(getPos().x==targetPos.x && getPos().y== targetPos.y) {
-            this.effectiveRadius=1.5;
+        if (getPos().x == targetPos.x && getPos().y == targetPos.y) {
+            this.effectiveRadius = 1.5;
             processHits();
             destroy();
         }
     }
 
     /**
-     * makes damage at a specified radius on the map
-     */
-    /*
-    @Override
-    public void processHits() {
-        for (Tank tank : model.getTanksMap().getTanks()) {
-            if (collisionWith(tank)) {
-                tank.processDamage(damage);
-                return;
-            }
-        }
-        for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
-            if (collisionWith(bblock)) {
-                bblock.reduce(damage);
-                return;
-            }
-        }
-    }
-
-     */
-    /**
      * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
      */
     public void processHits() {
         for (Tank tank : model.getTanksMap().getTanks()) {
             if (collisionWith(tank) && flag == 0) {
-                System.out.println("HIT tank");
                 tank.processDamage(damage);
                 destroy();
                 return;
@@ -90,7 +69,6 @@ public class HeavyProjectile extends Projectile {
         }
         for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
             if (collisionWith(bblock)) {
-                System.out.println("HIT bblock");
                 bblock.reduce(damage);
                 destroy();
                 return;
@@ -98,18 +76,14 @@ public class HeavyProjectile extends Projectile {
         }
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
             if (collisionWith(rBlock)) {
-                System.out.println("HIT rblock");
                 reflect();
                 return;
             }
         }
         for (UnbreakableBlock uBlock : model.getTanksMap().getUnbreakableBlocks()) {
             if (collisionWith(uBlock)) {
-                System.out.println("HIT ublock");
                 destroy();
             }
         }
     }
-
-
 }

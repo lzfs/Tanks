@@ -7,9 +7,7 @@ import pp.util.IntVec;
 import java.util.*;
 
 class TanksNavigator extends Navigator<IntVec> {
-
     private static final double ROTATION_PENALTY = .5;
-
     private final Set<IntVec> obstacles = new HashSet<>();
     private final TanksMap map;
 

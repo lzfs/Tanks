@@ -28,7 +28,7 @@ public abstract class Item<T extends Data> {
     }
 
     /**
-     * @return The effective Radius of the Item
+     * @return the effective Radius of the Item
      */
     public double getEffectiveRadius() {
         return effectiveRadius;
@@ -57,16 +57,12 @@ public abstract class Item<T extends Data> {
         return data.isDestroyed();
     }
 
-    ;
-
     /**
      * Checks whether there is a collision with another item
      *
      * @param other the item which is checked for a collision
      */
     public boolean collisionWith(Item other) {
-
-        //Tank and block have same size?
         if (getPos() == null || other.isDestroyed()) return false;
 
         double height = 0.6;
@@ -84,11 +80,18 @@ public abstract class Item<T extends Data> {
                    && (Math.abs(getPos().y - other.getPos().y) <= height + this.getEffectiveRadius());
         }
         else {
-            return (Math.abs(getPos().x - other.getPos().x) <=  2*width) && (Math.abs(getPos().y - other.getPos().y) <= 2*height);
+            return (Math.abs(getPos().x - other.getPos().x) <=  2 * width) && (Math.abs(getPos().y - other.getPos().y) <= 2 * height);
         }
-        //return false;
     }
 
+    /**
+     * checks if an obstacle is within a specified area
+     * @param obsPos
+     * @param height
+     * @param width
+     * @param otherPos
+     * @return
+     */
     public boolean isInRectangle(DoubleVec obsPos, int height, int width, DoubleVec otherPos) {
         if ((otherPos.x <= (obsPos.x + width)) && (otherPos.x >= (obsPos.x - width))) {
             if ((otherPos.y <= (obsPos.y + height)) && (otherPos.y >= (obsPos.y - width))) return true;

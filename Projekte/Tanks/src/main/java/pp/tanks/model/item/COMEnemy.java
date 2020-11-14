@@ -7,7 +7,7 @@ import pp.util.DoubleVec;
 /**
  * Represents a enemy played by the computer
  */
-public class COMEnemy extends Enemy{
+public class COMEnemy extends Enemy {
 
     protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, armor, turret, data);
@@ -16,33 +16,39 @@ public class COMEnemy extends Enemy{
     /**
      * method for test cases to check if the COMEnemy can shoot
      */
-    public void cheatShoot() {}
+    public void cheatShoot() {
+        //TODO
+    }
 
     /**
      * method for test cases to check if the COMEnemy can move
      */
-    public void cheatMove(DoubleVec pos) {}
-
-    public boolean blockShooting() {
-        return false;
+    public void cheatMove(DoubleVec pos) {
+        //TODO
     }
 
-    public void blockMovement() {}
-
+    /**
+     * Called once per frame. Used for updating this item's position etc.
+     *
+     * @param delta time in seconds since the last update call
+     */
     @Override
     public void update(double delta) {
         turret.update(delta);
-        if(isMoving()) {
+        if (isMoving()) {
             super.update(delta);
         }
         else {
-            if(!this.isDestroyed()){
+            if (!this.isDestroyed()){
                 behaviour(delta);
             }
-
         }
     }
 
+    /**
+     * specifies the behaviour of a COMEnemy
+     * @param delta
+     */
     public void behaviour(double delta) {}
 
     /**

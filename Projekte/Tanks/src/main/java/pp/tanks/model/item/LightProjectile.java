@@ -18,7 +18,7 @@ public class LightProjectile extends Projectile {
      */
     @Override
     public void isVisible() {
-        
+        //TODO
     }
 
     /**
@@ -30,5 +30,5 @@ public class LightProjectile extends Projectile {
     }
 
     @Override
-    public String toString() { return "Light";}
+    public String toString() { return "LightProjectile";}
 }

@@ -63,20 +63,10 @@ public class Sounds {
             @Override
             public void run() {
                 mediaPlayer = cls;
-                //resetSfx();
                 mediaPlayer.play();
             }
         });
     }
-
-    /**
-     * reset SFx to play them again
-     */
-    /*
-    void resetSfx(){
-        this.nameOfSound = new MediaPlayer(new Media(getClass().getResource("sounds/nameOfSound.mp3").toExternalForm()));
-    }
-     */
 
     /**
      * Mute sounds

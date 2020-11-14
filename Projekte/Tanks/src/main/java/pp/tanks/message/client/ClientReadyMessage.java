@@ -4,9 +4,14 @@ import pp.network.IConnection;
 import pp.tanks.message.server.IServerMessage;
 
 /**
- * message sent when a lobby is joined by a client
+ * Message used to establish the connection to the server
  */
-public class JoinLobbyXMessage implements IClientMessage {
+public class ClientReadyMessage implements IClientMessage {
+    public final String message;
+
+    public ClientReadyMessage(String msg) {
+        this.message = msg;
+    }
 
     /**
      * Method to accept a visitor

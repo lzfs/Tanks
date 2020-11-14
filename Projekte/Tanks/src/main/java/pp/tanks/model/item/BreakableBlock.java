@@ -8,7 +8,7 @@ import pp.util.DoubleVec;
 /**
  * Represents a block that can be destroyed by getting hit by a projectile
  */
-public class BreakableBlock extends Block<BBData>{
+public class BreakableBlock extends Block<BBData> {
 
     public BreakableBlock(Model model, BBData data) {
         super(model, data);
@@ -27,7 +27,7 @@ public class BreakableBlock extends Block<BBData>{
      * @param points the points to reduce the lifepoints
      */
     public void reduce(int points) {
-        if(getLifepoints() - points <= 0) {
+        if (getLifepoints() - points <= 0) {
             data.reduceLifepoints(data.getLifepoints());
             destroy();
             return;
@@ -44,6 +44,11 @@ public class BreakableBlock extends Block<BBData>{
         v.visit(this);
     }
 
+    /**
+     * Called once per frame. Used for updating this item's position etc.
+     *
+     * @param delta time in seconds since the last update call
+     */
     @Override
     public void update(double delta) {
         super.update(delta);

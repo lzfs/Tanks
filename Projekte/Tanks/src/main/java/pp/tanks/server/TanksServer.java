@@ -57,7 +57,7 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
     }
 
     @Override
-    public void visit(ClientReadyMsg msg, IConnection<IServerMessage> from) {
+    public void visit(ClientReadyMessage msg, IConnection<IServerMessage> from) {
         auto.playerConnected(msg, from);
     }
 

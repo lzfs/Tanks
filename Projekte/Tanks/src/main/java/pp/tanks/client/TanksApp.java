@@ -4,7 +4,7 @@ import pp.network.Connection;
 import pp.network.IConnection;
 import pp.network.MessageReceiver;
 import pp.tanks.message.client.IClientMessage;
-import pp.tanks.message.client.ClientReadyMsg;
+import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
@@ -12,7 +12,6 @@ import pp.tanks.message.server.PingMsg;
 import pp.tanks.message.server.SynchronizeMsg;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pp.tanks.controller.Engine;
 import pp.tanks.controller.MainMenuController;
@@ -63,11 +62,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * start Method for JavaFX
      *
      * @param stage the stage to show
-     * @throws Exception if something goes wrong
      */
     @Override
-    public void start(Stage stage) throws Exception {
-
+    public void start(Stage stage) {
         Engine engine = new Engine(stage, this, properties);
         this.stage = stage;
 
@@ -76,8 +73,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.show();
         engine.gameLoop();
         sounds.setMusic(sounds.mainMenu);
-
-
     }
 
     /**
@@ -150,7 +145,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             socket.setSoTimeout(1000);
             connection = new Connection<>(socket, this);
             if (connection.isConnected()) {
-                connection.send(new ClientReadyMsg("multiplayer"));
+                connection.send(new ClientReadyMessage("multiplayer"));
                 new Thread(connection).start();
             }
             else {

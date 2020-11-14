@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  * of all items consisting of the tanks, blocks and projectiles.
  */
 public class TanksMap extends AbstractList<Item <? extends Data>> {
-    private static final Logger LOGGER = Logger.getLogger(TanksMap.class.getName());
     private List<Tank> tanks = new ArrayList<>();
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
     private List<BreakableBlock> breakableBlocks = new ArrayList<>();
@@ -39,8 +38,8 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     }
 
     /**
-     * Returns the item (droid, obstacle, etc.) at the specified index in the list of all items.
-     * Index 0 always indicates the droid.
+     * Returns the item (tank, block, etc.) at the specified index in the list of all items.
+     * Index 0 always indicates the playersTank.
      *
      * @param index the index in the list of all items.
      */
@@ -81,7 +80,6 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * @return true or false
      */
     private boolean blocked(DoubleVec pos) {
-
         for (Item obs : getBlocks()) {
             if (obs.getPos().equals(pos)) {
                 return true;
@@ -105,14 +103,18 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     }
 
     /**
-     *
+     * returns the playersTank
      */
     public Tank getTank() {
         return tanks.get(0);
     }
 
-    public void setPlayerTank(Tank tank){
-        tanks.set(0,tank);
+    /**
+     * sets the playersTank on the first position in the list of tanks
+     * @param tank
+     */
+    public void setPlayerTank(Tank tank) {
+        tanks.set(0, tank);
 
     }
 
@@ -207,21 +209,13 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * @param deltaTime time in seconds since the last update call
      */
     void update(double deltaTime) {
-
-
-        for (Item item : this){
+        for (Item item : this) {
             item.update(deltaTime);
         }
-
-        // last update loop or user action may have created new projectiles
         projectiles.addAll(addedProjectiles);
         addedProjectiles.clear();
-
-        // process hits by projectiles
         for (Projectile proj : projectiles)
             proj.processHits();
-
-        // remove all destroyed items, except the droid
         List<Item> removed = new ArrayList<>();
         for (Item item : this)
             if (item.isDestroyed())
@@ -233,8 +227,8 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     /**
      * Adds a Tank to this map.
      */
-    public void addTanks(Tank t) {
-        tanks.add(t);
+    public void addTanks(Tank tank) {
+        tanks.add(tank);
     }
 
     /**
@@ -262,8 +256,6 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * Adds a projectile to this map.
      */
     public void addProjectile(Projectile p) {
-
         addedProjectiles.add(p);
-        //System.out.println(addedProjectiles.toString());
     }
 }
