@@ -2,6 +2,7 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 /**
@@ -47,5 +48,6 @@ public class Enemy extends Tank {
     @Override
     public void destroy() {
         super.destroy();
+        model.notifyReceivers(TanksNotification.TANK_DESTROYED);
     }
 }

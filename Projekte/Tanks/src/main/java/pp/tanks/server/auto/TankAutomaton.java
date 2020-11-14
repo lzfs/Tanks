@@ -31,10 +31,10 @@ public class TankAutomaton extends TankStateMachine {
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn));
-            if (msg.nachricht.equals("Singleplayer")) {
+            if (msg.message.equals("Singleplayer")) {
                 containingState().goToState(synchronize);
             }
-            if (msg.nachricht.equals("multiplayer")) {
+            if (msg.message.equals("multiplayer")) {
                 containingState().goToState(waitingFor2Player);
             }
             //else containingState().goToState();

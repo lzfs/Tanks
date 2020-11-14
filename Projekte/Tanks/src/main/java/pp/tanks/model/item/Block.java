@@ -2,6 +2,7 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.Data;
 import pp.tanks.model.Model;
+import pp.tanks.notification.TanksNotification;
 
 /**
  * base class for blocks
@@ -30,6 +31,7 @@ public abstract class Block<T extends Data> extends Item<T> {
     @Override
     public void destroy() {
         data.destroy();
+        model.notifyReceivers(TanksNotification.BLOCK_DESTROYED);
     }
 
     /**
