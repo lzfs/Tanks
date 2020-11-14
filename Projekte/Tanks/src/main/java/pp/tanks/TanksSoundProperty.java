@@ -6,10 +6,19 @@ package pp.tanks;
  */
 public enum TanksSoundProperty {
 
+    /**
+     * Path to the sound file played when a tank shoots
+     */
     tanksProjectileSound,
 
+    /**
+     * Path to the sound file played when a tank gets destroyed
+     */
     destroyedSound,
 
+    /**
+     * Path to the sound file played when a block gets destroyed
+     */
     blockDestroyedSound,
 }
 

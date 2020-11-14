@@ -4,13 +4,21 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * The controller displaying the lobby settings.
+ */
 public class LobbyController extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(LobbyController.class.getName());
     private static final String LOBBY_FXML = "Lobby.fxml"; //NON-NLS
     private Scene scene;
 
     /**
      * create a new LobbyController
-     * @param engine the engine of the game that switches between controllers
+     *
+     * @param engine the engine this controller belongs to
      */
     public LobbyController(Engine engine) {
         super(engine);
@@ -34,20 +42,31 @@ public class LobbyController extends Controller {
     @FXML
     private Button back;
 
-    public Scene makeScene()  {
+    /**
+     * Create the scene displaying the lobby settings.
+     */
+    public Scene makeScene() {
         return new Scene(engine.getViewForController(LOBBY_FXML, this));
     }
 
+    /**
+     * This method is called whenever this controller is activated,
+     * i.e., when the user clicked "Multiplayer" in the main menu.
+     */
     @Override
-    public void entry(){
+    public void entry() {
+        LOGGER.log(Level.INFO, "ENTRY LobbyController");
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
     }
 
+    /**
+     * This method is called whenever this controller is deactivated, i.e., when the users chose a lobby.
+     */
     @Override
-    public void exit(){
-        System.out.println("EXIT");
+    public void exit() {
+        LOGGER.log(Level.INFO, "EXIT LobbyController");
     }
 
     /**
@@ -62,7 +81,7 @@ public class LobbyController extends Controller {
      */
     @FXML
     private void back() {
-        System.out.println("BACK");
+        LOGGER.log(Level.INFO, "clicked BACK");
         engine.activateMainMenuController();
     }
 
@@ -71,7 +90,7 @@ public class LobbyController extends Controller {
      */
     @FXML
     private void searchForGame() {
-        System.out.println("SEARCH_FOR_GAME");
+        LOGGER.log(Level.INFO, "clicked SEARCH_FOR_GAME");
     }
 
     /**
@@ -79,7 +98,7 @@ public class LobbyController extends Controller {
      */
     @FXML
     private void createGame() {
+        LOGGER.log(Level.INFO, "clicked CREATE_GAME");
         engine.setScene(new Scene(engine.miniController));
-        System.out.println("CREATE_GAME");
     }
 }

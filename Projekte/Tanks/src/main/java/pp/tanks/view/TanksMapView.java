@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 
 import static pp.tanks.TanksImageProperty.backgroundImage;
 
+/**
+ * Represents the view of the game map
+ */
 public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     private static final Logger LOGGER = Logger.getLogger(TanksMapView.class.getName());
 
@@ -74,17 +77,11 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         final Image bgImage = images.getImage(backgroundImage);
         if (bgImage != null) context.drawImage(bgImage, 0, 0);
 
-
-
-
         // render items
-        //System.out.println(model.getTanksMap().size());
-
         for (Item p : model.getTanksMap()) {
             p.accept(visualizer);
         }
 
-        //
         context.setFont(TEXT_FONT);
         context.setFill(Color.WHITE);
         context.setFont(TEXT_FONT);

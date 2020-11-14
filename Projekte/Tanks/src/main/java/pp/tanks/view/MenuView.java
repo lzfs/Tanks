@@ -10,10 +10,19 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * Represents the view of the menus
+ */
 public class MenuView extends GridPane implements View {
     Stage stage;
     Controller controller;
 
+    /**
+     * Creates a view for the specified menu
+     *
+     * @param fileName the file name of the view to create
+     * @param controller the according controller
+     */
     private MenuView(Stage stage, String fileName, Controller controller) {
         this.stage = stage;
         this.controller = controller;
@@ -29,10 +38,16 @@ public class MenuView extends GridPane implements View {
         }
     }
 
+    /**
+     * static method to create a menuView
+     */
     public static MenuView makeView(Stage stage, String string, Controller controller) {
         return new MenuView(stage, string, controller);
     }
 
+    /**
+     * is called to update the menuView
+     */
     @Override
     public void update() {}
 }

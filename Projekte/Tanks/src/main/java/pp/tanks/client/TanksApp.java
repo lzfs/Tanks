@@ -13,6 +13,7 @@ import pp.tanks.message.server.SynchronizeMsg;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+
 import pp.tanks.controller.Engine;
 import pp.tanks.controller.MainMenuController;
 
@@ -27,7 +28,7 @@ import java.net.Socket;
 /**
  * Main class of the Tank app
  */
-public class TanksApp extends Application implements MessageReceiver<IServerMessage, IConnection<IClientMessage>>, IServerInterpreter{
+public class TanksApp extends Application implements MessageReceiver<IServerMessage, IConnection<IClientMessage>>, IServerInterpreter {
     private static final String PROPERTIES_FILE = "tanks.properties";
     private static final Logger LOGGER = Logger.getLogger(TanksApp.class.getName());
     private Connection<IClientMessage, IServerMessage> connection;
@@ -40,8 +41,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     private Stage stage;
     private MainMenuController mainMenuControl;
 
-
-
     /**
      * create a new TankApp
      */
@@ -50,7 +49,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     }
 
     /**
-     * Main Method
+     * main method
      *
      * @param args input args
      */
@@ -90,7 +89,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
                 try (Reader reader = new InputStreamReader(resource, StandardCharsets.UTF_8)) {
                     properties.load(reader);
                 }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.log(Level.WARNING, e.getMessage(), e);
         }
 
@@ -100,12 +100,15 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             LOGGER.info("try to read file " + fileName);
             try (FileReader reader = new FileReader(file)) {
                 properties.load(reader);
-            } catch (FileNotFoundException e) {
+            }
+            catch (FileNotFoundException e) {
                 LOGGER.log(Level.INFO, e.getMessage(), e);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 LOGGER.log(Level.WARNING, e.getMessage(), e);
             }
-        } else
+        }
+        else
             LOGGER.info("There is no file " + fileName);
         LOGGER.fine(() -> "properties: " + properties);
     }
@@ -167,8 +170,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     }
 
     /**
-     * methode used by the visitor to react to this message
-     * @param msg
+     * method used by the visitor to react to this message
+     *
+     * @param msg the SynchronizeMsg to send
      */
     @Override
     public void visit(SynchronizeMsg msg) {
@@ -176,6 +180,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         this.offset = msg.nanoOffset;
     }
 
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the PingMsg to send
+     */
     @Override
     public void visit(PingMsg msg) {
         connection.send(new PingResponse(System.nanoTime()));

@@ -48,7 +48,7 @@ public class MiniController extends GridPane {
 
     @FXML
     private void shoot() {
-        ProjectileData d = new ProjectileData(new DoubleVec(2, 3), 0, 0,new DoubleVec(1,1));
+        ProjectileData d = new ProjectileData(new DoubleVec(2, 3), 0, 0, new DoubleVec(1, 1));
         app.getConnection().send(new ShootMessage(new DataTimeItem(d, System.nanoTime() + app.getOffset())));
     }
 
@@ -59,7 +59,7 @@ public class MiniController extends GridPane {
     }
 
     @FXML
-    private void joinServer(){
+    private void joinServer() {
         app.joinGame();
     }
 }

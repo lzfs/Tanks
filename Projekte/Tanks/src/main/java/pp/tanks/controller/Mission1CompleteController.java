@@ -8,42 +8,56 @@ import javafx.scene.control.Button;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * controller class for the mission complete page
+ * The controller displaying that mission 1 is completed.
  */
 public class Mission1CompleteController extends Controller {
-
+    private static final Logger LOGGER = Logger.getLogger(Mission1CompleteController.class.getName());
     private static final String MISSION_1_COMPLETE_SP_FXML = "Mission1Complete.fxml"; //NON-NLS
     private Scene scene;
 
     /**
-     * create a new Mission1CompleteSPController
-     * @param engine the engine of the game that switches between controllers
+     * create a new Mission1CompleteController
+     *
+     * @param engine the engine this controller belongs to
      */
     public Mission1CompleteController(Engine engine) {
         super(engine);
     }
 
     /**
-     * The button to continue
+     * the button to continue
      */
     @FXML
     private Button next;
 
     /**
-     * make a new scene for JavaFX
-     * @return the scene
+     * Create the scene shown when mission 1 is completed.
      */
     public Scene makeScene() {
         return new Scene(engine.getViewForController(MISSION_1_COMPLETE_SP_FXML, this));
     }
 
+    /**
+     * This method is called whenever this controller is activated, i.e., when the first mission is completed.
+     */
     @Override
     void entry() {
+        LOGGER.log(Level.INFO, "ENTRY Mission1CompleteController");
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
+    }
+
+    /**
+     * This method is called whenever this controller is deactivated, i.e., when the the user clicked on next.
+     */
+    @Override
+    public void exit() {
+        LOGGER.log(Level.INFO, "EXIT Mission1CompleteController");
     }
 
     /**
@@ -53,9 +67,12 @@ public class Mission1CompleteController extends Controller {
         return MISSION_1_COMPLETE_SP_FXML;
     }
 
+    /**
+     * method for the next button
+     */
     @FXML
     private void next() throws IOException, XMLStreamException {
-        System.out.println("NEXT");
+        LOGGER.log(Level.INFO, "clicked NEXT");
 
         engine.getModel().loadMap("map2.xml");
 

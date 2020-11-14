@@ -4,14 +4,21 @@ import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * The controller realizing the game state when the game is over (SP).
+ */
 public class GameOverSPController extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(GameOverSPController.class.getName());
     private static final String GAME_OVER_SP_FXML = "GameOverSP.fxml"; //NON-NLS
     private Scene scene;
 
     /**
      * create a new GameOverSPController
      *
-     * @param engine the engine of the game that switches between controllers
+     * @param engine the engine this controller belongs to
      */
     public GameOverSPController(Engine engine) {
         super(engine);
@@ -23,22 +30,30 @@ public class GameOverSPController extends Controller {
     @FXML
     private Button mainMenuButton;
 
+    /**
+     * Create the scene shown when the game is lost in the singleplayer mode.
+     */
     public Scene makeScene() {
         return new Scene(engine.getViewForController(GAME_OVER_SP_FXML, this));
     }
+
     /**
      * This method is called whenever this controller is activated, i.e., when the game is over.
      */
     @Override
     public void entry() {
+        LOGGER.log(Level.INFO, "ENTRY GameOverSPController");
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
     }
 
+    /**
+     * This method is called whenever this controller is deactivated, i.e., when the user returns to the main menu.
+     */
     @Override
     public void exit() {
-        System.out.println("EXIT");
+        LOGGER.log(Level.INFO, "EXIT GameOverSPController");
     }
 
     /**
@@ -49,11 +64,11 @@ public class GameOverSPController extends Controller {
     }
 
     /**
-     * method for the back button
+     * method for the main menu button
      */
     @FXML
     private void mainMenu() {
-        System.out.println("MAIN_MENU");
+        LOGGER.log(Level.INFO, "GO TO MainMenuController");
         engine.activateMainMenuController();
     }
 }

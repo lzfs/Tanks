@@ -1,7 +1,6 @@
 package pp.tanks.controller;
 
 import pp.tanks.view.TanksMapView;
-import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -10,15 +9,21 @@ import javafx.scene.text.Text;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * The controller displaying the start screen of a level in the singleplayer mode.
+ */
 public class StartGameSPController extends Controller {
-
-    private static final String MENU_CONTROL_FXML = "StartGameSP.fxml"; //NON-NLS
+    private static final Logger LOGGER = Logger.getLogger(StartGameSPController.class.getName());
+    private static final String START_GAME_SP_FXML = "StartGameSP.fxml"; //NON-NLS
     private Scene scene;
 
     /**
      * create a new StartGameSPController
-     * @param engine the engine of the game that switches between controllers
+     *
+     * @param engine the engine this controller belongs to
      */
     public StartGameSPController(Engine engine) {
         super(engine);
@@ -48,11 +53,17 @@ public class StartGameSPController extends Controller {
     @FXML
     private Text enemyTanksText;
 
-
+    /**
+     * Create the scene shown before the game starts.
+     */
     public Scene makeScene() {
-        return new Scene(engine.getViewForController(MENU_CONTROL_FXML, this));
+        return new Scene(engine.getViewForController(START_GAME_SP_FXML, this));
     }
 
+    /**
+     * This method is called whenever this controller is activated,
+     * i.e., when the first mission is completed.
+     */
     @Override
     public void entry() {
         if (scene == null)
@@ -60,13 +71,20 @@ public class StartGameSPController extends Controller {
         engine.setScene(scene);
     }
 
+    /**
+     * This method is called whenever this controller is deactivated,
+     * i.e., when the the user clicked on next.
+     */
     @Override
     public void exit() {
-        System.out.println("EXIT");
+        LOGGER.log(Level.INFO, "EXIT StartGameSPController");
     }
 
+    /**
+     * @return the name of the used file as a String
+     */
     public String getString() {
-        return MENU_CONTROL_FXML;
+        return START_GAME_SP_FXML;
     }
 
     /**
@@ -84,6 +102,6 @@ public class StartGameSPController extends Controller {
         engine.setView(mapview);
 
         engine.activatePlayGameController();
-        System.out.println("START GAME SP");
+        LOGGER.log(Level.INFO, "clicked START_GAME_SP");
     }
 }

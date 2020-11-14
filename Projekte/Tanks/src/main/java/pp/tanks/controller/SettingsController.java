@@ -5,17 +5,22 @@ import pp.tanks.TanksImageProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class SettingsController extends Controller {
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    private static final String MENU_CONTROL_FXML = "Settings.fxml"; //NON-NLS
+/**
+ * The controller displaying the settings of the game.
+ */
+public class SettingsController extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(SettingsController.class.getName());
+    private static final String SETTINGS_FXML = "Settings.fxml"; //NON-NLS
     private Scene scene;
 
     /**
      * create a new SettingsController
-     * @param engine the engine of the game that switches between controllers
+     * @param engine the engine this controller belongs to
      */
     public SettingsController(Engine engine) {
         super(engine);
@@ -51,11 +56,17 @@ public class SettingsController extends Controller {
     @FXML
     private ImageView soundImage;
 
-
+    /**
+     * Create the scene displaying the settings of the game.
+     */
     public Scene makeScene()  {
-        return new Scene(engine.getViewForController(MENU_CONTROL_FXML, this));
+        return new Scene(engine.getViewForController(SETTINGS_FXML, this));
     }
 
+    /**
+     * This method is called whenever this controller is activated,
+     * i.e., when the user clicked on settings in the main menu.
+     */
     @Override
     public void entry(){
         if (scene == null)
@@ -63,13 +74,20 @@ public class SettingsController extends Controller {
         engine.setScene(scene);
     }
 
+    /**
+     * This method is called whenever this controller is deactivated,
+     * i.e., when the the user returned to the main menu.
+     */
     @Override
     public void exit(){
-        System.out.println("EXIT");
+        LOGGER.log(Level.INFO, "EXIT SettingsController");
     }
 
+    /**
+     * @return the name of the used file as a String
+     */
     public String getString(){
-        return MENU_CONTROL_FXML;
+        return SETTINGS_FXML;
     }
 
     /**
@@ -77,7 +95,7 @@ public class SettingsController extends Controller {
      */
     @FXML
     private void back() {
-        System.out.println("BACK");
+        LOGGER.log(Level.INFO, "clicked BACK");
         engine.activateMainMenuController();
     }
 
@@ -86,16 +104,19 @@ public class SettingsController extends Controller {
      */
     @FXML
     private void sound() {
-        /*
-        TODO fix this when TankSoundProperty is done
-        engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
-        if(engine.getTankApp().sounds.getMuted()){
-            soundImage.setImage(engine.getImages().getImage(TankImageProperty.soundOff));
+        // TODO fix this when TankSoundProperty is done
+        if(engine.getTankApp().sounds.getMuted()) {
+            engine.getTankApp().sounds.mute(false);
         } else {
-            soundImage.setImage(engine.getImages().getImage(TankImageProperty.soundOn));
+            engine.getTankApp().sounds.mute(true);
         }
-         */
-        System.out.println("SOUND");
+
+        if(engine.getTankApp().sounds.getMuted()){
+            soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+        } else {
+            soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+        }
+        LOGGER.log(Level.INFO, "clicked SOUND");
     }
 
     /**
@@ -109,6 +130,6 @@ public class SettingsController extends Controller {
         } else {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
         }
-        System.out.println("MUSIC");
+        LOGGER.log(Level.INFO, "clicked MUSIC");
     }
 }

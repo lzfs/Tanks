@@ -103,7 +103,7 @@ public abstract class SoundSupport<E extends Enum<E>> {
      * Plays an audio clip that is specified by the property argument.
      *
      * @param prop the property that has been used earlier to load the corresponding sound file.
-     * @return true iff there is a sound file associated with the specified argument
+     * @return true if there is a sound file associated with the specified argument
      */
     public boolean play(E prop) {
         final AudioClip audioClip = audioClips.get(prop);

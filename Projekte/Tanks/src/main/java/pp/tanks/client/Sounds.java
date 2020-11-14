@@ -12,7 +12,6 @@ public class Sounds {
     public MediaPlayer mediaPlayer;
     private boolean muted = false;
 
-
     /**
      * load all SFx and Music
      */

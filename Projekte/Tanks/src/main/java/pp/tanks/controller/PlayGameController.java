@@ -24,14 +24,13 @@ import javafx.scene.input.MouseEvent;
  * The controller realizing the game state when the game is really running.
  */
 class PlayGameController extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(PlayGameController.class.getName());
+
     public static final KeyCode W = KeyCode.W;
     public static final KeyCode A = KeyCode.A;
     public static final KeyCode S = KeyCode.S;
     public static final KeyCode D = KeyCode.D;
 
-    private static final Logger LOGGER = Logger.getLogger(PlayGameController.class.getName());
-
-    //private final Set<KeyCode> pressed = new HashSet<>();
     private final List<KeyCode> pressed = new ArrayList<>();
     private final Set<KeyCode> processed = new HashSet<>();
     private final StopWatch stopWatch = new StopWatch();
@@ -39,7 +38,7 @@ class PlayGameController extends Controller {
     private Scene scene;
 
     /**
-     * Creates the controller.
+     * create a new PlayGameController
      *
      * @param engine the game engine this controller belongs to
      */
@@ -53,7 +52,7 @@ class PlayGameController extends Controller {
     private TanksMap getTanksMap() {
         return engine.getModel().getTanksMap();
     }
-    
+
     /**
      * The handle method of the state pattern. This method is called by the game engine whenever an event happens.
      */
@@ -61,7 +60,7 @@ class PlayGameController extends Controller {
     public void handle(Event e) {
         if (e.getEventType() == KeyEvent.KEY_PRESSED) {
             final KeyCode code = ((KeyEvent) e).getCode();
-            if(!pressed.contains(code) ){
+            if (!pressed.contains(code)) {
                 pressed.add(code);
             }
         }
@@ -71,21 +70,17 @@ class PlayGameController extends Controller {
             processed.remove(code);
         }
         else if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
-            //System.out.println("Mouse clicked");
             final MouseEvent me = (MouseEvent) e;
             DoubleVec pos = engine.getView().viewToModel(me.getX(), me.getY());
             getTank().shoot(pos);
         }
-        else if(e.getEventType() == MouseEvent.MOUSE_MOVED){
-            //System.out.println("handle mouse moved");
-            MouseEvent event= (MouseEvent) e;
+        else if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
+            MouseEvent event = (MouseEvent) e;
             Double x1 = event.getX();
             Double y1 = event.getY();
-            DoubleVec dir = engine.getView().viewToModel(x1,y1).sub(getTank().getPos());
-            //System.out.println(dir);
+            DoubleVec dir = engine.getView().viewToModel(x1, y1).sub(getTank().getPos());
             //maybe norm
             getTank().getTurret().setDirection(dir.normalize());
-
             //für model umwandeln und turret als DoubleVec übergeben
         }
     }
@@ -97,12 +92,6 @@ class PlayGameController extends Controller {
     @Override
     public void update() {
         // process input events that occurred since the last game step
-        //List<KeyCode> list = new ArrayList<String>();
-        //System.out.println(pressed.toString());
-        //System.out.println("Tank Pos "+getTank().getPos());
-
-        //System.out.println("DIR  "+getTank().getTurret().getDirection());
-
         if (pressed.size() >= 2) {
             keyPressed(pressed.get(0), pressed.get(1));
         }
@@ -118,19 +107,21 @@ class PlayGameController extends Controller {
         lastUpdate = stopWatch.getTime();
         engine.getModel().update(delta);
 
-        if (engine.getModel().gameWon()){
+        if (engine.getModel().gameWon()) {
             engine.setView(null);
-            if(engine.getMode()=="Tutorial"){
+            if (engine.getMode().equals("Tutorial")) {
                 //TODO
                 engine.activateLevelController();
-            }else if(engine.getMode()=="Singleplayer"){
-                //TODO  unterscheidung in level und dann nächster controller laden // vielleicht generisch
+            }
+            else if (engine.getMode().equals("Singleplayer")) {
+                //TODO Unterscheidung in level und dann naechster controller laden // vielleicht generisch
                 engine.activateMission1CompleteController();
-            }else{
+            }
+            else {
                 //Multiplayer TODO
             }
         }
-        else if (engine.getModel().gameLost()){
+        else if (engine.getModel().gameLost()) {
             engine.setView(null);
             engine.activateGameLostController();
         }
@@ -156,7 +147,7 @@ class PlayGameController extends Controller {
      */
     @Override
     void exit() {
-        scene=null;
+        scene = null;
         stopWatch.stop();
     }
 
@@ -167,19 +158,19 @@ class PlayGameController extends Controller {
      * @param k2 key code
      **/
     private void keyPressed(KeyCode k1, KeyCode k2) {
-        if ((k1 == W && k2 == A) || (k1 == A && k2 == W)){
+        if ((k1 == W && k2 == A) || (k1 == A && k2 == W)) {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.LEFTUP);
         }
-        else if ((k1 == W && k2 == D) || (k1 == D && k2 == W)){
+        else if ((k1 == W && k2 == D) || (k1 == D && k2 == W)) {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHTUP);
         }
-        else if ((k1 == D && k2 == S) || (k1 == S && k2 == D)){
+        else if ((k1 == D && k2 == S) || (k1 == S && k2 == D)) {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHTDOWN);
         }
-        else if ((k1 == S && k2 == A) || (k1 == A && k2 == S)){
+        else if ((k1 == S && k2 == A) || (k1 == A && k2 == S)) {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.LEFTDOWN);
         }
@@ -195,20 +186,19 @@ class PlayGameController extends Controller {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.UP);
         }
-        else if (k1 == A){
+        else if (k1 == A) {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.LEFT);
         }
 
-        else if (k1 == S){
+        else if (k1 == S) {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.DOWN);
         }
-        else if (k1 == D){
+        else if (k1 == D) {
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHT);
         }
-
     }
 
     /**
