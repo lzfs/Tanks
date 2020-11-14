@@ -99,12 +99,7 @@ public class LevelController extends Controller {
     @FXML
     private void tutorial() {
         LOGGER.log(Level.INFO, "clicked TUTORIAL");
-
-        engine.setMode("Tutorial");
-
-        engine.setMapCounter(0);
-
-        engine.activatePlayGameController();
+        engine.activateTutorialOverviewController();
     }
 
     /**

@@ -47,6 +47,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final GameOverSPController gameOverSPController;
     public final PauseMenuSPController pauseMenuSPController;
     public final PlayGameController playGameController;
+    public final TutorialOverviewController tutorialOverviewController;
 
     public final LobbyController lobbyController;
     public final GameOverMPController gameOverMPController;
@@ -82,6 +83,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.gameOverSPController = new GameOverSPController(this);
         this.pauseMenuSPController = new PauseMenuSPController(this);
         this.playGameController = new PlayGameController(this);
+        this.tutorialOverviewController = new TutorialOverviewController(this);
 
         this.lobbyController = new LobbyController(this);
         this.gameOverMPController = new GameOverMPController(this);
@@ -227,6 +229,13 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     public void activateGameWonMPController() {
         setController(gameWonMPController);
+    }
+
+    /**
+     * activate the TutorialOverviewController
+     */
+    public void activateTutorialOverviewController() {
+        setController(tutorialOverviewController);
     }
 
     /**

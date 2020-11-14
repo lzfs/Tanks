@@ -71,6 +71,8 @@ public class TutorialOverviewController extends Controller {
     @FXML
     private void next() {
         LOGGER.log(Level.INFO, "GO TO PlayGameController");
+        engine.setMode("Tutorial");
+        engine.setMapCounter(0);
         engine.activatePlayGameController();
     }
 }
