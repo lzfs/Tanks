@@ -63,6 +63,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private Controller controller;
     private Tank saveTank = null;
     private String mode = "";
+    private int mapCounter = 0;
 
     /**
      * Creates a new engine
@@ -121,6 +122,14 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         stage.addEventHandler(InputEvent.ANY, this);
         stage.show();
      */
+    }
+
+    public void setMapCounter(int counter){
+        this.mapCounter = counter;
+    }
+
+    public int getMapCounter() {
+        return mapCounter;
     }
 
     /**
@@ -306,6 +315,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public void handle(Event event) {
         controller.handle(event);
     }
+
+
 
     /**
      * Sets the specified scene and changes the UI that way.

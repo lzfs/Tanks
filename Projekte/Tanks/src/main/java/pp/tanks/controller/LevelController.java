@@ -97,16 +97,12 @@ public class LevelController extends Controller {
      * method for the tutorial button
      */
     @FXML
-    private void tutorial() throws IOException, XMLStreamException {
+    private void tutorial() {
         LOGGER.log(Level.INFO, "clicked TUTORIAL");
 
         engine.setMode("Tutorial");
 
-        engine.getModel().loadMap("tutorialMap.xml");
-        PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(5, 5), 1000, 20));
-        engine.getModel().setTank(tank);
-        TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
-        engine.setView(mapview);
+        engine.setMapCounter(0);
 
         engine.activatePlayGameController();
     }

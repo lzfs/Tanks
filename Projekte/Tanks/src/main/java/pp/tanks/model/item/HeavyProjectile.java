@@ -51,7 +51,7 @@ public class HeavyProjectile extends Projectile {
         }
         if (getPos().x == targetPos.x && getPos().y == targetPos.y) {
             this.effectiveRadius = 1.5;
-            processHits();
+            collision();
             destroy();
         }
     }
@@ -59,7 +59,28 @@ public class HeavyProjectile extends Projectile {
     /**
      * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
      */
+    public void processHits() {}
+
+    public void collision(){
+        for (Tank tank : model.getTanksMap().getTanks()) {
+            if (collisionWith(tank) && flag == 0) {
+                tank.processDamage(damage);
+                destroy();
+                return;
+            }
+        }
+        for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
+            if (collisionWith(bblock)) {
+                bblock.reduce(damage);
+                destroy();
+                return;
+            }
+        }
+        destroy();
+    }
+    /*
     public void processHits() {
+
         for (Tank tank : model.getTanksMap().getTanks()) {
             if (collisionWith(tank) && flag == 0) {
                 tank.processDamage(damage);
@@ -86,4 +107,6 @@ public class HeavyProjectile extends Projectile {
             }
         }
     }
+
+         */
 }

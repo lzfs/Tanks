@@ -19,6 +19,7 @@ public class StartGameSPController extends Controller {
     private static final Logger LOGGER = Logger.getLogger(StartGameSPController.class.getName());
     private static final String START_GAME_SP_FXML = "StartGameSP.fxml"; //NON-NLS
     private Scene scene;
+    private boolean flag=false;
 
     /**
      * create a new StartGameSPController
@@ -69,6 +70,10 @@ public class StartGameSPController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
+        if( flag) {
+            livesCounter.setText(engine.getSaveTank().getLives()+"x");
+        }
+        flag=true;
     }
 
     /**
@@ -91,17 +96,12 @@ public class StartGameSPController extends Controller {
      * method for the startGameSP button
      */
     @FXML
-    private void startGameSP() throws IOException, XMLStreamException {
+    private void startGameSP() {
 
         engine.setMode("Singleplayer");
 
-        engine.getModel().loadMap("map1.xml");
-
-        engine.getModel().setTank(engine.getSaveTank());
-        TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
-        engine.setView(mapview);
-
-        engine.activatePlayGameController();
         LOGGER.log(Level.INFO, "clicked START_GAME_SP");
+        engine.activatePlayGameController();
+
     }
 }

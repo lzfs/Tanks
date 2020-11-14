@@ -48,7 +48,6 @@ public class TankDestroyer extends COMEnemy {
                     //TODO
                     final double bearing = target.sub(getPos()).angle() % 180;
                     double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
-                    System.out.println("winkel "+ needToTurnBy);
                     if (Math.abs(needToTurnBy) > 2) {
                         //TODO
                         Double currentRot = getRotation();
