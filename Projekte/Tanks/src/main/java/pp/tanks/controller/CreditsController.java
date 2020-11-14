@@ -56,6 +56,15 @@ public class CreditsController extends Controller {
     }
 
     /**
+     * This method is called whenever this controller is deactivated,
+     * i.e., when the user returns to the main menu
+     */
+    @Override
+    public void exit() {
+        LOGGER.log(Level.INFO, "EXIT CreditsController");
+    }
+
+    /**
      * method for the back button
      */
     @FXML
