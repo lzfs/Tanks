@@ -71,14 +71,10 @@ public class Mission1CompleteController extends Controller {
      * method for the next button
      */
     @FXML
-    private void next() throws IOException, XMLStreamException {
+    private void next() {
         LOGGER.log(Level.INFO, "clicked NEXT");
 
-        engine.getModel().loadMap("map2.xml");
-
-        engine.getModel().setTank(engine.getSaveTank());
-        TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
-        engine.setView(mapview);
+        engine.setMapCounter(2);
 
         engine.activatePlayGameController();
     }

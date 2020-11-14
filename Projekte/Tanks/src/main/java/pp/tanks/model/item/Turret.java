@@ -46,6 +46,10 @@ public class Turret {
         }
     }
 
+    public int getBounces(){
+        return bounced;
+    }
+
 
     /**
      * @return s the size of the magazin

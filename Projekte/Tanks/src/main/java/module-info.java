@@ -10,6 +10,7 @@ module pp.tanks {
     requires javafx.media;
     requires javafx.fxml;
     requires pp.media;
+    requires java.desktop;
     opens pp.tanks.controller to javafx.fxml, javafx.graphics;
     opens pp.tanks.client to javafx.fxml, javafx.graphics;
 }

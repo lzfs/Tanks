@@ -102,7 +102,12 @@ public abstract class Projectile extends Item<ProjectileData> {
         }
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
             if (collisionWith(rBlock)) {
-                reflect();
+                if (data.getBounce() > 0) {
+                    reflect();
+                    data.bounced();
+                } else {
+                    destroy();
+                }
                 return;
             }
         }

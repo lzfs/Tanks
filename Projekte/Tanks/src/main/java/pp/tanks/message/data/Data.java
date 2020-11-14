@@ -34,6 +34,8 @@ public class Data implements Serializable{
         return destroyed;
     }
 
+    public void setDestroyed(boolean bool){this.destroyed = bool;}
+
     public int getId() {
         return id;
     }

@@ -203,7 +203,7 @@ public class TankConfigSPController extends Controller {
         DoubleVec position = new DoubleVec(5, 5);
         PlayersTank tank = new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 1000, 20));
         engine.setSaveTank(tank);
-
+        engine.setMapCounter(1);
         engine.activateStartGameSPController();
     }
 
