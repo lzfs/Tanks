@@ -1,5 +1,6 @@
 package pp.tanks.controller;
 
+import pp.tanks.server.GameMode;
 import pp.tanks.view.TanksMapView;
 
 import javafx.fxml.FXML;
@@ -98,7 +99,7 @@ public class StartGameSPController extends Controller {
     @FXML
     private void startGameSP() {
 
-        engine.setMode("Singleplayer");
+        engine.setMode(GameMode.SINGLEPLAYER);
 
         LOGGER.log(Level.INFO, "clicked START_GAME_SP");
         engine.activatePlayGameController();

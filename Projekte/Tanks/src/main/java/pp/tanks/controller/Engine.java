@@ -11,6 +11,7 @@ import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
+import pp.tanks.server.GameMode;
 import pp.tanks.view.MenuView;
 
 import javafx.animation.AnimationTimer;
@@ -64,7 +65,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     private Controller controller;
     private Tank saveTank = null;
-    private String mode = "";
+    private GameMode mode = GameMode.TUTORIAL;
     private PlayerEnum playerEnum;
     private int mapCounter = 0;
 
@@ -308,11 +309,11 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         return this.saveTank;
     }
 
-    public void setMode(String string) {
-        this.mode = string;
+    public void setMode(GameMode mode) {
+        this.mode = mode;
     }
 
-    public String getMode() {
+    public GameMode getMode() {
         return this.mode;
     }
 

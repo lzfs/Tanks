@@ -1,5 +1,9 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.model.item.ItemEnum;
+import pp.tanks.server.GameMode;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -71,8 +75,9 @@ public class TutorialOverviewController extends Controller {
     @FXML
     private void next() {
         LOGGER.log(Level.INFO, "GO TO PlayGameController");
-        engine.setMode("Tutorial");
+        engine.setMode(GameMode.TUTORIAL);
         engine.setMapCounter(0);
+        engine.getTankApp().getConnection().send(new StartGameMessage(ItemEnum.LIGHT_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.TUTORIAL, engine.getPlayerEnum()));
         engine.activatePlayGameController();
     }
 }

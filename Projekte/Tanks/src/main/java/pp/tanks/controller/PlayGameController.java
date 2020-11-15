@@ -7,6 +7,7 @@ import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Tank;
+import pp.tanks.server.GameMode;
 import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 import pp.util.StopWatch;
@@ -55,8 +56,6 @@ class PlayGameController extends Controller {
     public PlayGameController(Engine engine) {
         super(engine);
     }
-
-
 
     /**
      * Returns the current game map of this game
@@ -121,11 +120,11 @@ class PlayGameController extends Controller {
 
         if (engine.getModel().gameWon()) {
             engine.setView(null);
-            if (engine.getMode().equals("Tutorial")) {
+            if ( engine.getMode() == GameMode.TUTORIAL) {
                 engine.activateLevelController();
             }
-            else if (engine.getMode().equals("Singleplayer")) {
-                if(engine.getMapCounter()==1){
+            else if (engine.getMode() == GameMode.SINGLEPLAYER) {
+                if (engine.getMapCounter() == 1)  {
                     engine.activateMission1CompleteController();
                 } else {
                     engine.activateMission2CompleteController();
@@ -136,13 +135,12 @@ class PlayGameController extends Controller {
             }
         }
         else if (engine.getModel().gameLost()) {
-            System.out.println("gamelost");
             engine.setView(null);
-            if (engine.getMode().equals("Tutorial")) {
+            if (engine.getMode() == GameMode.TUTORIAL) {
                 engine.activateLevelController();
-            } else if (engine.getMode().equals("Singleplayer")) {
+            } else if (engine.getMode() == GameMode.SINGLEPLAYER) {
                 engine.getSaveTank().decreaseLives();
-                if( engine.getSaveTank().getLives()>0){
+                if (engine.getSaveTank().getLives() > 0) {
                     engine.activateStartGameSPController();
                 } else {
                     engine.activateGameOverSPController();
