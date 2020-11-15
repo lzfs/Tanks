@@ -3,6 +3,7 @@ package pp.tanks.model;
 import pp.tanks.model.item.*;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
+import pp.tanks.server.GameMode;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -25,6 +26,7 @@ public class Model {
     private final List<TanksNotificationReceiver> receivers = new ArrayList<>();
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
+    private boolean debug;
 
     /**
      * Creates a game model
@@ -142,10 +144,15 @@ public class Model {
      * Returns true if and only if there are no tanks left.
      */
     public boolean gameWon() {
+        if (debug) return false;
         if (map.getTank0().isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
             if (tanks != map.getTank0() && !tanks.isDestroyed()) return false;
         }
         return true;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }

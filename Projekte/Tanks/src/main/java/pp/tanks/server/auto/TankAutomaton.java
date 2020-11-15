@@ -4,8 +4,11 @@ import pp.network.IConnection;
 import pp.tanks.client.TanksApp;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
+import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
+import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
@@ -50,7 +53,7 @@ public class TankAutomaton extends TankStateMachine {
 
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
-            players.add(new Player(conn));
+            players.add(new Player(conn, PlayerEnum.PLAYER1));
             if (msg.mode == GameMode.SINGLEPLAYER) {
                 gameMode = GameMode.SINGLEPLAYER;
                 conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
@@ -58,7 +61,8 @@ public class TankAutomaton extends TankStateMachine {
             }
             if (msg.mode == GameMode.MULTIPLAYER) {
                 gameMode = GameMode.MULTIPLAYER;
-                //TODO SetPlayerMessage schicken
+                if (players.size() == 1) conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+                else conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
                 containingState().goToState(waitingFor2Player);
             }
             //else containingState().goToState();
@@ -69,6 +73,8 @@ public class TankAutomaton extends TankStateMachine {
      * the state when a multiplayer game is started and a second player needs to connect
      */
     private final TankState waitingFor2Player = new TankState() {
+        private ItemEnum turret = ItemEnum.LIGHT_TURRET;
+        private ItemEnum armor = ItemEnum.LIGHT_ARMOR;
         @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
@@ -76,8 +82,16 @@ public class TankAutomaton extends TankStateMachine {
 
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
-            players.add(new Player(conn));
-            containingState().goToState(synchronize);
+            players.get(0).setArmor(armor);
+            players.get(0).setTurret(turret);
+            players.add(new Player(conn, PlayerEnum.PLAYER2));
+            containingState().goToState(playerReady);
+        }
+
+        @Override
+        public void updateTankConfig(UpdateTankConfigMessage msg) {
+            turret = msg.turret;
+            armor = msg.armor;
         }
     };
 

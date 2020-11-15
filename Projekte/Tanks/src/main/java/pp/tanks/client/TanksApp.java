@@ -9,6 +9,7 @@ import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
 
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 
 import pp.tanks.controller.Engine;
 import pp.tanks.controller.MainMenuController;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.server.GameMode;
 
 import java.io.*;
@@ -35,6 +37,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     private static final Logger LOGGER = Logger.getLogger(TanksApp.class.getName());
     private Connection<IClientMessage, IServerMessage> connection;
     public final Sounds sounds = new Sounds();
+    private PlayerEnum player;
 
     private long offset;
 
@@ -114,6 +117,10 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         else
             LOGGER.info("There is no file " + fileName);
         LOGGER.fine(() -> "properties: " + properties);
+    }
+
+    public PlayerEnum getPlayer() {
+        return player;
     }
 
     /**
@@ -200,7 +207,14 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(SetPlayerMessage msg) {
         engine.setPlayerEnum(msg.player);
+        this.player = msg.player;
         System.out.println(msg.player);
+    }
+
+    @Override
+    public void visit(ServerTankUpdateMessage msg) {
+        engine.miniController.playerConnected();
+        engine.miniController.serverUpdate(msg);
     }
 }
 

@@ -1,5 +1,9 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.model.item.ItemEnum;
+import pp.tanks.server.GameMode;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,6 +33,9 @@ public class CreditsController extends Controller {
      */
     @FXML
     private Button back;
+
+    @FXML
+    private Button debug;
 
     /**
      * Create the scene displaying the credits.
@@ -71,6 +78,16 @@ public class CreditsController extends Controller {
     private void back() {
         LOGGER.log(Level.INFO, "GO TO MainMenuController");
         engine.activateMainMenuController();
+    }
+
+    @FXML
+    private void debug() {
+        engine.getTankApp().joinGame(GameMode.TUTORIAL);
+        engine.setMode(GameMode.TUTORIAL);
+        engine.setMapCounter(3);
+        engine.getTankApp().getConnection().send(new StartGameMessage(ItemEnum.LIGHT_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.TUTORIAL, engine.getPlayerEnum()));
+        engine.activatePlayGameController();
+        //
     }
 }
 

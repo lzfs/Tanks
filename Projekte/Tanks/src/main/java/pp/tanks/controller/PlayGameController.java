@@ -159,12 +159,13 @@ class PlayGameController extends Controller {
         processed.clear();
         engine.getModel().loadMap("map"+engine.getMapCounter() +".xml");
 
-        if (engine.getMapCounter()==0) {
-            PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(5, 5), 1000, 20));
+        if (engine.getMapCounter()==0 || engine.getMapCounter()==3) {
+            if (engine.getMapCounter() == 3) engine.getModel().setDebug(true);
+            PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20)); //TODO id
             engine.getModel().setTank(tank);
         } else {
             engine.getSaveTank().setDestroyed(false);
-            engine.getSaveTank().setPos(new DoubleVec(5,5));
+            engine.getSaveTank().setPos(new DoubleVec(3,6));
             engine.getModel().setTank(engine.getSaveTank());
         }
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());

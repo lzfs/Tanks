@@ -20,4 +20,9 @@ public enum PlayerEnum {
         if (id == 0) return PLAYER1;
         else return PLAYER2;
     }
+
+    public int getEnemyID() {
+        if (this == PLAYER1) return 1;
+        else return 0;
+    }
 }

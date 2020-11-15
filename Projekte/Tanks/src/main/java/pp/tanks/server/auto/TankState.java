@@ -8,6 +8,7 @@ import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
 
 public abstract class TankState extends StateSupport<TankState> {
@@ -61,6 +62,10 @@ public abstract class TankState extends StateSupport<TankState> {
 
     public void startGame(StartGameMessage msg) {
         handle(s -> s.startGame(msg));
+    }
+
+    public void updateTankConfig(UpdateTankConfigMessage msg) {
+        handle(s -> s.updateTankConfig(msg));
     }
 
 }

@@ -2,7 +2,11 @@ package pp.tanks.server.auto;
 
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.message.client.UpdateTankConfigMessage;
+import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
@@ -24,6 +28,17 @@ public class PlayerReadyState extends TankState {
 
     @Override
     public void entry() {
+        if (parent.getPlayers().size() > 1) {
+            ItemEnum turret = null;
+            ItemEnum armor = null;
+            for (Player pl : parent.getPlayers()) {
+                if (pl.getArmor() != null) {
+                    turret = pl.getTurret();
+                    armor = pl.getArmor();
+                }
+                parent.getPlayers().get(pl.playerEnum.getEnemyID()).getConnection().send(new ServerTankUpdateMessage(turret, armor));
+            }
+        }
         System.out.println("Player Ready State");
     }
 
@@ -34,6 +49,14 @@ public class PlayerReadyState extends TankState {
         }
         parent.getPlayers().clear();
         containingState().goToState(parent.init);
+    }
+
+    @Override
+    public void updateTankConfig(UpdateTankConfigMessage msg) {
+        if (msg.player == PlayerEnum.PLAYER1) {
+            parent.getPlayers().get(1).getConnection().send(new ServerTankUpdateMessage(msg.turret, msg.armor));
+        }
+        else parent.getPlayers().get(0).getConnection().send(new ServerTankUpdateMessage(msg.turret, msg.armor));
     }
 
     @Override
@@ -61,6 +84,7 @@ public class PlayerReadyState extends TankState {
             model.getTanksMap().setPlayerTank0(PlayersTank.mkPlayersTank(pl.getTurret(), pl.getArmor()));//funktioniert nicht für Mulitplayer Spiele
         }
         System.out.println("hat geklappt");
+        // TODO in den SynchronizeState -> das Model bereitstellen
     }
 
 

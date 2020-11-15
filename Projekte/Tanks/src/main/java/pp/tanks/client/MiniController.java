@@ -2,13 +2,16 @@ package pp.tanks.client;
 
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.ShootMessage;
+import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
+import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -106,6 +109,7 @@ public class MiniController extends GridPane {
 
         ownTurret.setText(String.valueOf(turretList.get(turretCount)));
         currentTurret=turretList.get(turretCount);
+        app.getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, app.getPlayer()));
     }
 
     @FXML
@@ -116,6 +120,7 @@ public class MiniController extends GridPane {
         }
         ownArmor.setText(String.valueOf(armorList.get(armorCount)));
         currentArmor=armorList.get(armorCount);
+        app.getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, app.getPlayer()));
     }
 
     @FXML
@@ -124,9 +129,18 @@ public class MiniController extends GridPane {
     }
 
     public void playerConnected(){
+        if (playerconnected) return;
         waitingfor.setText("");
         playerconnected=true;
         ready.setDisable(false);
+    }
+
+    public void serverUpdate(ServerTankUpdateMessage msg) {
+        if (msg.turret == null) return;
+        Platform.runLater(() -> {
+            enemyTurret.setText(String.valueOf(msg.turret));
+            enemyArmor.setText(String.valueOf(msg.armor));
+        });
     }
 
 }

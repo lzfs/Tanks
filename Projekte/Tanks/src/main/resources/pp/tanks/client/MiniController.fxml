@@ -48,7 +48,7 @@
          <font>
             <Font size="17.0" />
          </font></Text>
-      <Text fx:id="enenmyTurret" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="LIGHT_TURRET" wrappingWidth="200.13671875" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+      <Text fx:id="enemyTurret" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="LIGHT_TURRET" wrappingWidth="200.13671875" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
          <font>
             <Font size="17.0" />
          </font></Text>

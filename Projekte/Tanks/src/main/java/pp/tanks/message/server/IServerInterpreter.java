@@ -8,4 +8,6 @@ public interface IServerInterpreter {
     void visit(PingMessage msg);
 
     void visit(SetPlayerMessage msg);
+
+    void visit(ServerTankUpdateMessage msg);
 }

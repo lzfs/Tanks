@@ -105,7 +105,7 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void visit(UpdateTankConfigMessage msg, IConnection<IServerMessage> from) {
-
+        auto.updateTankConfig(msg);
     }
 
     @Override

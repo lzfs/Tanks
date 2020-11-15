@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map w="23" h="13">
-    <playersTank x="5" y="5"></playersTank>
+    <playersTank x="3" y="6"></playersTank>
     <uBlock x="0" y="0"></uBlock>
     <uBlock x="0" y="1"></uBlock>
     <uBlock x="0" y="2"></uBlock>
@@ -77,8 +77,8 @@
     <bBlock x="4" y="3"></bBlock>
     <uBlock x="3" y="3"></uBlock>
 
-    <bBlock x="18" y="3"></bBlock>
     <uBlock x="19" y="3"></uBlock>
+    <bBlock x="18" y="3"></bBlock>
     <uBlock x="17" y="3"></uBlock>
 
     <uBlock x="5" y="9"></uBlock>
@@ -97,6 +97,6 @@
     <bBlock x="11" y="8"></bBlock>
     <uBlock x="11" y="9"></uBlock>
 
-    <apc x="20" y="8"></apc>
-    <howitzer x="20" y="6"></howitzer>
+    <apc x="20" y="7"></apc>
+    <howitzer x="20" y="5"></howitzer>
 </map>

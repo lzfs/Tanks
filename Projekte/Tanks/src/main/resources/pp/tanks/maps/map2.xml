@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map w="23" h="13">
-   <playersTank x="5" y="5"></playersTank>
+   <playersTank x="3" y="6"></playersTank>
    <uBlock x="0" y="0"></uBlock>
    <uBlock x="0" y="1"></uBlock>
    <uBlock x="0" y="2"></uBlock>
@@ -73,17 +73,19 @@
    <uBlock x="20" y="12"></uBlock>
    <uBlock x="21" y="12"></uBlock>
 
-   <bBlock x="3" y="4"></bBlock>
-   <bBlock x="3" y="5"></bBlock>
-   <uBlock x="4" y="6"></uBlock>
-   <uBlock x="4" y="7"></uBlock>
-   <bBlock x="3" y="8"></bBlock>
-   <bBlock x="3" y="9"></bBlock>
+   <bBlock x="4" y="3"></bBlock>
+   <bBlock x="4" y="4"></bBlock>
+   <uBlock x="5" y="5"></uBlock>
+   <uBlock x="5" y="6"></uBlock>
+   <bBlock x="5" y="7"></bBlock>
+   <bBlock x="4" y="8"></bBlock>
+   <bBlock x="4" y="9"></bBlock>
 
+   <bBlock x="18" y="3"></bBlock>
    <bBlock x="18" y="4"></bBlock>
-   <bBlock x="18" y="5"></bBlock>
-   <uBlock x="19" y="6"></uBlock>
-   <uBlock x="19" y="7"></uBlock>
+   <uBlock x="17" y="5"></uBlock>
+   <uBlock x="17" y="6"></uBlock>
+   <uBlock x="17" y="7"></uBlock>
    <bBlock x="18" y="8"></bBlock>
    <bBlock x="18" y="9"></bBlock>
 

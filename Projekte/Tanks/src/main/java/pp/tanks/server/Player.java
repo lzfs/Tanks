@@ -4,6 +4,7 @@ import pp.network.IConnection;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.PlayerEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +20,17 @@ public class Player {
     private final List<Long>nano = new ArrayList<>();
     private String infoText = "";
     //private ClientState state = ClientState.INIT;
-    private ItemEnum turret;
-    private ItemEnum armor;
+    private ItemEnum turret = null;
+    private ItemEnum armor = null;
     private boolean ready;
+    public final PlayerEnum playerEnum;
 
     /**
      * creates new player
      * @param conn the connection to the client represented by this player
      */
-    public Player(IConnection<IServerMessage> conn) {
+    public Player(IConnection<IServerMessage> conn, PlayerEnum playerEnum) {
+        this.playerEnum = playerEnum;
         this.connection = conn;
     }
 

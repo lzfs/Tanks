@@ -1,27 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map w="23" h="13">
+    <playersTank x="3" y="6"></playersTank>
+    <uBlock x = "11" y = "4"></uBlock>
+    <rBlock x = "11" y = "6"></rBlock>
+    <bBlock x = "11" y = "8"></bBlock>
+    <uBlock x = "18" y = "1"></uBlock>
+    <uBlock x = "18" y = "2"></uBlock>
+    <uBlock x = "18" y = "3"></uBlock>
+    <uBlock x = "18" y = "4"></uBlock>
+    <uBlock x = "19" y = "4"></uBlock>
+    <uBlock x = "20" y = "4"></uBlock>
+    <uBlock x = "21" y = "4"></uBlock>
 
-    // Tanks
-    <playersTank x="5" y="5"></playersTank>  //Player Tank
-    <apc x="20" y="2"></apc> //Armored Personel Carrier
-
-    // Blöcke in der Mitte der Map
-    <uBlock x = "11" y = "4"></ uBlock>     //unbreakable Block
-    <rBlock x = "11" y = "6"></ rBlock>     //reflectable Block
-    <bBlock x = "11" y = "8"></ bBlock>     //breakeable Block
-
-    //Käfig
-    <uBlock x = "18" y = "1"></ uBlock>
-    <uBlock x = "18" y = "2"></ uBlock>
-    <uBlock x = "18" y = "3"></ uBlock>
-    <uBlock x = "18" y = "4"></ uBlock>
-    <uBlock x = "19" y = "3"></ uBlock>
-    <uBlock x = "20" y = "3"></ uBlock>
-    <uBlock x = "21" y = "3"></ uBlock>
-
-
-
-    //linke Seite
     <uBlock x="0" y="0"></uBlock>
     <uBlock x="0" y="1"></uBlock>
     <uBlock x="0" y="2"></uBlock>
@@ -36,7 +26,6 @@
     <uBlock x="0" y="11"></uBlock>
     <uBlock x="0" y="12"></uBlock>
 
-    //rechte Seite
     <uBlock x="22" y="0"></uBlock>
     <uBlock x="22" y="1"></uBlock>
     <uBlock x="22" y="2"></uBlock>
@@ -51,7 +40,6 @@
     <uBlock x="22" y="11"></uBlock>
     <uBlock x="22" y="12"></uBlock>
 
-    //obere Seite
     <uBlock x="1" y="0"></uBlock>
     <uBlock x="2" y="0"></uBlock>
     <uBlock x="3" y="0"></uBlock>
@@ -74,7 +62,6 @@
     <uBlock x="20" y="0"></uBlock>
     <uBlock x="21" y="0"></uBlock>
 
-    //unter Seite
     <uBlock x="1" y="12"></uBlock>
     <uBlock x="2" y="12"></uBlock>
     <uBlock x="3" y="12"></uBlock>
@@ -96,4 +83,6 @@
     <uBlock x="19" y="12"></uBlock>
     <uBlock x="20" y="12"></uBlock>
     <uBlock x="21" y="12"></uBlock>
+
+    <!--<apc x="20" y="5"></apc>-->
 </map>
