@@ -13,15 +13,29 @@ import pp.util.DoubleVec;
 public abstract class Tank extends Item<TankData> {
     protected Turret turret;
     protected Armor armor;
-    protected double speed = 2;
+    protected double speed;
     protected double rotationspeed = 150;
     protected TankData data;
+    private int lives=1;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, data);
         this.armor = armor;
         this.turret = turret;
         this.data = data;
+        this.speed=calculateSpeed();
+    }
+
+    public void decreaseLives(){
+        this.lives-=1;
+    }
+
+    public int getLives(){
+        return this.lives;
+    }
+
+    public void setLives(int lives){
+        this.lives=lives;
     }
 
     /**
@@ -93,6 +107,10 @@ public abstract class Tank extends Item<TankData> {
         data.setMove(false);
     }
 
+    public void setDestroyed(boolean bool){
+        this.data.setDestroyed(bool);
+    }
+
     /**
      * updates the movement of a tank
      * @param delta
@@ -102,9 +120,13 @@ public abstract class Tank extends Item<TankData> {
         if (isMoving() && !data.isDestroyed()) {
             Double currentRot = data.getRotation();
             Double moveDirRotation = data.getMoveDir().getRotation();
-            Double tmp = (currentRot - moveDirRotation + 360) % 360;
-            Double tmp1 = (moveDirRotation - currentRot + 360) % 360;
-            Double tmp2 = Math.abs(currentRot - moveDirRotation); //TODO
+            System.out.println("currentRot " +currentRot);
+            System.out.println("movedirRot " +moveDirRotation);
+            Double tmp = (currentRot - moveDirRotation + 180) % 180;
+            Double tmp1 = (moveDirRotation - currentRot + 180) % 180;
+            System.out.println("tmp " + tmp);
+            System.out.println("tmp1 " + tmp1);
+            Double tmp2 = Math.abs(currentRot - moveDirRotation)%180; //TODO
             if (tmp2 < 2) {
                 setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
             }
@@ -149,7 +171,7 @@ public abstract class Tank extends Item<TankData> {
     private Projectile makeProjectile(DoubleVec targetPos) {
         DoubleVec dir = targetPos.sub(this.getPos()).normalize();
         DoubleVec position = this.getPos().add(dir.mult(1.01));
-        ProjectileData data = new ProjectileData(position, 1234,4, dir);  //TODO
+        ProjectileData data = new ProjectileData(position, 1234,turret.getBounces(), dir);  //TODO
         model.notifyReceivers(TanksNotification.TANK_FIRED);
         if (turret instanceof LightTurret) {
             return new LightProjectile(model, 0.3, turret.getDamage(), 4,data);  //TODO
@@ -161,6 +183,10 @@ public abstract class Tank extends Item<TankData> {
             return new HeavyProjectile(model, 0.3, turret.getDamage(), 4, targetPos,data); //TODO
         }
         return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);
+    }
+
+    private double calculateSpeed() {
+        return (25.0/ armor.getWeight());
     }
 
     /**

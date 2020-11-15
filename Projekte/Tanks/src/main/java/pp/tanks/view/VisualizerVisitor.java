@@ -143,7 +143,6 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(BreakableBlock bBlock) {
-        System.out.println(bBlock.isDestroyed());
         if (!bBlock.isDestroyed()) {
             drawItem(bBlock, TanksImageProperty.bBlock, Shape.RECTANGLE, Color.BLUE);
         }

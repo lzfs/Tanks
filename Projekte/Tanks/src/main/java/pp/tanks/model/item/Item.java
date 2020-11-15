@@ -5,6 +5,9 @@ import pp.tanks.model.Model;
 import pp.tanks.message.data.Data;
 import pp.util.DoubleVec;
 
+import javafx.geometry.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
+
 /**
  * Abstract base class of all items in a {@linkplain pp.tanks.model.TanksMap}
  */
@@ -65,8 +68,8 @@ public abstract class Item<T extends Data> {
     public boolean collisionWith(Item other) {
         if (getPos() == null || other.isDestroyed()) return false;
 
-        double height = 0.6;
-        double width = 0.6;
+        double height = 0.5;
+        double width = 0.5;
 
         if (other instanceof Projectile && this instanceof Projectile) {
             return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
@@ -80,30 +83,18 @@ public abstract class Item<T extends Data> {
                    && (Math.abs(getPos().y - other.getPos().y) <= height + this.getEffectiveRadius());
         }
         else {
-            return (Math.abs(getPos().x - other.getPos().x) <=  2 * width) && (Math.abs(getPos().y - other.getPos().y) <= 2 * height);
+            Rectangle2D item1 = new Rectangle2D(this.getPos().x - width, this.getPos().y - height, width, height);
+            Rectangle2D item2 = new Rectangle2D(other.getPos().x - width, other.getPos().y - height, width, height);
+            return item1.intersects(item2);
         }
     }
 
-    /**
-     * checks if an obstacle is within a specified area
-     * @param obsPos
-     * @param height
-     * @param width
-     * @param otherPos
-     * @return
-     */
-    public boolean isInRectangle(DoubleVec obsPos, int height, int width, DoubleVec otherPos) {
-        if ((otherPos.x <= (obsPos.x + width)) && (otherPos.x >= (obsPos.x - width))) {
-            if ((otherPos.y <= (obsPos.y + height)) && (otherPos.y >= (obsPos.y - width))) return true;
-        }
-        return false;
-    }
+
 
     /**
      * Indicates that this item has been destroyed.
      */
     public void destroy() {
-        System.out.println("destroy");
         data.destroy();
     }
 
@@ -120,4 +111,7 @@ public abstract class Item<T extends Data> {
      * @param delta time in seconds since the last update call
      */
     public abstract void update(double delta);
+
+
+
 }

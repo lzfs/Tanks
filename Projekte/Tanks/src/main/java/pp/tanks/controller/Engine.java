@@ -48,6 +48,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final GameOverSPController gameOverSPController;
     public final PauseMenuSPController pauseMenuSPController;
     public final PlayGameController playGameController;
+    public final TutorialOverviewController tutorialOverviewController;
 
     public final LobbyController lobbyController;
     public final GameOverMPController gameOverMPController;
@@ -65,6 +66,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private Tank saveTank = null;
     private String mode = "";
     private PlayerEnum playerEnum;
+    private int mapCounter = 0;
 
     /**
      * Creates a new engine
@@ -83,6 +85,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.gameOverSPController = new GameOverSPController(this);
         this.pauseMenuSPController = new PauseMenuSPController(this);
         this.playGameController = new PlayGameController(this);
+        this.tutorialOverviewController = new TutorialOverviewController(this);
 
         this.lobbyController = new LobbyController(this);
         this.gameOverMPController = new GameOverMPController(this);
@@ -123,6 +126,14 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         stage.addEventHandler(InputEvent.ANY, this);
         stage.show();
      */
+    }
+
+    public void setMapCounter(int counter){
+        this.mapCounter = counter;
+    }
+
+    public int getMapCounter() {
+        return mapCounter;
     }
 
     /**
@@ -223,6 +234,13 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
+     * activate the TutorialOverviewController
+     */
+    public void activateTutorialOverviewController() {
+        setController(tutorialOverviewController);
+    }
+
+    /**
      * activate the LobbyController
      */
     public void activateLobbyController() {
@@ -308,6 +326,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public void handle(Event event) {
         controller.handle(event);
     }
+
+
 
     /**
      * Sets the specified scene and changes the UI that way.

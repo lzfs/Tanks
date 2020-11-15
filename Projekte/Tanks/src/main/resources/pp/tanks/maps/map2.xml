@@ -36,16 +36,16 @@
    <uBlock x="5" y="0"></uBlock>
    <uBlock x="6" y="0"></uBlock>
    <uBlock x="7" y="0"></uBlock>
-   <rBlock x="8" y="0"></rBlock>
+   <uBlock x="8" y="0"></uBlock>
    <rBlock x="9" y="0"></rBlock>
    <rBlock x="10" y="0"></rBlock>
-   <uBlock x="11" y="0"></uBlock>
-   <uBlock x="12" y="0"></uBlock>
+   <rBlock x="11" y="0"></rBlock>
+   <rBlock x="12" y="0"></rBlock>
    <uBlock x="13" y="0"></uBlock>
    <uBlock x="14" y="0"></uBlock>
    <uBlock x="15" y="0"></uBlock>
-   <rBlock x="16" y="0"></rBlock>
-   <rBlock x="17" y="0"></rBlock>
+   <uBlock x="16" y="0"></uBlock>
+   <uBlock x="17" y="0"></uBlock>
    <uBlock x="18" y="0"></uBlock>
    <uBlock x="19" y="0"></uBlock>
    <uBlock x="20" y="0"></uBlock>
@@ -54,15 +54,15 @@
    <uBlock x="1" y="12"></uBlock>
    <uBlock x="2" y="12"></uBlock>
    <uBlock x="3" y="12"></uBlock>
-   <rBlock x="4" y="12"></rBlock>
-   <rBlock x="5" y="12"></rBlock>
-   <rBlock x="6" y="12"></rBlock>
-   <rBlock x="7" y="12"></rBlock>
+   <uBlock x="4" y="12"></uBlock>
+   <uBlock x="5" y="12"></uBlock>
+   <uBlock x="6" y="12"></uBlock>
+   <uBlock x="7" y="12"></uBlock>
    <uBlock x="8" y="12"></uBlock>
-   <uBlock x="9" y="12"></uBlock>
-   <uBlock x="10" y="12"></uBlock>
-   <uBlock x="11" y="12"></uBlock>
-   <uBlock x="12" y="12"></uBlock>
+   <rBlock x="9" y="12"></rBlock>
+   <rBlock x="10" y="12"></rBlock>
+   <rBlock x="11" y="12"></rBlock>
+   <rBlock x="12" y="12"></rBlock>
    <uBlock x="13" y="12"></uBlock>
    <uBlock x="14" y="12"></uBlock>
    <uBlock x="15" y="12"></uBlock>
@@ -73,12 +73,33 @@
    <uBlock x="20" y="12"></uBlock>
    <uBlock x="21" y="12"></uBlock>
 
-   <uBlock x="8" y="5"></uBlock>
-   <uBlock x="9" y="5"></uBlock>
-   <uBlock x="7" y="5"></uBlock>
-   <bBlock x="10" y="5"></bBlock>
+   <bBlock x="3" y="4"></bBlock>
+   <bBlock x="3" y="5"></bBlock>
+   <uBlock x="4" y="6"></uBlock>
+   <uBlock x="4" y="7"></uBlock>
+   <bBlock x="3" y="8"></bBlock>
+   <bBlock x="3" y="9"></bBlock>
 
+   <bBlock x="18" y="4"></bBlock>
+   <bBlock x="18" y="5"></bBlock>
+   <uBlock x="19" y="6"></uBlock>
+   <uBlock x="19" y="7"></uBlock>
+   <bBlock x="18" y="8"></bBlock>
+   <bBlock x="18" y="9"></bBlock>
 
-   <!--<tankDestroyer x="15" y="10"></tankDestroyer>-->
-   <apc x="15" y="5"></apc>
+   <rBlock x="9" y="3"></rBlock>
+   <bBlock x="10" y="3"></bBlock>
+   <bBlock x="11" y="3"></bBlock>
+   <bBlock x="12" y="3"></bBlock>
+   <rBlock x="13" y="3"></rBlock>
+
+   <rBlock x="9" y="9"></rBlock>
+   <bBlock x="10" y="9"></bBlock>
+   <bBlock x="11" y="9"></bBlock>
+   <bBlock x="12" y="9"></bBlock>
+   <rBlock x="13" y="9"></rBlock>
+
+   <apc x="20" y="4"></apc>
+   <howitzer x="20" y="6"></howitzer>
+   <tankDestroyer x="20" y="8"></tankDestroyer>
 </map>

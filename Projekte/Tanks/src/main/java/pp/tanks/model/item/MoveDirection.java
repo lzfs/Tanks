@@ -31,4 +31,13 @@ public enum MoveDirection {
     public DoubleVec getVec() {
         return new DoubleVec(this.x, this.y);
     }
+
+    /*
+    public MoveDirection getEq(MoveDirection dir){
+        if( dir == UP || dir==DOWN){
+
+        }
+    }
+
+     */
 }

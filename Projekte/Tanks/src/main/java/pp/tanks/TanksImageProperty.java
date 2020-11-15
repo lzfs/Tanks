@@ -110,5 +110,15 @@ public enum TanksImageProperty {
      * Path of the "tank destroyed" image
      */
     tankDestroyed,
+
+    /**
+     * Path of the "blocks for tutorial" image
+     */
+    blocksImageForTutorial,
+
+    /**
+     * Path of the "gamePlay information for tutorial" image
+     */
+    gamePlayImageForTutorial
 }
 

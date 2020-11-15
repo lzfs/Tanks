@@ -1,15 +1,22 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.TanksMap;
+import pp.tanks.model.item.LightArmor;
+import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.MoveDirection;
+import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Tank;
+import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 import pp.util.StopWatch;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.event.Event;
@@ -19,6 +26,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+
+import javax.xml.stream.XMLStreamException;
 
 /**
  * The controller realizing the game state when the game is really running.
@@ -37,6 +46,7 @@ class PlayGameController extends Controller {
     private double lastUpdate;
     private Scene scene;
 
+
     /**
      * create a new PlayGameController
      *
@@ -45,6 +55,8 @@ class PlayGameController extends Controller {
     public PlayGameController(Engine engine) {
         super(engine);
     }
+
+
 
     /**
      * Returns the current game map of this game
@@ -110,20 +122,35 @@ class PlayGameController extends Controller {
         if (engine.getModel().gameWon()) {
             engine.setView(null);
             if (engine.getMode().equals("Tutorial")) {
-                //TODO
                 engine.activateLevelController();
             }
             else if (engine.getMode().equals("Singleplayer")) {
-                //TODO Unterscheidung in level und dann naechster controller laden // vielleicht generisch
-                engine.activateMission1CompleteController();
+                if(engine.getMapCounter()==1){
+                    engine.activateMission1CompleteController();
+                } else {
+                    engine.activateMission2CompleteController();
+                }
             }
             else {
                 //Multiplayer TODO
             }
         }
         else if (engine.getModel().gameLost()) {
+            System.out.println("gamelost");
             engine.setView(null);
-            engine.activateGameLostController();
+            if (engine.getMode().equals("Tutorial")) {
+                engine.activateLevelController();
+            } else if (engine.getMode().equals("Singleplayer")) {
+                engine.getSaveTank().decreaseLives();
+                if( engine.getSaveTank().getLives()>0){
+                    engine.activateStartGameSPController();
+                } else {
+                    engine.activateGameOverSPController();
+                }
+            } else {
+                //Multiplayer
+                //TODO
+            }
         }
         else if (pressed.contains(KeyCode.ESCAPE))
             engine.activatePauseMenuSPController(); //TODO
@@ -137,8 +164,27 @@ class PlayGameController extends Controller {
         stopWatch.start();
         pressed.clear();
         processed.clear();
-        if (scene == null)
+        try{
+            engine.getModel().loadMap("map"+engine.getMapCounter() +".xml");
+        }
+        catch (XMLStreamException | IOException e) {
+            LOGGER.log(Level.INFO, "alles schiefgelaufen");
+            e.printStackTrace();
+        }
+        if (engine.getMapCounter()==0) {
+            PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(5, 5), 1000, 20));
+            engine.getModel().setTank(tank);
+        } else {
+            engine.getSaveTank().setDestroyed(false);
+            engine.getSaveTank().setPos(new DoubleVec(5,5));
+            engine.getModel().setTank(engine.getSaveTank());
+        }
+        TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
+        engine.setView(mapview);
+
+        if (scene == null){
             scene = new Scene(new Group(engine.getView()));
+        }
         engine.setScene(scene);
     }
 
@@ -147,6 +193,7 @@ class PlayGameController extends Controller {
      */
     @Override
     void exit() {
+        System.out.println("exit playgame");
         scene = null;
         stopWatch.stop();
     }
