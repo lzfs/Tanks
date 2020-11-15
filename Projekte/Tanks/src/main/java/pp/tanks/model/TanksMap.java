@@ -1,26 +1,25 @@
 package pp.tanks.model;
 
+import pp.tanks.message.data.Data;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
-import pp.util.IntVec;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Represents the entire game map. It can be accessed as an unmodifiable {@linkplain java.util.List}
  * of all items consisting of the tanks, blocks and projectiles.
  */
-public class TanksMap extends AbstractList<Item> {
-    private static final Logger LOGGER = Logger.getLogger(TanksMap.class.getName());
-    private List<Tank> tanks;
-    private List<ReflectableBlock> reflectableBlocks;
-    private List<BreakableBlock> breakableBlocks;
-    private List<UnbreakableBlock> unbreakableBlocks;
-    private List<Projectile> projectiles;
+public class TanksMap extends AbstractList<Item <? extends Data>> {
+    private List<Tank> playersTanks = new ArrayList<>();
+    private List<COMEnemy> enemy = new ArrayList<>();
+    private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
+    private List<BreakableBlock> breakableBlocks = new ArrayList<>();
+    private List<UnbreakableBlock> unbreakableBlocks = new ArrayList<>();
+    private List<Projectile> projectiles = new ArrayList<>(); // TODO use map instead of list
     private final List<Projectile> addedProjectiles = new ArrayList<>();
     private final int width;
     private final int height;
@@ -36,17 +35,18 @@ public class TanksMap extends AbstractList<Item> {
     }
 
     /**
-     * Returns the item (droid, obstacle, etc.) at the specified index in the list of all items.
-     * Index 0 always indicates the droid.
+     * Returns the item (tank, block, etc.) at the specified index in the list of all items.
+     * Index 0 always indicates the playersTank.
      *
      * @param index the index in the list of all items.
      */
     @Override
-    public Item get(int index) {
-        if (index == 0) return tanks.get(0);
-        int i = index - 1;
-        if (i < tanks.size()) return tanks.get(i);
-        i -= tanks.size();
+    public Item<? extends Data> get(int index) {
+        int i = index ;
+        if (i < playersTanks.size()) return playersTanks.get(i);
+        i -= playersTanks.size();
+        if (i < enemy.size()) return enemy.get(i);
+        i -= enemy.size();
         if (i < breakableBlocks.size()) return breakableBlocks.get(i);
         i -= breakableBlocks.size();
         if (i < unbreakableBlocks.size()) return unbreakableBlocks.get(i);
@@ -79,13 +79,12 @@ public class TanksMap extends AbstractList<Item> {
      * @return true or false
      */
     private boolean blocked(DoubleVec pos) {
-
         for (Item obs : getBlocks()) {
             if (obs.getPos().equals(pos)) {
                 return true;
             }
         }
-        for (Item obs : getTanks()) {
+        for (Item obs : getCOMTanks()) {
             if (obs.getPos().equals(pos)) {
                 return true;
             }
@@ -98,15 +97,30 @@ public class TanksMap extends AbstractList<Item> {
      *
      * @return the list of all tanks still alive
      */
-    public List<Tank> getTanks() {
-        return Collections.unmodifiableList(tanks);
+    public List<Tank> getCOMTanks() {
+        return Collections.unmodifiableList(enemy);
+    }
+
+    public List<Tank> getAllTanks() {
+        List<Tank> tmp = new ArrayList<>(playersTanks);
+        tmp.addAll(enemy);
+        return tmp;
     }
 
     /**
-     *
+     * returns the playersTank
      */
-    public Tank getTank() {
-        return tanks.get(0);
+    public Tank getTank0() {
+        return playersTanks.get(0);
+    }
+
+    /**
+     * sets the playersTank on the first position in the list of tanks
+     * @param tank
+     */
+    public void setPlayerTank0(Tank tank) {
+        playersTanks.set(0, tank);
+
     }
 
     /**
@@ -190,7 +204,7 @@ public class TanksMap extends AbstractList<Item> {
      */
     @Override
     public int size() {
-        return tanks.size() + breakableBlocks.size() + unbreakableBlocks.size() + reflectableBlocks.size() + projectiles.size();
+        return playersTanks.size() + breakableBlocks.size() + unbreakableBlocks.size() + reflectableBlocks.size() + projectiles.size() + enemy.size();
     }
 
     /**
@@ -200,18 +214,13 @@ public class TanksMap extends AbstractList<Item> {
      * @param deltaTime time in seconds since the last update call
      */
     void update(double deltaTime) {
-        for (Item item : this)
+        for (Item item : this) {
             item.update(deltaTime);
-
-        // last update loop or user action may have created new projectiles
+        }
         projectiles.addAll(addedProjectiles);
         addedProjectiles.clear();
-
-        // process hits by projectiles
         for (Projectile proj : projectiles)
             proj.processHits();
-
-        // remove all destroyed items, except the droid
         List<Item> removed = new ArrayList<>();
         for (Item item : this)
             if (item.isDestroyed())
@@ -223,8 +232,12 @@ public class TanksMap extends AbstractList<Item> {
     /**
      * Adds a Tank to this map.
      */
-    public void addTanks(Tank t) {
-        tanks.add(t);
+    public void addTanks(Tank tank) {
+        if(tank instanceof COMEnemy){
+            enemy.add((COMEnemy) tank);
+        } else {
+            playersTanks.add(tank);
+        }
     }
 
     /**

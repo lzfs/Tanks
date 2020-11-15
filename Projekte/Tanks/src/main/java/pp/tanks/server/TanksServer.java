@@ -36,16 +36,6 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
         this.server = server;
     }
 
-    /*
-     * Sends map to the player's client
-     *
-     * @param p the player to receive the map
-     */ /* add this method after creating the makeModel methode in "Player"
-    public void sendMap(Player p) {
-        p.getConnection().send(p.makeModel());
-    }
-    */
-
     @Override
     public void receiveMessage(IClientMessage message, IConnection<IServerMessage> conn) {
         message.accept(this, conn);
@@ -53,11 +43,12 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void onConnectionClosed(IConnection<IServerMessage> conn) {
-        System.exit(0);
+        System.out.println("Player disconnected");
+        //System.exit(0);
     }
 
     @Override
-    public void visit(ClientReadyMsg msg, IConnection<IServerMessage> from) {
+    public void visit(ClientReadyMessage msg, IConnection<IServerMessage> from) {
         auto.playerConnected(msg, from);
     }
 
@@ -104,7 +95,7 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void visit(StartGameMessage msg, IConnection<IServerMessage> from) {
-
+        auto.startGame(msg);
     }
 
     @Override
@@ -114,6 +105,11 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void visit(UpdateTankConfigMessage msg, IConnection<IServerMessage> from) {
+        auto.updateTankConfig(msg);
+    }
 
+    @Override
+    public void visit(BackMessage msg, IConnection<IServerMessage> from) {
+        auto.back(msg);
     }
 }

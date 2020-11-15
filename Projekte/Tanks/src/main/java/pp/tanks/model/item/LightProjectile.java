@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
@@ -8,8 +9,8 @@ import pp.util.DoubleVec;
  */
 public class LightProjectile extends Projectile {
 
-    public LightProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec pos) {
-        super(model, effectiveRadius, damage, speed, pos);
+    public LightProjectile(Model model, double effectiveRadius, int damage, double speed, ProjectileData data) {
+        super(model, effectiveRadius, damage, speed,data);
     }
 
     /**
@@ -17,7 +18,7 @@ public class LightProjectile extends Projectile {
      */
     @Override
     public void isVisible() {
-        
+        //TODO
     }
 
     /**
@@ -27,4 +28,7 @@ public class LightProjectile extends Projectile {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
+    @Override
+    public String toString() { return "LightProjectile";}
 }

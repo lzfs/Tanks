@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.model.Model;
@@ -17,6 +18,9 @@ import java.util.logging.Logger;
 
 import static pp.tanks.TanksImageProperty.backgroundImage;
 
+/**
+ * Represents the view of the game map
+ */
 public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     private static final Logger LOGGER = Logger.getLogger(TanksMapView.class.getName());
 
@@ -78,7 +82,6 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
             p.accept(visualizer);
         }
 
-        //
         context.setFont(TEXT_FONT);
         context.setFill(Color.WHITE);
         context.setFont(TEXT_FONT);
@@ -134,4 +137,3 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         }
     }
 }
-

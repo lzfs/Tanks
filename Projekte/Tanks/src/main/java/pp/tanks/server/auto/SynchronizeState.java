@@ -3,8 +3,8 @@ package pp.tanks.server.auto;
 import pp.network.IConnection;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.PingMsg;
-import pp.tanks.message.server.SynchronizeMsg;
+import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.SynchronizeMessage;
 import pp.tanks.server.Player;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * to add onto their System time
  */
 public class SynchronizeState extends TankState{
-    private TankAutomaton parent;
+    private final TankAutomaton parent;
     private int counter = 0;
     private long nanoTime1;
     private int playerCount = 0;
@@ -22,7 +22,7 @@ public class SynchronizeState extends TankState{
 
     public SynchronizeState(TankAutomaton parent) {
         this.parent = parent;
-        this.players = parent.getPlayers();// angepasst werden sobald die Player list im model ist
+        this.players = parent.getPlayers();// werden angepasst sobald die Player list im model ist
     }
 
     /**
@@ -39,6 +39,7 @@ public class SynchronizeState extends TankState{
      */
     @Override
     public void entry() {
+        System.out.println("synchronize State");
        call();
     }
 
@@ -63,7 +64,7 @@ public class SynchronizeState extends TankState{
      * sends a ping to the current player given in playerCount
      */
     public void call() {
-        players.get(playerCount).getConnection().send(new PingMsg());
+        players.get(playerCount).getConnection().send(new PingMessage());
         nanoTime1 = System.nanoTime();
         counter++;
     }
@@ -83,11 +84,11 @@ public class SynchronizeState extends TankState{
                 call();
             }
             else {
-                for (Player p : players) {
-                    SynchronizeMsg msg = new SynchronizeMsg(p.getOffset());
-                    p.getConnection().send(msg);
+                for(int i = 0; i < players.size(); i++){
+                    SynchronizeMessage msg = new SynchronizeMessage(i);
+                    players.get(i).getConnection().send(msg);
                 }
-                containingState().goToState(parent.playingState);
+                containingState().goToState(parent.playerReady);
             }
         }
     }

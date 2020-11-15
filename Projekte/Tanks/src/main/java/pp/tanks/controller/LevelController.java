@@ -1,18 +1,34 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.client.BackMessage;
+import pp.tanks.message.data.TankData;
+import pp.tanks.model.item.LightArmor;
+import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.PlayersTank;
+import pp.tanks.view.TanksMapView;
+import pp.util.DoubleVec;
+
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
-public class LevelController extends Controller {
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    private static final String MENU_CONTROL_FXML = "LevelSP.fxml"; //NON-NLS
+/**
+ * The controller displaying the levels the user can choose from.
+ */
+public class LevelController extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(LevelController.class.getName());
+    private static final String LEVEL_SP_FXML = "LevelSP.fxml"; //NON-NLS
     private Scene scene;
 
     /**
      * create a new LevelController
      *
-     * @param engine the engine of the game that switches between controllers
+     * @param engine the engine this controller belongs to
      */
     public LevelController(Engine engine) {
         super(engine);
@@ -36,27 +52,37 @@ public class LevelController extends Controller {
     @FXML
     private Button back;
 
+    /**
+     * Create the scene displaying all levels.
+     */
     public Scene makeScene() {
-        return new Scene(engine.getViewForController(MENU_CONTROL_FXML, this));
+        return new Scene(engine.getViewForController(LEVEL_SP_FXML, this));
     }
 
+    /**
+     * This method is called whenever this controller is activated, i.e., when the user clicked "Singleplayer" in the main menu.
+     */
     @Override
     public void entry() {
+        LOGGER.log(Level.INFO, "ENTRY LevelController");
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
     }
 
+    /**
+     * This method is called whenever this controller is deactivated, i.e., when the user chose a level.
+     */
     @Override
     public void exit() {
-        System.out.println("EXIT");
+        LOGGER.log(Level.INFO, "EXIT LevelController");
     }
 
     /**
      * @return the name of the file as a String
      */
     public String getFileName() {
-        return MENU_CONTROL_FXML;
+        return LEVEL_SP_FXML;
     }
 
     /**
@@ -64,7 +90,9 @@ public class LevelController extends Controller {
      */
     @FXML
     private void back() {
-        System.out.println("BACK");
+        LOGGER.log(Level.INFO, "clicked BACK");
+        engine.getTankApp().getConnection().send(new BackMessage());
+        engine.getModel().setDebug(false);
         engine.activateMainMenuController();
     }
 
@@ -73,7 +101,8 @@ public class LevelController extends Controller {
      */
     @FXML
     private void tutorial() {
-        System.out.println("TUTORIAL");
+        LOGGER.log(Level.INFO, "clicked TUTORIAL");
+        engine.activateTutorialOverviewController();
     }
 
     /**
@@ -81,7 +110,7 @@ public class LevelController extends Controller {
      */
     @FXML
     private void startGame() {
-        System.out.println("START_GAME");
+        LOGGER.log(Level.INFO, "clicked START_GAME");
         engine.activateTankConfigSPController();
     }
 }

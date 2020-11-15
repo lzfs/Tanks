@@ -1,3 +1,6 @@
+import org.javamodularity.moduleplugin.tasks.ModularJavaExec
+import org.javamodularity.moduleplugin.tasks.ModularCreateStartScripts
+
 defaultTasks 'clean', 'installDist'
 
 apply plugin: 'application'
@@ -16,5 +19,24 @@ dependencies {
 description = 'Tanks'
 
 application {
-    mainClassName = "$moduleName/pp.tanks.TanksApp"
+    mainClassName = "$moduleName/pp.tanks.client.TanksApp"
 }
+
+task runServer(type: ModularJavaExec){
+    main = "$moduleName/pp.tanks.server.TanksServer"
+}
+
+task createStartScriptsServer(type: ModularCreateStartScripts){
+    runTask = tasks.runServer
+    applicationName = 'TanksServer'
+}
+
+task runGame(type: ModularJavaExec){
+    main = "$moduleName/pp.tanks.client.TanksApp"
+}
+
+task createStartScriptsClient(type: ModularCreateStartScripts){
+    runTask = tasks.runGame
+    applicationName = 'TanksApp'
+}
+

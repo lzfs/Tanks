@@ -2,18 +2,16 @@ package pp.tanks.controller;
 
 import pp.tanks.*;
 import pp.tanks.client.MiniController;
+import pp.tanks.client.Sounds;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
-import pp.tanks.view.MenuView;
-import pp.media.ImageSupport;
-import pp.media.SoundSupport;
-import pp.tanks.TanksImageProperty;
-import pp.tanks.TanksSoundProperty;
-import pp.tanks.client.TanksApp;
+import pp.tanks.server.GameMode;
 import pp.tanks.view.MenuView;
 
 import javafx.animation.AnimationTimer;
@@ -22,10 +20,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.InputEvent;
 import javafx.stage.Stage;
+
 import pp.tanks.view.TanksMapView;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -34,50 +32,73 @@ import java.util.logging.Logger;
  * The game engine using the state pattern to control the game in its different states, i.e., playing the game,
  * showing that the game has been won or lost, and the menu.
  */
-public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*/ {
+public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private static final Logger LOGGER = Logger.getLogger(Engine.class.getName());
     private final TanksApp tankApp;
     private MenuView menuView;
-    //private TanksMapView view;
+    private TanksMapView view;
+
     public final MainMenuController mainMenuController;
     public final CreditsController creditsController;
     public final SettingsController settingsController;
     public final LevelController levelController;
-    public final StartGameSPController GameSPController;
+    public final StartGameSPController StartGameSPController;
     public final TankConfigSPController tankConfigSPController;
-    //public final GameOverController gameWonController;
-    //public final GameOverController gameLostController;
+    public final Mission1CompleteController mission1CompleteController;
+    public final Mission2CompleteController mission2CompleteController;
+    public final GameOverSPController gameOverSPController;
+    public final PauseMenuSPController pauseMenuSPController;
+    public final PlayGameController playGameController;
+    public final TutorialOverviewController tutorialOverviewController;
+
     public final LobbyController lobbyController;
-    public final GameOverController gameOverController;
-    public final MiniController miniController; //for tests
+    public final GameOverMPController gameOverMPController;
+    public final GameWonMPController gameWonMPController;
+    public final ConnectionLostController connectionLostController;
+
+    public final MiniController miniController; // for testing
 
     private final Stage stage;
-    //private final Model model;
+    private final Model model;
     private final ImageSupport<TanksImageProperty> images;
     private final SoundSupport<TanksSoundProperty> sound;
 
     private Controller controller;
+    private Tank saveTank = null;
+    private GameMode mode;
+    private PlayerEnum playerEnum;
+    private int mapCounter = 0;
 
     /**
-     * Creates a new game engine
+     * Creates a new engine
      *
      * @param stage the game stage where the game is played and the menu is shown
      */
-    public Engine(Stage stage, TanksApp tankApp, Properties properties) throws MalformedURLException {
+    public Engine(Stage stage, TanksApp tankApp, Properties properties) {
         this.mainMenuController = new MainMenuController(this);
         this.creditsController = new CreditsController(this);
         this.settingsController = new SettingsController(this);
         this.levelController = new LevelController(this);
-        this.GameSPController = new StartGameSPController(this);
+        this.StartGameSPController = new StartGameSPController(this);
         this.tankConfigSPController = new TankConfigSPController(this);
-        //this.gameWonController = new GameOverController(this, "Gewonnen");
-        //this.gameLostController = new GameOverController(this, "Verloren");
+        this.mission1CompleteController = new Mission1CompleteController(this);
+        this.mission2CompleteController = new Mission2CompleteController(this);
+        this.gameOverSPController = new GameOverSPController(this);
+        this.pauseMenuSPController = new PauseMenuSPController(this);
+        this.playGameController = new PlayGameController(this);
+        this.tutorialOverviewController = new TutorialOverviewController(this);
+
         this.lobbyController = new LobbyController(this);
-        this.gameOverController = new GameOverController(this);
+        this.gameOverMPController = new GameOverMPController(this);
+        this.gameWonMPController = new GameWonMPController(this);
+        this.connectionLostController = new ConnectionLostController(this);
+
+        this.miniController = new MiniController(tankApp);
+
         this.tankApp = tankApp;
         this.stage = stage;
-        this.miniController = new MiniController(tankApp);
-        //model = new Model(properties);
+        this.model = new Model(properties);
+        model.addReceiver(this);
 
         images = new ImageSupport<>(TanksImageProperty.class, properties) {
             @Override
@@ -94,15 +115,26 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
 
         setController(mainMenuController);
         this.menuView = MenuView.makeView(stage, mainMenuController.getFileName(), mainMenuController);
+
+        this.view = null;
+        // new TanksMapView(model, images)
+
         stage.addEventHandler(InputEvent.ANY, this);
     /*
-        //setController(mainMenuController);
+        // setController(mainMenuController);
         stage.setScene(new Scene(view));
         // accept all events, which are forwarded to the current controller
         stage.addEventHandler(InputEvent.ANY, this);
         stage.show();
-
      */
+    }
+
+    public void setMapCounter(int counter){
+        this.mapCounter = counter;
+    }
+
+    public int getMapCounter() {
+        return mapCounter;
     }
 
     /**
@@ -122,89 +154,144 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
             public void handle(long now) {
                 controller.update();
                 menuView.update();
+                if (view != null) {
+                    view.update();
+                }
             }
         }.start();
     }
 
     /**
-     * activates the CreditsController
+     * activate the CreditsController
      */
     public void activateCreditsController() {
         setController(creditsController);
     }
 
     /**
-     * activates the activateMainMenuController
+     * activate the MainMenuController
      */
     public void activateMainMenuController() {
         setController(mainMenuController);
     }
 
     /**
-     * activates the activateSettingsController
+     * activate the SettingsController
      */
     public void activateSettingsController() {
         setController(settingsController);
     }
 
     /**
-     * activates the activateLevelController
+     * activate the LevelController
      */
     public void activateLevelController() {
         setController(levelController);
     }
 
     /**
-     * activates the activateSPController
+     * activate the StartGameSPController
      */
-    public void activateSPController() {
-        setController(GameSPController);
+    public void activateStartGameSPController() {
+        setController(StartGameSPController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activate the TankConfigSPController
      */
     public void activateTankConfigSPController() {
         setController(tankConfigSPController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activate the PauseMenuSPController
      */
-    public void activateGameSettingsController() {
-        setController(tankConfigSPController);
+    public void activatePauseMenuSPController() {
+        setController(pauseMenuSPController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activate the playGameController
+     * convenience method to start the level again if the player tank gets destroyed
+     * TODO maybe we need to change that later on
      */
     public void activateGameLostController() {
-        setController(tankConfigSPController);
+        setController(playGameController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activate the GameWonController
+     * TODO use the missionXCompleteControllers and make them generic
      */
     public void activateGameWonController() {
-        setController(tankConfigSPController);
+        setController(mission1CompleteController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activate the GameWonMPController
+     */
+    public void activateGameWonMPController() {
+        setController(gameWonMPController);
+    }
+
+    /**
+     * activate the TutorialOverviewController
+     */
+    public void activateTutorialOverviewController() {
+        setController(tutorialOverviewController);
+    }
+
+    /**
+     * activate the LobbyController
      */
     public void activateLobbyController() {
         setController(lobbyController);
     }
 
     /**
-     * activates the activateTankConfigSPController
+     * activate the GameOverSPController
      */
-    public void activateGameOverController() {
-        setController(gameOverController);
+    public void activateGameOverSPController() {
+        setController(gameOverSPController);
     }
 
     /**
-     * Selects the specified controller, i.e., switches the game into the state realized by this controller
+     * activate the GameOverMPController
+     */
+    public void activateGameOverMPController() {
+        setController(gameOverMPController);
+    }
+
+    /**
+     * activate the Mission1CompleteSPController
+     */
+    public void activateMission1CompleteController() {
+        setController(mission1CompleteController);
+    }
+
+    /**
+     * activate the Mission2CompleteSPController
+     */
+    public void activateMission2CompleteController() {
+        setController(mission2CompleteController);
+    }
+
+    /**
+     * activate the PlayGameController
+     */
+    public void activatePlayGameController() {
+        setController(playGameController);
+    }
+
+    /**
+     * activate the ConnectionLostController
+     */
+    public void activateConnectionLostController() {
+        setController(connectionLostController);
+    }
+
+    /**
+     * Select the specified controller, i.e., switches the game into the state realized by this controller
      *
      * @param controller the controller realizing the new state of the game
      */
@@ -212,6 +299,22 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
         if (this.controller != null) this.controller.exit();
         this.controller = controller;
         this.controller.entry();
+    }
+
+    public void setSaveTank(Tank tank) {
+        this.saveTank = tank;
+    }
+
+    public Tank getSaveTank() {
+        return this.saveTank;
+    }
+
+    public void setMode(GameMode mode) {
+        this.mode = mode;
+    }
+
+    public GameMode getMode() {
+        return this.mode;
     }
 
     /**
@@ -224,6 +327,8 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
     public void handle(Event event) {
         controller.handle(event);
     }
+
+
 
     /**
      * Sets the specified scene and changes the UI that way.
@@ -242,35 +347,42 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
 
     /**
      * make a view that is suitable for the specified controller
+     *
      * @param nameOfFile the file you want to load from
      * @param controller the type of the controller
      * @return the newly created view
      */
     public MenuView getViewForController(String nameOfFile, Controller controller) {
-        menuView = MenuView.makeView(stage, nameOfFile, controller);
-        return menuView;
+        this.menuView = MenuView.makeView(stage, nameOfFile, controller);
+        return this.menuView;
+    }
+
+    /**
+     * @return the menuView
+     */
+    public MenuView getMenuView() {
+        return this.menuView;
     }
 
     /**
      * @return the view
      */
-    public MenuView getView() {
-        return menuView;
+    public TanksMapView getView() {
+        return this.view;
     }
 
-    /*
-     * @return the view
-     *//*
-    public TanksMapView getView() {
-        return view;
+    /**
+     * @param view the view to set
+     */
+    public void setView(TanksMapView view) {
+        this.view = view;
     }
-    */
 
     /**
      * @return the tank app
      */
-    public TanksApp getTankApp(){
-        return tankApp;
+    public TanksApp getTankApp() {
+        return this.tankApp;
     }
 
     /**
@@ -280,32 +392,39 @@ public class Engine implements EventHandler<Event>/*, TanksNotificationReceiver*
         return images;
     }
 
-    /*
-     *
+    /**
      * @return the model of the game
-     */ /*
+     */
     public Model getModel() {
-        return model;
+        return this.model;
     }
 
-
+    /**
+     * Subscriber method according to the subscriber pattern. The method plays audio clips depending on the
+     * specified notification if sound is not muted.
+     */
     @Override
     public void notify(TanksNotification notification) {
         LOGGER.finer("received " + notification);
         if (!getModel().isMuted())
             switch (notification) {
                 case TANK_FIRED:
-                    //sound.play(TanksSoundProperty.tanksProjectileSound);
+                    sound.play(TanksSoundProperty.tanksProjectileSound);
                     break;
                 case TANK_DESTROYED:
-                    //sound.play(TanksSoundProperty.destroyedSound);
+                    sound.play(TanksSoundProperty.destroyedSound);
                     break;
                 case BLOCK_DESTROYED:
-                    //sound.play(TanksSoundProperty.blockDestroyedSound);
+                    sound.play(TanksSoundProperty.blockDestroyedSound);
                     break;
             }
     }
-    */
 
+    public PlayerEnum getPlayerEnum() {
+        return playerEnum;
+    }
 
+    public void setPlayerEnum(PlayerEnum playerEnum) {
+        this.playerEnum = playerEnum;
+    }
 }

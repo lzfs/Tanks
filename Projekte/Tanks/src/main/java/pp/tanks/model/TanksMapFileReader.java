@@ -1,5 +1,8 @@
 package pp.tanks.model;
 
+import pp.tanks.message.data.BBData;
+import pp.tanks.message.data.Data;
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
 
@@ -25,7 +28,6 @@ class TanksMapFileReader {
     private final Model model;
     private TanksMap map;
     private final Set<DoubleVec> occupied = new HashSet<>();
-    private boolean droidSet = false;
     private XMLStreamReader xtr = null;
     private final List<String> errors = new ArrayList<>();
 
@@ -74,8 +76,7 @@ class TanksMapFileReader {
             final int w = getIntAttribute("w", 100);
             final int h = getIntAttribute("h", 100);
             map = new TanksMap(model, w, h);
-            occupied.clear();
-            droidSet = false;
+            occupied.clear();;
         }
         else if (map == null)
             error("unexpected XML element '" + elemName + "'");
@@ -92,58 +93,81 @@ class TanksMapFileReader {
             int tx;
             int ty;
             switch (elemName) {
-                case "breakableBlock":
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                case "bBlock":
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock(tmpPos, model));
+                    map.addBreakableBlock(new BreakableBlock( model, new BBData(tmpPos, 1, 20))); //TODO
                     break;
 
-                case "unbreakableBlock":
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                case "uBlock":
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    UnbreakableBlock uB = new UnbreakableBlock(model);
+                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, 1)); //TODO
                     uB.setPos(tmpPos);
                     map.addUnbreakableBlock(uB);
                     break;
 
-                case "reflectableBlock": {
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                case "rBlock": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    ReflectableBlock rB = new ReflectableBlock(model);
+                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, 1)); //TODO
                     rB.setPos(tmpPos);
                     map.addReflectableBlocks(rB);
                     break;
                 }
 
                 case "playersTank": {
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    //PlayersTank pT = new PlayersTank(model);
-                    //pT.setPos(tmpPos);
-                    //map.addTanks(pT);
+                    PlayersTank pT = new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(),new TankData(tmpPos, 1000, 20));
+                    map.addTanks(pT);
                     break;
                 }
 
                 case "enemy": {
-                    tx = getIntAttribute("tx", 0);
-                    ty = getIntAttribute("ty", 0);
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    //Enemy e= new Enemy(model);
-                    //e.setPos(tmpPos);
-                    //map.addTanks(e);
+                    break;
+                }
+                case "apc": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
+                    tmpPos = new DoubleVec(tx, ty);
+                    TankData data = new TankData(tmpPos,0100,20);
+                    ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model, data);
+                    map.addTanks(apc);
+                    break;
+                }
+                case "howitzer": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
+                    tmpPos = new DoubleVec(tx, ty);
+                    TankData data = new TankData(tmpPos,0100,20);
+                    Howitzer howitzer = new Howitzer(model, data);
+                    map.addTanks(howitzer);
                     break;
                 }
 
+                case "tankDestroyer": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
+                    tmpPos = new DoubleVec(tx, ty);
+                    TankData data = new TankData(tmpPos,0100,20);
+                    TankDestroyer tankDestroyer = new TankDestroyer(model,data);
+                    map.addTanks(tankDestroyer);
+                    break;
+                }
                 default:
                     error("unknown XML element '" + elemName + "'");
             }

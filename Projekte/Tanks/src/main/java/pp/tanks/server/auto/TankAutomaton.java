@@ -1,40 +1,68 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
-import pp.tanks.message.client.ClientReadyMsg;
+import pp.tanks.client.TanksApp;
+import pp.tanks.message.client.BackMessage;
+import pp.tanks.message.client.ClientReadyMessage;
+import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.ServerTankUpdateMessage;
+import pp.tanks.message.server.SetPlayerMessage;
+import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 import pp.tanks.server.TanksServer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TankAutomaton extends TankStateMachine {
     private final TanksServer ts;
-    private final List<Player> players = new ArrayList<>(); // only for testing has to be in Model
+    private final List<Player> players = new ArrayList<>();
+    private GameMode gameMode;
+    private final Properties properties = new Properties();
+    public static final Logger LOGGER = Logger.getLogger(TankAutomaton.class.getName());
 
     public TankAutomaton(TanksServer ts) {
         this.ts = ts;
+        load("tanks.properties");
         entry();
     }
 
     /**
      * the init state of this automaton
      */
-    private final TankState init = new TankState() {
+    public final TankState init = new TankState() {
         @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
         }
 
         @Override
-        public void playerConnected(ClientReadyMsg msg, IConnection<IServerMessage> conn) {
-            players.add(new Player(conn));
-            if (msg.nachricht.equals("Singleplayer")) {
-                containingState().goToState(synchronize);
+        public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
+            players.add(new Player(conn, PlayerEnum.PLAYER1));
+            if (msg.mode == GameMode.SINGLEPLAYER) {
+                gameMode = GameMode.SINGLEPLAYER;
+                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+                containingState().goToState(playerReady);
             }
-            if (msg.nachricht.equals("multiplayer")) {
+            if (msg.mode == GameMode.MULTIPLAYER) {
+                gameMode = GameMode.MULTIPLAYER;
+                if (players.size() == 1) conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+                else conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
                 containingState().goToState(waitingFor2Player);
             }
             //else containingState().goToState();
@@ -45,40 +73,45 @@ public class TankAutomaton extends TankStateMachine {
      * the state when a multiplayer game is started and a second player needs to connect
      */
     private final TankState waitingFor2Player = new TankState() {
+        private ItemEnum turret = ItemEnum.LIGHT_TURRET;
+        private ItemEnum armor = ItemEnum.LIGHT_ARMOR;
         @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
         }
 
         @Override
-        public void playerConnected(ClientReadyMsg msg, IConnection<IServerMessage> conn) {
-            players.add(new Player(conn));
-            containingState().goToState(synchronize);
+        public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
+            players.get(0).setArmor(armor);
+            players.get(0).setTurret(turret);
+            players.add(new Player(conn, PlayerEnum.PLAYER2));
+            containingState().goToState(playerReady);
+        }
+
+        @Override
+        public void updateTankConfig(UpdateTankConfigMessage msg) {
+            turret = msg.turret;
+            armor = msg.armor;
         }
     };
 
+    /**
+     * state for the synchronize of client and server
+     */
     private final TankState synchronize = new SynchronizeState(this);
 
     /**
      * the state where the players choose their tank
      */
-    public final TankState playerReady = new TankState() {
-        @Override
-        public TankAutomaton containingState() {
-            return TankAutomaton.this;
-        }
+    public final TankState playerReady = new PlayerReadyState(this);
 
-        @Override
-        public void entry() {
-            System.out.println("Der Hamster liegt hier");
-        }
-    };
-
-
+    /**
+     * state for playing
+     */
     public final TankState playingState = new PlayingState(this);
 
-
     // has to be in Model
+
     /**
      * Returns the player representing the client with the specified connection.
      *
@@ -97,21 +130,6 @@ public class TankAutomaton extends TankStateMachine {
         return players;
     }
 
-    /*
-     * Sets the client state to determine the controls
-     *
-     * @param p        the target player
-     * @param infoText info text for the player
-     * @param state    control state
-     */ /* add this method after adding the class "ClientState"
-    void setClientState(Player p, String infoText, ClientState state) {
-        p.setState(state);
-        p.setInfoText(infoText);
-        ts.sendMap(p);
-    }
-    */
-
-
     @Override
     public TankState containingState() {
         return null;
@@ -127,4 +145,50 @@ public class TankAutomaton extends TankStateMachine {
         return init;
     }
 
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    /**
+     * load a specified file
+     *
+     * @param fileName the name of the file as a String
+     */
+    private void load(String fileName) {
+        // first load properties using class loader
+        try {
+            final InputStream resource = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
+            if (resource == null)
+                LOGGER.info("Class loader cannot find " + fileName);
+            else
+                try (Reader reader = new InputStreamReader(resource, StandardCharsets.UTF_8)) {
+                    properties.load(reader);
+                }
+        }
+        catch (IOException e) {
+            LOGGER.log(Level.WARNING, e.getMessage(), e);
+        }
+
+        // and now try to read the properties file
+        final File file = new File(fileName);
+        if (file.exists() && file.isFile() && file.canRead()) {
+            LOGGER.info("try to read file " + fileName);
+            try (FileReader reader = new FileReader(file)) {
+                properties.load(reader);
+            }
+            catch (FileNotFoundException e) {
+                LOGGER.log(Level.INFO, e.getMessage(), e);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.WARNING, e.getMessage(), e);
+            }
+        }
+        else
+            LOGGER.info("There is no file " + fileName);
+        LOGGER.fine(() -> "properties: " + properties);
+    }
+
+    public Properties getProperties() {
+        return this.properties;
+    }
 }

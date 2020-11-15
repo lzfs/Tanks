@@ -1,6 +1,20 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.message.data.TankData;
+import pp.tanks.model.item.Armor;
+import pp.tanks.model.item.HeavyArmor;
+import pp.tanks.model.item.HeavyTurret;
+import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.LightArmor;
+import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.NormalArmor;
+import pp.tanks.model.item.NormalTurret;
+import pp.tanks.model.item.PlayersTank;
+import pp.tanks.model.item.Turret;
+import pp.tanks.server.GameMode;
+import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -9,25 +23,40 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * The controller displaying the tank configuration in the singleplayer mode.
+ */
 public class TankConfigSPController extends Controller {
+    private static final Logger LOGGER = Logger.getLogger(TankConfigSPController.class.getName());
+    private static final String TANK_CONFIG_SP_FXML = "TankConfigSP.fxml"; //NON-NLS
 
-    private static final String MENU_CONTROL_FXML = "TankConfigSP.fxml"; //NON-NLS
     private Scene scene;
     private int counterTurret = 0;
     private int counterArmor = 0;
+
     private final List<Image> turrets = new ArrayList<>();
     private final List<Image> armors = new ArrayList<>();
     private final List<Image> charts = new ArrayList<>();
+
     private final List<Integer> magazine = new ArrayList<>(Arrays.asList(5, 3, 1));
     private final List<Integer> cadence = new ArrayList<>(Arrays.asList(1, 3, 5));
 
+    private final List<Armor> armorList = new ArrayList<>(Arrays.asList(new LightArmor(), new NormalArmor(), new HeavyArmor()));
+
+    private final List<Turret> turretsList = new ArrayList<>(Arrays.asList(new LightTurret(), new NormalTurret(), new HeavyTurret()));
+
     /**
      * create a new TankConfigSPController
-     * @param engine the engine of the game that switches between controllers
+     *
+     * @param engine the engine this controller belongs to
      */
     public TankConfigSPController(Engine engine) {
         super(engine);
@@ -111,12 +140,20 @@ public class TankConfigSPController extends Controller {
     @FXML
     private ImageView speedChart;
 
+    /**
+     * Create the scene shown to configure the player tank.
+     */
     public Scene makeScene() {
-        return new Scene(engine.getViewForController(MENU_CONTROL_FXML, this));
+        return new Scene(engine.getViewForController(TANK_CONFIG_SP_FXML, this));
     }
 
+    /**
+     * This method is called whenever this controller is activated,
+     * i.e., when the the player chose a level in the Level-Selection-Menu.
+     */
     @Override
     public void entry() {
+        LOGGER.log(Level.INFO, "ENTRY TankConfigSPController");
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
@@ -134,16 +171,20 @@ public class TankConfigSPController extends Controller {
         charts.add(engine.getImages().getImage(TanksImageProperty.chart3));
     }
 
+    /**
+     * This method is called whenever this controller is deactivated,
+     * i.e., when the the user clicked on confirm.
+     */
     @Override
     public void exit() {
-        System.out.println("EXIT");
+        LOGGER.log(Level.INFO, "EXIT TankConfigSPController");
     }
 
     /**
      * @return the name of the file as a String
      */
     public String getFileName() {
-        return MENU_CONTROL_FXML;
+        return TANK_CONFIG_SP_FXML;
     }
 
     /**
@@ -151,7 +192,7 @@ public class TankConfigSPController extends Controller {
      */
     @FXML
     private void back() {
-        System.out.println("BACK");
+        LOGGER.log(Level.INFO, "clicked BACK");
         engine.activateLevelController();
     }
 
@@ -159,9 +200,15 @@ public class TankConfigSPController extends Controller {
      * method for the confirm button
      */
     @FXML
-    private void confirm() {
-        System.out.println("CONFIRM");
-        engine.activateSPController();
+    private void confirm() throws IOException, XMLStreamException {
+        LOGGER.log(Level.INFO, "clicked CONFIRM");
+
+        DoubleVec position = new DoubleVec(5, 5);
+        PlayersTank tank = new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 1000, 20)); //TODO id
+        engine.getTankApp().getConnection().send(new StartGameMessage(getCountTurret(counterTurret), getCountArmor(counterArmor), GameMode.SINGLEPLAYER, engine.getPlayerEnum()));
+        engine.setSaveTank(tank);
+        engine.setMapCounter(1);
+        engine.activateStartGameSPController();
     }
 
     /**
@@ -179,8 +226,6 @@ public class TankConfigSPController extends Controller {
         image1.setImage(turrets.get(counterTurret));
         magazineSizeText.setText(magazine.get(counterTurret).toString());
         cadenceText.setText(cadence.get(counterTurret).toString() + "s");
-
-        System.out.println("TURRET_BUTTON_RIGHT");
     }
 
     /**
@@ -196,8 +241,6 @@ public class TankConfigSPController extends Controller {
         image1.setImage(turrets.get(counterTurret));
         magazineSizeText.setText(magazine.get(counterTurret).toString());
         cadenceText.setText(cadence.get(counterTurret).toString() + "s");
-
-        System.out.println("TURRET_BUTTON_LEFT");
     }
 
     /**
@@ -213,8 +256,6 @@ public class TankConfigSPController extends Controller {
         image2.setImage(armors.get(counterArmor));
 
         changeCharts();
-
-        System.out.println("ARMOR_BUTTON_RIGHT");
     }
 
     /**
@@ -231,8 +272,6 @@ public class TankConfigSPController extends Controller {
         image2.setImage(armors.get(counterArmor));
 
         changeCharts();
-
-        System.out.println("ARMOR_BUTTON_LEFT");
     }
 
     /**
@@ -244,7 +283,7 @@ public class TankConfigSPController extends Controller {
             armorChart.setImage(charts.get(0));
             speedChart.setImage(charts.get(2));
         }
-        else if (counterArmor == 2) {
+        else if (counterArmor == 1) {
             armorChart.setImage(charts.get(1));
             speedChart.setImage(charts.get(1));
         }
@@ -252,5 +291,17 @@ public class TankConfigSPController extends Controller {
             armorChart.setImage(charts.get(2));
             speedChart.setImage(charts.get(0));
         }
+    }
+
+    private ItemEnum getCountTurret(int c) {
+        if (c == 0) return ItemEnum.LIGHT_TURRET;
+        else if (c == 1) return ItemEnum.NORMAL_TURRET;
+        else return ItemEnum.HEAVY_TURRET;
+    }
+
+    private ItemEnum getCountArmor(int c) {
+        if (c == 0) return ItemEnum.LIGHT_ARMOR;
+        else if (c == 1) return ItemEnum.NORMAL_ARMOR;
+        else return ItemEnum.HEAVY_ARMOR;
     }
 }

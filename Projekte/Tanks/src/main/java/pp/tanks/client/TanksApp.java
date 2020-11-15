@@ -4,18 +4,22 @@ import pp.network.Connection;
 import pp.network.IConnection;
 import pp.network.MessageReceiver;
 import pp.tanks.message.client.IClientMessage;
-import pp.tanks.message.client.ClientReadyMsg;
+import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.PingMsg;
-import pp.tanks.message.server.SynchronizeMsg;
+import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.ServerTankUpdateMessage;
+import pp.tanks.message.server.SetPlayerMessage;
+import pp.tanks.message.server.SynchronizeMessage;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 import pp.tanks.controller.Engine;
 import pp.tanks.controller.MainMenuController;
+import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.server.GameMode;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -28,14 +32,17 @@ import java.net.Socket;
 /**
  * Main class of the Tank app
  */
-public class TanksApp extends Application implements MessageReceiver<IServerMessage, IConnection<IClientMessage>>, IServerInterpreter{
+public class TanksApp extends Application implements MessageReceiver<IServerMessage, IConnection<IClientMessage>>, IServerInterpreter {
     private static final String PROPERTIES_FILE = "tanks.properties";
     private static final Logger LOGGER = Logger.getLogger(TanksApp.class.getName());
     private Connection<IClientMessage, IServerMessage> connection;
     public final Sounds sounds = new Sounds();
+    private PlayerEnum player;
+
     private long offset;
 
     private final Properties properties = new Properties();
+    private Engine engine;
 
     private Stage stage;
     private MainMenuController mainMenuControl;
@@ -48,7 +55,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     }
 
     /**
-     * Main Method
+     * main method
      *
      * @param args input args
      */
@@ -60,19 +67,16 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * start Method for JavaFX
      *
      * @param stage the stage to show
-     * @throws Exception if something goes wrong
      */
     @Override
-    public void start(Stage stage) throws Exception {
-
-        Engine engine = new Engine(stage, this, properties);
+    public void start(Stage stage) {
+        this.engine = new Engine(stage, this, properties);
         this.stage = stage;
 
         stage.setResizable(false);
         stage.setTitle("Tanks");
         stage.show();
         engine.gameLoop();
-
         sounds.setMusic(sounds.mainMenu);
     }
 
@@ -91,7 +95,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
                 try (Reader reader = new InputStreamReader(resource, StandardCharsets.UTF_8)) {
                     properties.load(reader);
                 }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.log(Level.WARNING, e.getMessage(), e);
         }
 
@@ -101,14 +106,21 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             LOGGER.info("try to read file " + fileName);
             try (FileReader reader = new FileReader(file)) {
                 properties.load(reader);
-            } catch (FileNotFoundException e) {
+            }
+            catch (FileNotFoundException e) {
                 LOGGER.log(Level.INFO, e.getMessage(), e);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 LOGGER.log(Level.WARNING, e.getMessage(), e);
             }
-        } else
+        }
+        else
             LOGGER.info("There is no file " + fileName);
         LOGGER.fine(() -> "properties: " + properties);
+    }
+
+    public PlayerEnum getPlayer() {
+        return player;
     }
 
     /**
@@ -128,13 +140,17 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      */
     @Override
     public void onConnectionClosed(IConnection<IClientMessage> conn) {
-        System.exit(0);
+        //System.exit(0);
+        System.out.println("quit connection");
+        connection.shutdown();
+        connection = null;
     }
 
     /**
      * Establishes a connection to an online server
+     * @param mode given Player-mode
      */
-    public void joinGame() {
+    public void joinGame(GameMode mode) {
         if (connection != null) {
             LOGGER.severe("trying to join a game again"); //NON-NLS
             return;
@@ -146,7 +162,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             socket.setSoTimeout(1000);
             connection = new Connection<>(socket, this);
             if (connection.isConnected()) {
-                connection.send(new ClientReadyMsg("multiplayer"));
+                connection.send(new ClientReadyMessage(mode));
                 new Thread(connection).start();
             }
             else {
@@ -168,18 +184,37 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     }
 
     /**
-     * methode used by the visitor to react to this message
-     * @param msg
+     * method used by the visitor to react to this message
+     *
+     * @param msg the SynchronizeMsg to send
      */
     @Override
-    public void visit(SynchronizeMsg msg) {
-        System.out.println(msg.nanoOffset);
+    public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
+        System.out.println(" offset: " + msg.nanoOffset);
+    }
+
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the PingMsg to send
+     */
+    @Override
+    public void visit(PingMessage msg) {
+        connection.send(new PingResponse(System.nanoTime()));
     }
 
     @Override
-    public void visit(PingMsg msg) {
-        connection.send(new PingResponse(System.nanoTime()));
+    public void visit(SetPlayerMessage msg) {
+        engine.setPlayerEnum(msg.player);
+        this.player = msg.player;
+        System.out.println(msg.player);
+    }
+
+    @Override
+    public void visit(ServerTankUpdateMessage msg) {
+        engine.miniController.playerConnected();
+        engine.miniController.serverUpdate(msg);
     }
 }
 

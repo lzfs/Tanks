@@ -1,6 +1,8 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 /**
@@ -10,8 +12,8 @@ public class Enemy extends Tank {
     private double animationTime;
     private DoubleVec targetPos;
 
-    protected Enemy(Model model, double effectiveRadius, Armor armor, Turret turret) {
-        super(model, effectiveRadius, armor, turret);
+    protected Enemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
+        super(model, effectiveRadius, armor, turret, data);
     }
 
     /**
@@ -19,7 +21,7 @@ public class Enemy extends Tank {
      */
     @Override
     public void isVisible() {
-
+        //TODO
     }
 
     /**
@@ -46,5 +48,6 @@ public class Enemy extends Tank {
     @Override
     public void destroy() {
         super.destroy();
+        model.notifyReceivers(TanksNotification.TANK_DESTROYED);
     }
 }

@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
@@ -11,67 +12,64 @@ import java.util.List;
 
 /**
  * Represents a ArmoredPersonnelCarrier, a specified type of a COMEnemy
+ * A ArmoredPersonnelCarrier is a light Tank: light Turret and light armor but very fast
+ * Because its so fast it orientates to drive towards the enemy and constantly shoots at them
  */
 public class ArmoredPersonnelCarrier extends COMEnemy {
-    private int movingCounter;
-
     private final List<DoubleVec> path = new LinkedList<>();
 
-    protected ArmoredPersonnelCarrier(Model model) {
-        super(model, 3, new Armor(1000, 10), new HeavyTurret());
+    public ArmoredPersonnelCarrier(Model model, TankData data) {
+        super(model, 3, new LightArmor(), new LightTurret(), data);
     }
 
+    /**
+     * specifies the behaviour of an APC (driving towards the playersTank position and constantly shooting at him)
+     * @param delta
+     */
     @Override
-    public void update(double delta) {
-        turret.update(delta);
-
-        if(isMoving()) {
-            super.update(delta);
-        } else if(canShoot() && Math.random() < 0.8) {
-            turret.setDirection(model.getTanksMap().getTank().getPos().sub(this.getPos()));
-            for(int i = 0; i < turret.getMagSize(); i++) {
-                if(canShoot()) {
-                    shoot(model.getTanksMap().getTank().getPos());
-                }
+    public void behaviour(double delta) {
+        turret.setDirection(model.getTanksMap().getTank0().getPos().sub(this.getPos()));
+        if(canShoot() && Math.random() < 0.8) {
+            if(canShoot()) {
+                shoot(model.getTanksMap().getTank0().getPos());
             }
         } else {
-            Tank playersTank = model.getTanksMap().getTank();
-            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec());
-            //What if pos is blocked??
+            Tank playersTank = model.getTanksMap().getTank0();
+            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2,2)));
             navigateTo(targetPos);
-            // as long as there is a path to follow and this time slot has still some time left
             while (path.size() > 0 && delta > 0.) {
                 final DoubleVec target = path.get(0);
                 if (getPos().distanceSq(target) < 1e-4) {
-                    // we arte so close... let's jump to the next path point
                     setPos(target);
                     path.remove(0);
                 }
                 else {
-                    final double bearing = target.sub(getPos()).angle();
-                    double needToTurnBy = normalizeAngle(bearing - getRotation());
-                    // we need to turn the droid such that its rotation coincides with the bearing of the next path point
-                    if (Math.abs(needToTurnBy) >= delta * speed) {
-                        // we are turning during the rest of this time slot
-                        setRotation(getRotation() + Math.signum(needToTurnBy) * delta * speed);
+                    //TODO
+                    final double bearing = target.sub(getPos()).angle() % 180;
+                    double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
+                    if (Math.abs(needToTurnBy) > 2) {   //TODO
+                        Double currentRot = getRotation();
+                        Double moveDirRotation = target.sub(getPos()).normalize().angle();
+                        Double tmp = (currentRot - moveDirRotation + 360) % 360;
+                        Double tmp1 = (moveDirRotation - currentRot + 360) % 360;
+                        if (tmp > tmp1) {
+                            setRotation(currentRot + delta * rotationspeed);
+                        } else {
+                            setRotation(currentRot - delta * rotationspeed);
+                        }
                         delta = 0.;
                     }
                     else {
-                        // we first turn the droid
-                        setRotation(bearing);
-                        // and there is some time left in this time slot
-                        delta -= Math.abs(needToTurnBy) / speed;
+                        setRotation((int) bearing);
                         final double distanceToGo = getPos().distance(target);
                         if (distanceToGo >= delta * speed) {
-                            // we do not reach the next path point in this time slot
-                            setPos(getPos().add(DoubleVec.polar(speed * delta, getRotation())));
+                            DoubleVec dir = target.sub(getPos()).normalize();
+                            setPos(getPos().add(dir.mult(delta * speed)));
                             delta = 0.;
                         }
                         else {
-                            // we have reached the next path pint in this time slot
                             setPos(target);
                             path.remove(0);
-                            // and there is some time left in this time slot
                             delta -= distanceToGo / speed;
                         }
                     }
@@ -92,7 +90,6 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
         if (pPath != null) {
             for (IntVec v : pPath)
                 path.add(v.toFloatVec());
-            // remove first path point as this represents the field where the droid is currently stying
             if (path.size() > 1) path.remove(0);
         }
     }

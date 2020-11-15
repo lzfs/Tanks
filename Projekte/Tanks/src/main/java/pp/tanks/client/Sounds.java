@@ -8,14 +8,14 @@ import javafx.scene.media.MediaPlayer;
  */
 
 public class Sounds {
-    MediaPlayer mainMenu;
-    private MediaPlayer mediaPlayer;
+    public MediaPlayer mainMenu;
+    public MediaPlayer mediaPlayer;
     private boolean muted = false;
 
     /**
      * load all SFx and Music
      */
-    Sounds() {
+    public Sounds() {
         this.mainMenu = new MediaPlayer(new Media(getClass().getResource("sounds/MainMenuSound.mp3").toExternalForm()));
     }
 
@@ -62,20 +62,10 @@ public class Sounds {
             @Override
             public void run() {
                 mediaPlayer = cls;
-                //resetSfx();
                 mediaPlayer.play();
             }
         });
     }
-
-    /**
-     * reset SFx to play them again
-     */
-    /*
-    void resetSfx(){
-        this.nameOfSound = new MediaPlayer(new Media(getClass().getResource("sounds/nameOfSound.mp3").toExternalForm()));
-    }
-     */
 
     /**
      * Mute sounds

@@ -61,7 +61,7 @@
          <font>
             <Font size="18.0" />
          </font></Text>
-        <ImageView fx:id="image1" fitHeight="70.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+        <ImageView fx:id="image1" fitHeight="108.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
             <image>
                 <Image url="@../client/images/turret1.png" />
             </image>

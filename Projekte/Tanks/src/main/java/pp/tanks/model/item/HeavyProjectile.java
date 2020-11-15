@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
@@ -9,15 +10,19 @@ import pp.util.DoubleVec;
 public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
-    public HeavyProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec pos, DoubleVec targetPos) {
-        super(model, effectiveRadius, damage, speed, pos);
+    public HeavyProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec targetPos, ProjectileData data ){
+        super(model, effectiveRadius, damage, speed,data);
+        this.targetPos=targetPos;
+        this.flag=1;
     }
 
     /**
      * method for test cases
      */
     @Override
-    public void isVisible() {}
+    public void isVisible() {
+        //TODO
+    }
 
     /**
      * Accept method of the visitor pattern.
@@ -34,31 +39,74 @@ public class HeavyProjectile extends Projectile {
      */
     @Override
     public void update(double delta) {
+        if (flag > 0) {
+            flag -= delta;
+        }
+        if (flag < 0) {
+            flag = 0;
+        }
         data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
-        //TODO schiesst übers ziel hinaus
-        if(data.getPos().equals(targetPos)) {
-            processHits();
+        if (getPos().distance(targetPos) <= 0.3) {
+            setPos(targetPos);
+        }
+        if (getPos().x == targetPos.x && getPos().y == targetPos.y) {
+            this.effectiveRadius = 1.5;
+            collision();
             destroy();
         }
     }
 
     /**
-     * makes damage at a specified radius on the map
+     * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
      */
-    @Override
-    public void processHits() {
-        for (Tank tank : model.getTanksMap().getTanks()) {
-            if (collisionWith(tank)) {
+    public void processHits() {}
+
+    public void collision(){
+        for (Tank tank : model.getTanksMap().getAllTanks()) {
+            if (collisionWith(tank) && flag == 0) {
                 tank.processDamage(damage);
+                destroy();
                 return;
             }
         }
         for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
             if (collisionWith(bblock)) {
                 bblock.reduce(damage);
+                destroy();
                 return;
             }
         }
-        //TODO Radius
+        destroy();
     }
+    /*
+    public void processHits() {
+
+        for (Tank tank : model.getTanksMap().getTanks()) {
+            if (collisionWith(tank) && flag == 0) {
+                tank.processDamage(damage);
+                destroy();
+                return;
+            }
+        }
+        for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
+            if (collisionWith(bblock)) {
+                bblock.reduce(damage);
+                destroy();
+                return;
+            }
+        }
+        for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
+            if (collisionWith(rBlock)) {
+                reflect();
+                return;
+            }
+        }
+        for (UnbreakableBlock uBlock : model.getTanksMap().getUnbreakableBlocks()) {
+            if (collisionWith(uBlock)) {
+                destroy();
+            }
+        }
+    }
+
+         */
 }

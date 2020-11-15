@@ -3,10 +3,12 @@ package pp.tanks.model;
 import pp.tanks.model.item.*;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
+import pp.tanks.server.GameMode;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -24,6 +26,7 @@ public class Model {
     private final List<TanksNotificationReceiver> receivers = new ArrayList<>();
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
+    private boolean debug;
 
     /**
      * Creates a game model
@@ -32,7 +35,6 @@ public class Model {
      */
     public Model(Properties props) {
         this.props = props;
-        //make tanks map
     }
 
     /**
@@ -69,7 +71,7 @@ public class Model {
     /**
      * Sets the specified game map as the current one.
      *
-     * @param map droids map
+     * @param map tanks map
      */
     public void setTanksMap(TanksMap map) {
         this.map = map;
@@ -79,12 +81,21 @@ public class Model {
     /**
      * Loads a game map from the specified xml file and sets it as the current one.
      *
-     * @param file xml file representing a droids map
-     * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
-     * @throws XMLStreamException if the file is no valid xml file
+     * @param string xml file name representing a tanks map
      */
-    public void loadMap(File file) throws IOException, XMLStreamException {
-        setTanksMap(new TanksMapFileReader(this).readFile(file));
+    public void loadMap(String string) {
+        String path = "Tanks/src/main/resources/pp/tanks/maps/" + string;
+        String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
+        try {
+            File currentFile = new File(absolutePath);
+            setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
+        } catch (IOException | XMLStreamException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void setTank(Tank tank){
+        map.setPlayerTank0(tank);
     }
 
     /**
@@ -126,15 +137,22 @@ public class Model {
      * Returns true if amd only if own tank is dead.
      */
     public boolean gameLost() {
-        //TODO
-        return false;
+        return map.getTank0().isDestroyed();
     }
 
     /**
      * Returns true if and only if there are no tanks left.
      */
     public boolean gameWon() {
-        //TODO
-        return false;
+        if (debug) return false;
+        if (map.getTank0().isDestroyed()) return false;
+        for (Tank tanks : map.getCOMTanks()) {
+            if (tanks != map.getTank0() && !tanks.isDestroyed()) return false;
+        }
+        return true;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }

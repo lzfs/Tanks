@@ -1,13 +1,18 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 
 /**
  * Represents the tank of the current player
  */
 public class PlayersTank extends Tank{
-    protected PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret) {
-        super(model, effectiveRadius, armor, turret);
+
+
+
+    public PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
+        super(model, effectiveRadius, armor, turret, data);
+        setLives(3);
     }
 
     /**
@@ -15,7 +20,7 @@ public class PlayersTank extends Tank{
      */
     @Override
     public void isVisible() {
-
+        //TODO
     }
 
     /**
@@ -24,5 +29,14 @@ public class PlayersTank extends Tank{
     @Override
     public void accept(Visitor v) {
         v.visit(this);
+    }
+
+    /** TODO: add Method
+     *
+     * @param turret
+     * @param armor
+     */
+    public static PlayersTank mkPlayersTank(ItemEnum turret, ItemEnum armor) {
+        return null;
     }
 }

@@ -5,6 +5,6 @@ package pp.tanks.model.item;
  */
 public class NormalTurret extends Turret{
     public NormalTurret() {
-        super(20, 1, 10, 2000, 3);
+        super(20, 1, 10, 2, 3,3);
     }
 }

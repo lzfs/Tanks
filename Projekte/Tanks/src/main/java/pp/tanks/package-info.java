@@ -1,4 +1,4 @@
 /**
- * Contains the sample app
+ * Contains the tanks app
  */
 package pp.tanks;

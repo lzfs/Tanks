@@ -1,18 +1,28 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.Data;
 import pp.tanks.model.Model;
+import pp.tanks.notification.TanksNotification;
 
 /**
  * base class for blocks
  */
-public abstract class Block extends Item {
+public abstract class Block<T extends Data> extends Item<T> {
     private int width;
     private int height;
 
-    public Block(Model model) {
-        super(model, 1);
-        this.width = 3;
-        this.height = 3;
+    public Block(Model model, T data) {
+        super(model, 1, data);
+        this.width = 1;
+        this.height = 1;
+    }
+
+    public int getHeight(){
+        return height;
+    }
+
+    public int getWidth(){
+        return width;
     }
 
     /**
@@ -20,7 +30,8 @@ public abstract class Block extends Item {
      */
     @Override
     public void destroy() {
-
+        data.destroy();
+        model.notifyReceivers(TanksNotification.BLOCK_DESTROYED);
     }
 
     /**
@@ -28,15 +39,7 @@ public abstract class Block extends Item {
      */
     @Override
     public void isVisible() {
-
-    }
-
-    /**
-     * Accept method of the visitor pattern.
-     */
-    @Override
-    public void accept(Visitor v) {
-        //??
+        //TODO
     }
 
     /**
@@ -45,7 +48,5 @@ public abstract class Block extends Item {
      * @param delta time in seconds since the last update call
      */
     @Override
-    public void update(double delta) {
-
-    }
+    public void update(double delta) {}
 }
