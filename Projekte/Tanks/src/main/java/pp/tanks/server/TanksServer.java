@@ -36,16 +36,6 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
         this.server = server;
     }
 
-    /*
-     * Sends map to the player's client
-     *
-     * @param p the player to receive the map
-     */ /* add this method after creating the makeModel methode in "Player"
-    public void sendMap(Player p) {
-        p.getConnection().send(p.makeModel());
-    }
-    */
-
     @Override
     public void receiveMessage(IClientMessage message, IConnection<IServerMessage> conn) {
         message.accept(this, conn);
@@ -105,7 +95,7 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void visit(StartGameMessage msg, IConnection<IServerMessage> from) {
-
+        auto.startGame(msg);
     }
 
     @Override

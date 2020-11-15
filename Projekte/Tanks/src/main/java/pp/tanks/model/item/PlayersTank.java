@@ -23,15 +23,20 @@ public class PlayersTank extends Tank{
         //TODO
     }
 
-
-
-
-
     /**
      * Accept method of the visitor pattern.
      */
     @Override
     public void accept(Visitor v) {
         v.visit(this);
+    }
+
+    /** TODO: add Method
+     *
+     * @param turret
+     * @param armor
+     */
+    public static PlayersTank mkPlayersTank(ItemEnum turret, ItemEnum armor) {
+        return null;
     }
 }

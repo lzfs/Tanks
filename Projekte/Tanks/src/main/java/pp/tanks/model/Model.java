@@ -7,9 +7,6 @@ import pp.tanks.notification.TanksNotificationReceiver;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +81,7 @@ public class Model {
      *
      * @param string xml file name representing a tanks map
      */
-    public void loadMap(String string) throws IOException, XMLStreamException {
+    public void loadMap(String string) {
         String path = "Tanks/src/main/resources/pp/tanks/maps/" + string;
         String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
@@ -96,7 +93,7 @@ public class Model {
     }
 
     public void setTank(Tank tank){
-        map.setPlayerTank(tank);
+        map.setPlayerTank0(tank);
     }
 
     /**
@@ -138,16 +135,16 @@ public class Model {
      * Returns true if amd only if own tank is dead.
      */
     public boolean gameLost() {
-        return map.getTank().isDestroyed();
+        return map.getTank0().isDestroyed();
     }
 
     /**
      * Returns true if and only if there are no tanks left.
      */
     public boolean gameWon() {
-        if (map.getTank().isDestroyed()) return false;
-        for (Tank tanks : map.getTanks()) {
-            if (tanks != map.getTank() && !tanks.isDestroyed()) return false;
+        if (map.getTank0().isDestroyed()) return false;
+        for (Tank tanks : map.getCOMTanks()) {
+            if (tanks != map.getTank0() && !tanks.isDestroyed()) return false;
         }
         return true;
     }

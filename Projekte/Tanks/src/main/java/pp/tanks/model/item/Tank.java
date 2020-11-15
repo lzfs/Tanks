@@ -193,7 +193,7 @@ public abstract class Tank extends Item<TankData> {
      * handles the movement of the tank if it collides with other tanks or blocks in the map
      */
     private void collide() {
-        for (Tank tank : model.getTanksMap().getTanks()) {
+        for (Tank tank : model.getTanksMap().getCOMTanks()) {
             if (this != tank &&collisionWith(tank)) {
                 setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
                 setMove(false);
@@ -223,4 +223,5 @@ public abstract class Tank extends Item<TankData> {
         }
         data.setLifePoints(armor.getArmorPoints());
     }
+
 }

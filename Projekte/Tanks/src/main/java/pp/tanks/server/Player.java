@@ -2,6 +2,8 @@ package pp.tanks.server;
 
 import pp.network.IConnection;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.model.item.Item;
+import pp.tanks.model.item.ItemEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,9 @@ public class Player {
     private final List<Long>nano = new ArrayList<>();
     private String infoText = "";
     //private ClientState state = ClientState.INIT;
+    private ItemEnum turret;
+    private ItemEnum armor;
+    private boolean ready;
 
     /**
      * creates new player
@@ -74,15 +79,6 @@ public class Player {
         return nano.get(indexPing);
     }
 
-
-    /*
-     * sets the control state for the player client
-     *//* add this method after including the class "ClientState"
-    public void setState(ClientState state) {
-        this.state = state;
-    }
-    */
-
     /**
      * sets the info text to be displayed
      */
@@ -90,4 +86,27 @@ public class Player {
         this.infoText = infoText;
     }
 
+    public void setTurret(ItemEnum turret) {
+        this.turret = turret;
+    }
+
+    public void setArmor(ItemEnum armor) {
+        this.armor = armor;
+    }
+
+    public ItemEnum getTurret() {
+        return turret;
+    }
+
+    public ItemEnum getArmor() {
+        return armor;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady() {
+        this.ready = true;
+    }
 }

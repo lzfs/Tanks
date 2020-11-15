@@ -62,7 +62,7 @@ public class HeavyProjectile extends Projectile {
     public void processHits() {}
 
     public void collision(){
-        for (Tank tank : model.getTanksMap().getTanks()) {
+        for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (collisionWith(tank) && flag == 0) {
                 tank.processDamage(damage);
                 destroy();

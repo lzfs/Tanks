@@ -4,7 +4,9 @@ package pp.tanks.model.item;
  * Enumeration of the players that can join the game
  */
 public enum PlayerEnum {
-    PLAYER1(0, 1000), PLAYER2(1, 2000), SERVER(-1, -1000);
+    PLAYER1(0, 1000),
+    PLAYER2(1, 2000),
+    SERVER(-1, -1000);
 
     public final int tankID;
     public final int projectileID;

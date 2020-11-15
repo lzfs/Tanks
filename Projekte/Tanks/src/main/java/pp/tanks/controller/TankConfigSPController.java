@@ -1,16 +1,19 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.Armor;
 import pp.tanks.model.item.HeavyArmor;
 import pp.tanks.model.item.HeavyTurret;
+import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.NormalArmor;
 import pp.tanks.model.item.NormalTurret;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Turret;
+import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
@@ -202,6 +205,7 @@ public class TankConfigSPController extends Controller {
 
         DoubleVec position = new DoubleVec(5, 5);
         PlayersTank tank = new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 1000, 20));
+        engine.getTankApp().getConnection().send(new StartGameMessage(getCountTurret(counterTurret), getCountArmor(counterArmor), GameMode.SINGLEPLAYER, engine.getPlayerEnum()));
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
         engine.activateStartGameSPController();
@@ -287,5 +291,17 @@ public class TankConfigSPController extends Controller {
             armorChart.setImage(charts.get(2));
             speedChart.setImage(charts.get(0));
         }
+    }
+
+    private ItemEnum getCountTurret(int c) {
+        if (c == 0) return ItemEnum.LIGHT_TURRET;
+        else if (c == 1) return ItemEnum.NORMAL_TURRET;
+        else return ItemEnum.HEAVY_TURRET;
+    }
+
+    private ItemEnum getCountArmor(int c) {
+        if (c == 0) return ItemEnum.LIGHT_ARMOR;
+        else if (c == 1) return ItemEnum.NORMAL_ARMOR;
+        else return ItemEnum.HEAVY_ARMOR;
     }
 }

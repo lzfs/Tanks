@@ -2,8 +2,6 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
-import pp.tanks.message.data.Data;
-import pp.tanks.message.data.ProjectileData;
 import pp.util.DoubleVec;
 
 /**
@@ -86,7 +84,7 @@ public abstract class Projectile extends Item<ProjectileData> {
      * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
      */
     public void processHits() {
-        for (Tank tank : model.getTanksMap().getTanks()) {
+        for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (collisionWith(tank) && flag == 0) {
                 tank.processDamage(damage);
                 destroy();

@@ -9,6 +9,7 @@ import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
 
 import javafx.application.Application;
@@ -183,8 +184,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
-        engine.setPlayerEnum(msg.player);
-        System.out.println(msg.player + " offset: " + msg.nanoOffset);
+        System.out.println(" offset: " + msg.nanoOffset);
     }
 
     /**
@@ -195,6 +195,12 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(PingMessage msg) {
         connection.send(new PingResponse(System.nanoTime()));
+    }
+
+    @Override
+    public void visit(SetPlayerMessage msg) {
+        engine.setPlayerEnum(msg.player);
+        System.out.println(msg.player);
     }
 }
 

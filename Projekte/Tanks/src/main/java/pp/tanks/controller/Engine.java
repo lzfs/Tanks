@@ -65,7 +65,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     private Controller controller;
     private Tank saveTank = null;
-    private GameMode mode = GameMode.TUTORIAL;
+    private GameMode mode;
     private PlayerEnum playerEnum;
     private int mapCounter = 0;
 

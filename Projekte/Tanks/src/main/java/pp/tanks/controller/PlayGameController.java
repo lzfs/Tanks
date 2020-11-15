@@ -12,12 +12,10 @@ import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 import pp.util.StopWatch;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.event.Event;
@@ -25,10 +23,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
-
-import javax.xml.stream.XMLStreamException;
 
 /**
  * The controller realizing the game state when the game is really running.
@@ -162,13 +157,8 @@ class PlayGameController extends Controller {
         stopWatch.start();
         pressed.clear();
         processed.clear();
-        try{
-            engine.getModel().loadMap("map"+engine.getMapCounter() +".xml");
-        }
-        catch (XMLStreamException | IOException e) {
-            LOGGER.log(Level.INFO, "alles schiefgelaufen");
-            e.printStackTrace();
-        }
+        engine.getModel().loadMap("map"+engine.getMapCounter() +".xml");
+
         if (engine.getMapCounter()==0) {
             PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(5, 5), 1000, 20));
             engine.getModel().setTank(tank);
@@ -250,6 +240,6 @@ class PlayGameController extends Controller {
      * @return the players tank
      */
     private Tank getTank() {
-        return engine.getModel().getTanksMap().getTank();
+        return engine.getModel().getTanksMap().getTank0();
     }
 }

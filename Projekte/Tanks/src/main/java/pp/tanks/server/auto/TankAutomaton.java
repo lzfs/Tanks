@@ -1,23 +1,41 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
+import pp.tanks.client.TanksApp;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.SetPlayerMessage;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 import pp.tanks.server.TanksServer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TankAutomaton extends TankStateMachine {
     private final TanksServer ts;
-    private final List<Player> players = new ArrayList<>(); // only for testing has to be in Model
+    private final List<Player> players = new ArrayList<>();
+    private GameMode gameMode;
+    private final Properties properties = new Properties();
+    public static final Logger LOGGER = Logger.getLogger(TankAutomaton.class.getName());
 
     public TankAutomaton(TanksServer ts) {
         this.ts = ts;
+        load("tanks.properties");
         entry();
     }
 
@@ -34,9 +52,13 @@ public class TankAutomaton extends TankStateMachine {
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn));
             if (msg.mode == GameMode.SINGLEPLAYER) {
+                gameMode = GameMode.SINGLEPLAYER;
+                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
                 containingState().goToState(playerReady);
             }
             if (msg.mode == GameMode.MULTIPLAYER) {
+                gameMode = GameMode.MULTIPLAYER;
+                //TODO SetPlayerMessage schicken
                 containingState().goToState(waitingFor2Player);
             }
             //else containingState().goToState();
@@ -59,6 +81,9 @@ public class TankAutomaton extends TankStateMachine {
         }
     };
 
+    /**
+     * state for the synchronize of client and server
+     */
     private final TankState synchronize = new SynchronizeState(this);
 
     /**
@@ -66,6 +91,9 @@ public class TankAutomaton extends TankStateMachine {
      */
     public final TankState playerReady = new PlayerReadyState(this);
 
+    /**
+     * state for playing
+     */
     public final TankState playingState = new PlayingState(this);
 
     // has to be in Model
@@ -88,20 +116,6 @@ public class TankAutomaton extends TankStateMachine {
         return players;
     }
 
-    /*
-     * Sets the client state to determine the controls
-     *
-     * @param p        the target player
-     * @param infoText info text for the player
-     * @param state    control state
-     */ /* add this method after adding the class "ClientState"
-    void setClientState(Player p, String infoText, ClientState state) {
-        p.setState(state);
-        p.setInfoText(infoText);
-        ts.sendMap(p);
-    }
-    */
-
     @Override
     public TankState containingState() {
         return null;
@@ -115,5 +129,52 @@ public class TankAutomaton extends TankStateMachine {
     @Override
     public TankState init() {
         return init;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    /**
+     * load a specified file
+     *
+     * @param fileName the name of the file as a String
+     */
+    private void load(String fileName) {
+        // first load properties using class loader
+        try {
+            final InputStream resource = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
+            if (resource == null)
+                LOGGER.info("Class loader cannot find " + fileName);
+            else
+                try (Reader reader = new InputStreamReader(resource, StandardCharsets.UTF_8)) {
+                    properties.load(reader);
+                }
+        }
+        catch (IOException e) {
+            LOGGER.log(Level.WARNING, e.getMessage(), e);
+        }
+
+        // and now try to read the properties file
+        final File file = new File(fileName);
+        if (file.exists() && file.isFile() && file.canRead()) {
+            LOGGER.info("try to read file " + fileName);
+            try (FileReader reader = new FileReader(file)) {
+                properties.load(reader);
+            }
+            catch (FileNotFoundException e) {
+                LOGGER.log(Level.INFO, e.getMessage(), e);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.WARNING, e.getMessage(), e);
+            }
+        }
+        else
+            LOGGER.info("There is no file " + fileName);
+        LOGGER.fine(() -> "properties: " + properties);
+    }
+
+    public Properties getProperties() {
+        return this.properties;
     }
 }
