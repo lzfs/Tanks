@@ -1,15 +1,8 @@
 package pp.tanks.client;
 
-import pp.tanks.message.client.MoveMessage;
-import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
-import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileData;
-import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.model.item.ItemEnum;
-import pp.tanks.server.GameMode;
-import pp.util.DoubleVec;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -35,9 +28,9 @@ public class MiniController extends GridPane {
     private List<ItemEnum> armorList = new ArrayList(Arrays.asList(ItemEnum.LIGHT_ARMOR, ItemEnum.NORMAL_ARMOR, ItemEnum.HEAVY_ARMOR));
     private int armorCount=0;
     private int turretCount=0;
-    private ItemEnum currentTurret=ItemEnum.LIGHT_TURRET;
-    private ItemEnum currentArmor=ItemEnum.LIGHT_ARMOR;
-    private boolean playerconnected=false;
+    private ItemEnum currentTurret = ItemEnum.LIGHT_TURRET;
+    private ItemEnum currentArmor = ItemEnum.LIGHT_ARMOR;
+    private boolean playerConnected = false;
 
     @FXML
     private Button changeTurret;
@@ -129,9 +122,9 @@ public class MiniController extends GridPane {
     }
 
     public void playerConnected(){
-        if (playerconnected) return;
+        if (playerConnected) return;
         waitingfor.setText("");
-        playerconnected=true;
+        playerConnected =true;
         ready.setDisable(false);
     }
 

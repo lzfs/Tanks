@@ -83,8 +83,8 @@ public abstract class Item<T extends Data> {
                    && (Math.abs(getPos().y - other.getPos().y) <= height + this.getEffectiveRadius());
         }
         else {
-            Rectangle2D item1 = new Rectangle2D(this.getPos().x - width, this.getPos().y - height, width, height);
-            Rectangle2D item2 = new Rectangle2D(other.getPos().x - width, other.getPos().y - height, width, height);
+            Rectangle2D item1 = new Rectangle2D(this.getPos().x - width, this.getPos().y - height, 2 * width, 2 * height);
+            Rectangle2D item2 = new Rectangle2D(other.getPos().x - width, other.getPos().y - height, 2 * width, 2 * height);
             return item1.intersects(item2);
         }
     }

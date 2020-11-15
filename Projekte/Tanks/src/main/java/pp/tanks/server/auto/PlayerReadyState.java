@@ -37,6 +37,8 @@ public class PlayerReadyState extends TankState {
                     armor = pl.getArmor();
                 }
                 parent.getPlayers().get(pl.playerEnum.getEnemyID()).getConnection().send(new ServerTankUpdateMessage(turret, armor));
+                turret = null;
+                armor = null;
             }
         }
         System.out.println("Player Ready State");
