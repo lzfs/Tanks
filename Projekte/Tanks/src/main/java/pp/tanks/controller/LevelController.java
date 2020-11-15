@@ -92,6 +92,7 @@ public class LevelController extends Controller {
     private void back() {
         LOGGER.log(Level.INFO, "clicked BACK");
         engine.getTankApp().getConnection().send(new BackMessage());
+        engine.getModel().setDebug(false);
         engine.activateMainMenuController();
     }
 
