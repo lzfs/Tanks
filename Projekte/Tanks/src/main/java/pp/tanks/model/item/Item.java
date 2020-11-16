@@ -15,7 +15,7 @@ public abstract class Item<T extends Data> {
     protected final Model model;
     protected double effectiveRadius;
     protected boolean destroyed = false;
-    protected T data;
+    protected T data; //TODO ggf. final hinzufügen
 
     /**
      * Creates a new item for the specified game model.

@@ -15,7 +15,7 @@ public abstract class Tank extends Item<TankData> {
     protected Armor armor;
     protected double speed;
     protected double rotationspeed = 150;
-    protected TankData data;
+    protected TankData data; //TODO zeile löschen
     private int lives=1;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
@@ -118,15 +118,15 @@ public abstract class Tank extends Item<TankData> {
     public void updateMove(double delta) {
         collide();
         if (isMoving() && !data.isDestroyed()) {
-            Double currentRot = data.getRotation();
-            Double moveDirRotation = data.getMoveDir().getRotation();
+            double currentRot = data.getRotation();
+            double moveDirRotation = data.getMoveDir().getRotation();
             System.out.println("currentRot " +currentRot);
             System.out.println("movedirRot " +moveDirRotation);
-            Double tmp = (currentRot - moveDirRotation + 180) % 180;
-            Double tmp1 = (moveDirRotation - currentRot + 180) % 180;
+            double tmp = (currentRot - moveDirRotation + 180) % 180;
+            double tmp1 = (moveDirRotation - currentRot + 180) % 180;
             System.out.println("tmp " + tmp);
             System.out.println("tmp1 " + tmp1);
-            Double tmp2 = Math.abs(currentRot - moveDirRotation)%180; //TODO
+            double tmp2 = Math.abs(currentRot - moveDirRotation)%180; //TODO
             if (tmp2 < 2) {
                 setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
             }
