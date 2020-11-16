@@ -31,12 +31,4 @@ task createStartScriptsServer(type: ModularCreateStartScripts){
     applicationName = 'TanksServer'
 }
 
-task runGame(type: ModularJavaExec){
-    main = "$moduleName/pp.tanks.client.TanksApp"
-}
-
-task createStartScriptsClient(type: ModularCreateStartScripts){
-    runTask = tasks.runGame
-    applicationName = 'TanksApp'
-}
-
+installDist.finalizedBy tasks.createStartScriptsServer
