@@ -73,26 +73,6 @@ public class MiniController extends GridPane {
         ready.setDisable(true);
     }
 
-    /*
-    @FXML
-    private void shoot() {
-        ProjectileData d = new ProjectileData(new DoubleVec(2, 3), 0, 0, new DoubleVec(1, 1));
-        app.getConnection().send(new ShootMessage(new DataTimeItem(d, System.nanoTime() + app.getOffset())));
-    }
-
-    @FXML
-    private void moveTank() {
-        TankData d = new TankData(new DoubleVec(1, 1), 0, 100);
-        app.getConnection().send(new MoveMessage(new DataTimeItem(d, System.nanoTime() + app.getOffset())));
-    }
-
-    @FXML
-    private void joinServer() {
-        app.joinGame(GameMode.MULTIPLAYER);
-    }
-     */
-
-
     @FXML
     private void changeTurret() {
         turretCount++;

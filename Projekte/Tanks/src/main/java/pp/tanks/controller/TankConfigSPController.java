@@ -200,7 +200,7 @@ public class TankConfigSPController extends Controller {
      * method for the confirm button
      */
     @FXML
-    private void confirm() throws IOException, XMLStreamException {
+    private void confirm() {
         LOGGER.log(Level.INFO, "clicked CONFIRM");
 
         DoubleVec position = new DoubleVec(5, 5);
@@ -208,6 +208,8 @@ public class TankConfigSPController extends Controller {
         engine.getTankApp().getConnection().send(new StartGameMessage(getCountTurret(counterTurret), getCountArmor(counterArmor), GameMode.SINGLEPLAYER, engine.getPlayerEnum()));
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
+        counterArmor = 0;
+        counterTurret = 0;
         engine.activateStartGameSPController();
     }
 

@@ -125,7 +125,7 @@ public abstract class Tank extends Item<TankData> {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
         collide(newPos);
         if (isMoving() && !data.isDestroyed()) {
-            double currentRot = data.getRotation();
+            double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
             System.out.println("currentRot " + currentRot);
             System.out.println("movedirRot " + moveDirRotation);
@@ -134,7 +134,8 @@ public abstract class Tank extends Item<TankData> {
             System.out.println("tmp " + tmp);
             System.out.println("tmp1 " + tmp1);
             double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
-            if (tmp2 < 2) {
+            if (tmp2 < 4) {
+                data.setRotation(moveDirRotation);
                 setPos(newPos);
             }
             else if (tmp > tmp1) {
