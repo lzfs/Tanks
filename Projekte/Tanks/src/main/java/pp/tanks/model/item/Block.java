@@ -8,20 +8,20 @@ import pp.tanks.notification.TanksNotification;
  * base class for blocks
  */
 public abstract class Block<T extends Data> extends Item<T> {
-    private int width;
-    private int height;
+    private double width;
+    private double height;
 
     public Block(Model model, T data) {
-        super(model, 1, data);
-        this.width = 1;
-        this.height = 1;
+        super(model, 1.5, data);
+        this.width = 1.5;
+        this.height = 1.5;
     }
 
-    public int getHeight(){
+    public double getHeight(){
         return height;
     }
 
-    public int getWidth(){
+    public double getWidth(){
         return width;
     }
 

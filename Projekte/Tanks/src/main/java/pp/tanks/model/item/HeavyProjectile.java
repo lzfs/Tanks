@@ -63,14 +63,14 @@ public class HeavyProjectile extends Projectile {
 
     public void collision(){
         for (Tank tank : model.getTanksMap().getAllTanks()) {
-            if (collisionWith(tank) && flag == 0) {
+            if (collisionWith(tank, getPos()) && flag == 0) {
                 tank.processDamage(damage);
                 destroy();
                 return;
             }
         }
         for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
-            if (collisionWith(bblock)) {
+            if (collisionWith(bblock, getPos())) {
                 bblock.reduce(damage);
                 destroy();
                 return;
