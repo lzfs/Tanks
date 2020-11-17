@@ -55,9 +55,9 @@ public class TankDestroyer extends COMEnemy {
                         Double tmp = (currentRot - moveDirRotation + 360) % 360;
                         Double tmp1 = (moveDirRotation - currentRot + 360) % 360;
                         if (tmp > tmp1) {
-                            setRotation(currentRot + delta * rotationspeed);
+                            setRotation(currentRot + delta * rotationSpeed);
                         } else {
-                            setRotation(currentRot - delta * rotationspeed);
+                            setRotation(currentRot - delta * rotationSpeed);
                         }
                         delta = 0.;
                     }

@@ -4,13 +4,6 @@
     <uBlock x = "11" y = "4"></uBlock>
     <rBlock x = "11" y = "6"></rBlock>
     <bBlock x = "11" y = "8"></bBlock>
-    <uBlock x = "18" y = "1"></uBlock>
-    <uBlock x = "18" y = "2"></uBlock>
-    <uBlock x = "18" y = "3"></uBlock>
-    <uBlock x = "18" y = "4"></uBlock>
-    <uBlock x = "19" y = "4"></uBlock>
-    <uBlock x = "20" y = "4"></uBlock>
-    <uBlock x = "21" y = "4"></uBlock>
 
     <uBlock x="0" y="0"></uBlock>
     <uBlock x="0" y="1"></uBlock>

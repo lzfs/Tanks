@@ -1,5 +1,11 @@
 package pp.tanks.server.auto;
 
+import pp.tanks.model.Model;
+import pp.tanks.server.GameMode;
+import pp.tanks.server.Player;
+
+import java.util.List;
+
 /**
  * Playing State from statechart build as a statemachine to host two substates.
  *
@@ -19,7 +25,15 @@ public class PlayingState extends TankStateMachine {
      * The two substates
      */
     final TankState playerDisconnect = new PlayerDisconnectState(this);
-    final TankState gameRunning = new GameRunningState(this);
+    private TankState gameRunning;
+
+    public void initializeGame(Model model, GameMode gameMode) {
+        gameRunning = new GameRunningState(this, model, gameMode);
+    }
+
+    public List<Player> getPlayers() {
+        return parent.getPlayers();
+    }
 
     /**
      * Override method mandatory to use methods of StateSupport

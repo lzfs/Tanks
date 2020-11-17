@@ -9,8 +9,8 @@ import pp.util.DoubleVec;
  */
 public class NormalProjectile extends Projectile {
 
-    public NormalProjectile(Model model, double effectiveRadius, int damage, double speed, ProjectileData data) {
-        super(model, effectiveRadius, damage, speed, data);
+    public NormalProjectile(Model model, ProjectileData data) {
+        super(model, 0.3, 20, 4.0, data);
     }
 
     /**

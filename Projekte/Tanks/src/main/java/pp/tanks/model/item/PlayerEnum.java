@@ -6,7 +6,7 @@ package pp.tanks.model.item;
 public enum PlayerEnum {
     PLAYER1(0, 1000),
     PLAYER2(1, 2000),
-    SERVER(-1, -1000);
+    SERVER(-1, 3000);
 
     public final int tankID;
     public final int projectileID;
