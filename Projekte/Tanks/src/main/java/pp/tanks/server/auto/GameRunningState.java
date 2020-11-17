@@ -4,8 +4,10 @@ import pp.network.IConnection;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.Projectile;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 
@@ -137,8 +139,8 @@ public class GameRunningState extends TankState {
 
         /*if (tmp.size() != 0) {
             for (DataTimeItem d : tmp) {
-                Rocket r = new Rocket(model, d.data);
-                model.getMap().getRockets().put(d.data.getId(), r);
+                Projectile r = Projectile.mkProjectile(model,(ProjectileData) d.data.mkCopy());
+                model.getTanksMap()..put(d.data.getId(), r);
                 r.interpolateData(d);
                 parent.getPlayers().get(r.getEnemy().tankId).rockets.add(r);
                 r.interpolateTime(time);

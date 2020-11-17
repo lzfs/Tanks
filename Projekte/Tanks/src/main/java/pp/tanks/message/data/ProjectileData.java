@@ -11,19 +11,21 @@ public class ProjectileData extends Data {
     private DoubleVec dir;
     private int bounce;
     public final ItemEnum type;
+    public final DoubleVec targetPos;
 
-    public ProjectileData(DoubleVec pos, int id, int bounce,DoubleVec dir, ItemEnum type) {
+    public ProjectileData(DoubleVec pos, int id, int bounce,DoubleVec dir, DoubleVec targetPos, ItemEnum type) {
         super(pos, id);
         this.bounce = bounce;
         this.dir = dir;
         this.type = type;
+        this.targetPos = targetPos;
     }
 
     /**
      * creates a similar copy of the current ProjectileData-class for working processes
      * @return returns the copy
      */
-    public ProjectileData mkCopy(){ return new ProjectileData(this.getPos(), this.getId(), this.bounce, this.dir, this.type);}
+    public ProjectileData mkCopy(){ return new ProjectileData(this.getPos(), this.getId(), this.bounce, this.dir, this.targetPos, this.type);}
 
     /**
      * updates the direction of the projectile

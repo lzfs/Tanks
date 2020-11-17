@@ -95,9 +95,9 @@ public abstract class Projectile extends Item<ProjectileData> {
                 return;
             }
         }
-        for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
-            if (collisionWith(bblock, getPos())) {
-                bblock.reduce(damage);
+        for (BreakableBlock bBlock : model.getTanksMap().getBreakableBlocks()) {
+            if (collisionWith(bBlock, getPos())) {
+                bBlock.reduce(damage);
                 destroy();
                 return;
             }
@@ -133,4 +133,16 @@ public abstract class Projectile extends Item<ProjectileData> {
      * Accept method of the visitor pattern.
      */
     public abstract void accept(Visitor v);
+
+    /**
+     * methode for creating new projectiles with different types
+     * @param model model
+     * @param data data
+     * @return returns the correct projectile
+     */
+    public static Projectile mkProjectile(Model model, ProjectileData data) {
+        if (data.type == ItemEnum.LIGHT_PROJECTILE) return new LightProjectile(model, data);
+        else if (data.type == ItemEnum.NORMAL_PROJECTILE) return new NormalProjectile(model, data);
+        else return new HeavyProjectile(model, data, data.targetPos);
+    }
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class Data implements Serializable{
     private DoubleVec pos;
-    private int id;
+    public final int id;
     private boolean destroyed;
 
     public Data(DoubleVec pos, int id) {

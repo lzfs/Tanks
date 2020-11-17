@@ -7,7 +7,9 @@ import pp.util.DoubleVec;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Represents the entire game map. It can be accessed as an unmodifiable {@linkplain java.util.List}
@@ -19,8 +21,8 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
     private List<BreakableBlock> breakableBlocks = new ArrayList<>();
     private List<UnbreakableBlock> unbreakableBlocks = new ArrayList<>();
-    private List<Projectile> projectiles = new ArrayList<>(); // TODO use map instead of list
-    private final List<Projectile> addedProjectiles = new ArrayList<>();
+    private final HashMap<Integer, Projectile> projectiles = new HashMap<>(); // TODO use map instead of list
+    private final HashMap<Integer, Projectile> addedProjectiles = new HashMap<>(); // TODO use map instead of list
     private final int width;
     private final int height;
     private final Model model;
@@ -53,7 +55,8 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         i -= unbreakableBlocks.size();
         if (i < reflectableBlocks.size()) return reflectableBlocks.get(i);
         i -= reflectableBlocks.size();
-        return projectiles.get(i);
+        List<Projectile> tmp = new ArrayList<>(projectiles.values());
+        return tmp.get(i);
     }
 
     /**
@@ -169,7 +172,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * @return the list of all projectiles
      */
     public List<Projectile> getProjectiles() {
-        return Collections.unmodifiableList(projectiles);
+        return Collections.unmodifiableList(new ArrayList<>(projectiles.values()));
     }
 
     /**
@@ -217,16 +220,19 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         for (Item item : this) {
             item.update(deltaTime);
         }
-        projectiles.addAll(addedProjectiles);
+        projectiles.putAll(addedProjectiles);
         addedProjectiles.clear();
-        for (Projectile proj : projectiles)
+        for (Projectile proj : projectiles.values())
             proj.processHits();
         List<Item> removed = new ArrayList<>();
         for (Item item : this)
             if (item.isDestroyed())
                 removed.add(item);
         breakableBlocks.removeAll(removed);
-        projectiles.removeAll(removed);
+        for (Entry<Integer, Projectile> entry : projectiles.entrySet()) {
+            if (removed.contains(entry.getValue())) projectiles.remove(entry.getKey());
+        }
+
     }
 
     /**
@@ -265,6 +271,6 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * Adds a projectile to this map.
      */
     public void addProjectile(Projectile p) {
-        addedProjectiles.add(p);
+        addedProjectiles.put(p.getProjectileData().id, p);
     }
 }

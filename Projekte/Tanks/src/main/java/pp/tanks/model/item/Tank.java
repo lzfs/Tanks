@@ -184,7 +184,7 @@ public abstract class Tank extends Item<TankData> {
         if (projectileId == playerEnum.projectileID + 999) projectileId = playerEnum.projectileID;
         DoubleVec dir = targetPos.sub(this.getPos()).normalize();
         DoubleVec position = this.getPos().add(dir.mult(1.01));
-        ProjectileData data = new ProjectileData(position, projectileId + 1, turret.getBounces(), dir, turret.projectileType);
+        ProjectileData data = new ProjectileData(position, projectileId + 1, turret.getBounces(), dir, targetPos, turret.projectileType);
         model.notifyReceivers(TanksNotification.TANK_FIRED);
         return turret.mkProjectile(this.model, data, targetPos);
         /*
