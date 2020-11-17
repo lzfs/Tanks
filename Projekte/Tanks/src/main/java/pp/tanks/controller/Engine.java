@@ -142,7 +142,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      *
      * @param counter new number
      */
-    public void setMapCounter(int counter){
+    public void setMapCounter(int counter) {
         this.mapCounter = counter;
     }
 
@@ -332,7 +332,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * TODO add Doc
+     * TODO: add JavaDoc
+     *
      * @param tank
      */
     public void setSaveTank(Tank tank) {
@@ -372,8 +373,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public void handle(Event event) {
         controller.handle(event);
     }
-
-
 
     /**
      * Sets the specified scene and changes the UI that way.
@@ -474,6 +473,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     /**
      * updates PlayerEnum
+     *
      * @param playerEnum new playerEnum
      */
     public void setPlayerEnum(PlayerEnum playerEnum) {

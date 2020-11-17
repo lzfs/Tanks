@@ -119,6 +119,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         LOGGER.fine(() -> "properties: " + properties);
     }
 
+    /**
+     * @return current player
+     */
     public PlayerEnum getPlayer() {
         return player;
     }

@@ -56,14 +56,26 @@ public abstract class TankState extends StateSupport<TankState> {
         handle(s -> s.shoot(msg));
     }
 
+    /**
+     * is called when a player sends a BackMessage and is received by the server
+     * @param msg the BackMessage
+     */
     public void back(BackMessage msg) {
         handle(s -> s.back(msg));
     }
 
+    /**
+     * is called when a player sends a StartGameMessage and is received by the server
+     * @param msg the StartGameMessage
+     */
     public void startGame(StartGameMessage msg) {
         handle(s -> s.startGame(msg));
     }
 
+    /**
+     * is called when a player sends a UpdateTankConfigMessage and is received by the server
+     * @param msg the UpdateTankConfigMessage
+     */
     public void updateTankConfig(UpdateTankConfigMessage msg) {
         handle(s -> s.updateTankConfig(msg));
     }
