@@ -52,6 +52,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final TutorialOverviewController tutorialOverviewController;
 
     public final LobbyController lobbyController;
+    public final SearchGameServerConfigController searchGameServerConfigController;
+    public final TankConfigMPController tankConfigMPController;
     public final GameOverMPController gameOverMPController;
     public final GameWonMPController gameWonMPController;
     public final ConnectionLostController connectionLostController;
@@ -89,6 +91,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.tutorialOverviewController = new TutorialOverviewController(this);
 
         this.lobbyController = new LobbyController(this);
+        this.searchGameServerConfigController = new SearchGameServerConfigController(this);
+        this.tankConfigMPController = new TankConfigMPController(this);
         this.gameOverMPController = new GameOverMPController(this);
         this.gameWonMPController = new GameWonMPController(this);
         this.connectionLostController = new ConnectionLostController(this);
@@ -246,6 +250,20 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     public void activateLobbyController() {
         setController(lobbyController);
+    }
+
+    /**
+     * activate the SearchGameServerConfigController
+     */
+    public void activateSearchGameServerConfigController() {
+        setController(searchGameServerConfigController);
+    }
+
+    /**
+     * activate the TankConfigMPController
+     */
+    public void activateTankConfigMPController() {
+        setController(tankConfigMPController);
     }
 
     /**
