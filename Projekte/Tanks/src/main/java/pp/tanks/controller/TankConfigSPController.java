@@ -295,12 +295,20 @@ public class TankConfigSPController extends Controller {
         }
     }
 
+    /**
+     * @param c id of turret
+     * @return correct turret fitting to the id
+     */
     private ItemEnum getCountTurret(int c) {
         if (c == 0) return ItemEnum.LIGHT_TURRET;
         else if (c == 1) return ItemEnum.NORMAL_TURRET;
         else return ItemEnum.HEAVY_TURRET;
     }
 
+    /**
+     * @param c id of armor
+     * @return correct armor fitting to the id
+     */
     private ItemEnum getCountArmor(int c) {
         if (c == 0) return ItemEnum.LIGHT_ARMOR;
         else if (c == 1) return ItemEnum.NORMAL_ARMOR;

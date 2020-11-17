@@ -487,6 +487,9 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         return getTankApp().getOffset();
     }
 
+    /**
+     * @return connection
+     */
     public Connection<IClientMessage, IServerMessage> getConnection() {
         return getTankApp().getConnection();
     }

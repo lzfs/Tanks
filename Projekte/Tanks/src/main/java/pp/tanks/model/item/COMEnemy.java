@@ -27,6 +27,10 @@ public class COMEnemy extends Enemy {
         //TODO
     }
 
+    /**
+     * shoots a projectile
+     * @param pos target-position
+     */
     @Override
     public void shoot(DoubleVec pos) {
         if (canShoot() && !this.isDestroyed()) {
@@ -45,6 +49,7 @@ public class COMEnemy extends Enemy {
     public void update(double delta) {
         turret.update(delta);
         if (isMoving()) {
+            //hier
             super.update(delta);
         }
         else {
@@ -61,7 +66,9 @@ public class COMEnemy extends Enemy {
     public void behaviour(double delta) {}
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     public void accept(Visitor v) {
         v.visit(this);

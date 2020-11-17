@@ -37,10 +37,16 @@ public class DataTimeItem implements Comparable<DataTimeItem>, Serializable {
         return Long.compare(serverTime, o.serverTime);
     }
 
+    /**
+     * @return current position
+     */
     public DoubleVec getPos(){
         return this.data.getPos();
     }
 
+    /**
+     * @return current id
+     */
     public int getId() {
         return data.getId();
     }

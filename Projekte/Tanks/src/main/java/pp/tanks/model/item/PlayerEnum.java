@@ -16,11 +16,18 @@ public enum PlayerEnum {
         this.projectileID = projectileID;
     }
 
+    /**
+     * @param id specified player-id
+     * @return correct player
+     */
     public static PlayerEnum getPlayer(int id) {
         if (id == 0) return PLAYER1;
         else return PLAYER2;
     }
 
+    /**
+     * @return specified player-id
+     */
     public int getEnemyID() {
         if (this == PLAYER1) return 1;
         else return 0;

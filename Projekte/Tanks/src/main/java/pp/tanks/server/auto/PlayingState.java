@@ -27,10 +27,18 @@ public class PlayingState extends TankStateMachine {
     final TankState playerDisconnect = new PlayerDisconnectState(this);
     private TankState gameRunning;
 
+    /**
+     * initializes a new game
+     * @param model model
+     * @param gameMode gameMode
+     */
     public void initializeGame(Model model, GameMode gameMode) {
         gameRunning = new GameRunningState(this, model, gameMode);
     }
 
+    /**
+     * @return list of all players
+     */
     public List<Player> getPlayers() {
         return parent.getPlayers();
     }

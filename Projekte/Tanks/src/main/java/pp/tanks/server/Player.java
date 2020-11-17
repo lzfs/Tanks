@@ -93,34 +93,60 @@ public class Player {
         this.infoText = infoText;
     }
 
+    /**
+     * updates turret
+     * @param turret new type
+     */
     public void setTurret(ItemEnum turret) {
         this.turret = turret;
     }
 
+    /**
+     * updates armor
+     * @param armor new type
+     */
     public void setArmor(ItemEnum armor) {
         this.armor = armor;
     }
 
+    /**
+     * @return turret-type
+     */
     public ItemEnum getTurret() {
         return turret;
     }
 
+    /**
+     * @return armor-type
+     */
     public ItemEnum getArmor() {
         return armor;
     }
 
+    /**
+     * @return ready-flag as boolean
+     */
     public boolean isReady() {
         return ready;
     }
 
+    /**
+     * sets ready-flag as true
+     */
     public void setReady() {
         this.ready = true;
     }
 
+    /**
+     * deletes all projectiles on the list
+     */
     public void reset() {
         this.projectiles.clear();
     }
 
+    /**
+     * TODO: add JavaDoc
+     */
     public void sendMessages() {
         //System.out.println("send");
         if (!projectiles.isEmpty()) {

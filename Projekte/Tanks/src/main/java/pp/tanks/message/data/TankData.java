@@ -38,14 +38,23 @@ public class TankData extends Data {
         return move;
     }
 
+    /**
+     * @return current move-direction
+     */
     public MoveDirection getMoveDir() {
         return moveDir;
     }
 
+    /**
+     * @return current turret-direction
+     */
     public DoubleVec getTurretDir() {
         return turretDir;
     }
 
+    /**
+     * @return current rotation
+     */
     public double getRotation() {
         return rotation;
     }
@@ -59,6 +68,9 @@ public class TankData extends Data {
         this.lifePoints = lifePoints;
     }
 
+    /**
+     * @return current number of lifepoints
+     */
     public int getLifePoints() {
         return lifePoints;
     }

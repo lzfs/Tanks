@@ -88,15 +88,34 @@ public abstract class Turret {
         }
         return false;
     }
+
+    /**
+     * creates a new projectile
+     * @param model TODO
+     * @param data TODO
+     * @param target new target-position
+     * @return
+     */
     public abstract Projectile mkProjectile(Model model, ProjectileData data, DoubleVec target);
 
+    /**
+     * @return number of bounces
+     */
     public abstract int getBounces();
 
+    /**
+     * @return current direction
+     */
     public DoubleVec getDirection() {
         return this.direction;
     }
 
-    public void setDirection(DoubleVec direction) {
-        this.direction = direction;
+    /**
+     * updates current direction
+     *
+     * @param dir new direction
+     */
+    public void setDirection(DoubleVec dir) {
+        this.direction = dir;
     }
 }

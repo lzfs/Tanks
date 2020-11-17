@@ -9,7 +9,7 @@ import pp.util.DoubleVec;
  */
 public class HeavyTurret extends Turret {
     public HeavyTurret() {
-        super( 0, 5, 1,5, ItemEnum.HEAVY_PROJECTILE);
+        super(0, 5, 1, 5, ItemEnum.HEAVY_PROJECTILE);
     }
 
     @Override

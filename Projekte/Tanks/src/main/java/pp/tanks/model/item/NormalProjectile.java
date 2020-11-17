@@ -22,7 +22,9 @@ public class NormalProjectile extends Projectile {
     }
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     @Override
     public void accept(Visitor v) {

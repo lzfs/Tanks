@@ -41,7 +41,7 @@ class PlayGameController extends Controller {
     private final StopWatch stopWatch = new StopWatch();
     private double lastUpdate;
     private Scene scene;
-
+    private boolean stopFlag = false;
 
     /**
      * create a new PlayGameController
@@ -74,6 +74,10 @@ class PlayGameController extends Controller {
             final KeyCode code = ((KeyEvent) e).getCode();
             pressed.remove(code);
             processed.remove(code);
+
+            if (pressed.size() == 0) {
+                stopFlag = true;
+            }
         }
         else if (e.getEventType() == MouseEvent.MOUSE_CLICKED) {
             final MouseEvent me = (MouseEvent) e;
@@ -82,8 +86,8 @@ class PlayGameController extends Controller {
         }
         else if (e.getEventType() == MouseEvent.MOUSE_MOVED) {
             MouseEvent event = (MouseEvent) e;
-            Double x1 = event.getX();
-            Double y1 = event.getY();
+            double x1 = event.getX();
+            double y1 = event.getY();
             DoubleVec dir = engine.getView().viewToModel(x1, y1).sub(getTank().getPos());
             //maybe norm
             getTank().getTurret().setDirection(dir.normalize());
@@ -108,6 +112,11 @@ class PlayGameController extends Controller {
             getTank().setMove(false);
         }
 
+        if (stopFlag) {
+           getTank().stopMovement();
+            stopFlag = false;
+        }
+
         // update the model
         final double delta = stopWatch.getTime() - lastUpdate;
         lastUpdate = stopWatch.getTime();
@@ -115,13 +124,14 @@ class PlayGameController extends Controller {
 
         if (engine.getModel().gameWon()) {
             engine.setView(null);
-            if ( engine.getMode() == GameMode.TUTORIAL) {
+            if (engine.getMode() == GameMode.TUTORIAL) {
                 engine.activateLevelController();
             }
             else if (engine.getMode() == GameMode.SINGLEPLAYER) {
-                if (engine.getMapCounter() == 1)  {
+                if (engine.getMapCounter() == 1) {
                     engine.activateMission1CompleteController();
-                } else {
+                }
+                else {
                     engine.activateMission2CompleteController();
                 }
             }
@@ -133,14 +143,17 @@ class PlayGameController extends Controller {
             engine.setView(null);
             if (engine.getMode() == GameMode.TUTORIAL) {
                 engine.activateLevelController();
-            } else if (engine.getMode() == GameMode.SINGLEPLAYER) {
+            }
+            else if (engine.getMode() == GameMode.SINGLEPLAYER) {
                 engine.getSaveTank().decreaseLives();
                 if (engine.getSaveTank().getLives() > 0) {
                     engine.activateStartGameSPController();
-                } else {
+                }
+                else {
                     engine.activateGameOverSPController();
                 }
-            } else {
+            }
+            else {
                 //Multiplayer
                 //TODO
             }
@@ -157,21 +170,22 @@ class PlayGameController extends Controller {
         stopWatch.start();
         pressed.clear();
         processed.clear();
-        engine.getModel().loadMap("map"+engine.getMapCounter() +".xml");
+        engine.getModel().loadMap("map" + engine.getMapCounter() + ".xml");
 
-        if (engine.getMapCounter()==0 || engine.getMapCounter()==3) {
+        if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {
             if (engine.getMapCounter() == 3) engine.getModel().setDebug(true);
             PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20));
             engine.getModel().setTank(tank);
-        } else {
+        }
+        else {
             engine.getSaveTank().setDestroyed(false);
-            engine.getSaveTank().setPos(new DoubleVec(3,6));
+            engine.getSaveTank().setPos(new DoubleVec(3, 6));
             engine.getModel().setTank(engine.getSaveTank());
         }
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
         engine.setView(mapview);
 
-        if (scene == null){
+        if (scene == null) {
             scene = new Scene(new Group(engine.getView()));
         }
         engine.setScene(scene);
@@ -196,19 +210,19 @@ class PlayGameController extends Controller {
     private void keyPressed(KeyCode k1, KeyCode k2) {
         if ((k1 == W && k2 == A) || (k1 == A && k2 == W)) {
             getTank().setMove(true);
-            getTank().setMoveDirection(MoveDirection.LEFTUP);
+            getTank().setMoveDirection(MoveDirection.LEFT_UP);
         }
         else if ((k1 == W && k2 == D) || (k1 == D && k2 == W)) {
             getTank().setMove(true);
-            getTank().setMoveDirection(MoveDirection.RIGHTUP);
+            getTank().setMoveDirection(MoveDirection.RIGHT_UP);
         }
         else if ((k1 == D && k2 == S) || (k1 == S && k2 == D)) {
             getTank().setMove(true);
-            getTank().setMoveDirection(MoveDirection.RIGHTDOWN);
+            getTank().setMoveDirection(MoveDirection.RIGHT_DOWN);
         }
         else if ((k1 == S && k2 == A) || (k1 == A && k2 == S)) {
             getTank().setMove(true);
-            getTank().setMoveDirection(MoveDirection.LEFTDOWN);
+            getTank().setMoveDirection(MoveDirection.LEFT_DOWN);
         }
     }
 

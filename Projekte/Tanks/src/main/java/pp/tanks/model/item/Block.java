@@ -17,10 +17,16 @@ public abstract class Block<T extends Data> extends Item<T> {
         this.height = 1.5;
     }
 
+    /**
+     * @return height
+     */
     public double getHeight(){
         return height;
     }
 
+    /**
+     * @return width
+     */
     public double getWidth(){
         return width;
     }

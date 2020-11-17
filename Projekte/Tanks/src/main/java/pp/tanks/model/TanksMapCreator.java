@@ -37,6 +37,9 @@ class TanksMapCreator {
         this.model = model;
     }
 
+    /**
+     * @return empty map
+     */
     public TanksMap makeEmptyMap() {
         final int width = fieldSizeX.value(model.getProperties());
         final int height = fieldSizeY.value(model.getProperties());

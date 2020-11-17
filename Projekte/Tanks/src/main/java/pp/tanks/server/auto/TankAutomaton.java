@@ -126,6 +126,9 @@ public class TankAutomaton extends TankStateMachine {
         return null;
     }
 
+    /**
+     * @return list of all players
+     */
     public List<Player> getPlayers() {
         return players;
     }

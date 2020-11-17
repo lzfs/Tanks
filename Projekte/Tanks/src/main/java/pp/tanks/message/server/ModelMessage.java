@@ -14,6 +14,11 @@ public class ModelMessage implements IServerMessage {
         this.projectile = projectile;
     }
 
+    /**
+     * Method to accept a visitor
+     *
+     * @param interpreter       visitor to be used
+     */
     @Override
     public void accept(IServerInterpreter interpreter) {
 

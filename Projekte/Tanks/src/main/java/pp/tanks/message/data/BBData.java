@@ -18,13 +18,16 @@ public class BBData extends Data {
      */
     public BBData mkCopy(){ return new BBData(this.getPos(), this.getId(), this.lifepoints);}
 
+    /**
+     * @return current lifepoints
+     */
     public int getLifepoints() {
         return lifepoints;
     }
 
     /**
      * reduces the lifepoints of the breakable block after getting hit by a projectile
-     * @param points
+     * @param points number of reducing lifepoints (taken damage)
      */
     public void reduceLifepoints(int points) {
         this.lifepoints -= points;

@@ -14,6 +14,12 @@ public class ShootMessage implements IClientMessage {
         this.dataTime = dataTime;
     }
 
+    /**
+     * Method to accept a visitor
+     *
+     * @param interpreter       visitor to be used
+     * @param from              the connectionID
+     */
     @Override
     public void accept(IClientInterpreter interpreter, IConnection<IServerMessage> from) {
         interpreter.visit(this, from);

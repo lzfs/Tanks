@@ -1,5 +1,7 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.client.MoveMessage;
+import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 
@@ -7,7 +9,6 @@ import pp.tanks.model.Model;
  * Represents the tank of the current player
  */
 public class PlayersTank extends Tank{
-
 
 
     public PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
@@ -24,7 +25,9 @@ public class PlayersTank extends Tank{
     }
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     @Override
     public void accept(Visitor v) {
@@ -38,5 +41,21 @@ public class PlayersTank extends Tank{
      */
     public static PlayersTank mkPlayersTank(ItemEnum turret, ItemEnum armor) {
         return null;
+    }
+
+    @Override
+    public void stopMovement() {
+        data.setMoveDir(MoveDirection.STAY);
+        DataTimeItem item = new DataTimeItem(data, System.nanoTime() + model.getEngine().getOffset());
+        model.getEngine().getConnection().send(new MoveMessage(item));
+    }
+
+    @Override
+    public void setMoveDirection(MoveDirection dir) {
+        if (dir != data.getMoveDir()) {
+            DataTimeItem item = new DataTimeItem(data, System.nanoTime() + model.getEngine().getOffset());
+            model.getEngine().getConnection().send(new MoveMessage(item));
+        }
+        super.setMoveDirection(dir);
     }
 }

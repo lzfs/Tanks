@@ -35,6 +35,9 @@ public class ProjectileData extends Data {
         this.dir = dir;
     }
 
+    /**
+     * @return number of remaining bounces
+     */
     public int getBounce() {
         return bounce;
     }
@@ -46,10 +49,16 @@ public class ProjectileData extends Data {
         this.bounce -= 1;
     } //TODO
 
+    /**
+     * @return current direction
+     */
     public DoubleVec getDir() {
         return this.dir;
     }
 
+    /**
+     * @return type
+     */
     public ItemEnum getType() {
         return type;
     }

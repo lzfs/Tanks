@@ -106,6 +106,9 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         return Collections.unmodifiableList(enemy);
     }
 
+    /**
+     * @return list of all tanks
+     */
     public List<Tank> getAllTanks() {
         List<Tank> tmp = new ArrayList<>(playersTanks);
         tmp.addAll(enemy);
@@ -127,6 +130,9 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         playersTanks.set(0, tank);
     }
 
+    /**
+     * @return hashMap with
+     */
     public HashMap<Integer, Projectile> getAddedProjectiles() {
         return addedProjectiles;
     }

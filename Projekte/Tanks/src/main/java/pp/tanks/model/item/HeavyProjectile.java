@@ -61,6 +61,9 @@ public class HeavyProjectile extends Projectile {
      */
     public void processHits() {}
 
+    /**
+     * TODO add fitting JavaDoc
+     */
     public void collision(){
         for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (collisionWith(tank, getPos()) && flag == 0) {

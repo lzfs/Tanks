@@ -97,6 +97,10 @@ public class Model {
         }
     }
 
+    /**
+     * updates tank
+     * @param tank new tank
+     */
     public void setTank(Tank tank){
         map.setPlayerTank0(tank);
     }
@@ -155,22 +159,40 @@ public class Model {
         return true;
     }
 
+    /**
+     * activates debug-mode
+     * @param debug boolean for activation
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
+    /**
+     * @return latestUpdate
+     */
     public long getLatestUpdate() {
         return latestUpdate;
     }
 
+    /**
+     * updates latestUpdate
+     * @param latestUpdate new latestUpdate
+     */
     public void setLatestUpdate(long latestUpdate) {
         this.latestUpdate = latestUpdate;
     }
 
+    /**
+     * updates engine
+     * @param engine "new" engine
+     */
     public void setEngine(Engine engine) {
         this.engine = engine;
     }
 
+    /**
+     * @return current engine
+     */
     public Engine getEngine() {
         return this.engine;
     }

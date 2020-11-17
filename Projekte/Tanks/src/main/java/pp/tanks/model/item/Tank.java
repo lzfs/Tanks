@@ -32,22 +32,40 @@ public abstract class Tank extends Item<TankData> {
         if (model.getEngine() != null) latestOp = new DataTimeItem(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
     }
 
+    /**
+     * reduces remaining lives by one
+     */
     public void decreaseLives() {
         this.lives -= 1;
     }
 
+    /**
+     * @return remaining lives
+     */
     public int getLives() {
         return this.lives;
     }
 
+    /**
+     * updates lives
+     *
+     * @param lives new number of lives
+     */
     public void setLives(int lives) {
         this.lives = lives;
     }
 
+    /**
+     * @return latest operation as DataTimeItem
+     */
     public DataTimeItem getLatestOp() {
         return latestOp;
     }
 
+    /**
+     * updates latest operation
+     * @param latestOp new latest operation as DataTimeItem
+     */
     public void setLatestOp(DataTimeItem latestOp) {
         this.latestOp = latestOp;
     }
@@ -61,10 +79,16 @@ public abstract class Tank extends Item<TankData> {
         return data.isMoving();
     }
 
+    /**
+     * @return used turret
+     */
     public Turret getTurret() {
         return this.turret;
     }
 
+    /**
+     * @return used armor
+     */
     public Armor getArmor() {
         return armor;
     }
@@ -87,6 +111,9 @@ public abstract class Tank extends Item<TankData> {
         data.setRotation(rotation % 180);
     }
 
+    /**
+     * @return current move-direction
+     */
     public MoveDirection getMoveDir() {
         return data.getMoveDir();
     }
@@ -100,10 +127,16 @@ public abstract class Tank extends Item<TankData> {
         data.setMoveDir(dir);
     }
 
+    /**
+     * @return current speed
+     */
     public double getSpeed() {
         return speed;
     }
 
+    /**
+     * @return current rotation
+     */
     public double getRotation() {
         return data.getRotation();
     }
@@ -125,6 +158,10 @@ public abstract class Tank extends Item<TankData> {
         data.setMove(false);
     }
 
+    /**
+     * updates destruction-status
+     * @param bool boolean of new status
+     */
     public void setDestroyed(boolean bool) {
         this.data.setDestroyed(bool);
     }
@@ -137,7 +174,7 @@ public abstract class Tank extends Item<TankData> {
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
         collide(newPos);
-        if (isMoving() && !data.isDestroyed()) {
+        if (isMoving() && !data.isDestroyed()&&data.getMoveDir()!=MoveDirection.STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
             //System.out.println("currentRot " + currentRot);
@@ -161,7 +198,9 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     public abstract void accept(Visitor v);
 
@@ -255,4 +294,9 @@ public abstract class Tank extends Item<TankData> {
         }
         data.setLifePoints(armor.getArmorPoints());
     }
+
+    /**
+     * TODO: add method
+     */
+    public void stopMovement() {}
 }

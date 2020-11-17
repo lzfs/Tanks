@@ -16,7 +16,6 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
     private IServer<IClientMessage, ? extends IConnection<IServerMessage>> server;
     final TankAutomaton auto = new TankAutomaton(this);
 
-
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT);
@@ -57,7 +56,6 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
         auto.pingResponse(msg, from);
     }
 
-
     @Override
     public void visit(CollisionMessage msg, IConnection<IServerMessage> from) {
 
@@ -79,7 +77,7 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
     }
 
     @Override
-    public void visit(MoveMessage msg,  IConnection<IServerMessage> from) {
+    public void visit(MoveMessage msg, IConnection<IServerMessage> from) {
         auto.tankMove(msg, from);
     }
 

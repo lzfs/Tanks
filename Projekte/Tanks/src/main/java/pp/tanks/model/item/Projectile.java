@@ -56,26 +56,46 @@ public abstract class Projectile extends Item<ProjectileData> {
         }
     }
 
+    /**
+     * updates direction
+     * @param dir new direction
+     */
     public void setDir(DoubleVec dir) {
         data.setDir(dir);
     }
 
+    /**
+     * @return current direction
+     */
     public DoubleVec getDir() {
         return data.getDir();
     }
 
+    /**
+     * @return damage
+     */
     public int getDamage() {
         return this.damage;
     }
 
+    /**
+     * @return ProjectileData
+     */
     public ProjectileData getProjectileData() {
         return this.data;
     }
 
+    /**
+     * @return DataTimeItem of last operation
+     */
     public DataTimeItem getLatestOp() {
         return latestOp;
     }
 
+    /**
+     * updates latestOperation
+     * @param latestOp new latest operation as DataTimeItem
+     */
     public void setLatestOp(DataTimeItem latestOp) {
         this.latestOp = latestOp;
     }
@@ -142,7 +162,9 @@ public abstract class Projectile extends Item<ProjectileData> {
     }
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     public abstract void accept(Visitor v);
 
@@ -158,6 +180,9 @@ public abstract class Projectile extends Item<ProjectileData> {
         else return new HeavyProjectile(model, data, data.targetPos);
     }
 
+    /**
+     * @return Player-Enumeration from id
+     */
     public PlayerEnum getEnemy() {
         if (data.getId() <= 2000 && data.getId() >= 1000) return PlayerEnum.PLAYER2;
         else return PlayerEnum.PLAYER1;

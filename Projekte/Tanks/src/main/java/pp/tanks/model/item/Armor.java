@@ -12,22 +12,32 @@ public class Armor {
         this.weight = weight;
     }
 
+    /**
+     * @return current weight
+     */
     public int getWeight() {
         return this.weight;
     }
 
+    /**
+     * @return current armor-lifepoints
+     */
     public int getArmorPoints() {
         return this.armorPoints;
     }
 
     /**
      * Reduces armorPoints after getting hit by a projectile
-     * @param damage
+     * @param damage reducing damage-points
      */
     public void takeDamage(int damage) {
         this.armorPoints -= damage;
     }
 
+    /**
+     * updates armor-lifepoints
+     * @param points new armor-lifepoints
+     */
     public void setArmorPoints(int points) {
         this.armorPoints = points;
     }

@@ -21,16 +21,22 @@ public class Data implements Serializable{
 
     /**
      * update the position of the tank
-     * @param pos
+     * @param pos new position
      */
     public void setPos(DoubleVec pos) {
         this.pos = pos;
     }
 
+    /**
+     * destroys the item
+     */
     public void destroy() {
         this.destroyed = true;
     }
 
+    /**
+     * @return current position
+     */
     public DoubleVec getPos() {
         return pos;
     }
@@ -43,8 +49,15 @@ public class Data implements Serializable{
         return destroyed;
     }
 
+    /**
+     * updates the destroy-flag
+     * @param bool new status
+     */
     public void setDestroyed(boolean bool){this.destroyed = bool;}
 
+    /**
+     * @return item id
+     */
     public int getId() {
         return id;
     }

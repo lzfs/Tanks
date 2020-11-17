@@ -62,7 +62,7 @@ public abstract class Item<T extends Data> {
         return data.isDestroyed();
     }
 
-    /**
+    /*
      * Checks whether there is a collision with another item
      *
      * @param other the item which is checked for a collision
@@ -124,7 +124,9 @@ public abstract class Item<T extends Data> {
     public abstract void isVisible();
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     public abstract void accept(Visitor v);
 

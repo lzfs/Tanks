@@ -129,11 +129,28 @@ public class GameRunningState extends TankState {
         buffer.add(msg.dataTime);
     }
 
+    /**
+     * TODO: add JavaDoc
+     * @param time
+     * @param tmp
+     */
     private void processTanks(long time, List<DataTimeItem> tmp) {
+        if (tmp.size() != 0) {
+            for (DataTimeItem d : tmp) {
+                int id = d.data.getId();
+                //model.getTanksMap().get(id).interpolateData(d);
+                System.out.println("bewegung verarbeitet");
+            }
 
+        }
 
     }
 
+    /**
+     * TODO: add JavaDoc
+     * @param time
+     * @param tmp
+     */
     private void processProjectiles(long time, List<DataTimeItem> tmp) {
 
         if (tmp.size() != 0) {

@@ -37,12 +37,21 @@ public class SearchGameServerConfigController extends Controller {
     @FXML
     private Button search;
 
+    /**
+     * text-field for ip-address
+     */
     @FXML
     private TextField ipField;
 
+    /**
+     * text-field for port
+     */
     @FXML
     private TextField portField;
 
+    /**
+     * information-text
+     */
     @FXML
     private Text infoText;
 
