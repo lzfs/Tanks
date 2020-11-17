@@ -1,5 +1,7 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.ProjectileData;
+import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
 import java.util.Arrays;
@@ -7,26 +9,28 @@ import java.util.Arrays;
 /**
  * base class of turret that are placed on a tank
  */
-public class Turret {
-    private int damage;
-    private int bounced;
-    private int weight;
-    private double reloadTime;
-    private double[] mag;
+public abstract class Turret {
+    //private int damage;
+    //private int bounced;
+    private final int weight;
+    private final double reloadTime;
+    private final double[] mag;
     private DoubleVec direction;
     private double cadence;
-    private final double currentcadence;
+    private final double currentCadence;
+    public final ItemEnum projectileType;
 
-    public Turret(int damage, int bounced, int weight, double reloadTime, int mag, double cadence) {
-        this.damage = damage;
-        this.bounced = bounced;
+    public Turret(int weight, double reloadTime, int mag, double cadence, ItemEnum projectileType) {
+        //this.damage = damage;
+        //this.bounced = bounced;
         this.weight = weight;
         this.reloadTime = reloadTime;
         this.mag = new double[mag];
         this.direction =new DoubleVec(0,0);
         Arrays.fill(this.mag, 0.0);
         this.cadence = 0;
-        this.currentcadence = cadence;
+        this.currentCadence = cadence;
+        this.projectileType = projectileType;
     }
 
     /**
@@ -46,16 +50,17 @@ public class Turret {
         }
     }
 
-    public int getBounces(){
-        return bounced;
-    }
 
 
     /**
-     * @return s the size of the magazin
+     * @return s the size of the magazine
      */
     public int getMagSize() {
         return mag.length;
+    }
+
+    public int getWeight() {
+        return this.weight;
     }
 
     /**
@@ -65,7 +70,7 @@ public class Turret {
         for (int i = 0; i < mag.length; i++) {
             if (mag[i] == 0.0) {
                 mag[i] = reloadTime;
-                cadence = currentcadence;
+                cadence = currentCadence;
                 return;
             }
         }
@@ -83,10 +88,9 @@ public class Turret {
         }
         return false;
     }
+    public abstract Projectile mkProjectile(Model model, ProjectileData data, DoubleVec target);
 
-    public int getDamage() {
-        return damage;
-    }
+    public abstract int getBounces();
 
     public DoubleVec getDirection() {
         return this.direction;

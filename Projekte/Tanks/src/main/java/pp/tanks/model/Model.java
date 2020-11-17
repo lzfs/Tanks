@@ -27,6 +27,7 @@ public class Model {
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
     private boolean debug;
+    private long latestUpdate;
 
     /**
      * Creates a game model
@@ -154,5 +155,13 @@ public class Model {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    public long getLatestUpdate() {
+        return latestUpdate;
+    }
+
+    public void setLatestUpdate(long latestUpdate) {
+        this.latestUpdate = latestUpdate;
     }
 }

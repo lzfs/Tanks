@@ -41,8 +41,7 @@ public class DataTimeItem implements Comparable<DataTimeItem>, Serializable {
         return this.data.getPos();
     }
 
-    @Override
-    public String toString() {
-        return "" + serverTime;
+    public int getId() {
+        return data.getId();
     }
 }

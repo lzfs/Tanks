@@ -108,7 +108,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * state for playing
      */
-    public final TankState playingState = new PlayingState(this);
+    public final PlayingState playingState = new PlayingState(this);
 
     // has to be in Model
 

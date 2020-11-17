@@ -86,7 +86,9 @@ public class PlayerReadyState extends TankState {
             model.getTanksMap().setPlayerTank0(PlayersTank.mkPlayersTank(pl.getTurret(), pl.getArmor()));//funktioniert nicht für Mulitplayer Spiele
         }
         System.out.println("hat geklappt");
-        // TODO in den SynchronizeState -> das Model bereitstellen
+        //TODO Nachricht an den Client wie der gegenerische Panzer aussieht bzw. das das Game startet (ModelMessage?)
+        parent.playingState.initializeGame(model, msg.gameMode);
+        parent.goToState(containingState().playingState);
     }
 
 

@@ -6,10 +6,6 @@ import pp.tanks.message.data.TankData;
 import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
-import javafx.geometry.Rectangle2D;
-
-import java.awt.geom.Ellipse2D;
-
 /**
  * abstract base class of all tanks in a {@linkplain pp.tanks.model.TanksMap}
  */
@@ -17,14 +13,18 @@ public abstract class Tank extends Item<TankData> {
     protected Turret turret;
     protected Armor armor;
     protected double speed;
-    protected double rotationspeed = 150;
+    protected double rotationSpeed = 150;
     private int lives = 1;
+    public final PlayerEnum playerEnum;
+    private int projectileId;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, 0.8, data);
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
+        this.playerEnum = PlayerEnum.getPlayer(data.getId());
+        this.projectileId = playerEnum.projectileID;
     }
 
     public void decreaseLives() {
@@ -42,7 +42,7 @@ public abstract class Tank extends Item<TankData> {
     /**
      * checks if the tank is moving
      *
-     * @return
+     * @return move-boolean
      */
     public boolean isMoving() {
         return data.isMoving();
@@ -128,7 +128,7 @@ public abstract class Tank extends Item<TankData> {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
             System.out.println("currentRot " + currentRot);
-            System.out.println("movedirRot " + moveDirRotation);
+            System.out.println("moveDirRot " + moveDirRotation);
             double tmp = (currentRot - moveDirRotation + 180) % 180;
             double tmp1 = (moveDirRotation - currentRot + 180) % 180;
             System.out.println("tmp " + tmp);
@@ -139,10 +139,10 @@ public abstract class Tank extends Item<TankData> {
                 setPos(newPos);
             }
             else if (tmp > tmp1) {
-                data.setRotation(currentRot + delta * rotationspeed);
+                data.setRotation(currentRot + delta * rotationSpeed);
             }
             else {
-                data.setRotation(currentRot - delta * rotationspeed);
+                data.setRotation(currentRot - delta * rotationSpeed);
             }
         }
     }
@@ -168,7 +168,7 @@ public abstract class Tank extends Item<TankData> {
     /**
      * checks if the tank is able to shoot
      *
-     * @return
+     * @return flag for shoot-possibility
      */
     protected boolean canShoot() {
         return turret.canShoot();
@@ -177,14 +177,17 @@ public abstract class Tank extends Item<TankData> {
     /**
      * decides which type of projectile the tank is shooting by type of turret it's using
      *
-     * @param targetPos
-     * @return
+     * @param targetPos Position of the target-cursor
+     * @return projectile
      */
     private Projectile makeProjectile(DoubleVec targetPos) {
+        if (projectileId == playerEnum.projectileID + 999) projectileId = playerEnum.projectileID;
         DoubleVec dir = targetPos.sub(this.getPos()).normalize();
         DoubleVec position = this.getPos().add(dir.mult(1.01));
-        ProjectileData data = new ProjectileData(position, 1234, turret.getBounces(), dir);  //TODO
+        ProjectileData data = new ProjectileData(position, projectileId + 1, turret.getBounces(), dir, turret.projectileType);
         model.notifyReceivers(TanksNotification.TANK_FIRED);
+        return turret.mkProjectile(this.model, data, targetPos);
+        /*
         if (turret instanceof LightTurret) {
             return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);  //TODO
         }
@@ -194,11 +197,11 @@ public abstract class Tank extends Item<TankData> {
         else if (turret instanceof HeavyTurret) {
             return new HeavyProjectile(model, 0.3, turret.getDamage(), 4, targetPos, data); //TODO
         }
-        return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);
+        return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);*/
     }
 
     private double calculateSpeed() {
-        return (25.0 / armor.getWeight());
+        return (25.0 / (armor.getWeight() + turret.getWeight()));
     }
 
     /**
@@ -222,9 +225,9 @@ public abstract class Tank extends Item<TankData> {
 
 
     /**
-     * reduces armor points if the tank was hitted by a projectile
+     * reduces armor points if the tank was hit by a projectile
      *
-     * @param damage
+     * @param damage incoming damage-data
      */
     public void processDamage(int damage) {
         if (armor.getArmorPoints() - damage <= 0) {

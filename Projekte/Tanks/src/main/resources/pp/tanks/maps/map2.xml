@@ -77,7 +77,7 @@
    <bBlock x="4" y="4"></bBlock>
    <uBlock x="5" y="5"></uBlock>
    <uBlock x="5" y="6"></uBlock>
-   <bBlock x="5" y="7"></bBlock>
+   <uBlock x="5" y="7"></uBlock>
    <bBlock x="4" y="8"></bBlock>
    <bBlock x="4" y="9"></bBlock>
 

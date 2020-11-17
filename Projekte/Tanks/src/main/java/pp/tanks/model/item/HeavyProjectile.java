@@ -10,8 +10,8 @@ import pp.util.DoubleVec;
 public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
-    public HeavyProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec targetPos, ProjectileData data ){
-        super(model, effectiveRadius, damage, speed,data);
+    public HeavyProjectile(Model model, ProjectileData data, DoubleVec targetPos){
+        super(model, 0.3, 30, 4.0,data);
         this.targetPos=targetPos;
         this.flag=1;
     }
