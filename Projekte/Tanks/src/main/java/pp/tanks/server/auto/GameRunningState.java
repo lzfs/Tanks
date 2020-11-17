@@ -57,21 +57,23 @@ public class GameRunningState extends TankState {
 
         List<DataTimeItem> dat = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            if (tmp != null) {
+            if (tmp.length != 0) {
                 for (DataTimeItem item : tmp) {
-                    if (item.serverTime < timeStart + step * (i + 1) && (i == 0 || item.serverTime > timeStart + step * i || i == 4 /* vlt andere Lösung*/)) dat.add(item);
+                    if (item.serverTime < timeStart + step * (i + 1) && (i == 0 || item.serverTime > timeStart + step * i)) dat.add(item);
                 }
             }
             makeDatLists(dat);
-            processProjectiles(timeStart + step * (i + 1));
-            processTanks(timeStart + step * (i + 1));
+            processProjectiles(timeStart + step * (i + 1), new ArrayList<>(projectileDat));
+            processTanks(timeStart + step * (i + 1), new ArrayList<>(tankDat));
+            projectileDat.clear();
+            tankDat.clear();
             dat.clear();
         }
         model.setLatestUpdate(timeStart + 5 * step);
 
         for (Player p : parent.getPlayers()) {
-            //p.sendMessages();
-            //p.reset();
+            p.sendMessages();
+            p.reset();
         }
     }
 
@@ -127,25 +129,25 @@ public class GameRunningState extends TankState {
         buffer.add(msg.dataTime);
     }
 
-    private void processTanks(long time) {
-        List<DataTimeItem> tmp = new ArrayList<>(tankDat);
-        this.tankDat.clear();
+    private void processTanks(long time, List<DataTimeItem> tmp) {
+
 
     }
 
-    private void processProjectiles(long time) {
-        List<DataTimeItem> tmp = new ArrayList<>(projectileDat);
-        this.projectileDat.clear();
+    private void processProjectiles(long time, List<DataTimeItem> tmp) {
 
-        /*if (tmp.size() != 0) {
+        if (tmp.size() != 0) {
             for (DataTimeItem d : tmp) {
                 Projectile r = Projectile.mkProjectile(model,(ProjectileData) d.data.mkCopy());
-                model.getTanksMap()..put(d.data.getId(), r);
-                r.interpolateData(d);
-                parent.getPlayers().get(r.getEnemy().tankId).rockets.add(r);
-                r.interpolateTime(time);
+                model.getTanksMap().getAddedProjectiles().put(d.data.getId(), r);
+                //r.interpolateData(d);
+                if (gameMode == GameMode.MULTIPLAYER) {
+                    parent.getPlayers().get(r.getEnemy().tankID).projectiles.add(r);
+                }
+                else System.out.println("projectil verarbeitet");
+                //r.interpolateTime(time);
             }
-        }*/
+        }
 
     }
 

@@ -34,6 +34,9 @@ public class CreditsController extends Controller {
     @FXML
     private Button back;
 
+    /**
+     * the button for debug (in credits)
+     */
     @FXML
     private Button debug;
 
@@ -80,6 +83,9 @@ public class CreditsController extends Controller {
         engine.activateMainMenuController();
     }
 
+    /**
+     * method for the debug button
+     */
     @FXML
     private void debug() {
         engine.getTankApp().joinGame(GameMode.TUTORIAL);

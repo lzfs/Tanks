@@ -1,10 +1,13 @@
 package pp.tanks.server;
 
 import pp.network.IConnection;
+import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.ModelMessage;
 import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.model.item.Projectile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class Player {
     private ItemEnum armor = null;
     private boolean ready;
     public final PlayerEnum playerEnum;
+    public final List<Projectile> projectiles = new ArrayList<>();
 
     /**
      * creates new player
@@ -111,5 +115,22 @@ public class Player {
 
     public void setReady() {
         this.ready = true;
+    }
+
+    public void reset() {
+        this.projectiles.clear();
+    }
+
+    public void sendMessages() {
+        //System.out.println("send");
+        if (!projectiles.isEmpty()) {
+            List<DataTimeItem> r = new ArrayList<>();
+            if (!projectiles.isEmpty()) {
+                for (Projectile proj : projectiles) {
+                    r.add(proj.getLatestOp());
+                }
+            }
+            connection.send(new ModelMessage(null, r));
+        }
     }
 }

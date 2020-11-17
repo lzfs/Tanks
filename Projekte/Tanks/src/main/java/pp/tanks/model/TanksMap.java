@@ -4,6 +4,8 @@ import pp.tanks.message.data.Data;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
 
+import javafx.application.Platform;
+
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +23,8 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
     private List<BreakableBlock> breakableBlocks = new ArrayList<>();
     private List<UnbreakableBlock> unbreakableBlocks = new ArrayList<>();
-    private final HashMap<Integer, Projectile> projectiles = new HashMap<>(); // TODO use map instead of list
-    private final HashMap<Integer, Projectile> addedProjectiles = new HashMap<>(); // TODO use map instead of list
+    private final HashMap<Integer, Projectile> projectiles = new HashMap<>();
+    private final HashMap<Integer, Projectile> addedProjectiles = new HashMap<>();
     private final int width;
     private final int height;
     private final Model model;
@@ -123,7 +125,10 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      */
     public void setPlayerTank0(Tank tank) {
         playersTanks.set(0, tank);
+    }
 
+    public HashMap<Integer, Projectile> getAddedProjectiles() {
+        return addedProjectiles;
     }
 
     /**
@@ -230,7 +235,9 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
                 removed.add(item);
         breakableBlocks.removeAll(removed);
         for (Entry<Integer, Projectile> entry : projectiles.entrySet()) {
-            if (removed.contains(entry.getValue())) projectiles.remove(entry.getKey());
+            if (removed.contains(entry.getValue())) {
+                Platform.runLater(() -> projectiles.remove(entry.getKey()));
+            }
         }
 
     }

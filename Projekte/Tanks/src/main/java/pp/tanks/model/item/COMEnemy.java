@@ -27,6 +27,15 @@ public class COMEnemy extends Enemy {
         //TODO
     }
 
+    @Override
+    public void shoot(DoubleVec pos) {
+        if (canShoot() && !this.isDestroyed()) {
+            turret.shoot();
+            Projectile projectile = super.makeProjectile(pos);
+            model.getTanksMap().addProjectile(projectile);
+        }
+    }
+
     /**
      * Called once per frame. Used for updating this item's position etc.
      *

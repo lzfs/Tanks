@@ -1,5 +1,6 @@
 package pp.tanks.model;
 
+import pp.tanks.controller.Engine;
 import pp.tanks.model.item.*;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
@@ -28,6 +29,7 @@ public class Model {
     private boolean muted = prefs.getBoolean(MUTED, false);
     private boolean debug;
     private long latestUpdate;
+    private Engine engine;
 
     /**
      * Creates a game model
@@ -163,5 +165,13 @@ public class Model {
 
     public void setLatestUpdate(long latestUpdate) {
         this.latestUpdate = latestUpdate;
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
+    public Engine getEngine() {
+        return this.engine;
     }
 }

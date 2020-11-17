@@ -1,11 +1,14 @@
 package pp.tanks.controller;
 
+import pp.network.Connection;
 import pp.tanks.*;
 import pp.tanks.client.MiniController;
 import pp.tanks.client.Sounds;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
+import pp.tanks.message.client.IClientMessage;
+import pp.tanks.message.server.IServerMessage;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Tank;
@@ -102,6 +105,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.tankApp = tankApp;
         this.stage = stage;
         this.model = new Model(properties);
+        this.model.setEngine(this);
         model.addReceiver(this);
 
         images = new ImageSupport<>(TanksImageProperty.class, properties) {
@@ -133,10 +137,18 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     }
 
+    /**
+     * updates mapCounter
+     *
+     * @param counter new number
+     */
     public void setMapCounter(int counter){
         this.mapCounter = counter;
     }
 
+    /**
+     * @return mapCounter
+     */
     public int getMapCounter() {
         return mapCounter;
     }
@@ -319,18 +331,33 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.controller.entry();
     }
 
+    /**
+     * TODO add Doc
+     * @param tank
+     */
     public void setSaveTank(Tank tank) {
         this.saveTank = tank;
     }
 
+    /**
+     * @return saveTank
+     */
     public Tank getSaveTank() {
         return this.saveTank;
     }
 
+    /**
+     * updates gamemode
+     *
+     * @param mode new gamemode
+     */
     public void setMode(GameMode mode) {
         this.mode = mode;
     }
 
+    /**
+     * @return gamemode
+     */
     public GameMode getMode() {
         return this.mode;
     }
@@ -438,11 +465,29 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
             }
     }
 
+    /**
+     * @return playerEnum
+     */
     public PlayerEnum getPlayerEnum() {
         return playerEnum;
     }
 
+    /**
+     * updates PlayerEnum
+     * @param playerEnum new playerEnum
+     */
     public void setPlayerEnum(PlayerEnum playerEnum) {
         this.playerEnum = playerEnum;
+    }
+
+    /**
+     * @return offset
+     */
+    public long getOffset() {
+        return getTankApp().getOffset();
+    }
+
+    public Connection<IClientMessage, IServerMessage> getConnection() {
+        return getTankApp().getConnection();
     }
 }

@@ -1,5 +1,6 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
@@ -14,6 +15,8 @@ public abstract class Projectile extends Item<ProjectileData> {
     protected final Double speed;
     protected final ProjectileData data;
     protected double flag;
+    private DataTimeItem latestOp;
+    private long latestInterpolate;
 
     public Projectile(Model model, double effectiveRadius, int damage, Double speed, ProjectileData data) {
         super(model, effectiveRadius, data);
@@ -21,6 +24,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         this.damage = damage;
         this.speed = speed;
         this.flag = 0.5;
+        if (model.getEngine() != null) latestOp = new DataTimeItem(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
         for (Block i : model.getTanksMap().getBlocks()) {
             if (collisionWith(i, getPos())) {
                 destroy();
@@ -66,6 +70,14 @@ public abstract class Projectile extends Item<ProjectileData> {
 
     public ProjectileData getProjectileData() {
         return this.data;
+    }
+
+    public DataTimeItem getLatestOp() {
+        return latestOp;
+    }
+
+    public void setLatestOp(DataTimeItem latestOp) {
+        this.latestOp = latestOp;
     }
 
     /**
@@ -144,5 +156,10 @@ public abstract class Projectile extends Item<ProjectileData> {
         if (data.type == ItemEnum.LIGHT_PROJECTILE) return new LightProjectile(model, data);
         else if (data.type == ItemEnum.NORMAL_PROJECTILE) return new NormalProjectile(model, data);
         else return new HeavyProjectile(model, data, data.targetPos);
+    }
+
+    public PlayerEnum getEnemy() {
+        if (data.getId() <= 2000 && data.getId() >= 1000) return PlayerEnum.PLAYER2;
+        else return PlayerEnum.PLAYER1;
     }
 }
