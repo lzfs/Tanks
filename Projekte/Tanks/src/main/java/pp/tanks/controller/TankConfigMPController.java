@@ -5,6 +5,8 @@ import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.ServerTankUpdateMessage;
+import pp.tanks.message.server.StartingMultiplayerMessage;
+import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
@@ -262,6 +264,8 @@ public class TankConfigMPController extends Controller {
         ownTurretCounter = 0;
         opponentArmorCounter = 0;
         opponentTurretCounter = 0;
+        readyButton.setDisable(true);
+        player2ReadyText.setText("Warten auf Spieler 2");
     }
 
     /**
@@ -433,6 +437,17 @@ public class TankConfigMPController extends Controller {
             turretPlayer2.setImage(turrets.get(opponentTurretCounter));
             armorPlayer2.setImage(armors.get(opponentArmorCounter));
             changeOpponentCharts();
+        });
+    }
+
+    public void startGame(StartingMultiplayerMessage msg) {
+        Platform.runLater(() -> {
+            PlayersTank tank = PlayersTank.mkPlayersTank(engine.getModel(), currentTurret, currentArmor, msg.playerTank);
+            Enemy enemy = Enemy.mkEnemyTank(engine.getModel(), msg.enemyTurret, msg.enemyArmor, msg.enemyTank);
+            engine.setSaveTank(tank);
+            engine.setSaveEnemyTank(enemy);
+            engine.setMapCounter(1);
+            engine.activatePlayGameController();
         });
     }
 }

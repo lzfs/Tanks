@@ -2,6 +2,7 @@ package pp.tanks.server;
 
 import pp.network.IConnection;
 import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.model.item.Item;
@@ -148,9 +149,8 @@ public class Player {
      * TODO: add JavaDoc
      */
     public void sendMessages() {
-        //System.out.println("send");
         if (!projectiles.isEmpty()) {
-            List<DataTimeItem> r = new ArrayList<>();
+            List<DataTimeItem<ProjectileData>> r = new ArrayList<>();
             if (!projectiles.isEmpty()) {
                 for (Projectile proj : projectiles) {
                     r.add(proj.getLatestOp());

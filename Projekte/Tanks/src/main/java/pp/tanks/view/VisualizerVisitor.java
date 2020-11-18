@@ -24,6 +24,7 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(PlayersTank playersTank) {
+
         Boolean destroyed = playersTank.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();
@@ -71,7 +72,53 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(Enemy enemy) {
+
+        /*
         drawItem(enemy, TanksImageProperty.armor2, Shape.RECTANGLE, Color.BLUE);
+         */
+        Boolean destroyed = enemy.isDestroyed();
+
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        final DoubleVec pos = view.modelToView(enemy.getPos());
+        context.translate(pos.x, pos.y);
+
+        if (!destroyed) {
+            //context.rotate(-90);
+            context.rotate((enemy.getRotation() + 90) % 360);
+            context.scale(0.75, 0.75);
+
+            Armor armor = enemy.getArmor();
+            if (armor instanceof LightArmor) {
+                drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+            }
+            else if (armor instanceof NormalArmor) {
+                drawImage(TanksImageProperty.armor2, Shape.DIRECTED_OVAL, Color.GREEN);
+            }
+            else {
+                drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN);
+            }
+            //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+
+            context.rotate(-enemy.getRotation());
+            context.rotate(enemy.getTurret().getDirection().angle());
+
+            Turret turret = enemy.getTurret();
+            if (turret instanceof LightTurret) {
+                drawImage(TanksImageProperty.turret1, Shape.DIRECTED_OVAL, Color.GREEN);
+            }
+            else if (turret instanceof NormalTurret) {
+                drawImage(TanksImageProperty.turret2, Shape.DIRECTED_OVAL, Color.GREEN);
+            }
+            else {
+                drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN);
+            }
+            //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
+        }
+        else {
+            drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN);
+        }
+        context.setTransform(ori);
     }
 
     @Override

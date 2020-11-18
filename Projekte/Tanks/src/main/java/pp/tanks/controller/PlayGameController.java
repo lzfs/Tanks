@@ -1,11 +1,15 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.MoveDirection;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.PlayersTank;
+import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
 import pp.tanks.view.TanksMapView;
@@ -28,7 +32,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * The controller realizing the game state when the game is really running.
  */
-class PlayGameController extends Controller {
+public class PlayGameController extends Controller {
     private static final Logger LOGGER = Logger.getLogger(PlayGameController.class.getName());
 
     public static final KeyCode W = KeyCode.W;
@@ -42,6 +46,7 @@ class PlayGameController extends Controller {
     private double lastUpdate;
     private Scene scene;
     private boolean stopFlag = false;
+    private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
 
     /**
      * create a new PlayGameController
@@ -64,6 +69,7 @@ class PlayGameController extends Controller {
      */
     @Override
     public void handle(Event e) {
+        if (engine.getView() == null) return;
         if (e.getEventType() == KeyEvent.KEY_PRESSED) {
             final KeyCode code = ((KeyEvent) e).getCode();
             if (!pressed.contains(code)) {
@@ -116,6 +122,8 @@ class PlayGameController extends Controller {
            getTank().stopMovement();
             stopFlag = false;
         }
+        //put new projectiles from the server into the game
+        addProjectiles();
 
         // update the model
         final double delta = stopWatch.getTime() - lastUpdate;
@@ -137,6 +145,7 @@ class PlayGameController extends Controller {
             }
             else {
                 //Multiplayer TODO
+                System.out.println("FEHLER1");
             }
         }
         else if (engine.getModel().gameLost()) {
@@ -156,6 +165,7 @@ class PlayGameController extends Controller {
             else {
                 //Multiplayer
                 //TODO
+                System.out.println("FEHLER2");
             }
         }
         else if (pressed.contains(KeyCode.ESCAPE))
@@ -178,9 +188,25 @@ class PlayGameController extends Controller {
             engine.getModel().setTank(tank);
         }
         else {
-            engine.getSaveTank().setDestroyed(false);
-            engine.getSaveTank().setPos(new DoubleVec(3, 6));
-            engine.getModel().setTank(engine.getSaveTank());
+            if (engine.getMode() == GameMode.SINGLEPLAYER) {
+                engine.getSaveTank().setDestroyed(false);
+                engine.getSaveTank().setPos(new DoubleVec(3, 6));
+                engine.getModel().setTank(engine.getSaveTank());
+            }
+            else {
+                if (engine.getPlayerEnum() == PlayerEnum.PLAYER1) {
+                    engine.getSaveTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveTank());
+                    engine.getSaveEnemyTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveEnemyTank());
+                }
+                else {
+                    engine.getSaveEnemyTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveEnemyTank());
+                    engine.getSaveTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveTank());
+                }
+            }
         }
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
         engine.setView(mapview);
@@ -256,5 +282,19 @@ class PlayGameController extends Controller {
      */
     private Tank getTank() {
         return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
+    }
+
+    private void addProjectiles() {
+        if (projectiles.isEmpty()) return;
+        for (DataTimeItem<ProjectileData> item : projectiles) {
+            Projectile p = Projectile.mkProjectile(engine.getModel(), item.data);
+            engine.getModel().getTanksMap().addProjectile(p);
+            p.interpolateData(item);
+        }
+        projectiles.clear();
+    }
+
+    public void addServerProjectiles(List<DataTimeItem<ProjectileData>> list) {
+        this.projectiles.addAll(list);
     }
 }

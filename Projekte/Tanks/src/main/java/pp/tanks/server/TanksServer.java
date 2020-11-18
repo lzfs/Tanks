@@ -35,6 +35,13 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
         this.server = server;
     }
 
+    public void shutdown(){
+        if (server != null){
+            server.shutdown();
+        }
+        server = null;
+    }
+
     @Override
     public void receiveMessage(IClientMessage message, IConnection<IServerMessage> conn) {
         message.accept(this, conn);

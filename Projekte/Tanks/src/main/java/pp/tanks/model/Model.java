@@ -4,6 +4,7 @@ import pp.tanks.controller.Engine;
 import pp.tanks.model.item.*;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
+import pp.tanks.server.GameMode;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -151,6 +152,7 @@ public class Model {
      */
     public boolean gameWon() {
         if (debug) return false;
+        if (engine.getMode() == GameMode.MULTIPLAYER) return false;  //TODO
         if (map.getTank(engine.getPlayerEnum()).isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
             if (tanks != map.getTank(engine.getPlayerEnum()) && !tanks.isDestroyed()) return false;

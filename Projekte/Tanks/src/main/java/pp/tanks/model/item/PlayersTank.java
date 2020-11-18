@@ -34,26 +34,28 @@ public class PlayersTank extends Tank{
         v.visit(this);
     }
 
-    /** TODO: add Method
+    /**
      *
      * @param turret
      * @param armor
      */
-    public static PlayersTank mkPlayersTank(ItemEnum turret, ItemEnum armor) {
-        return null;
+    public static PlayersTank mkPlayersTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
+        Turret ergTurret = Turret.mkTurret(turret);
+        Armor ergArmor = Armor.mkArmor(armor);
+        return new PlayersTank(model,1, ergArmor, ergTurret, data);
     }
 
     @Override
     public void stopMovement() {
         data.setMoveDir(MoveDirection.STAY);
-        DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
+        DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
         model.getEngine().getConnection().send(new MoveMessage(item));
     }
 
     @Override
     public void setMoveDirection(MoveDirection dir) {
         if (dir != data.getMoveDir()) {
-            DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
+            DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
             model.getEngine().getConnection().send(new MoveMessage(item));
         }
         super.setMoveDirection(dir);
