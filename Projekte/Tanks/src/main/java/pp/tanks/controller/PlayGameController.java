@@ -1,5 +1,7 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.LightArmor;
@@ -7,6 +9,7 @@ import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.PlayersTank;
+import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
 import pp.tanks.view.TanksMapView;
@@ -29,7 +32,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * The controller realizing the game state when the game is really running.
  */
-class PlayGameController extends Controller {
+public class PlayGameController extends Controller {
     private static final Logger LOGGER = Logger.getLogger(PlayGameController.class.getName());
 
     public static final KeyCode W = KeyCode.W;
@@ -43,6 +46,7 @@ class PlayGameController extends Controller {
     private double lastUpdate;
     private Scene scene;
     private boolean stopFlag = false;
+    private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
 
     /**
      * create a new PlayGameController
@@ -118,6 +122,8 @@ class PlayGameController extends Controller {
            getTank().stopMovement();
             stopFlag = false;
         }
+        //put new projectiles from the server into the game
+        addProjectiles();
 
         // update the model
         final double delta = stopWatch.getTime() - lastUpdate;
@@ -276,5 +282,19 @@ class PlayGameController extends Controller {
      */
     private Tank getTank() {
         return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
+    }
+
+    private void addProjectiles() {
+        if (projectiles.isEmpty()) return;
+        for (DataTimeItem<ProjectileData> item : projectiles) {
+            Projectile p = Projectile.mkProjectile(engine.getModel(), item.data);
+            engine.getModel().getTanksMap().addProjectile(p);
+            p.interpolateData(item);
+        }
+        projectiles.clear();
+    }
+
+    public void addServerProjectiles(List<DataTimeItem<ProjectileData>> list) {
+        this.projectiles.addAll(list);
     }
 }

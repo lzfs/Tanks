@@ -8,6 +8,7 @@ import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.PingMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
@@ -233,6 +234,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(StartingMultiplayerMessage msg) {
         engine.tankConfigMPController.startGame(msg);
+    }
+
+    @Override
+    public void visit(ModelMessage msg) {
+        engine.playGameController.addServerProjectiles(msg.projectile);
     }
 }
 

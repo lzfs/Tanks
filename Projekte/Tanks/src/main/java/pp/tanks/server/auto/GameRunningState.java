@@ -3,8 +3,10 @@ package pp.tanks.server.auto;
 import pp.network.IConnection;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.ShootMessage;
+import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
+import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.Projectile;
@@ -26,12 +28,12 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class GameRunningState extends TankState {
     private final Model model;
     private final PlayingState parent;
-    private final Queue<DataTimeItem> buffer = new PriorityBlockingQueue<>();
-    private DataTimeItem[] working;
+    private final Queue<DataTimeItem<? extends Data>> buffer = new PriorityBlockingQueue<>();
+    private DataTimeItem<? extends Data>[] working;
     private final Thread workWhatEver = new Thread(this::workBuff);
     private final GameMode gameMode;
-    private final List<DataTimeItem> tankDat = new ArrayList<>();
-    private final List<DataTimeItem> projectileDat = new ArrayList<>();
+    private final List<DataTimeItem<TankData>> tankDat = new ArrayList<>();
+    private final List<DataTimeItem<ProjectileData>> projectileDat = new ArrayList<>();
 
 
     /**
@@ -49,16 +51,16 @@ public class GameRunningState extends TankState {
      * only printing out the data
      */
     public void workBuff(){
-        DataTimeItem[] tmp = working;
+        DataTimeItem<? extends Data>[] tmp = working;
         working = null;
         long timeEnd = System.nanoTime();
         long timeStart = model.getLatestUpdate();
         long step = (timeEnd - timeStart) / 5;
 
-        List<DataTimeItem> dat = new ArrayList<>();
+        List<DataTimeItem<? extends Data>> dat = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             if (tmp.length != 0) {
-                for (DataTimeItem item : tmp) {
+                for (DataTimeItem<? extends Data> item : tmp) {
                     if (item.serverTime < timeStart + step * (i + 1) && (i == 0 || item.serverTime > timeStart + step * i)) dat.add(item);
                 }
             }
@@ -134,9 +136,9 @@ public class GameRunningState extends TankState {
      * @param time
      * @param tmp
      */
-    private void processTanks(long time, List<DataTimeItem> tmp) {
+    private void processTanks(long time, List<DataTimeItem<TankData>> tmp) {
         if (tmp.size() != 0) {
-            for (DataTimeItem d : tmp) {
+            for (DataTimeItem<TankData> d : tmp) {
                 int id = d.data.getId();
                 //model.getTanksMap().get(id).interpolateData(d);
                 System.out.println("bewegung verarbeitet");
@@ -151,18 +153,16 @@ public class GameRunningState extends TankState {
      * @param time
      * @param tmp
      */
-    private void processProjectiles(long time, List<DataTimeItem> tmp) {
+    private void processProjectiles(long time, List<DataTimeItem<ProjectileData>> tmp) {
 
         if (tmp.size() != 0) {
-            for (DataTimeItem d : tmp) {
-                Projectile r = Projectile.mkProjectile(model,(ProjectileData) d.data.mkCopy());
+            for (DataTimeItem<ProjectileData> d : tmp) {
+                Projectile r = Projectile.mkProjectile(model, d.data.mkCopy());
                 model.getTanksMap().getAddedProjectiles().put(d.data.getId(), r);
-                //r.interpolateData(d);
+                r.interpolateData(d);
                 if (gameMode == GameMode.MULTIPLAYER) {
                     parent.getPlayers().get(r.getEnemy().tankID).projectiles.add(r);
-                    System.out.println("Multiplayer projectile added");
                 }
-                else System.out.println("projectil verarbeitet");
                 //r.interpolateTime(time);
             }
         }
@@ -173,16 +173,16 @@ public class GameRunningState extends TankState {
      * separates incoming DataTimeItem and adds the elements of the list to the correct Data List
      * @param dat incoming list of DataTimeItems
      */
-    private void makeDatLists(List<DataTimeItem> dat) {
+    private void makeDatLists(List<DataTimeItem<? extends Data>> dat) {
         if (dat.size() == 0) return;
-        for (DataTimeItem item : dat) {
+        for (DataTimeItem<? extends Data> item : dat) {
             if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.TUTORIAL) {
-                if (item.getId() < 1) tankDat.add(item);
-                else projectileDat.add(item);
+                if (item.getId() < 1) tankDat.add((DataTimeItem<TankData>) item);
+                else projectileDat.add((DataTimeItem<ProjectileData>) item);
             }
             if (gameMode == GameMode.MULTIPLAYER) {
-                if (item.getId() < 2) tankDat.add(item);
-                else projectileDat.add(item);
+                if (item.getId() < 2) tankDat.add((DataTimeItem<TankData>) item);
+                else projectileDat.add((DataTimeItem<ProjectileData>) item);
             }
 
         }

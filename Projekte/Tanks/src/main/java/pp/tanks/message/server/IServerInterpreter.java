@@ -12,4 +12,6 @@ public interface IServerInterpreter {
     void visit(ServerTankUpdateMessage msg);
 
     void visit(StartingMultiplayerMessage msg);
+
+    void visit(ModelMessage msg);
 }
