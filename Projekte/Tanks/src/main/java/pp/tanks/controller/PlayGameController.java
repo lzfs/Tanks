@@ -5,6 +5,7 @@ import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.MoveDirection;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
@@ -64,6 +65,7 @@ class PlayGameController extends Controller {
      */
     @Override
     public void handle(Event e) {
+        if (engine.getView() == null) return;
         if (e.getEventType() == KeyEvent.KEY_PRESSED) {
             final KeyCode code = ((KeyEvent) e).getCode();
             if (!pressed.contains(code)) {
@@ -137,6 +139,7 @@ class PlayGameController extends Controller {
             }
             else {
                 //Multiplayer TODO
+                System.out.println("FEHLER1");
             }
         }
         else if (engine.getModel().gameLost()) {
@@ -156,6 +159,7 @@ class PlayGameController extends Controller {
             else {
                 //Multiplayer
                 //TODO
+                System.out.println("FEHLER2");
             }
         }
         else if (pressed.contains(KeyCode.ESCAPE))
@@ -178,9 +182,25 @@ class PlayGameController extends Controller {
             engine.getModel().setTank(tank);
         }
         else {
-            engine.getSaveTank().setDestroyed(false);
-            engine.getSaveTank().setPos(new DoubleVec(3, 6));
-            engine.getModel().setTank(engine.getSaveTank());
+            if (engine.getMode() == GameMode.SINGLEPLAYER) {
+                engine.getSaveTank().setDestroyed(false);
+                engine.getSaveTank().setPos(new DoubleVec(3, 6));
+                engine.getModel().setTank(engine.getSaveTank());
+            }
+            else {
+                if (engine.getPlayerEnum() == PlayerEnum.PLAYER1) {
+                    engine.getSaveTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveTank());
+                    engine.getSaveEnemyTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveEnemyTank());
+                }
+                else {
+                    engine.getSaveEnemyTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveEnemyTank());
+                    engine.getSaveTank().setDestroyed(false);
+                    engine.getModel().setTank(engine.getSaveTank());
+                }
+            }
         }
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
         engine.setView(mapview);

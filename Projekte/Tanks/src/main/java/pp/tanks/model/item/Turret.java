@@ -118,4 +118,10 @@ public abstract class Turret {
     public void setDirection(DoubleVec dir) {
         this.direction = dir;
     }
+
+    public static Turret mkTurret(ItemEnum turret) {
+        if (turret == ItemEnum.LIGHT_TURRET) return new LightTurret();
+        else if (turret == ItemEnum.NORMAL_TURRET) return new NormalTurret();
+        else return new HeavyTurret();
+    }
 }

@@ -160,6 +160,7 @@ public class GameRunningState extends TankState {
                 //r.interpolateData(d);
                 if (gameMode == GameMode.MULTIPLAYER) {
                     parent.getPlayers().get(r.getEnemy().tankID).projectiles.add(r);
+                    System.out.println("Multiplayer projectile added");
                 }
                 else System.out.println("projectil verarbeitet");
                 //r.interpolateTime(time);

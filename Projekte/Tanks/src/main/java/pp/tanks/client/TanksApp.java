@@ -11,6 +11,7 @@ import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.PingMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
+import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
 
 import javafx.application.Application;
@@ -227,6 +228,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(ServerTankUpdateMessage msg) {
         engine.tankConfigMPController.playerConnected();
         engine.tankConfigMPController.serverUpdate(msg);
+    }
+
+    @Override
+    public void visit(StartingMultiplayerMessage msg) {
+        engine.tankConfigMPController.startGame(msg);
     }
 }
 

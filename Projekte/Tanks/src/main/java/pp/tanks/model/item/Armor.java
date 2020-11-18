@@ -41,4 +41,10 @@ public class Armor {
     public void setArmorPoints(int points) {
         this.armorPoints = points;
     }
+
+    public static Armor mkArmor(ItemEnum armor) {
+        if (armor == ItemEnum.LIGHT_ARMOR) return new LightArmor();
+        else if (armor == ItemEnum.NORMAL_ARMOR) return new NormalArmor();
+        else return new HeavyArmor();
+    }
 }

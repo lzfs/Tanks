@@ -3,13 +3,16 @@ package pp.tanks.server.auto;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
+import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.ServerTankUpdateMessage;
+import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
+import pp.util.DoubleVec;
 
 public class PlayerReadyState extends TankState {
     private final TankAutomaton parent;
@@ -81,12 +84,27 @@ public class PlayerReadyState extends TankState {
         else {
             model.loadMap("map1.xml");
         }
-        for (Player pl : parent.getPlayers()) {
-            System.out.println("turret: " + pl.getTurret() + " armor: " + pl.getArmor());
-            model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(pl.getTurret(), pl.getArmor()));//funktioniert nicht für Mulitplayer Spiele
+        if (msg.gameMode == GameMode.MULTIPLAYER) {
+            TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1);
+            TankData data2 = new TankData(new DoubleVec(20, 6), 1, 1);
+            for (Player pl : parent.getPlayers()) {
+                ItemEnum turret = parent.getPlayers().get(pl.playerEnum.getEnemyID()).getTurret();
+                ItemEnum armor = parent.getPlayers().get(pl.playerEnum.getEnemyID()).getArmor();
+                if (pl.playerEnum == PlayerEnum.PLAYER1) {
+                    pl.getConnection().send(new StartingMultiplayerMessage(turret, armor, data1, data2));
+                    model.setTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
+                }
+                else {
+                    pl.getConnection().send(new StartingMultiplayerMessage(turret, armor, data2, data1));
+                    model.setTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data2));
+                }
+            }
         }
-        System.out.println("hat geklappt");
-        //TODO Nachricht an den Client wie der gegenerische Panzer aussieht bzw. das das Game startet (ModelMessage?)
+        else {
+            Player pl = parent.getPlayers().get(0);
+            TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3);//TODO im Tutorial hat der Spieler nur ein Leben!!
+            model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
+        }
         parent.playingState.initializeGame(model, msg.gameMode);
         parent.goToState(containingState().playingState);
     }

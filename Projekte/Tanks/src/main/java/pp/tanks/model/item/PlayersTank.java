@@ -34,13 +34,15 @@ public class PlayersTank extends Tank{
         v.visit(this);
     }
 
-    /** TODO: add Method
+    /**
      *
      * @param turret
      * @param armor
      */
-    public static PlayersTank mkPlayersTank(ItemEnum turret, ItemEnum armor) {
-        return null;
+    public static PlayersTank mkPlayersTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
+        Turret ergTurret = Turret.mkTurret(turret);
+        Armor ergArmor = Armor.mkArmor(armor);
+        return new PlayersTank(model,1, ergArmor, ergTurret, data);
     }
 
     @Override

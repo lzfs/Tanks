@@ -10,6 +10,7 @@ import pp.tanks.TanksSoundProperty;
 import pp.tanks.message.client.IClientMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
@@ -70,6 +71,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     private Controller controller;
     private Tank saveTank = null;
+    private Enemy saveEnemyTank = null;
     private GameMode mode;
     private PlayerEnum playerEnum;
     private int mapCounter = 0;
@@ -144,6 +146,14 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     public void setMapCounter(int counter) {
         this.mapCounter = counter;
+    }
+
+    public void setSaveEnemyTank(Enemy enemyTank) {
+        this.saveEnemyTank=enemyTank;
+    }
+
+    public Enemy getSaveEnemyTank() {
+        return saveEnemyTank;
     }
 
     /**
