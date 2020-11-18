@@ -26,8 +26,8 @@ public class MiniController extends GridPane {
     private final TanksApp app;
     private List<ItemEnum> turretList = new ArrayList(Arrays.asList(ItemEnum.LIGHT_TURRET, ItemEnum.NORMAL_TURRET, ItemEnum.HEAVY_TURRET));
     private List<ItemEnum> armorList = new ArrayList(Arrays.asList(ItemEnum.LIGHT_ARMOR, ItemEnum.NORMAL_ARMOR, ItemEnum.HEAVY_ARMOR));
-    private int armorCount=0;
-    private int turretCount=0;
+    private int armorCount = 0;
+    private int turretCount = 0;
     private ItemEnum currentTurret = ItemEnum.LIGHT_TURRET;
     private ItemEnum currentArmor = ItemEnum.LIGHT_ARMOR;
     private boolean playerConnected = false;
@@ -56,7 +56,6 @@ public class MiniController extends GridPane {
     @FXML
     private Text enemyArmor;
 
-
     public MiniController(TanksApp app) {
         this.app = app;
         final URL location = getClass().getResource(MENU_CONTROL_FXML);
@@ -76,23 +75,23 @@ public class MiniController extends GridPane {
     @FXML
     private void changeTurret() {
         turretCount++;
-        if(turretCount>2){
-            turretCount=0;
+        if (turretCount > 2) {
+            turretCount = 0;
         }
 
         ownTurret.setText(String.valueOf(turretList.get(turretCount)));
-        currentTurret=turretList.get(turretCount);
+        currentTurret = turretList.get(turretCount);
         app.getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, app.getPlayer()));
     }
 
     @FXML
     private void changeArmor() {
         armorCount++;
-        if(armorCount>2){
-            armorCount=0;
+        if (armorCount > 2) {
+            armorCount = 0;
         }
         ownArmor.setText(String.valueOf(armorList.get(armorCount)));
-        currentArmor=armorList.get(armorCount);
+        currentArmor = armorList.get(armorCount);
         app.getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, app.getPlayer()));
     }
 
@@ -101,10 +100,10 @@ public class MiniController extends GridPane {
         System.out.println("3");
     }
 
-    public void playerConnected(){
+    public void playerConnected() {
         if (playerConnected) return;
         waitingfor.setText("");
-        playerConnected =true;
+        playerConnected = true;
         ready.setDisable(false);
     }
 
@@ -115,5 +114,4 @@ public class MiniController extends GridPane {
             enemyArmor.setText(String.valueOf(msg.armor));
         });
     }
-
 }

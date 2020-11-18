@@ -54,15 +54,14 @@ public class TankAutomaton extends TankStateMachine {
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn, PlayerEnum.PLAYER1));
-            if (msg.mode == GameMode.SINGLEPLAYER) {
-                gameMode = GameMode.SINGLEPLAYER;
+            if (msg.mode == GameMode.SINGLEPLAYER || msg.mode == GameMode.TUTORIAL) {
+                gameMode = msg.mode;
                 conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
                 containingState().goToState(playerReady);
             }
             if (msg.mode == GameMode.MULTIPLAYER) {
                 gameMode = GameMode.MULTIPLAYER;
-                if (players.size() == 1) conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
-                else conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
+                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
                 containingState().goToState(waitingFor2Player);
             }
             //else containingState().goToState();
@@ -75,6 +74,7 @@ public class TankAutomaton extends TankStateMachine {
     private final TankState waitingFor2Player = new TankState() {
         private ItemEnum turret = ItemEnum.LIGHT_TURRET;
         private ItemEnum armor = ItemEnum.LIGHT_ARMOR;
+
         @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
@@ -82,9 +82,10 @@ public class TankAutomaton extends TankStateMachine {
 
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
+            players.add(new Player(conn, PlayerEnum.PLAYER2));
             players.get(0).setArmor(armor);
             players.get(0).setTurret(turret);
-            players.add(new Player(conn, PlayerEnum.PLAYER2));
+            conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
             containingState().goToState(playerReady);
         }
 

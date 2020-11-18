@@ -152,14 +152,22 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * @param mode given Player-mode
      */
     public void joinGame(GameMode mode) {
+        joinGame(mode, "127.0.0.1", "1234");
+    }
+
+    /**
+     * Establishes a connection to an online server
+     *
+     * @param mode given Player-mode
+     */
+    public void joinGame(GameMode mode, String ipAddress, String portString) {
         if (connection != null) {
             LOGGER.severe("trying to join a game again"); //NON-NLS
             return;
         }
         try {
-            final int port = 1234;
-            final Socket socket = new Socket("127.0.0.1", port);
-            //final Socket socket = new Socket("137.193.138.79", port);
+            final int port = Integer.parseInt(portString);
+            final Socket socket = new Socket(ipAddress, port);
             socket.setSoTimeout(1000);
             connection = new Connection<>(socket, this);
             if (connection.isConnected()) {
@@ -214,8 +222,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
 
     @Override
     public void visit(ServerTankUpdateMessage msg) {
-        engine.miniController.playerConnected();
-        engine.miniController.serverUpdate(msg);
+        engine.tankConfigMPController.playerConnected();
+        engine.tankConfigMPController.serverUpdate(msg);
     }
 }
 

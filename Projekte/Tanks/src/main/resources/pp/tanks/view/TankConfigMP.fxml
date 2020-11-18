@@ -1,166 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0"
-         prefWidth="766.0" styleClass="window" stylesheets="@tank.css" type="GridPane"
-         xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0"
-              prefWidth="771.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="374.0" prefWidth="766.0" styleClass="window" stylesheets="@tank.css" type="GridPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="771.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="103.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.99999999999999" minWidth="10.0"
-                               prefWidth="115.99999999999999"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="10.0" prefWidth="88.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="115.33333333333331"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.0" minWidth="10.0" prefWidth="83.33333333333331"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="104.0" minWidth="0.0" prefWidth="44.333333333333314"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.3333740234375" minWidth="3.6666971842447538"
-                               prefWidth="91.0"/>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="242.33333333333337" minWidth="10.0" prefWidth="133.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="103.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.99999999999999" minWidth="10.0" prefWidth="115.99999999999999" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="10.0" prefWidth="85.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="84.33333333333331" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="86.0" minWidth="10.0" prefWidth="83.33333333333331" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="86.0" minWidth="10.0" prefWidth="30.333333333333314" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="227.3333740234375" minWidth="3.6666971842447538" prefWidth="93.66662597656244" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="242.33333333333337" minWidth="10.0" prefWidth="110.3333740234375" />
+         <ColumnConstraints hgrow="SOMETIMES" maxWidth="242.33333333333337" minWidth="10.0" prefWidth="98.00002034505212" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="306.0" minHeight="10.0" prefHeight="135.33334096272785" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="436.0" minHeight="10.0" prefHeight="131.33332570393884" vgrow="SOMETIMES"/>
-            <RowConstraints maxHeight="419.0" minHeight="10.0" prefHeight="97.33333333333331" vgrow="SOMETIMES"/>
+         <RowConstraints maxHeight="306.0" minHeight="10.0" prefHeight="85.33333333333333" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="306.0" minHeight="10.0" prefHeight="101.99999999999999" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="436.0" minHeight="10.0" prefHeight="103.99998982747394" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="419.0" minHeight="10.0" prefHeight="97.33333333333331" vgrow="SOMETIMES" />
         </rowConstraints>
         <children>
-            <Button fx:id="turretButtonLeft" mnemonicParsing="false" onAction="#turretButtonLeft" text="&lt;"
-                    GridPane.columnIndex="2" GridPane.halignment="CENTER"/>
-            <Button fx:id="armorButtonLeft" mnemonicParsing="false" onAction="#armorButtonLeft" text="&lt;"
-                    GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-            <Button fx:id="turretButtonRight" mnemonicParsing="false" onAction="#turretButtonRight" text="&gt;"
-                    GridPane.columnIndex="4" GridPane.halignment="CENTER"/>
-            <Button fx:id="armorButtonRight" mnemonicParsing="false" onAction="#armorButtonRight" text="&gt;"
-                    GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panzerung">
+            <Button fx:id="turretButtonLeft" mnemonicParsing="false" onAction="#turretButtonLeft" text="&lt;" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="armorButtonLeft" mnemonicParsing="false" onAction="#armorButtonLeft" text="&lt;" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button fx:id="turretButtonRight" mnemonicParsing="false" onAction="#turretButtonRight" text="&gt;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="armorButtonRight" mnemonicParsing="false" onAction="#armorButtonRight" text="&gt;" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panzerung" GridPane.rowIndex="1">
                 <GridPane.margin>
-                    <Insets left="5.0"/>
+                    <Insets left="5.0" />
                 </GridPane.margin>
             </Text>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schaden" GridPane.valignment="TOP">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schaden" GridPane.rowIndex="1" GridPane.valignment="TOP">
                 <GridPane.margin>
-                    <Insets left="5.0" top="5.0"/>
+                    <Insets left="5.0" top="5.0" />
                 </GridPane.margin>
             </Text>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Geschwindigkeit"
-                  GridPane.valignment="BOTTOM">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Geschwindigkeit" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                 <GridPane.margin>
-                    <Insets left="5.0"/>
+                    <Insets left="5.0" />
                 </GridPane.margin>
             </Text>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Magazingröße" GridPane.rowIndex="1">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Magazingröße" GridPane.rowIndex="2">
                 <GridPane.margin>
-                    <Insets left="5.0"/>
+                    <Insets left="5.0" />
                 </GridPane.margin>
             </Text>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Ladezeit" GridPane.rowIndex="1"
-                  GridPane.valignment="BOTTOM">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Ladezeit" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                 <GridPane.margin>
-                    <Insets left="5.0"/>
+                    <Insets left="5.0" />
                 </GridPane.margin>
             </Text>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panzerung" GridPane.columnIndex="6"/>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schaden" GridPane.columnIndex="6"
-                  GridPane.valignment="TOP">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panzerung" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Schaden" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.valignment="TOP">
                 <GridPane.margin>
-                    <Insets top="5.0"/>
+                    <Insets top="5.0" />
                 </GridPane.margin>
             </Text>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Geschwindigkeit" GridPane.columnIndex="6"
-                  GridPane.valignment="BOTTOM"/>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Magazingröße" GridPane.columnIndex="6"
-                  GridPane.rowIndex="1"/>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Ladezeit" GridPane.columnIndex="6"
-                  GridPane.rowIndex="1" GridPane.valignment="BOTTOM"/>
-            <Text fx:id="cadenceTextPlayer2" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="1s"
-                  GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM"/>
-            <Text fx:id="magazineSizeTextPlayer1" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="5"
-                  GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Text fx:id="TextFeldMag" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="5"
-                  GridPane.columnIndex="7" GridPane.rowIndex="1"/>
-            <Text fx:id="TextFeldLad" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="1s"
-                  GridPane.columnIndex="7" GridPane.rowIndex="1" GridPane.valignment="BOTTOM"/>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" text="Zurück" GridPane.columnIndex="2"
-                    GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Geschwindigkeit" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Magazingröße" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Ladezeit" GridPane.columnIndex="6" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Text fx:id="cadenceTextPlayer1" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="1s" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Text fx:id="magazineSizeTextPlayer1" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Text fx:id="magazineSizeTextPlayer2" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="5" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+            <Text fx:id="cadenceTextPlayer2" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="1s" GridPane.columnIndex="7" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#back" text="Zurück" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Button>
-            <Button fx:id="readyButton" mnemonicParsing="false" onAction="#ready" text="Bereit" GridPane.columnIndex="4"
-                    GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button fx:id="readyButton" mnemonicParsing="false" onAction="#ready" text="Bereit" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Button>
-            <Text fx:id="player2ReadyText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="auf Spieler 2 warten"
-                  GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="2"
-                  GridPane.valignment="CENTER"/>
-            <ImageView fx:id="ownTurretImage" fitHeight="76.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true"
-                       GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Text fx:id="player2ReadyText" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="auf Spieler 2 warten" GridPane.columnIndex="7" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+            <ImageView fx:id="ownTurretImage" fitHeight="76.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                 <image>
-                    <Image url="@../client/images/turret1.png"/>
+                    <Image url="@../client/images/turret1.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="ownArmorImage" fitHeight="76.0" fitWidth="97.0" layoutX="302.0" layoutY="13.0"
-                       pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER"
-                       GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <ImageView fx:id="ownArmorImage" fitHeight="76.0" fitWidth="97.0" layoutX="302.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                 <image>
-                    <Image url="@../client/images/armor1.png"/>
+                    <Image url="@../client/images/armor1.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="harmChartPlayer1" fitHeight="19.0" fitWidth="102.0" pickOnBounds="true"
-                       preserveRatio="true" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <ImageView fx:id="harmChartPlayer1" fitHeight="19.0" fitWidth="102.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
                 <image>
                     <Image url="@../client/images/chart1.png" />
                 </image>
                 <GridPane.margin>
-                    <Insets top="5.0"/>
+                    <Insets top="5.0" />
                 </GridPane.margin>
             </ImageView>
-            <ImageView fx:id="armorChartPlayer1" fitHeight="19.0" fitWidth="102.0" layoutX="113.0" layoutY="10.0"
-                       pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.valignment="CENTER">
+            <ImageView fx:id="armorChartPlayer1" fitHeight="19.0" fitWidth="102.0" layoutX="113.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                 <image>
                     <Image url="@../client/images/chart1.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="speedChartPlayer1" fitHeight="19.0" fitWidth="102.0" layoutX="113.0" layoutY="42.0"
-                       pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+            <ImageView fx:id="speedChartPlayer1" fitHeight="19.0" fitWidth="102.0" layoutX="113.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                 <image>
                     <Image url="@../client/images/chart3.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="harmChartPlayer2" fitHeight="19.0" fitWidth="102.0" layoutX="113.0" layoutY="10.0"
-                       pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.valignment="TOP">
+            <ImageView fx:id="harmChartPlayer2" fitHeight="19.0" fitWidth="102.0" layoutX="113.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="1" GridPane.valignment="TOP">
                 <GridPane.margin>
-                    <Insets top="5.0"/>
+                    <Insets top="5.0" />
                 </GridPane.margin>
                 <image>
                     <Image url="@../client/images/chart1.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="armorChartPlayer2" fitHeight="19.0" fitWidth="102.0" layoutX="752.0" layoutY="10.0"
-                       pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.valignment="CENTER">
+            <ImageView fx:id="armorChartPlayer2" fitHeight="19.0" fitWidth="102.0" layoutX="752.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                 <image>
                     <Image url="@../client/images/chart1.png" />
                 </image>
             </ImageView>
-            <ImageView fx:id="speedChartPlayer2" fitHeight="19.0" fitWidth="102.0" layoutX="752.0" layoutY="42.0"
-                       pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.valignment="BOTTOM">
+            <ImageView fx:id="speedChartPlayer2" fitHeight="19.0" fitWidth="102.0" layoutX="752.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                 <image>
                     <Image url="@../client/images/chart3.png" />
                 </image>
             </ImageView>
+         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Spieler 1" GridPane.columnIndex="1" GridPane.columnSpan="2">
+            <font>
+               <Font name="System Bold" size="48.0" />
+            </font>
+         </Text>
+         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Spieler 2" GridPane.columnIndex="6">
+            <font>
+               <Font name="System Bold" size="48.0" />
+            </font>
+         </Text>
+         <Line endX="329.65338134765625" rotate="90.0" startX="100.0" stroke="WHITE" strokeWidth="2.0" GridPane.columnIndex="5">
+            <GridPane.margin>
+               <Insets top="200.0" />
+            </GridPane.margin>
+         </Line>
+         <ImageView fx:id="turretPlayer2" fitHeight="76.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+             <image>
+                 <Image url="@../client/images/turret1.png" />
+             </image>
+            <GridPane.margin>
+               <Insets right="5.0" />
+            </GridPane.margin>
+         </ImageView>
+         <ImageView fx:id="armorPlayer2" fitHeight="76.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+             <image>
+                 <Image url="@../client/images/armor1.png" />
+             </image>
+            <GridPane.margin>
+               <Insets right="5.0" />
+            </GridPane.margin>
+         </ImageView>
         </children>
     </GridPane>
     <columnConstraints>
-        <ColumnConstraints/>
+        <ColumnConstraints />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints/>
+        <RowConstraints />
     </rowConstraints>
 </fx:root>
