@@ -101,9 +101,6 @@ public abstract class Item<T extends Data> {
     public boolean collisionWith(Item other, DoubleVec newPos) {
         if (getPos() == null || other.isDestroyed()) return false;
 
-        double height = 0.5;
-        double width = 0.5;
-
         if (other instanceof Block) {
             Block block = (Block) other;
             Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);

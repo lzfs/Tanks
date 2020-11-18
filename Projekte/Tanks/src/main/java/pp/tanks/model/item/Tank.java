@@ -8,6 +8,8 @@ import pp.tanks.message.data.TankData;
 import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
+import java.awt.geom.Ellipse2D;
+
 import static pp.tanks.model.item.MoveDirection.*;
 
 /**
@@ -25,7 +27,7 @@ public abstract class Tank extends Item<TankData> {
     private long latestInterpolate;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, 0.8, data);
+        super(model, 0.75, data);
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
@@ -300,6 +302,27 @@ public abstract class Tank extends Item<TankData> {
                 setMove(false);
                 return;
             }
+        }
+    }
+
+    /**
+     * Checks whether there is a collision with another item
+     *
+     * @param other the item which is checked for a collision
+     */
+    @Override
+    public boolean collisionWith(Item other, DoubleVec newPos) {
+        if (getPos() == null || other.isDestroyed()) return false;
+
+        double buffer = 0.4;
+
+        if (other instanceof Block) {
+            Block block = (Block) other;
+            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
+            return item1.intersects(other.getPos().x - ((block.getWidth() + buffer) / 2.0), other.getPos().y - ((block.getHeight() + buffer) / 2.0), block.getWidth()  + buffer, block.getHeight()  + buffer);
+        }
+        else {
+            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
 

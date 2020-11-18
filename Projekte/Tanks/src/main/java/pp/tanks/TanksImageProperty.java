@@ -119,6 +119,11 @@ public enum TanksImageProperty {
     /**
      * Path of the "gamePlay information for tutorial" image
      */
-    gamePlayImageForTutorial
+    gamePlayImageForTutorial,
+
+    /**
+     * Path of the explosion image
+     */
+    explosion
 }
 

@@ -242,6 +242,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         breakableBlocks.removeAll(removed);
         for (Entry<Integer, Projectile> entry : projectiles.entrySet()) {
             if (removed.contains(entry.getValue())) {
+                model.getEngine().getView().addExplosion(entry.getValue().getProjectileData().getPos());
                 Platform.runLater(() -> projectiles.remove(entry.getKey()));
             }
         }

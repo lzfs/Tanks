@@ -2,7 +2,9 @@ package pp.tanks.view;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -14,9 +16,13 @@ import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 import pp.util.DoubleVec;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static pp.tanks.TanksImageProperty.backgroundImage;
+import static pp.tanks.TanksImageProperty.chart1;
+import static pp.tanks.TanksImageProperty.explosion;
 
 /**
  * Represents the view of the game map
@@ -33,6 +39,10 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     private final ImageSupport<TanksImageProperty> images;
     private final VisualizerVisitor visualizer;
 
+    private final List<double[]> positions = new ArrayList<>();
+
+    private ProgressBar progressBar;
+
     /**
      * Creates a view for the specified game model
      *
@@ -42,6 +52,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         this.model = model;
         this.images = images;
         this.visualizer = new VisualizerVisitor(this);
+        this.progressBar = new ProgressBar(1.0);
         setCanvasSize();
         model.addReceiver(this);
     }
@@ -80,6 +91,16 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         // render items
         for (Item p : model.getTanksMap()) {
             p.accept(visualizer);
+        }
+
+        for (int i = 0; i < positions.size(); i++) {
+            if (positions.get(i)[2] < 0.8) {
+                drawImage(explosion, positions.get(i)[0], positions.get(i)[1]);
+                positions.get(i)[2] += 0.1;
+            }
+            else {
+                positions.remove(positions.get(i));
+            }
         }
 
         context.setFont(TEXT_FONT);
@@ -134,6 +155,24 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
             setCanvasSize();
             if (getScene() != null && getScene().getWindow() != null)
                 getScene().getWindow().sizeToScene();
+        }
+    }
+
+    public void addExplosion(DoubleVec pos) {
+        positions.add(new double[]{pos.x, pos.y, 0.1});
+    }
+
+    /**
+     * Draws an image if such an image has been configured.
+     *
+     * @param prop the string property indicating an image
+     */
+    private void drawImage(TanksImageProperty prop, double x, double y) {
+        final GraphicsContext context = getGraphicsContext2D();
+        final Image img = getImages().getImage(prop);
+        DoubleVec pos = modelToView(x, y);
+        if (img != null) {
+            context.drawImage(img, pos.x - (img.getWidth() * 0.5), pos.y - (img.getHeight() * 0.5));
         }
     }
 }

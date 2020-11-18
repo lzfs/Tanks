@@ -10,10 +10,10 @@ import pp.util.DoubleVec;
 public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
-    public HeavyProjectile(Model model, ProjectileData data){
-        super(model, 0.3, 30, 4.0,data);
+    public HeavyProjectile(Model model, ProjectileData data) {
+        super(model, 0.25, 30, 5.0, data);
         this.targetPos = data.getTargetPos();
-        this.flag=1;
+        this.flag = 1;
     }
 
     /**
@@ -50,7 +50,7 @@ public class HeavyProjectile extends Projectile {
             setPos(targetPos);
         }
         if (getPos().x == targetPos.x && getPos().y == targetPos.y) {
-            this.effectiveRadius = 1.5;
+            this.effectiveRadius = 2;
             collision();
             destroy();
         }
@@ -64,7 +64,7 @@ public class HeavyProjectile extends Projectile {
     /**
      * TODO add fitting JavaDoc
      */
-    public void collision(){
+    public void collision() {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (collisionWith(tank, getPos()) && flag == 0) {
                 tank.processDamage(damage);

@@ -157,7 +157,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         }
 
         for (Projectile p : model.getTanksMap().getProjectiles()) {
-            if (p != this && collisionWith(p, getPos())) {
+            if (p != this && collisionWith(p, getPos()) && !(p instanceof HeavyProjectile)) {
                 destroy();
                 p.destroy();
                 return;

@@ -1,6 +1,7 @@
 package pp.tanks.view;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
@@ -75,7 +76,6 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(COMEnemy comEnemy) {
-
         /*
         //vielleicht noch extra drawimage funktion mit rotation
         if(!comEnemy.isDestroyed()){
