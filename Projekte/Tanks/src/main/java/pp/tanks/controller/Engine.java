@@ -478,6 +478,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     public void setPlayerEnum(PlayerEnum playerEnum) {
         this.playerEnum = playerEnum;
+        System.out.println(getPlayerEnum());
     }
 
     /**

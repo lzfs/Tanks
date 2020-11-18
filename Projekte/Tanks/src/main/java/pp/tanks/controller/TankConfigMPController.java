@@ -256,7 +256,7 @@ public class TankConfigMPController extends Controller {
     private void ready() {
         LOGGER.log(Level.INFO, "clicked READY");
 
-        engine.getTankApp().getConnection().send(new StartGameMessage(currentTurret, currentArmor, GameMode.MULTIPLAYER, engine.getTankApp().getPlayer()));
+        engine.getTankApp().getConnection().send(new StartGameMessage(currentTurret, currentArmor, GameMode.MULTIPLAYER, engine.getPlayerEnum()));
 
         ownArmorCounter = 0;
         ownTurretCounter = 0;
@@ -280,7 +280,7 @@ public class TankConfigMPController extends Controller {
         currentTurret = turretList.get(ownTurretCounter);
         magazineSizeTextPlayer1.setText(magazine.get(ownTurretCounter).toString());
         cadenceTextPlayer1.setText(cadence.get(ownTurretCounter).toString() + "s");
-        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getTankApp().getPlayer()));
+        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getPlayerEnum()));
     }
 
     /**
@@ -297,7 +297,7 @@ public class TankConfigMPController extends Controller {
         currentTurret = turretList.get(ownTurretCounter);
         magazineSizeTextPlayer1.setText(magazine.get(ownTurretCounter).toString());
         cadenceTextPlayer1.setText(cadence.get(ownTurretCounter).toString() + "s");
-        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getTankApp().getPlayer()));
+        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getPlayerEnum()));
     }
 
     /**
@@ -315,7 +315,7 @@ public class TankConfigMPController extends Controller {
         currentArmor = armorList.get(ownArmorCounter);
 
         changeOwnCharts();
-        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getTankApp().getPlayer()));
+        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getPlayerEnum()));
     }
 
     /**
@@ -334,7 +334,7 @@ public class TankConfigMPController extends Controller {
         currentArmor = armorList.get(ownArmorCounter);
 
         changeOwnCharts();
-        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getTankApp().getPlayer()));
+        engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getPlayerEnum()));
     }
 
     /**

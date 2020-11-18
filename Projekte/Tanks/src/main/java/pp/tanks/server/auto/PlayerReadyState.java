@@ -79,7 +79,7 @@ public class PlayerReadyState extends TankState {
             model.loadMap("map1.xml");
         }
         else {
-            System.out.println("noch nicht fertig");
+            model.loadMap("map1.xml");
         }
         for (Player pl : parent.getPlayers()) {
             System.out.println("turret: " + pl.getTurret() + " armor: " + pl.getArmor());
