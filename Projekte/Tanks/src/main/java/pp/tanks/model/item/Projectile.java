@@ -5,17 +5,19 @@ import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
-import java.awt.geom.Ellipse2D;
+
+
 
 /**
  * abstract base class for all types of projectiles
  */
 public abstract class Projectile extends Item<ProjectileData> {
+    private static final DoubleVec STAY = new DoubleVec(0, 0);
     protected final int damage;
     protected final Double speed;
-    protected final ProjectileData data;
+    protected ProjectileData data;
     protected double flag;
-    private DataTimeItem latestOp;
+    private DataTimeItem<ProjectileData> latestOp;
     private long latestInterpolate;
 
     public Projectile(Model model, double effectiveRadius, int damage, Double speed, ProjectileData data) {
@@ -24,7 +26,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         this.damage = damage;
         this.speed = speed;
         this.flag = 0.5;
-        if (model.getEngine() != null) latestOp = new DataTimeItem(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
+        if (model.getEngine() != null) latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
         for (Block i : model.getTanksMap().getBlocks()) {
             if (collisionWith(i, getPos())) {
                 destroy();
@@ -88,7 +90,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     /**
      * @return DataTimeItem of last operation
      */
-    public DataTimeItem getLatestOp() {
+    public DataTimeItem<ProjectileData> getLatestOp() {
         return latestOp;
     }
 
@@ -96,7 +98,7 @@ public abstract class Projectile extends Item<ProjectileData> {
      * updates latestOperation
      * @param latestOp new latest operation as DataTimeItem
      */
-    public void setLatestOp(DataTimeItem latestOp) {
+    public void setLatestOp(DataTimeItem<ProjectileData> latestOp) {
         this.latestOp = latestOp;
     }
 
@@ -186,5 +188,19 @@ public abstract class Projectile extends Item<ProjectileData> {
     public PlayerEnum getEnemy() {
         if (data.getId() <= 2000 && data.getId() >= 1000) return PlayerEnum.PLAYER2;
         else return PlayerEnum.PLAYER1;
+    }
+
+    public void interpolateData(DataTimeItem<ProjectileData> item) {
+        this.data = item.data.mkCopy();
+        this.latestOp = item;
+    }
+
+    public boolean interpolateTime(long time) {
+        if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;
+        long tmp = (time - latestOp.serverTime);
+        double deltaT = ((double) tmp) / FACTOR_SEC;
+        data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT)));
+        latestInterpolate = time;
+        return true;
     }
 }

@@ -358,7 +358,7 @@ public abstract class Tank extends Item<TankData> {
             double tTime = (tFin - latestSec);
 
             if (tTime > deltaT) {
-                data.setRotation(latestRot + tTime * rotationSpeed);
+                data.setRotation(latestRot + deltaT * rotationSpeed);
             }
             else {
                 double rest = deltaT - tTime;
@@ -371,7 +371,7 @@ public abstract class Tank extends Item<TankData> {
             double tTime = (tFin - latestSec);
 
             if (tTime > deltaT) {
-                data.setRotation(latestRot - tTime * rotationSpeed);
+                data.setRotation(latestRot - deltaT * rotationSpeed);
             }
             else {
                 double rest = deltaT - tTime;
