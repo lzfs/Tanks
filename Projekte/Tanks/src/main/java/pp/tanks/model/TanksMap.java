@@ -118,16 +118,16 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     /**
      * returns the playersTank
      */
-    public Tank getTank0() {
-        return playersTanks.get(0);
+    public Tank getTank(PlayerEnum player) {
+       return playersTanks.get(player.tankID);
     }
 
     /**
      * sets the playersTank on the first position in the list of tanks
      * @param tank
      */
-    public void setPlayerTank0(Tank tank) {
-        playersTanks.set(0, tank);
+    public void addPlayerTank(Tank tank) {
+        playersTanks.add(tank);
     }
 
     /**

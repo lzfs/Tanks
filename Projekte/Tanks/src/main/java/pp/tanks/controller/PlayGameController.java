@@ -255,6 +255,6 @@ class PlayGameController extends Controller {
      * @return the players tank
      */
     private Tank getTank() {
-        return engine.getModel().getTanksMap().getTank0();
+        return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
     }
 }

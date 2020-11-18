@@ -83,7 +83,7 @@ public class PlayerReadyState extends TankState {
         }
         for (Player pl : parent.getPlayers()) {
             System.out.println("turret: " + pl.getTurret() + " armor: " + pl.getArmor());
-            model.getTanksMap().setPlayerTank0(PlayersTank.mkPlayersTank(pl.getTurret(), pl.getArmor()));//funktioniert nicht für Mulitplayer Spiele
+            model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(pl.getTurret(), pl.getArmor()));//funktioniert nicht für Mulitplayer Spiele
         }
         System.out.println("hat geklappt");
         //TODO Nachricht an den Client wie der gegenerische Panzer aussieht bzw. das das Game startet (ModelMessage?)

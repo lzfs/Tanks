@@ -14,7 +14,7 @@ public class HeavyTurret extends Turret {
 
     @Override
     public Projectile mkProjectile(Model model, ProjectileData data, DoubleVec target) {
-        return new HeavyProjectile(model, data, target);
+        return new HeavyProjectile(model, data);
     }
 
     @Override

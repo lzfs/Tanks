@@ -4,7 +4,6 @@ import pp.tanks.controller.Engine;
 import pp.tanks.model.item.*;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
-import pp.tanks.server.GameMode;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -102,7 +101,7 @@ public class Model {
      * @param tank new tank
      */
     public void setTank(Tank tank){
-        map.setPlayerTank0(tank);
+        map.addPlayerTank(tank);
     }
 
     /**
@@ -144,7 +143,7 @@ public class Model {
      * Returns true if amd only if own tank is dead.
      */
     public boolean gameLost() {
-        return map.getTank0().isDestroyed();
+        return map.getTank(engine.getPlayerEnum()).isDestroyed();
     }
 
     /**
@@ -152,9 +151,9 @@ public class Model {
      */
     public boolean gameWon() {
         if (debug) return false;
-        if (map.getTank0().isDestroyed()) return false;
+        if (map.getTank(engine.getPlayerEnum()).isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
-            if (tanks != map.getTank0() && !tanks.isDestroyed()) return false;
+            if (tanks != map.getTank(engine.getPlayerEnum()) && !tanks.isDestroyed()) return false;
         }
         return true;
     }

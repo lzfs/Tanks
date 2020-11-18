@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map w="23" h="13">
-   <playersTank x="3" y="6"></playersTank>
    <uBlock x="0" y="0"></uBlock>
    <uBlock x="0" y="1"></uBlock>
    <uBlock x="0" y="2"></uBlock>

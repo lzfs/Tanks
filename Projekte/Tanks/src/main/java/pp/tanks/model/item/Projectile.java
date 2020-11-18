@@ -56,6 +56,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         else {
             setDir(new DoubleVec(getDir().x * (-1), getDir().y * (-1)));
         }
+        setPos(getPos().add(getDir().mult(0.1)));
     }
 
     /**
@@ -151,6 +152,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         for (UnbreakableBlock uBlock : model.getTanksMap().getUnbreakableBlocks()) {
             if (collisionWith(uBlock, getPos())) {
                 destroy();
+                return;
             }
         }
 
@@ -179,7 +181,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     public static Projectile mkProjectile(Model model, ProjectileData data) {
         if (data.type == ItemEnum.LIGHT_PROJECTILE) return new LightProjectile(model, data);
         else if (data.type == ItemEnum.NORMAL_PROJECTILE) return new NormalProjectile(model, data);
-        else return new HeavyProjectile(model, data, data.targetPos);
+        else return new HeavyProjectile(model, data);
     }
 
     /**

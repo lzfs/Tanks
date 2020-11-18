@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map w="23" h="13">
-    <playersTank x="3" y="6"></playersTank>
     <uBlock x = "11" y = "4"></uBlock>
     <rBlock x = "11" y = "6"></rBlock>
     <bBlock x = "11" y = "8"></bBlock>

@@ -8,9 +8,12 @@ import pp.util.DoubleVec;
  * Represents a enemy played by the computer
  */
 public class COMEnemy extends Enemy {
+    public final PlayerEnum player;
 
     protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, armor, turret, data);
+        if (model.getEngine() == null) this.player = PlayerEnum.PLAYER1;
+        else this.player = model.getEngine().getPlayerEnum();
     }
 
     /**
