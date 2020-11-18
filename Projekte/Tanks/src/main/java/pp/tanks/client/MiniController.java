@@ -19,6 +19,8 @@ import java.util.List;
 
 /**
  * Controller for visual tests of the server team
+ *
+ * !!WIRD AUCH NICHT KOMMENTIERT!!
  */
 
 public class MiniController extends GridPane {

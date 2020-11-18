@@ -149,6 +149,9 @@ public class TankAutomaton extends TankStateMachine {
         return init;
     }
 
+    /**
+     * @return current gameMode
+     */
     public GameMode getGameMode() {
         return gameMode;
     }
@@ -192,6 +195,9 @@ public class TankAutomaton extends TankStateMachine {
         LOGGER.fine(() -> "properties: " + properties);
     }
 
+    /**
+     * @return current Properties
+     */
     public Properties getProperties() {
         return this.properties;
     }

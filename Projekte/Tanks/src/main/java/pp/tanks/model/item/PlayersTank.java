@@ -46,14 +46,14 @@ public class PlayersTank extends Tank{
     @Override
     public void stopMovement() {
         data.setMoveDir(MoveDirection.STAY);
-        DataTimeItem item = new DataTimeItem(data, System.nanoTime() + model.getEngine().getOffset());
+        DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
         model.getEngine().getConnection().send(new MoveMessage(item));
     }
 
     @Override
     public void setMoveDirection(MoveDirection dir) {
         if (dir != data.getMoveDir()) {
-            DataTimeItem item = new DataTimeItem(data, System.nanoTime() + model.getEngine().getOffset());
+            DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
             model.getEngine().getConnection().send(new MoveMessage(item));
         }
         super.setMoveDirection(dir);

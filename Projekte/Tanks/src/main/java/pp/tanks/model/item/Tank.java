@@ -8,6 +8,8 @@ import pp.tanks.message.data.TankData;
 import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
+import static pp.tanks.model.item.MoveDirection.*;
+
 /**
  * abstract base class of all tanks in a {@linkplain pp.tanks.model.TanksMap}
  */
@@ -19,7 +21,7 @@ public abstract class Tank extends Item<TankData> {
     private int lives = 1;
     public final PlayerEnum playerEnum;
     private int projectileId;
-    private DataTimeItem latestOp;
+    private DataTimeItem<TankData> latestOp;
     private long latestInterpolate;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
@@ -29,7 +31,7 @@ public abstract class Tank extends Item<TankData> {
         this.speed = calculateSpeed();
         this.playerEnum = PlayerEnum.getPlayer(data.getId());
         this.projectileId = playerEnum.projectileID;
-        if (model.getEngine() != null) latestOp = new DataTimeItem(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
+        if (model.getEngine() != null) latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
     }
 
     /**
@@ -58,15 +60,16 @@ public abstract class Tank extends Item<TankData> {
     /**
      * @return latest operation as DataTimeItem
      */
-    public DataTimeItem getLatestOp() {
+    public DataTimeItem<TankData> getLatestOp() {
         return latestOp;
     }
 
     /**
      * updates latest operation
+     *
      * @param latestOp new latest operation as DataTimeItem
      */
-    public void setLatestOp(DataTimeItem latestOp) {
+    public void setLatestOp(DataTimeItem<TankData> latestOp) {
         this.latestOp = latestOp;
     }
 
@@ -160,6 +163,7 @@ public abstract class Tank extends Item<TankData> {
 
     /**
      * updates destruction-status
+     *
      * @param bool boolean of new status
      */
     public void setDestroyed(boolean bool) {
@@ -174,15 +178,36 @@ public abstract class Tank extends Item<TankData> {
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
         collide(newPos);
-        if (isMoving() && !data.isDestroyed()&&data.getMoveDir()!=MoveDirection.STAY) {
+        if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
-            //System.out.println("currentRot " + currentRot);
-            //System.out.println("moveDirRot " + moveDirRotation);
+
+            //haben latest OP
+            //wenn nachricht an server
+            //dataTime item an sich selbst geben
+            //berechenen angefangen und wann fertig
+            //delta größer als deltaT also zeit die ich bräuchte
+            //iwas iwo abziehen
+
+            //es kommt bewegunsgänderung
+            //hat Data
+            //und latestOP  (bräuchte er eigentlich nicht)
+            //wenn stopmovement oder setmovedirection
+            //das datatime item als latestOP abspeichern
+            //delta winkel berechnen  (der zu drehende winkel)
+            //wie lange ich bräuchte kann ich mir deltaT für dauer der drehung berechnen
+            //deltaT abspeichern
+            //iwo oben ne deltaZeit
+            //deltaZeit+=delta
+            //ist deltazeit kleiner als deltaT?
+            //=> current rotation dreh dings
+            //berechnen speichern
+            //deltazeit=deltaT
+            // deltazeit- deltaT=minizeit
+            //setRotation auf moveDirdirection
+            //setPosition(alte + direction * speed*minizeit
             double tmp = (currentRot - moveDirRotation + 180) % 180;
             double tmp1 = (moveDirRotation - currentRot + 180) % 180;
-            //System.out.println("tmp " + tmp);
-            //System.out.println("tmp1 " + tmp1);
             double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
             if (tmp2 < 4) {
                 data.setRotation(moveDirRotation);
@@ -213,7 +238,7 @@ public abstract class Tank extends Item<TankData> {
         if (canShoot() && !this.isDestroyed()) {
             turret.shoot();
             Projectile projectile = makeProjectile(pos);
-            ShootMessage msg = new ShootMessage(new DataTimeItem(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
+            ShootMessage msg = new ShootMessage(new DataTimeItem<>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
             model.getEngine().getConnection().send(msg);
             model.getTanksMap().addProjectile(projectile);
         }
@@ -296,7 +321,68 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * TODO: add method
+     * over written in PlayersTank
      */
     public void stopMovement() {}
+
+    /**
+     * makes a copy of the interpolating Data-object and overwrites the current data
+     *
+     * @param item represents the given DataTimeItem-object
+     */
+    public void interpolateData(DataTimeItem<TankData> item) {
+        this.data = item.data.mkCopy();
+        this.latestOp = item;
+    }
+
+    /**
+     * the interpolateTime methode calculates the time for a interpolated movement
+     *
+     * @param time
+     * @return returns a boolean while the movement is calculated valid
+     */
+    public boolean interpolateTime(long time) {
+        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
+        long tmp = (time - latestOp.serverTime);
+        double deltaT = ((double) tmp) / FACTOR_SEC;
+
+        double latestRot = latestOp.data.getRotation() % 180;
+        double moveDirRotation = latestOp.data.getMoveDir().getRotation();
+
+        double tmp0 = (latestRot - moveDirRotation + 180) % 180;
+        double tmp1 = (moveDirRotation - latestRot + 180) % 180;
+        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
+
+        if (tmp0 > tmp1) {
+            double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
+            double tTime = (tFin - latestSec);
+
+            if (tTime > deltaT) {
+                data.setRotation(latestRot + tTime * rotationSpeed);
+            }
+            else {
+                double rest = deltaT - tTime;
+                data.setRotation(moveDirRotation);
+                data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
+            }
+        }
+        else {
+            double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
+            double tTime = (tFin - latestSec);
+
+            if (tTime > deltaT) {
+                data.setRotation(latestRot - tTime * rotationSpeed);
+            }
+            else {
+                double rest = deltaT - tTime;
+                data.setRotation(moveDirRotation);
+                data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
+            }
+        }
+
+        //data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(deltaT * speed)));
+        latestInterpolate = time;
+        return true;
+    }
+
 }
