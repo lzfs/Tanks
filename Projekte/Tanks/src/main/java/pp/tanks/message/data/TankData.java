@@ -15,7 +15,7 @@ public class TankData extends Data {
 
     public TankData(DoubleVec pos, int id, int lifePoints) {
         super(pos, id);
-        this.moveDir = MoveDirection.RIGHT;
+        this.moveDir = MoveDirection.STAY;
         this.turretDir = new DoubleVec(0, 0);
         this.move = false;
         this.rotation = 0;

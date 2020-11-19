@@ -126,9 +126,10 @@ public class PlayGameController extends Controller {
         addProjectiles();
 
         // update the model
-        final double delta = stopWatch.getTime() - lastUpdate;
-        lastUpdate = stopWatch.getTime();
-        engine.getModel().update(delta);
+        /*final double delta = stopWatch.getTime() - lastUpdate;
+        lastUpdate = stopWatch.getTime();*/
+
+        engine.getModel().update(System.nanoTime() + engine.getOffset());
 
         if (engine.getModel().gameWon()) {
             engine.setView(null);

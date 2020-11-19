@@ -155,13 +155,9 @@ public abstract class Tank extends Item<TankData> {
     /**
      * Called once per frame. Used for updating this item's position etc.
      *
-     * @param delta time in seconds since the last update call
+     * //@param delta time in seconds since the last update call
      */
-    public void update(double delta) {
-        turret.update(delta);
-        updateMove(delta);
-        data.setMove(false);
-    }
+
 
     /**
      * updates destruction-status

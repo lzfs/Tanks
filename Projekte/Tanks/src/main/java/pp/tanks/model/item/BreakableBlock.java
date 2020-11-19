@@ -44,13 +44,4 @@ public class BreakableBlock extends Block<BBData> {
         v.visit(this);
     }
 
-    /**
-     * Called once per frame. Used for updating this item's position etc.
-     *
-     * @param delta time in seconds since the last update call
-     */
-    @Override
-    public void update(double delta) {
-        super.update(delta);
-    }
 }

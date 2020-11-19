@@ -54,5 +54,5 @@ public abstract class Block<T extends Data> extends Item<T> {
      * @param delta time in seconds since the last update call
      */
     @Override
-    public void update(double delta) {}
+    public void update(long serverTime) {}
 }

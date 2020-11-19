@@ -110,8 +110,8 @@ public class Model {
      *
      * @param deltaTime time in seconds since the last update call
      */
-    public void update(double deltaTime) {
-        map.update(deltaTime);
+    public void update(long serverTime) {
+        map.update(serverTime);
     }
 
     /**

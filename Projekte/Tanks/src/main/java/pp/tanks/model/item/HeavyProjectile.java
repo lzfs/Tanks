@@ -38,8 +38,8 @@ public class HeavyProjectile extends Projectile {
      * @param delta time in seconds since the last update call
      */
     @Override
-    public void update(double delta) {
-        if (flag > 0) {
+    public void update(long serverTime) {
+       /* if (flag > 0) {
             flag -= delta;
         }
         if (flag < 0) {
@@ -53,7 +53,7 @@ public class HeavyProjectile extends Projectile {
             this.effectiveRadius = 2;
             collision();
             destroy();
-        }
+        }*/
     }
 
     /**

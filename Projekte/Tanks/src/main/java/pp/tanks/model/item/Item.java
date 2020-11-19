@@ -133,7 +133,7 @@ public abstract class Item<T extends Data> {
      *
      * @param delta time in seconds since the last update call
      */
-    public abstract void update(double delta);
+    public abstract void update(long serverTime);
 
 
 

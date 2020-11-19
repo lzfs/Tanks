@@ -15,7 +15,6 @@ public abstract class Projectile extends Item<ProjectileData> {
     private static final DoubleVec STAY = new DoubleVec(0, 0);
     protected final int damage;
     protected final Double speed;
-    protected ProjectileData data;
     protected double flag;
     private DataTimeItem<ProjectileData> latestOp;
     private long latestInterpolate;
@@ -106,17 +105,18 @@ public abstract class Projectile extends Item<ProjectileData> {
     /**
      * Updates the projectile
      *
-     * @param delta delta
+     * //@param delta delta
      */
     @Override
-    public void update(double delta) {
-        data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
+    public void update(long serverTime) {
+        interpolateTime(serverTime);//TODO was ist mit der Flag
+        /*data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
         if (flag > 0) {
             flag -= delta;
         }
         if (flag < 0) {
             flag = 0;
-        }
+        }*/
     }
 
     /**
@@ -201,7 +201,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
         double deltaT = ((double) tmp) / FACTOR_SEC;
-        data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT)));
+        data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT * speed)));
         latestInterpolate = time;
         return true;
     }

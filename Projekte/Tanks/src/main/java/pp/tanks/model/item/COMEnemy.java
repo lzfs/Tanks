@@ -49,8 +49,8 @@ public class COMEnemy extends Enemy {
      * @param delta time in seconds since the last update call
      */
     @Override
-    public void update(double delta) {
-        turret.update(delta);
+    public void update(long serverTime) {
+        /*turret.update(delta);
         if (isMoving()) {
             //hier
             super.update(delta);
@@ -59,7 +59,7 @@ public class COMEnemy extends Enemy {
             if (!this.isDestroyed()){
                 behaviour(delta);
             }
-        }
+        }*/
     }
 
     /**

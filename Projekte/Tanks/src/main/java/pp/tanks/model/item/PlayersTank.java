@@ -9,11 +9,14 @@ import pp.tanks.model.Model;
  * Represents the tank of the current player
  */
 public class PlayersTank extends Tank{
+    private long latestViewUpdate;
 
 
     public PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, armor, turret, data);
         setLives(3);
+        if (getLatestOp() != null) latestViewUpdate = getLatestOp().serverTime;
+        else System.nanoTime();
     }
 
     /**
@@ -32,6 +35,17 @@ public class PlayersTank extends Tank{
     @Override
     public void accept(Visitor v) {
         v.visit(this);
+    }
+
+    @Override
+    public void update(long serverTime) {
+        long tmp = (serverTime - latestViewUpdate);
+        double delta = ((double) tmp) / FACTOR_SEC;
+        latestViewUpdate = serverTime;
+        turret.update(delta);
+        updateMove(delta);
+        data.setMove(false);
+
     }
 
     /**

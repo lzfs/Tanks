@@ -38,8 +38,8 @@ public class Enemy extends Tank {
      * @param delta time in seconds since the last update call
      */
     @Override
-    public void update(double delta) {
-        super.update(delta);
+    public void update(long serverTime) {
+        interpolateTime(serverTime);
     }
 
     /**

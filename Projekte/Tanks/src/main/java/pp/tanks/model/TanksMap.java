@@ -227,9 +227,9 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      *
      * @param deltaTime time in seconds since the last update call
      */
-    void update(double deltaTime) {
+    void update(long serverTime) {
         for (Item item : this) {
-            item.update(deltaTime);
+            item.update(serverTime);
         }
         projectiles.putAll(addedProjectiles);
         addedProjectiles.clear();
