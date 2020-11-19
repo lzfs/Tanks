@@ -225,7 +225,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * Called once per frame. This method calls the update method of each item in this map and removes items that
      * cease to exist.
      *
-     * @param deltaTime time in seconds since the last update call
+     * @param serverTime time in seconds since the last update call
      */
     void update(long serverTime) {
         for (Item item : this) {
@@ -242,7 +242,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         breakableBlocks.removeAll(removed);
         for (Entry<Integer, Projectile> entry : projectiles.entrySet()) {
             if (removed.contains(entry.getValue())) {
-                model.getEngine().getView().addExplosion(entry.getValue().getProjectileData().getPos());
+                model.getEngine().getView().addExplosion(entry.getValue());
                 Platform.runLater(() -> projectiles.remove(entry.getKey()));
             }
         }

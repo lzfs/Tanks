@@ -124,6 +124,11 @@ public enum TanksImageProperty {
     /**
      * Path of the explosion image
      */
-    explosion
+    explosion,
+
+    /**
+     * Path of the big explosion image
+     */
+    bigExplosion
 }
 
