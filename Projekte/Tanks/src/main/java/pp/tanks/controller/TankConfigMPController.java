@@ -297,6 +297,8 @@ public class TankConfigMPController extends Controller {
         if (ownTurretCounter < 0) {
             ownTurretCounter = turrets.size() - 1;
         }
+
+        harmChartPlayer1.setImage(charts.get(ownTurretCounter));
         ownTurretImage.setImage(turrets.get(ownTurretCounter));
         currentTurret = turretList.get(ownTurretCounter);
         magazineSizeTextPlayer1.setText(magazine.get(ownTurretCounter).toString());
