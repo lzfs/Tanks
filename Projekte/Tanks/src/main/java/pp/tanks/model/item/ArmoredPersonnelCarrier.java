@@ -28,7 +28,7 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
      */
     @Override
     public void behaviour(double delta) {
-        turret.setDirection(model.getTanksMap().getTank(player).getPos().sub(this.getPos()));
+        getData().setTurretDir(model.getTanksMap().getTank(player).getPos().sub(this.getPos()));
         if(canShoot() && Math.random() < 0.8) {
             if(canShoot()) {
                 shoot(model.getTanksMap().getTank(player).getPos());

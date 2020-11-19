@@ -129,7 +129,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    PlayersTank pT = new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(),new TankData(tmpPos, 1000, 20));
+                    PlayersTank pT = new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(),new TankData(tmpPos, 1000, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
                     map.addTanks(pT);
                     break;
                 }
@@ -144,7 +144,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos,0100,20);
+                    TankData data = new TankData(tmpPos,0010,20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
                     ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model, data);
                     map.addTanks(apc);
                     break;
@@ -153,7 +153,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos,0100,20);
+                    TankData data = new TankData(tmpPos,0100,20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
                     Howitzer howitzer = new Howitzer(model, data);
                     map.addTanks(howitzer);
                     break;
@@ -163,7 +163,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos,0100,20);
+                    TankData data = new TankData(tmpPos,0001,20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
                     TankDestroyer tankDestroyer = new TankDestroyer(model,data);
                     map.addTanks(tankDestroyer);
                     break;

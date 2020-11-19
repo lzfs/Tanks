@@ -47,7 +47,7 @@ public class PlayGameController extends Controller {
     private Scene scene;
     private boolean stopFlag = false;
     private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
-
+    private final List<DataTimeItem<TankData>> enemyTanks = new ArrayList<>();
     /**
      * create a new PlayGameController
      *
@@ -96,7 +96,8 @@ public class PlayGameController extends Controller {
             double y1 = event.getY();
             DoubleVec dir = engine.getView().viewToModel(x1, y1).sub(getTank().getPos());
             //maybe norm
-            getTank().getTurret().setDirection(dir.normalize());
+            //getTank().getTurret().setDirection(dir.normalize());
+            getTank().getData().setTurretDir(dir.normalize());
             //für model umwandeln und turret als DoubleVec übergeben
         }
     }
@@ -122,6 +123,7 @@ public class PlayGameController extends Controller {
            getTank().stopMovement();
             stopFlag = false;
         }
+        processEnemyTanks();
         //put new projectiles from the server into the game
         addProjectiles();
 
@@ -185,7 +187,7 @@ public class PlayGameController extends Controller {
 
         if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {
             if (engine.getMapCounter() == 3) engine.getModel().setDebug(true);
-            PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20));
+            PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
             engine.getModel().setTank(tank);
         }
         else {
@@ -285,6 +287,9 @@ public class PlayGameController extends Controller {
         return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
     }
 
+    /**
+     * creates for each projectile in the list "projectiles" a new "existing" projectile
+     */
     private void addProjectiles() {
         if (projectiles.isEmpty()) return;
         for (DataTimeItem<ProjectileData> item : projectiles) {
@@ -295,7 +300,32 @@ public class PlayGameController extends Controller {
         projectiles.clear();
     }
 
+    /**
+     * TODO: add JavaDoc
+     */
+    private void processEnemyTanks() {
+        if (enemyTanks.isEmpty()) return;
+        for (DataTimeItem<TankData> item : enemyTanks) {
+            Tank tmp = engine.getModel().getTanksMap().getAllTanks().get(item.getId());
+            tmp.interpolateData(item);
+        }
+    }
+
+    /**
+     * adds elements to the projectiles-list
+     *
+     * @param list processing projectiles
+     */
     public void addServerProjectiles(List<DataTimeItem<ProjectileData>> list) {
         this.projectiles.addAll(list);
+    }
+
+    /**
+     * adds enemy-actions to the enemyTanks list
+     *
+     * @param list processing enemy-actions
+     */
+    public void addServerEnemyData(List<DataTimeItem<TankData>> list) {
+        this.enemyTanks.addAll(list);
     }
 }

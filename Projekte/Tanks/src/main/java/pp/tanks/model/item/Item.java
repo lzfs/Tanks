@@ -1,6 +1,8 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.data.Data;
+import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.tanks.message.data.Data;
 import pp.util.DoubleVec;
@@ -18,7 +20,7 @@ public abstract class Item<T extends Data> {
     protected final Model model;
     protected double effectiveRadius;
     protected boolean destroyed = false;
-    protected T data; //TODO ggf. final hinzufügen
+    protected T data;
 
     /**
      * Creates a new item for the specified game model.
@@ -33,6 +35,9 @@ public abstract class Item<T extends Data> {
         this.data = data;
     }
 
+    public T getData() {
+        return data;
+    }
     /**
      * @return the effective Radius of the Item
      */
@@ -131,9 +136,13 @@ public abstract class Item<T extends Data> {
     /**
      * Called once per frame. Used for updating this item's position etc.
      *
-     * @param delta time in seconds since the last update call
+     * @param serverTime the synced nanotime of the server
      */
     public abstract void update(long serverTime);
+
+    public abstract void interpolateData(DataTimeItem<T> item);
+
+    public abstract boolean interpolateTime(long serverTime);
 
 
 

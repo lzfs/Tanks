@@ -9,6 +9,7 @@ import pp.tanks.model.item.HeavyTurret;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.NormalArmor;
 import pp.tanks.model.item.NormalTurret;
 import pp.tanks.model.item.PlayersTank;
@@ -204,7 +205,7 @@ public class TankConfigSPController extends Controller {
         LOGGER.log(Level.INFO, "clicked CONFIRM");
 
         DoubleVec position = new DoubleVec(5, 5);
-        PlayersTank tank = new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20)); //TODO id
+        PlayersTank tank = new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0,0))); //TODO id
         engine.getTankApp().getConnection().send(new StartGameMessage(getCountTurret(counterTurret), getCountArmor(counterArmor), GameMode.SINGLEPLAYER, engine.getPlayerEnum()));
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
