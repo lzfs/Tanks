@@ -95,11 +95,13 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         }
 
         for (Projectile p : projectiles) {
-            if (p instanceof HeavyProjectile) {
-                drawImage(bigExplosion, p.getPos().x, p.getPos().y);
-            }
-            else {
-                drawImage(explosion, p.getPos().x, p.getPos().y);
+            for (int i = 0; i < 5; i++) {
+                if (p instanceof HeavyProjectile) {
+                    drawImage(bigExplosion, p.getPos().x, p.getPos().y);
+                }
+                else {
+                    drawImage(explosion, p.getPos().x, p.getPos().y);
+                }
             }
         }
         projectiles.removeAll(projectiles);
