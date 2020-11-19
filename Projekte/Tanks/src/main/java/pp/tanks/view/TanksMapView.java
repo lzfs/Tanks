@@ -1,5 +1,6 @@
 package pp.tanks.view;
 
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressBar;
@@ -177,5 +178,13 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         if (img != null) {
             context.drawImage(img, pos.x - (img.getWidth() * 0.5), pos.y - (img.getHeight() * 0.5));
         }
+    }
+
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+
+    public void updateProgressBar(double percentage) {
+        this.progressBar.setProgress(percentage);
     }
 }

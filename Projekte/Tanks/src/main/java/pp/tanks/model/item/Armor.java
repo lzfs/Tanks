@@ -6,10 +6,12 @@ package pp.tanks.model.item;
 public class Armor {
     private int armorPoints;
     private int weight;
+    protected int maxPoints;
 
     public Armor(int armorPoints, int weight) {
         this.armorPoints = armorPoints;
         this.weight = weight;
+        this.maxPoints = 100;
     }
 
     /**
@@ -24,6 +26,10 @@ public class Armor {
      */
     public int getArmorPoints() {
         return this.armorPoints;
+    }
+
+    public int getMaxPoints() {
+        return maxPoints;
     }
 
     /**

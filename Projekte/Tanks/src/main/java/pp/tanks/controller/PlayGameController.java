@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -173,6 +174,9 @@ public class PlayGameController extends Controller {
         }
         else if (pressed.contains(KeyCode.ESCAPE))
             engine.activatePauseMenuSPController(); //TODO
+
+
+        engine.getView().updateProgressBar((((double) engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints()/ engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
     }
 
     /**
@@ -215,7 +219,10 @@ public class PlayGameController extends Controller {
         engine.setView(mapview);
 
         if (scene == null) {
-            scene = new Scene(new Group(engine.getView()));
+            ProgressBar progressBar = new ProgressBar(1.0);
+            engine.getView().setProgressBar(progressBar);
+            Group group = new Group(engine.getView(), progressBar);
+            scene = new Scene(group);
         }
         engine.setScene(scene);
     }
