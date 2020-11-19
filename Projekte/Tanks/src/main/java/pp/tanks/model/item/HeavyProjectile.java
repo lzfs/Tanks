@@ -39,13 +39,16 @@ public class HeavyProjectile extends Projectile {
      */
     @Override
     public void update(long serverTime) {
+        interpolateTime(serverTime);
        /* if (flag > 0) {
             flag -= delta;
         }
         if (flag < 0) {
             flag = 0;
         }
+
         data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
+        */
         if (getPos().distance(targetPos) <= 0.3) {
             setPos(targetPos);
         }
@@ -53,8 +56,9 @@ public class HeavyProjectile extends Projectile {
             this.effectiveRadius = 2;
             collision();
             destroy();
-        }*/
+        }
     }
+
 
     /**
      * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
