@@ -105,7 +105,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     /**
      * Updates the projectile
      *
-     * //@param delta delta
+     * @param serverTime time
      */
     @Override
     public void update(long serverTime) {

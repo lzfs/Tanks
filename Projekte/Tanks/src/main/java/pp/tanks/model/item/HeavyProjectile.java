@@ -35,7 +35,7 @@ public class HeavyProjectile extends Projectile {
     /**
      * Called once per frame. Used for updating this item's position etc.
      *
-     * @param delta time in seconds since the last update call
+     * @param serverTime time in seconds since the last update call
      */
     @Override
     public void update(long serverTime) {

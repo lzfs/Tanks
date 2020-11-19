@@ -429,6 +429,11 @@ public class TankConfigMPController extends Controller {
         });
     }
 
+    /**
+     * updates the server
+     *
+     * @param msg update message
+     */
     public void serverUpdate(ServerTankUpdateMessage msg) {
         if (msg.turret == null) return;
         Platform.runLater(() -> {
@@ -440,6 +445,11 @@ public class TankConfigMPController extends Controller {
         });
     }
 
+    /**
+     * starts the multiplayer game
+     *
+     * @param msg activation message
+     */
     public void startGame(StartingMultiplayerMessage msg) {
         Platform.runLater(() -> {
             PlayersTank tank = PlayersTank.mkPlayersTank(engine.getModel(), currentTurret, currentArmor, msg.playerTank);
