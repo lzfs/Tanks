@@ -105,7 +105,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     /**
      * Updates the projectile
      *
-     * //@param delta delta
+     * @param serverTime time
      */
     @Override
     public void update(long serverTime) {
@@ -192,11 +192,12 @@ public abstract class Projectile extends Item<ProjectileData> {
         else return PlayerEnum.PLAYER1;
     }
 
+    @Override
     public void interpolateData(DataTimeItem<ProjectileData> item) {
         this.data = item.data.mkCopy();
         this.latestOp = item;
     }
-
+    @Override
     public boolean interpolateTime(long time) {
         if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);

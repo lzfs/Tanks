@@ -8,6 +8,7 @@ import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
@@ -85,8 +86,8 @@ public class PlayerReadyState extends TankState {
             model.loadMap("map1.xml");
         }
         if (msg.gameMode == GameMode.MULTIPLAYER) {
-            TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1);
-            TankData data2 = new TankData(new DoubleVec(20, 6), 1, 1);
+            TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0));
+            TankData data2 = new TankData(new DoubleVec(20, 6), 1, 1, MoveDirection.STAY, 0, new DoubleVec(-1, 0));
             for (Player pl : parent.getPlayers()) {
                 ItemEnum turret = parent.getPlayers().get(pl.playerEnum.getEnemyID()).getTurret();
                 ItemEnum armor = parent.getPlayers().get(pl.playerEnum.getEnemyID()).getArmor();
@@ -102,7 +103,7 @@ public class PlayerReadyState extends TankState {
         }
         else {
             Player pl = parent.getPlayers().get(0);
-            TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3);//TODO im Tutorial hat der Spieler nur ein Leben!!
+            TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3, MoveDirection.STAY, 0, new DoubleVec(0, 0));//TODO im Tutorial hat der Spieler nur ein Leben!!
             model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
         }
         parent.playingState.initializeGame(model, msg.gameMode);

@@ -46,7 +46,7 @@ public class COMEnemy extends Enemy {
     /**
      * Called once per frame. Used for updating this item's position etc.
      *
-     * @param delta time in seconds since the last update call
+     * @param serverTime the synced nanotime of the server
      */
     @Override
     public void update(long serverTime) {

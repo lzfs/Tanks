@@ -3,12 +3,14 @@ package pp.tanks.server;
 import pp.network.IConnection;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
+import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
+import pp.tanks.model.item.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ public class Player {
     private boolean ready;
     public final PlayerEnum playerEnum;
     public final List<Projectile> projectiles = new ArrayList<>();
+    public final List<Tank> enemyTanks = new ArrayList<>();
 
     /**
      * creates new player
@@ -143,20 +146,27 @@ public class Player {
      */
     public void reset() {
         this.projectiles.clear();
+        this.enemyTanks.clear();
     }
 
     /**
      * TODO: add JavaDoc
      */
     public void sendMessages() {
-        if (!projectiles.isEmpty()) {
+        if (!projectiles.isEmpty() || !enemyTanks.isEmpty()) {
             List<DataTimeItem<ProjectileData>> r = new ArrayList<>();
+            List<DataTimeItem<TankData>> enemy = new ArrayList<>();
             if (!projectiles.isEmpty()) {
                 for (Projectile proj : projectiles) {
                     r.add(proj.getLatestOp());
                 }
             }
-            connection.send(new ModelMessage(null, r));
+            if (!enemyTanks.isEmpty()) {
+                for (Tank tank : enemyTanks) {
+                    enemy.add(tank.getLatestOp());
+                }
+            }
+            connection.send(new ModelMessage(enemy, r));
         }
     }
 }

@@ -45,7 +45,6 @@ public class PlayersTank extends Tank{
         turret.update(delta);
         updateMove(delta);
         data.setMove(false);
-
     }
 
     /**
@@ -69,9 +68,10 @@ public class PlayersTank extends Tank{
     @Override
     public void setMoveDirection(MoveDirection dir) {
         if (dir != data.getMoveDir()) {
+            super.setMoveDirection(dir);
             DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
             model.getEngine().getConnection().send(new MoveMessage(item));
         }
-        super.setMoveDirection(dir);
+        else super.setMoveDirection(dir);
     }
 }

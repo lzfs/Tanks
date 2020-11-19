@@ -103,21 +103,6 @@ public abstract class Turret {
      */
     public abstract int getBounces();
 
-    /**
-     * @return current direction
-     */
-    public DoubleVec getDirection() {
-        return this.direction;
-    }
-
-    /**
-     * updates current direction
-     *
-     * @param dir new direction
-     */
-    public void setDirection(DoubleVec dir) {
-        this.direction = dir;
-    }
 
     public static Turret mkTurret(ItemEnum turret) {
         if (turret == ItemEnum.LIGHT_TURRET) return new LightTurret();

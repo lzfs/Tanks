@@ -9,7 +9,9 @@ import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
+import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 
@@ -140,8 +142,10 @@ public class GameRunningState extends TankState {
         if (tmp.size() != 0) {
             for (DataTimeItem<TankData> d : tmp) {
                 int id = d.data.getId();
-                //model.getTanksMap().get(id).interpolateData(d);
-                System.out.println("bewegung verarbeitet");
+                model.getTanksMap().getTank(PlayerEnum.getPlayer(id)).interpolateData(d);
+                if (id == 0) parent.getPlayers().get(1).enemyTanks.add((Tank) model.getTanksMap().get(id));
+                else parent.getPlayers().get(0).enemyTanks.add((Tank) model.getTanksMap().get(id));
+
             }
 
         }

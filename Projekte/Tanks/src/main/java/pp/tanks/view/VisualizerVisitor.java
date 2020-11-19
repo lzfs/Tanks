@@ -50,7 +50,7 @@ public class VisualizerVisitor implements Visitor {
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
             context.rotate(-playersTank.getRotation());
-            context.rotate(playersTank.getTurret().getDirection().angle());
+            context.rotate(playersTank.getData().getTurretDir().angle());
 
             Turret turret = playersTank.getTurret();
             if (turret instanceof LightTurret) {
@@ -101,7 +101,7 @@ public class VisualizerVisitor implements Visitor {
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
             context.rotate(-enemy.getRotation());
-            context.rotate(enemy.getTurret().getDirection().angle());
+            context.rotate(enemy.getData().getTurretDir().angle());
 
             Turret turret = enemy.getTurret();
             if (turret instanceof LightTurret) {
@@ -168,7 +168,7 @@ public class VisualizerVisitor implements Visitor {
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
             context.rotate(-comEnemy.getRotation());
-            context.rotate(comEnemy.getTurret().getDirection().angle());
+            context.rotate(comEnemy.getData().getTurretDir().angle());
 
             Turret turret = comEnemy.getTurret();
             if (turret instanceof LightTurret) {

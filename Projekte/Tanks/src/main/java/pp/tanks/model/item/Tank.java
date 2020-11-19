@@ -33,7 +33,8 @@ public abstract class Tank extends Item<TankData> {
         this.speed = calculateSpeed();
         this.playerEnum = PlayerEnum.getPlayer(data.getId());
         this.projectileId = playerEnum.projectileID;
-        if (model.getEngine() != null) latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
+        if (model.getEngine() != null)
+            latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
     }
 
     /**
@@ -101,7 +102,7 @@ public abstract class Tank extends Item<TankData> {
     /**
      * updates the move of a tank
      *
-     * @param move
+     * @param move move-flag
      */
     public void setMove(boolean move) {
         data.setMove(move);
@@ -110,7 +111,7 @@ public abstract class Tank extends Item<TankData> {
     /**
      * updates the rotation of the turret
      *
-     * @param rotation
+     * @param rotation new roation
      */
     public void setRotation(double rotation) {
         data.setRotation(rotation % 180);
@@ -154,10 +155,9 @@ public abstract class Tank extends Item<TankData> {
 
     /**
      * Called once per frame. Used for updating this item's position etc.
-     *
+     * TODO: what the heck is with this comment?
      * //@param delta time in seconds since the last update call
      */
-
 
     /**
      * updates destruction-status
@@ -226,6 +226,7 @@ public abstract class Tank extends Item<TankData> {
      * @param v visitor to be used
      */
     public abstract void accept(Visitor v);
+
 
     /**
      * shooting a projectile in the direction of the cursor
@@ -315,13 +316,12 @@ public abstract class Tank extends Item<TankData> {
         if (other instanceof Block) {
             Block block = (Block) other;
             Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
-            return item1.intersects(other.getPos().x - ((block.getWidth() + buffer) / 2.0), other.getPos().y - ((block.getHeight() + buffer) / 2.0), block.getWidth()  + buffer, block.getHeight()  + buffer);
+            return item1.intersects(other.getPos().x - ((block.getWidth() + buffer) / 2.0), other.getPos().y - ((block.getHeight() + buffer) / 2.0), block.getWidth() + buffer, block.getHeight() + buffer);
         }
         else {
             return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
-
 
     /**
      * reduces armor points if the tank was hit by a projectile
@@ -349,6 +349,7 @@ public abstract class Tank extends Item<TankData> {
      *
      * @param item represents the given DataTimeItem-object
      */
+    @Override
     public void interpolateData(DataTimeItem<TankData> item) {
         this.data = item.data.mkCopy();
         this.latestOp = item;
@@ -357,15 +358,16 @@ public abstract class Tank extends Item<TankData> {
     /**
      * the interpolateTime methode calculates the time for a interpolated movement
      *
-     * @param time
+     * @param time for calculation
      * @return returns a boolean while the movement is calculated valid
      */
+    @Override
     public boolean interpolateTime(long time) {
         if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
         double deltaT = ((double) tmp) / FACTOR_SEC;
 
-        double latestRot = latestOp.data.getRotation() % 180;
+        double latestRot = (latestOp.data.getRotation() + 180) % 180;
         double moveDirRotation = latestOp.data.getMoveDir().getRotation();
 
         double tmp0 = (latestRot - moveDirRotation + 180) % 180;
@@ -375,7 +377,6 @@ public abstract class Tank extends Item<TankData> {
         if (tmp0 > tmp1) {
             double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
             double tTime = (tFin - latestSec);
-
             if (tTime > deltaT) {
                 data.setRotation(latestRot + deltaT * rotationSpeed);
             }
@@ -386,9 +387,8 @@ public abstract class Tank extends Item<TankData> {
             }
         }
         else {
-            double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
+            double tFin = (tmp0 + latestSec * rotationSpeed) / rotationSpeed;
             double tTime = (tFin - latestSec);
-
             if (tTime > deltaT) {
                 data.setRotation(latestRot - deltaT * rotationSpeed);
             }
@@ -403,5 +403,4 @@ public abstract class Tank extends Item<TankData> {
         latestInterpolate = time;
         return true;
     }
-
 }
