@@ -76,7 +76,7 @@ class TanksMapFileReader {
             final int w = getIntAttribute("w", 100);
             final int h = getIntAttribute("h", 100);
             map = new TanksMap(model, w, h);
-            occupied.clear();;
+            occupied.clear(); ;
         }
         else if (map == null)
             error("unexpected XML element '" + elemName + "'");
@@ -99,7 +99,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock( model, new BBData(tmpPos, 1, 20))); //TODO
+                    map.addBreakableBlock(new BreakableBlock(model, new BBData(tmpPos, 1, 20))); //TODO
                     break;
 
                 case "uBlock":
@@ -129,7 +129,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    PlayersTank pT = new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(),new TankData(tmpPos, 1000, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
+                    PlayersTank pT = new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(), new TankData(tmpPos, 1000, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
                     map.addTanks(pT);
                     break;
                 }
@@ -144,7 +144,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos,0010,20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
+                    TankData data = new TankData(tmpPos, 0010, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
                     ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model, data);
                     map.addTanks(apc);
                     break;
@@ -153,7 +153,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos,0100,20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
+                    TankData data = new TankData(tmpPos, 0100, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
                     Howitzer howitzer = new Howitzer(model, data);
                     map.addTanks(howitzer);
                     break;
@@ -163,9 +163,13 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos,0001,20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
-                    TankDestroyer tankDestroyer = new TankDestroyer(model,data);
+                    TankData data = new TankData(tmpPos, 0001, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
+                    TankDestroyer tankDestroyer = new TankDestroyer(model, data);
                     map.addTanks(tankDestroyer);
+                    break;
+                }
+                case "enemyCounter":
+                case "levelCounter": {
                     break;
                 }
                 default:

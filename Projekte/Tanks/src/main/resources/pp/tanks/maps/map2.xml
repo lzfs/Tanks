@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map w="23" h="13">
+   <enemyCounter v="3"></enemyCounter>
+   <levelCounter v="2"></levelCounter>
    <uBlock x="0" y="0"></uBlock>
    <uBlock x="0" y="1"></uBlock>
    <uBlock x="0" y="2"></uBlock>

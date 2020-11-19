@@ -108,7 +108,7 @@ public class Model {
     /**
      * Called once per frame. This method triggers any update of the game model based on the elapsed time.
      *
-     * @param deltaTime time in seconds since the last update call
+     * @param serverTime time in seconds since the last update call
      */
     public void update(long serverTime) {
         map.update(serverTime);
