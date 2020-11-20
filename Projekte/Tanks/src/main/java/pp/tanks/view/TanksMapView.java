@@ -54,6 +54,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         this.model = model;
         this.images = images;
         this.visualizer = new VisualizerVisitor(this);
+        // override default value
         this.progressBar = new ProgressBar(1.0);
         setCanvasSize();
         model.addReceiver(this);
@@ -182,6 +183,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
 
     public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
+        this.progressBar.setStyle("-fx-padding: 15; -fx-scale-x: 1.3; -fx-accent: #51d951;");
     }
 
     public void updateProgressBar(double percentage) {
