@@ -149,7 +149,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     public void setSaveEnemyTank(Enemy enemyTank) {
-        this.saveEnemyTank=enemyTank;
+        this.saveEnemyTank = enemyTank;
     }
 
     public Enemy getSaveEnemyTank() {
@@ -351,7 +351,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * @return saveTank
+     * @return savedTank
      */
     public Tank getSaveTank() {
         return this.saveTank;

@@ -139,6 +139,9 @@ public class TankAutomaton extends TankStateMachine {
         return null;
     }
 
+    /**
+     * @return automaton
+     */
     @Override
     TankAutomaton getAuto() {
         return this;

@@ -38,6 +38,7 @@ public abstract class Item<T extends Data> {
     public T getData() {
         return data;
     }
+
     /**
      * @return the effective Radius of the Item
      */
@@ -116,7 +117,6 @@ public abstract class Item<T extends Data> {
         }
     }
 
-
     /**
      * Indicates that this item has been destroyed.
      */
@@ -140,10 +140,23 @@ public abstract class Item<T extends Data> {
      */
     public abstract void update(long serverTime);
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param item
+     */
     public abstract void interpolateData(DataTimeItem<T> item);
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param serverTime
+     * @return
+     */
     public abstract boolean interpolateTime(long serverTime);
 
-
-
+    /**
+     * for thomases (god's) will
+     */
+    public void processDamage(int damage) {}
 }

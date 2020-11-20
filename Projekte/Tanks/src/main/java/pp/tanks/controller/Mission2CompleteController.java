@@ -17,6 +17,7 @@ public class Mission2CompleteController extends Controller {
 
     /**
      * create a new Mission2CompleteController
+     *
      * @param engine the engine this controller belongs to
      */
     public Mission2CompleteController(Engine engine) {
@@ -46,6 +47,7 @@ public class Mission2CompleteController extends Controller {
             scene = makeScene();
         engine.setScene(scene);
     }
+
     /**
      * This method is called whenever this controller is deactivated, i.e., when the the user clicked on next.
      */

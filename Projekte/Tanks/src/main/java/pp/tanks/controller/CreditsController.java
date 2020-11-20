@@ -100,6 +100,9 @@ public class CreditsController extends Controller {
         //
     }
 
+    /**
+     * Thread is tired, he sleeps now.
+     */
     private void sleep() {
         try {
             Thread.sleep(20);

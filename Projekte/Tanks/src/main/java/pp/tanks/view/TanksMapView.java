@@ -180,10 +180,20 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         }
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param progressBar
+     */
     public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param percentage
+     */
     public void updateProgressBar(double percentage) {
         this.progressBar.setProgress(percentage);
     }

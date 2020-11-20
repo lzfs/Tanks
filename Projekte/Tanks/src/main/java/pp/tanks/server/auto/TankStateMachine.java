@@ -24,5 +24,4 @@ public abstract class TankStateMachine extends TankState implements Statemachine
     public void setState(TankState state) {
         this.state = state;
     }
-
 }

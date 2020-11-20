@@ -7,9 +7,9 @@ import pp.util.DoubleVec;
 /**
  * Represents a NormalTurret
  */
-public class NormalTurret extends Turret{
+public class NormalTurret extends Turret {
     public NormalTurret() {
-        super(10, 2, 3,3, ItemEnum.NORMAL_PROJECTILE);
+        super(10, 2, 3, 3, ItemEnum.NORMAL_PROJECTILE);
     }
 
     @Override
@@ -18,7 +18,7 @@ public class NormalTurret extends Turret{
     }
 
     @Override
-    public int getBounces(){
+    public int getBounces() {
         return 3;
     }
 }

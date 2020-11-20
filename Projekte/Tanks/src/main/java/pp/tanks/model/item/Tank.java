@@ -31,9 +31,10 @@ public abstract class Tank extends Item<TankData> {
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
-        this.playerEnum = PlayerEnum.getPlayer(data.getId());
+        this.playerEnum = PlayerEnum.getPlayer(data.getId()); //TODO Com enemys beim schießen
         this.projectileId = playerEnum.projectileID;
-        if (model.getEngine() != null) latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
+        if (model.getEngine() != null)
+            latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
     }
 
     /**
@@ -126,7 +127,7 @@ public abstract class Tank extends Item<TankData> {
     /**
      * updates the MoveDirection
      *
-     * @param dir
+     * @param dir new direction
      */
     public void setMoveDirection(MoveDirection dir) {
         data.setMoveDir(dir);
@@ -146,6 +147,11 @@ public abstract class Tank extends Item<TankData> {
         return data.getRotation();
     }
 
+    /**
+     * updates postion
+     *
+     * @param pos the new position of the item
+     */
     @Override
     public void setPos(DoubleVec pos) {
         super.setPos(pos);
@@ -170,7 +176,7 @@ public abstract class Tank extends Item<TankData> {
     /**
      * updates the movement of a tank
      *
-     * @param delta
+     * @param delta time
      */
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
@@ -226,7 +232,6 @@ public abstract class Tank extends Item<TankData> {
      */
     public abstract void accept(Visitor v);
 
-
     /**
      * shooting a projectile in the direction of the cursor
      *
@@ -278,6 +283,9 @@ public abstract class Tank extends Item<TankData> {
         return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);*/
     }
 
+    /**
+     * @return caluclated speed depending on armor- and turret- weight
+     */
     private double calculateSpeed() {
         return (25.0 / (armor.getWeight() + turret.getWeight()));
     }
@@ -327,6 +335,7 @@ public abstract class Tank extends Item<TankData> {
      *
      * @param damage incoming damage-data
      */
+    @Override
     public void processDamage(int damage) {
         if (armor.getArmorPoints() - damage <= 0) {
             armor.setArmorPoints(0);
@@ -336,6 +345,13 @@ public abstract class Tank extends Item<TankData> {
             armor.takeDamage(damage);
         }
         data.setLifePoints(armor.getArmorPoints());
+    }
+
+    /**
+     * @return boolean-value if the tank is destroyed by incoming damage
+     */
+    public boolean processDestruction(int damage) {
+        return armor.getArmorPoints() - damage <= 0;
     }
 
     /**

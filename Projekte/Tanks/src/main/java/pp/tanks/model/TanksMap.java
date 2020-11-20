@@ -1,6 +1,7 @@
 package pp.tanks.model;
 
 import pp.tanks.message.data.Data;
+import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
 
@@ -17,7 +18,7 @@ import java.util.Map.Entry;
  * Represents the entire game map. It can be accessed as an unmodifiable {@linkplain java.util.List}
  * of all items consisting of the tanks, blocks and projectiles.
  */
-public class TanksMap extends AbstractList<Item <? extends Data>> {
+public class TanksMap extends AbstractList<Item<? extends Data>> {
     private List<Tank> playersTanks = new ArrayList<>();
     private List<COMEnemy> enemy = new ArrayList<>();
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
@@ -28,6 +29,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     private final int width;
     private final int height;
     private final Model model;
+    private final List<ICollisionObserver> observers = new ArrayList<>();
 
     /**
      * Creates a map of the specified size and with a droid at position (0,0)
@@ -46,7 +48,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      */
     @Override
     public Item<? extends Data> get(int index) {
-        int i = index ;
+        int i = index;
         if (i < playersTanks.size()) return playersTanks.get(i);
         i -= playersTanks.size();
         if (i < enemy.size()) return enemy.get(i);
@@ -66,7 +68,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * to be a neighbor of pos. This method takes into account that one must not make a diagonal move across a corner
      * of a blocked field, i.e., a field with an obstacle.
      *
-     * @param startPos the starting Position
+     * @param startPos  the starting Position
      * @param targetPos the Position you go to
      * @return true or false
      */
@@ -123,11 +125,12 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * returns the playersTank
      */
     public Tank getTank(PlayerEnum player) {
-       return playersTanks.get(player.tankID);
+        return playersTanks.get(player.tankID);
     }
 
     /**
      * sets the playersTank on the first position in the list of tanks
+     *
      * @param tank
      */
     public void addPlayerTank(Tank tank) {
@@ -246,20 +249,23 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         breakableBlocks.removeAll(removed);
         for (Entry<Integer, Projectile> entry : projectiles.entrySet()) {
             if (removed.contains(entry.getValue())) {
-                model.getEngine().getView().addExplosion(entry.getValue());
-                Platform.runLater(() -> projectiles.remove(entry.getKey()));
+                if (model.getEngine() != null ) {
+                    model.getEngine().getView().addExplosion(entry.getValue());
+                    Platform.runLater(() -> projectiles.remove(entry.getKey()));
+                }
+                else projectiles.remove(entry.getKey());
             }
         }
-
     }
 
     /**
      * Adds a Tank to this map.
      */
     public void addTanks(Tank tank) {
-        if(tank instanceof COMEnemy){
+        if (tank instanceof COMEnemy) {
             enemy.add((COMEnemy) tank);
-        } else {
+        }
+        else {
             playersTanks.add(tank);
         }
     }
@@ -290,5 +296,33 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      */
     public void addProjectile(Projectile p) {
         addedProjectiles.put(p.getProjectileData().id, p);
+    }
+
+    /**
+     * adds a new observer to the ICollisionObserver interface
+     *
+     * @param obs
+     */
+    public void addObserver(ICollisionObserver obs) {
+        observers.add(obs);
+    }
+
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param id1
+     * @param id2
+     * @param dmg1
+     * @param dmg2
+     * @param dest1
+     * @param dest2
+     * @param serverTime
+     */
+    public void notifyObs(int id1, int id2, int dmg1, int dmg2, boolean dest1, boolean dest2, long serverTime) {
+        if (observers.isEmpty()) return;
+        ProjectileCollision coll = new ProjectileCollision(id1, id2, dmg1, dmg2, dest1, dest2, serverTime);
+        for (ICollisionObserver obs : observers) {
+            obs.notify(coll);
+        }
     }
 }

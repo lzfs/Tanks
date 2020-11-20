@@ -8,16 +8,16 @@ import java.util.List;
 
 /**
  * Playing State from statechart build as a statemachine to host two substates.
- *
  */
 public class PlayingState extends TankStateMachine {
     private final TankAutomaton parent;
 
     /**
      * Constructor to PlayingState class
+     *
      * @param parent
      */
-    public PlayingState (TankAutomaton parent) {
+    public PlayingState(TankAutomaton parent) {
         this.parent = parent;
     }
 
@@ -29,7 +29,8 @@ public class PlayingState extends TankStateMachine {
 
     /**
      * initializes a new game
-     * @param model model
+     *
+     * @param model    model
      * @param gameMode gameMode
      */
     public void initializeGame(Model model, GameMode gameMode) {
@@ -45,6 +46,7 @@ public class PlayingState extends TankStateMachine {
 
     /**
      * Override method mandatory to use methods of StateSupport
+     *
      * @return the parent, in this case TankAutomaton
      */
     @Override
@@ -54,6 +56,7 @@ public class PlayingState extends TankStateMachine {
 
     /**
      * Method called upon entering the state
+     *
      * @return gameRunning State
      */
     @Override

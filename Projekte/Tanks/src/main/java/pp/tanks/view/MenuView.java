@@ -20,7 +20,7 @@ public class MenuView extends GridPane implements View {
     /**
      * Creates a view for the specified menu
      *
-     * @param fileName the file name of the view to create
+     * @param fileName   the file name of the view to create
      * @param controller the according controller
      */
     private MenuView(Stage stage, String fileName, Controller controller) {

@@ -25,6 +25,7 @@ public class TankDestroyer extends COMEnemy {
 
     /**
      * specifies the behaviour of an TankDestroyer (driving towards the target position of the playersTank and constantly shooting at him)
+     *
      * @param delta
      */
     @Override
@@ -34,9 +35,10 @@ public class TankDestroyer extends COMEnemy {
             if (canShoot()) {
                 shoot(model.getTanksMap().getTank(player1).getPos());
             }
-        } else {
+        }
+        else {
             Tank playersTank = model.getTanksMap().getTank(player1);
-            DoubleVec targetPos = playersTank.getPos().add(new DoubleVec(2,2));
+            DoubleVec targetPos = playersTank.getPos().add(new DoubleVec(2, 2));
             navigateTo(targetPos);
             while (path.size() > 0 && delta > 0.) {
                 final DoubleVec target = path.get(0);
@@ -56,7 +58,8 @@ public class TankDestroyer extends COMEnemy {
                         double tmp1 = (moveDirRotation - currentRot + 360) % 360;
                         if (tmp > tmp1) {
                             setRotation(currentRot + delta * rotationSpeed);
-                        } else {
+                        }
+                        else {
                             setRotation(currentRot - delta * rotationSpeed);
                         }
                         delta = 0.;
@@ -102,7 +105,6 @@ public class TankDestroyer extends COMEnemy {
     public List<DoubleVec> getPath() {
         return Collections.unmodifiableList(path);
     }
-
 
     /**
      * Normalizes the specified angle such the returned angle lies in the range -180 degrees
