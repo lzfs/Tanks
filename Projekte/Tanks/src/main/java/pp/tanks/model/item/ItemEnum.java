@@ -15,5 +15,9 @@ public enum ItemEnum {
     /**
      * types of turrets
      */
-    HEAVY_TURRET, NORMAL_TURRET, LIGHT_TURRET
+    HEAVY_TURRET, NORMAL_TURRET, LIGHT_TURRET,
+    /**
+     * types of COMEnemy
+     */
+    HOWITZER, ACP, TANK_DESTROYER
 }

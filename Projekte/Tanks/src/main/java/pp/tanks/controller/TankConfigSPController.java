@@ -3,6 +3,7 @@ package pp.tanks.controller;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.data.TankData;
+import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.model.item.Armor;
 import pp.tanks.model.item.HeavyArmor;
 import pp.tanks.model.item.HeavyTurret;
@@ -17,6 +18,7 @@ import pp.tanks.model.item.Turret;
 import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -211,7 +213,15 @@ public class TankConfigSPController extends Controller {
         engine.setMapCounter(1);
         counterArmor = 0;
         counterTurret = 0;
-        engine.activateStartGameSPController();
+        confirm.setDisable(true);
+    }
+
+    public void startGame(StartingSingleplayerMessage msg) {
+        Platform.runLater(() -> {
+            engine.playGameController.constructionData.addAll(msg.dataList);
+            engine.playGameController.constructionEnum.addAll(msg.comType);
+            engine.activateStartGameSPController();
+        });
     }
 
     /**

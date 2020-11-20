@@ -8,12 +8,13 @@ import pp.util.DoubleVec;
  * Represents a enemy played by the computer
  */
 public class COMEnemy extends Enemy {
-    public final PlayerEnum player;
+    public final PlayerEnum player1 = PlayerEnum.PLAYER1;
+    private long latestViewUpdate;
 
     protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, armor, turret, data);
-        if (model.getEngine() == null) this.player = PlayerEnum.PLAYER1;
-        else this.player = model.getEngine().getPlayerEnum();
+        if (model.getEngine() != null) latestViewUpdate = System.nanoTime() + model.getEngine().getOffset();
+        else latestViewUpdate = System.nanoTime();
     }
 
     /**
@@ -50,16 +51,23 @@ public class COMEnemy extends Enemy {
      */
     @Override
     public void update(long serverTime) {
-        /*turret.update(delta);
-        if (isMoving()) {
-            //hier
-            super.update(delta);
-        }
-        else {
-            if (!this.isDestroyed()){
-                behaviour(delta);
+        long tmp = serverTime - latestViewUpdate;
+        double delta = ((double) tmp) / FACTOR_SEC;
+        turret.update(delta);
+        if (model.getEngine() != null) {
+            /*if (isMoving()) {
+                //hier
+                super.update(delta);
             }
-        }*/
+            else {*/
+                if (!this.isDestroyed()){
+                    behaviour(delta);
+                }
+            //}
+        }
+
+        else interpolateTime(serverTime);
+        latestViewUpdate = serverTime;
     }
 
     /**
@@ -75,5 +83,11 @@ public class COMEnemy extends Enemy {
      */
     public void accept(Visitor v) {
         v.visit(this);
+    }
+
+    public static COMEnemy mkComEnemy(ItemEnum type, Model model, TankData data) {
+        if (type == ItemEnum.ACP) return new ArmoredPersonnelCarrier(model, data);
+        else if (type == ItemEnum.TANK_DESTROYER) return new TankDestroyer(model, data);
+        else return new Howitzer(model, data);
     }
 }

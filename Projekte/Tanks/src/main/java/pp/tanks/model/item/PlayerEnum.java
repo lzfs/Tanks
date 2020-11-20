@@ -22,7 +22,8 @@ public enum PlayerEnum {
      */
     public static PlayerEnum getPlayer(int id) {
         if (id == 0) return PLAYER1;
-        else return PLAYER2;
+        else if (id == 1) return PLAYER2;
+        else return SERVER;
     }
 
     /**

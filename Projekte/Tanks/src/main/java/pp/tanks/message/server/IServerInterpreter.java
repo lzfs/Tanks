@@ -14,4 +14,6 @@ public interface IServerInterpreter {
     void visit(StartingMultiplayerMessage msg);
 
     void visit(ModelMessage msg);
+
+    void visit(StartingSingleplayerMessage msg);
 }

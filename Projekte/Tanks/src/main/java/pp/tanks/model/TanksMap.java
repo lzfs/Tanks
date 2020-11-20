@@ -102,8 +102,12 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      *
      * @return the list of all tanks still alive
      */
-    public List<Tank> getCOMTanks() {
+    public List<COMEnemy> getCOMTanks() {
         return Collections.unmodifiableList(enemy);
+    }
+
+    public void addCOMTank(COMEnemy tank) {
+        enemy.add(tank);
     }
 
     /**

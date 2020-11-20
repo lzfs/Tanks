@@ -4,6 +4,8 @@ import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.TanksMap;
+import pp.tanks.model.item.COMEnemy;
+import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.MoveDirection;
@@ -47,6 +49,8 @@ public class PlayGameController extends Controller {
     private double lastUpdate;
     private Scene scene;
     private boolean stopFlag = false;
+    public final List<ItemEnum> constructionEnum = new ArrayList<>();
+    public final List<TankData> constructionData = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
     private final List<DataTimeItem<TankData>> enemyTanks = new ArrayList<>();
     /**
@@ -199,6 +203,7 @@ public class PlayGameController extends Controller {
                 engine.getSaveTank().setDestroyed(false);
                 engine.getSaveTank().setPos(new DoubleVec(3, 6));
                 engine.getModel().setTank(engine.getSaveTank());
+                loadSingleplayerEnemy();
             }
             else {
                 if (engine.getPlayerEnum() == PlayerEnum.PLAYER1) {
@@ -225,6 +230,14 @@ public class PlayGameController extends Controller {
             scene = new Scene(group);
         }
         engine.setScene(scene);
+    }
+
+    private void loadSingleplayerEnemy() {
+        if (!constructionEnum.isEmpty()) {
+            for (int i = 0; i < constructionEnum.size(); i++) {
+                engine.getModel().getTanksMap().addCOMTank(COMEnemy.mkComEnemy(constructionEnum.get(i), engine.getModel(), constructionData.get(i)));
+            }
+        }
     }
 
     /**

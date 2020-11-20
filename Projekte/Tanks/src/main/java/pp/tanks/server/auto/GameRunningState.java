@@ -143,7 +143,7 @@ public class GameRunningState extends TankState {
             for (DataTimeItem<TankData> d : tmp) {
                 int id = d.data.getId();
                 model.getTanksMap().getTank(PlayerEnum.getPlayer(id)).interpolateData(d);
-                if (id == 0) parent.getPlayers().get(1).enemyTanks.add((Tank) model.getTanksMap().get(id));
+                if (id == 0) parent.getPlayers().get(1).enemyTanks.add((Tank) model.getTanksMap().get(id)); //für singleplayer anpassen
                 else parent.getPlayers().get(0).enemyTanks.add((Tank) model.getTanksMap().get(id));
 
             }

@@ -28,13 +28,13 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
      */
     @Override
     public void behaviour(double delta) {
-        getData().setTurretDir(model.getTanksMap().getTank(player).getPos().sub(this.getPos()));
+        getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
         if(canShoot() && Math.random() < 0.8) {
             if(canShoot()) {
-                shoot(model.getTanksMap().getTank(player).getPos());
+                shoot(model.getTanksMap().getTank(player1).getPos());
             }
         } else {
-            Tank playersTank = model.getTanksMap().getTank(player);
+            Tank playersTank = model.getTanksMap().getTank(player1);
             DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2,2)));
             navigateTo(targetPos);
             while (path.size() > 0 && delta > 0.) {
@@ -48,10 +48,10 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
                     final double bearing = target.sub(getPos()).angle() % 180;
                     double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
                     if (Math.abs(needToTurnBy) > 2) {   //TODO
-                        Double currentRot = getRotation();
-                        Double moveDirRotation = target.sub(getPos()).normalize().angle();
-                        Double tmp = (currentRot - moveDirRotation + 360) % 360;
-                        Double tmp1 = (moveDirRotation - currentRot + 360) % 360;
+                        double currentRot = getRotation();
+                        double moveDirRotation = target.sub(getPos()).normalize().angle();
+                        double tmp = (currentRot - moveDirRotation + 360) % 360;
+                        double tmp1 = (moveDirRotation - currentRot + 360) % 360;
                         if (tmp > tmp1) {
                             setRotation(currentRot + delta * rotationSpeed);
                         } else {

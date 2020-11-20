@@ -13,6 +13,7 @@ import pp.tanks.message.server.PingMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
+import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
 
 import javafx.application.Application;
@@ -240,6 +241,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(ModelMessage msg) {
         engine.playGameController.addServerEnemyData(msg.tanks);
         engine.playGameController.addServerProjectiles(msg.projectile);
+    }
+
+    @Override
+    public void visit(StartingSingleplayerMessage msg) {
+        engine.tankConfigSPController.startGame(msg);
     }
 }
 

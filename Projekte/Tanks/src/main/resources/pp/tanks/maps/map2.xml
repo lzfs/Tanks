@@ -102,7 +102,7 @@
    <bBlock x="12" y="9"></bBlock>
    <rBlock x="13" y="9"></rBlock>
 
-   <apc x="20" y="4"></apc>
+   <!--<apc x="20" y="4"></apc>
    <howitzer x="20" y="6"></howitzer>
-   <tankDestroyer x="20" y="8"></tankDestroyer>
+   <tankDestroyer x="20" y="8"></tankDestroyer>-->
 </map>
