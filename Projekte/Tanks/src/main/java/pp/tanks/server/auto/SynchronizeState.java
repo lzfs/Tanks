@@ -13,7 +13,7 @@ import java.util.List;
  * State where the Clocks of the clients and the server are getting synchronized by sending the clients an offset they have
  * to add onto their System time
  */
-public class SynchronizeState extends TankState{
+public class SynchronizeState extends TankState {
     private final TankAutomaton parent;
     private int counter = 0;
     private long nanoTime1;
@@ -26,7 +26,6 @@ public class SynchronizeState extends TankState{
     }
 
     /**
-     *
      * @return the containing state
      */
     @Override
@@ -40,7 +39,7 @@ public class SynchronizeState extends TankState{
     @Override
     public void entry() {
         System.out.println("synchronize State");
-       call();
+        call();
     }
 
     /**
@@ -48,7 +47,7 @@ public class SynchronizeState extends TankState{
      * and computes the ping and the nano offset for this client. Then it lets the state
      * decide if it should recall this client
      *
-     * @param msg the PingResponse
+     * @param msg  the PingResponse
      * @param conn the connection which was used to send the message
      */
     @Override
@@ -78,13 +77,13 @@ public class SynchronizeState extends TankState{
             call();
         }
         else {
-            if (playerCount + 1  != players.size()) {
+            if (playerCount + 1 != players.size()) {
                 ++playerCount;
                 counter = 0;
                 call();
             }
             else {
-                for(Player p : players){
+                for (Player p : players) {
                     SynchronizeMessage msg = new SynchronizeMessage(p.getOffset());
                     p.getConnection().send(msg);
                 }

@@ -51,14 +51,15 @@ public class Enemy extends Tank {
         model.notifyReceivers(TanksNotification.TANK_DESTROYED);
     }
 
-    /** Method for creating a EnemyTank Instance
+    /**
+     * Method for creating a EnemyTank Instance
      *
-     * @param turret
-     * @param armor
+     * @param turret correct turret-type
+     * @param armor correct armor-type
      */
     public static Enemy mkEnemyTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
         Turret ergTurret = Turret.mkTurret(turret);
         Armor ergArmor = Armor.mkArmor(armor);
-        return new Enemy(model,3, ergArmor, ergTurret, data);
+        return new Enemy(model, 3, ergArmor, ergTurret, data);
     }
 }

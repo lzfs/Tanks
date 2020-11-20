@@ -9,7 +9,7 @@ import pp.util.DoubleVec;
  */
 public class LightTurret extends Turret {
     public LightTurret() {
-        super(5, 5, 5,1, ItemEnum.LIGHT_PROJECTILE);
+        super(5, 5, 5, 1, ItemEnum.LIGHT_PROJECTILE);
     }
 
     @Override

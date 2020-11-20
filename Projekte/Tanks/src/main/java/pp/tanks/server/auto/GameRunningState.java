@@ -5,9 +5,12 @@ import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.ProjectileCollisionMessage;
+import pp.tanks.model.ICollisionObserver;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
@@ -27,7 +30,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  * Data form clients is received here and put into the buffer, which is periodically
  * emptied and the containing messages are then chronologically processes by the server
  */
-public class GameRunningState extends TankState {
+public class GameRunningState extends TankState implements ICollisionObserver {
     private final Model model;
     private final PlayingState parent;
     private final Queue<DataTimeItem<? extends Data>> buffer = new PriorityBlockingQueue<>();
@@ -37,9 +40,9 @@ public class GameRunningState extends TankState {
     private final List<DataTimeItem<TankData>> tankDat = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectileDat = new ArrayList<>();
 
-
     /**
      * Constructor of the GameRunningState
+     *
      * @param parent the parent of this state, in this case, the PlayingState
      */
     public GameRunningState(PlayingState parent, Model model, GameMode mode) {
@@ -52,7 +55,7 @@ public class GameRunningState extends TankState {
      * method used to process the messages that were contained in the buffer list, currently
      * only printing out the data
      */
-    public void workBuff(){
+    public void workBuff() {
         DataTimeItem<? extends Data>[] tmp = working;
         working = null;
         long timeEnd = System.nanoTime();
@@ -63,7 +66,8 @@ public class GameRunningState extends TankState {
         for (int i = 0; i < 5; i++) {
             if (tmp.length != 0) {
                 for (DataTimeItem<? extends Data> item : tmp) {
-                    if (item.serverTime < timeStart + step * (i + 1) && (i == 0 || item.serverTime > timeStart + step * i)) dat.add(item);
+                    if (item.serverTime < timeStart + step * (i + 1) && (i == 0 || item.serverTime > timeStart + step * i))
+                        dat.add(item);
                 }
             }
             makeDatLists(dat);
@@ -72,6 +76,7 @@ public class GameRunningState extends TankState {
             projectileDat.clear();
             tankDat.clear();
             dat.clear();
+            model.update(timeStart + step * (i + 1));
         }
         model.setLatestUpdate(timeStart + 5 * step);
 
@@ -80,7 +85,6 @@ public class GameRunningState extends TankState {
             p.reset();
         }
     }
-
 
     /**
      * Method called upon entering the State. Current implementation only for testing the Timer function,
@@ -91,6 +95,7 @@ public class GameRunningState extends TankState {
         System.out.println("runningState");
         Timer timer = new Timer();
         model.setLatestUpdate(System.nanoTime());
+        model.getTanksMap().addObserver(this);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -103,6 +108,7 @@ public class GameRunningState extends TankState {
 
     /**
      * Override method mandatory to use methods of StateSupport
+     *
      * @return the parent, in this case PlayingState
      */
     @Override
@@ -114,7 +120,7 @@ public class GameRunningState extends TankState {
      * The function called when receiving a MoveMessage.
      * Adding the message to the Buffer
      *
-     * @param msg hte Message processed
+     * @param msg  hte Message processed
      * @param conn the connection from which the message was send
      */
     @Override
@@ -135,6 +141,7 @@ public class GameRunningState extends TankState {
 
     /**
      * TODO: add JavaDoc
+     *
      * @param time
      * @param tmp
      */
@@ -143,17 +150,16 @@ public class GameRunningState extends TankState {
             for (DataTimeItem<TankData> d : tmp) {
                 int id = d.data.getId();
                 model.getTanksMap().getTank(PlayerEnum.getPlayer(id)).interpolateData(d);
-                if (id == 0) parent.getPlayers().get(1).enemyTanks.add((Tank) model.getTanksMap().get(id)); //für singleplayer anpassen
+                if (id == 0)
+                    parent.getPlayers().get(1).enemyTanks.add((Tank) model.getTanksMap().get(id)); //für singleplayer anpassen
                 else parent.getPlayers().get(0).enemyTanks.add((Tank) model.getTanksMap().get(id));
-
             }
-
         }
-
     }
 
     /**
      * TODO: add JavaDoc
+     *
      * @param time
      * @param tmp
      */
@@ -170,11 +176,11 @@ public class GameRunningState extends TankState {
                 //r.interpolateTime(time);
             }
         }
-
     }
 
     /**
      * separates incoming DataTimeItem and adds the elements of the list to the correct Data List
+     *
      * @param dat incoming list of DataTimeItems
      */
     private void makeDatLists(List<DataTimeItem<? extends Data>> dat) {
@@ -188,7 +194,29 @@ public class GameRunningState extends TankState {
                 if (item.getId() < 2) tankDat.add((DataTimeItem<TankData>) item);
                 else projectileDat.add((DataTimeItem<ProjectileData>) item);
             }
+        }
+    }
 
+    @Override
+    public void notify(ProjectileCollision coll) {
+        if (coll.dest1) {
+            if (coll.id1 > 999) model.getTanksMap().getProjectiles().get(coll.id1).destroy();
+            else model.getTanksMap().get(coll.id1).destroy();
+        }
+        else {
+            if (coll.id1 > 999) model.getTanksMap().getProjectiles().get(coll.id1).processDamage(coll.dmg1);
+            else model.getTanksMap().get(coll.id1).processDamage(coll.dmg1);
+        }
+        if (coll.dest2) {
+            if (coll.id2 > 999) model.getTanksMap().getProjectiles().get(coll.id2).destroy();
+            else model.getTanksMap().get(coll.id2).destroy();
+        }
+        else {
+            if (coll.id2 > 999) model.getTanksMap().getProjectiles().get(coll.id2).processDamage(coll.dmg2);
+            else model.getTanksMap().get(coll.id2).processDamage(coll.dmg2);
+        }
+        for (Player pl : parent.getPlayers()) {
+            pl.getConnection().send(new ProjectileCollisionMessage(coll));
         }
     }
 }

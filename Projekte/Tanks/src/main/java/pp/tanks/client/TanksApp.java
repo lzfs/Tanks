@@ -10,6 +10,7 @@ import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.ProjectileCollisionMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
@@ -190,10 +191,16 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         }
     }
 
+    /**
+     * @return conection
+     */
     public Connection<IClientMessage, IServerMessage> getConnection() {
         return connection;
     }
 
+    /**
+     * @return offset
+     */
     public long getOffset() {
         return offset;
     }
@@ -246,6 +253,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(StartingSingleplayerMessage msg) {
         engine.tankConfigSPController.startGame(msg);
+    }
+
+    @Override
+    public void visit(ProjectileCollisionMessage msg) {
+        engine.playGameController.addCollision(msg.collision);
     }
 }
 

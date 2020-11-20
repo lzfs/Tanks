@@ -15,7 +15,6 @@ public class BreakableBlock extends Block<BBData> {
     }
 
     /**
-     *
      * @return the actual lifepoints of the breakable block
      */
     public int getLifepoints() {
@@ -24,9 +23,11 @@ public class BreakableBlock extends Block<BBData> {
 
     /**
      * reduces the lifepoints
+     *
      * @param points the points to reduce the lifepoints
      */
-    public void reduce(int points) {
+    @Override
+    public void processDamage(int points) {
         if (getLifepoints() - points <= 0) {
             data.reduceLifepoints(data.getLifepoints());
             destroy();
@@ -36,12 +37,22 @@ public class BreakableBlock extends Block<BBData> {
     }
 
     /**
+     * checks if the incoming damage destroys the block
+     *
+     * @param damage incoming damage as int
+     * @return boolean-value
+     */
+    public boolean processDestruction(int damage) {
+        return getLifepoints() - damage <= 0;
+    }
+
+    /**
      * method to accept the visitor
+     *
      * @param v a Visitor
      */
     @Override
     public void accept(Visitor v) {
         v.visit(this);
     }
-
 }

@@ -22,8 +22,8 @@ import java.util.List;
 public class Player {
     private final IConnection<IServerMessage> connection;
 
-    private final List<Long>ping = new ArrayList<>();
-    private final List<Long>nano = new ArrayList<>();
+    private final List<Long> ping = new ArrayList<>();
+    private final List<Long> nano = new ArrayList<>();
     private String infoText = "";
     //private ClientState state = ClientState.INIT;
     private ItemEnum turret = null;
@@ -35,6 +35,7 @@ public class Player {
 
     /**
      * creates new player
+     *
      * @param conn the connection to the client represented by this player
      */
     public Player(IConnection<IServerMessage> conn, PlayerEnum playerEnum) {
@@ -51,9 +52,9 @@ public class Player {
         return connection;
     }
 
-
     /**
      * Adds a new ping-time to the ping-list
+     *
      * @param ping represents the given ping
      */
     public void addPing(long ping) {
@@ -62,6 +63,7 @@ public class Player {
 
     /**
      * adds a new nano-time to the nano-list
+     *
      * @param nano represents the given nano
      */
     public void addNano(long nano) {
@@ -70,6 +72,7 @@ public class Player {
 
     /**
      * finds the index of the smallest ping
+     *
      * @return the nanoOffset at the computed index
      */
     public long getOffset() {
@@ -93,12 +96,13 @@ public class Player {
     /**
      * sets the info text to be displayed
      */
-    public void setInfoText(String infoText){
+    public void setInfoText(String infoText) {
         this.infoText = infoText;
     }
 
     /**
      * updates turret
+     *
      * @param turret new type
      */
     public void setTurret(ItemEnum turret) {
@@ -107,6 +111,7 @@ public class Player {
 
     /**
      * updates armor
+     *
      * @param armor new type
      */
     public void setArmor(ItemEnum armor) {

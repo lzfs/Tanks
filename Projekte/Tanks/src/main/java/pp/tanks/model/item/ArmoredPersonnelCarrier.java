@@ -24,18 +24,20 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
 
     /**
      * specifies the behaviour of an APC (driving towards the playersTank position and constantly shooting at him)
+     *
      * @param delta
      */
     @Override
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
-        if(canShoot() && Math.random() < 0.8) {
-            if(canShoot()) {
+        if (canShoot() && Math.random() < 0.8) {
+            if (canShoot()) {
                 shoot(model.getTanksMap().getTank(player1).getPos());
             }
-        } else {
+        }
+        else {
             Tank playersTank = model.getTanksMap().getTank(player1);
-            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2,2)));
+            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2, 2)));
             navigateTo(targetPos);
             while (path.size() > 0 && delta > 0.) {
                 final DoubleVec target = path.get(0);
@@ -54,7 +56,8 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
                         double tmp1 = (moveDirRotation - currentRot + 360) % 360;
                         if (tmp > tmp1) {
                             setRotation(currentRot + delta * rotationSpeed);
-                        } else {
+                        }
+                        else {
                             setRotation(currentRot - delta * rotationSpeed);
                         }
                         delta = 0.;
@@ -100,7 +103,6 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
     public List<DoubleVec> getPath() {
         return Collections.unmodifiableList(path);
     }
-
 
     /**
      * Normalizes the specified angle such the returned angle lies in the range -180 degrees

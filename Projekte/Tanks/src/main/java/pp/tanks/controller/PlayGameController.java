@@ -1,6 +1,7 @@
 package pp.tanks.controller;
 
 import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.TanksMap;
@@ -21,6 +22,7 @@ import pp.util.StopWatch;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -53,6 +55,8 @@ public class PlayGameController extends Controller {
     public final List<TankData> constructionData = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
     private final List<DataTimeItem<TankData>> enemyTanks = new ArrayList<>();
+    private final PriorityQueue<ProjectileCollision> collisionList = new PriorityQueue<>();
+
     /**
      * create a new PlayGameController
      *
@@ -125,12 +129,13 @@ public class PlayGameController extends Controller {
         }
 
         if (stopFlag) {
-           getTank().stopMovement();
+            getTank().stopMovement();
             stopFlag = false;
         }
         processEnemyTanks();
         //put new projectiles from the server into the game
         addProjectiles();
+        handleCollision();
 
         // update the model
         /*final double delta = stopWatch.getTime() - lastUpdate;
@@ -179,8 +184,7 @@ public class PlayGameController extends Controller {
         else if (pressed.contains(KeyCode.ESCAPE))
             engine.activatePauseMenuSPController(); //TODO
 
-
-        engine.getView().updateProgressBar((((double) engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints()/ engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
+        engine.getView().updateProgressBar((((double) engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
     }
 
     /**
@@ -232,6 +236,9 @@ public class PlayGameController extends Controller {
         engine.setScene(scene);
     }
 
+    /**
+     * loads new COM-Enemy
+     */
     private void loadSingleplayerEnemy() {
         if (!constructionEnum.isEmpty()) {
             for (int i = 0; i < constructionEnum.size(); i++) {
@@ -347,5 +354,30 @@ public class PlayGameController extends Controller {
      */
     public void addServerEnemyData(List<DataTimeItem<TankData>> list) {
         this.enemyTanks.addAll(list);
+    }
+
+    public void handleCollision() {
+        for (ProjectileCollision coll : collisionList) {
+            if (coll.dest1) {
+                if (coll.id1 > 999) getTanksMap().getProjectiles().get(coll.id1).destroy();
+                else getTanksMap().get(coll.id1).destroy();
+            }
+            else {
+                if (coll.id1 > 999) getTanksMap().getProjectiles().get(coll.id1).processDamage(coll.dmg1);
+                else getTanksMap().get(coll.id1).processDamage(coll.dmg1);
+            }
+            if (coll.dest2) {
+                if (coll.id2 > 999) getTanksMap().getProjectiles().get(coll.id2).destroy();
+                else getTanksMap().get(coll.id2).destroy();
+            }
+            else {
+                if (coll.id2 > 999) getTanksMap().getProjectiles().get(coll.id2).processDamage(coll.dmg2);
+                else getTanksMap().get(coll.id2).processDamage(coll.dmg2);
+            }
+        }
+    }
+
+    public void addCollision(ProjectileCollision coll) {
+        collisionList.add(coll);
     }
 }

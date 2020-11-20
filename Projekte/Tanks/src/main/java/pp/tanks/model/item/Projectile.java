@@ -5,9 +5,6 @@ import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
-
-
-
 /**
  * abstract base class for all types of projectiles
  */
@@ -25,7 +22,8 @@ public abstract class Projectile extends Item<ProjectileData> {
         this.damage = damage;
         this.speed = speed;
         this.flag = System.nanoTime();
-        if (model.getEngine() != null) latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
+        if (model.getEngine() != null)
+            latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
         for (Block i : model.getTanksMap().getBlocks()) {
             if (collisionWith(i, getPos())) {
                 destroy();
@@ -60,6 +58,7 @@ public abstract class Projectile extends Item<ProjectileData> {
 
     /**
      * updates direction
+     *
      * @param dir new direction
      */
     public void setDir(DoubleVec dir) {
@@ -96,6 +95,7 @@ public abstract class Projectile extends Item<ProjectileData> {
 
     /**
      * updates latestOperation
+     *
      * @param latestOp new latest operation as DataTimeItem
      */
     public void setLatestOp(DataTimeItem<ProjectileData> latestOp) {
@@ -114,7 +114,6 @@ public abstract class Projectile extends Item<ProjectileData> {
         if (System.nanoTime() - flag > 1000000) {
             flag = 0;
         }
-
     }
 
     /**
@@ -123,14 +122,13 @@ public abstract class Projectile extends Item<ProjectileData> {
     public void processHits() {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (collisionWith(tank, getPos()) && flag == 0) {
-                tank.processDamage(damage);
-                destroy();
+                model.getTanksMap().notifyObs(this.data.id, tank.data.id, 0, damage, true, tank.processDestruction(damage), System.nanoTime());
                 return;
             }
         }
         for (BreakableBlock bBlock : model.getTanksMap().getBreakableBlocks()) {
             if (collisionWith(bBlock, getPos())) {
-                bBlock.reduce(damage);
+                model.getTanksMap().notifyObs(this.data.id, bBlock.data.id, 0, damage, true, bBlock.processDestruction(damage), System.nanoTime());
                 destroy();
                 return;
             }
@@ -156,8 +154,7 @@ public abstract class Projectile extends Item<ProjectileData> {
 
         for (Projectile p : model.getTanksMap().getProjectiles()) {
             if (p != this && collisionWith(p, getPos()) && !(p instanceof HeavyProjectile)) {
-                destroy();
-                p.destroy();
+                model.getTanksMap().notifyObs(this.data.id, p.data.id, 0, 0, true, true, System.nanoTime());
                 return;
             }
         }
@@ -172,8 +169,9 @@ public abstract class Projectile extends Item<ProjectileData> {
 
     /**
      * methode for creating new projectiles with different types
+     *
      * @param model model
-     * @param data data
+     * @param data  data
      * @return returns the correct projectile
      */
     public static Projectile mkProjectile(Model model, ProjectileData data) {
@@ -195,6 +193,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         this.data = item.data.mkCopy();
         this.latestOp = item;
     }
+
     @Override
     public boolean interpolateTime(long time) {
         if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;

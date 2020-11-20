@@ -26,6 +26,7 @@ public class Howitzer extends COMEnemy {
 
     /**
      * specifies the behaviour of an Howitzer (driving in their half of the map to avoid getting a contact with faster tanks)
+     *
      * @param delta
      */
     @Override

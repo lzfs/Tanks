@@ -14,7 +14,6 @@ import pp.tanks.message.server.IServerMessage;
 public abstract class TankState extends StateSupport<TankState> {
 
     /**
-     *
      * @return the automaton this state belongs to
      */
     TankAutomaton getAuto() {
@@ -23,7 +22,8 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a ClientReadyMsg and is received by the server
-     * @param msg the ClientReadyMsg
+     *
+     * @param msg  the ClientReadyMsg
      * @param conn the Connection the message was sent from
      */
     public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
@@ -32,7 +32,8 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a PingResponse and is received by the server
-     * @param msg the PingResponse
+     *
+     * @param msg  the PingResponse
      * @param conn the connection the message was sent from
      */
     public void pingResponse(PingResponse msg, IConnection<IServerMessage> conn) {
@@ -41,7 +42,8 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a MoveMessage and is received by the server
-     * @param msg the MoveMessage
+     *
+     * @param msg  the MoveMessage
      * @param conn the connection the message was sent from
      */
     public void tankMove(MoveMessage msg, IConnection<IServerMessage> conn) {
@@ -50,6 +52,7 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a ShootMessage and is received by the server
+     *
      * @param msg the ShootMessage
      */
     public void shoot(ShootMessage msg) {
@@ -58,6 +61,7 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a BackMessage and is received by the server
+     *
      * @param msg the BackMessage
      */
     public void back(BackMessage msg) {
@@ -66,6 +70,7 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a StartGameMessage and is received by the server
+     *
      * @param msg the StartGameMessage
      */
     public void startGame(StartGameMessage msg) {
@@ -74,10 +79,10 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a UpdateTankConfigMessage and is received by the server
+     *
      * @param msg the UpdateTankConfigMessage
      */
     public void updateTankConfig(UpdateTankConfigMessage msg) {
         handle(s -> s.updateTankConfig(msg));
     }
-
 }

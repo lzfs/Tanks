@@ -16,4 +16,6 @@ public interface IServerInterpreter {
     void visit(ModelMessage msg);
 
     void visit(StartingSingleplayerMessage msg);
+
+    void visit(ProjectileCollisionMessage msg);
 }

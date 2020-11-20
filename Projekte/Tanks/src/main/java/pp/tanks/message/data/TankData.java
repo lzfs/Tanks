@@ -72,7 +72,7 @@ public class TankData extends Data {
     /**
      * updates the life points of the tank
      *
-     * @param lifePoints
+     * @param lifePoints remaining lifePoints
      */
     public void setLifePoints(int lifePoints) {
         this.lifePoints = lifePoints;
@@ -86,9 +86,9 @@ public class TankData extends Data {
     }
 
     /**
-     * updates the move direction of the tank
+     * updates the move-direction of the tank
      *
-     * @param moveDir
+     * @param moveDir new move-direction
      */
     public void setMoveDir(MoveDirection moveDir) {
         this.moveDir = moveDir;
@@ -97,25 +97,25 @@ public class TankData extends Data {
     /**
      * updates the rotation of the tank
      *
-     * @param rotation
+     * @param rotation new rotation
      */
     public void setRotation(double rotation) {
         this.rotation = (rotation + 360) % 360;
     }
 
     /**
-     * updates the turret direction of the tank
+     * updates the turret-direction of the tank
      *
-     * @param turretDir
+     * @param turretDir new turret-direction
      */
     public void setTurretDir(DoubleVec turretDir) {
         this.turretDir = turretDir;
     }
 
     /**
-     * updates the movement of the tank
+     * updates the move-flag of the tank
      *
-     * @param move
+     * @param move new status
      */
     public void setMove(boolean move) {
         this.move = move;

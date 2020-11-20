@@ -85,7 +85,7 @@ public class PlayerReadyState extends TankState {
         if (msg.gameMode == GameMode.MULTIPLAYER) {
             multiplayerGame(model);
         }
-        else if (msg.gameMode == GameMode.SINGLEPLAYER){
+        else if (msg.gameMode == GameMode.SINGLEPLAYER) {
             singleplayerGameLvlOne(model);
         }
         else {
@@ -95,12 +95,18 @@ public class PlayerReadyState extends TankState {
         parent.goToState(containingState().playingState);
     }
 
+    /**
+     * loads new model depending on the gamemode
+     *
+     * @param gameMode chosen gamemode
+     * @return new model
+     */
     public Model loadModel(GameMode gameMode) {
         Model model = new Model(parent.getProperties());
         if (gameMode == GameMode.TUTORIAL) {
             model.loadMap("map0.xml");
         }
-        else if (gameMode == GameMode.SINGLEPLAYER){
+        else if (gameMode == GameMode.SINGLEPLAYER) {
             model.loadMap("map1.xml");
         }
         else {
@@ -109,6 +115,11 @@ public class PlayerReadyState extends TankState {
         return model;
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param model
+     */
     public void multiplayerGame(Model model) {
         TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0));
         TankData data2 = new TankData(new DoubleVec(20, 6), 1, 1, MoveDirection.STAY, 0, new DoubleVec(-1, 0));
@@ -126,12 +137,22 @@ public class PlayerReadyState extends TankState {
         }
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param model
+     */
     public void tutorialGame(Model model) {
         Player pl = parent.getPlayers().get(0);
         TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0));
         model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param model
+     */
     public void singleplayerGameLvlOne(Model model) {
         Player pl = parent.getPlayers().get(0);
         TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3, MoveDirection.STAY, 0, new DoubleVec(0, 0));
@@ -143,6 +164,4 @@ public class PlayerReadyState extends TankState {
         List<TankData> data = new ArrayList<>(List.of(enemy1, enemy2, enemy3));
         pl.getConnection().send(new StartingSingleplayerMessage(enums, data));
     }
-
-
 }

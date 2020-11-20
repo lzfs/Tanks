@@ -26,7 +26,7 @@ public abstract class Turret {
         this.weight = weight;
         this.reloadTime = reloadTime;
         this.mag = new double[mag];
-        this.direction =new DoubleVec(0,0);
+        this.direction = new DoubleVec(0, 0);
         Arrays.fill(this.mag, 0.0);
         this.cadence = 0;
         this.currentCadence = cadence;
@@ -49,8 +49,6 @@ public abstract class Turret {
                 mag[i] = 0;
         }
     }
-
-
 
     /**
      * @return s the size of the magazine
@@ -77,8 +75,7 @@ public abstract class Turret {
     }
 
     /**
-     * checks if the turret is able to shoot
-     * @return
+     * @return boolean depending on the turret's ability to shoot
      */
     public boolean canShoot() {
         for (double d : mag) {
@@ -91,8 +88,9 @@ public abstract class Turret {
 
     /**
      * creates a new projectile
-     * @param model TODO
-     * @param data TODO
+     *
+     * @param model  TODO
+     * @param data   TODO
      * @param target new target-position
      * @return
      */
@@ -103,7 +101,12 @@ public abstract class Turret {
      */
     public abstract int getBounces();
 
-
+    /**
+     * creates new turret
+     *
+     * @param turret correct turret-type
+     * @return new turret
+     */
     public static Turret mkTurret(ItemEnum turret) {
         if (turret == ItemEnum.LIGHT_TURRET) return new LightTurret();
         else if (turret == ItemEnum.NORMAL_TURRET) return new NormalTurret();

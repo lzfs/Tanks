@@ -8,9 +8,8 @@ import pp.tanks.model.Model;
 /**
  * Represents the tank of the current player
  */
-public class PlayersTank extends Tank{
+public class PlayersTank extends Tank {
     private long latestViewUpdate;
-
 
     public PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, armor, turret, data);
@@ -48,6 +47,7 @@ public class PlayersTank extends Tank{
     }
 
     /**
+     * TODO: add JavaDoc
      *
      * @param turret
      * @param armor
@@ -58,6 +58,9 @@ public class PlayersTank extends Tank{
         return new PlayersTank(model, 3, ergArmor, ergTurret, data);
     }
 
+    /**
+     * stops movement
+     */
     @Override
     public void stopMovement() {
         data.setMoveDir(MoveDirection.STAY);
@@ -65,6 +68,11 @@ public class PlayersTank extends Tank{
         model.getEngine().getConnection().send(new MoveMessage(item));
     }
 
+    /**
+     * updates movement-direction
+     *
+     * @param dir new direction
+     */
     @Override
     public void setMoveDirection(MoveDirection dir) {
         if (dir != data.getMoveDir()) {

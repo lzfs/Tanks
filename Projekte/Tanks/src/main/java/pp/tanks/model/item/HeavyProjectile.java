@@ -59,7 +59,6 @@ public class HeavyProjectile extends Projectile {
         }
     }
 
-
     /**
      * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
      */
@@ -78,7 +77,7 @@ public class HeavyProjectile extends Projectile {
         }
         for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
             if (collisionWith(bblock, getPos())) {
-                bblock.reduce(damage);
+                bblock.processDamage(damage);
                 destroy();
                 return;
             }

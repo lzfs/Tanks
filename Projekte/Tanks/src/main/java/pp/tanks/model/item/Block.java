@@ -21,14 +21,14 @@ public abstract class Block<T extends Data> extends Item<T> {
     /**
      * @return height
      */
-    public double getHeight(){
+    public double getHeight() {
         return height;
     }
 
     /**
      * @return width
      */
-    public double getWidth(){
+    public double getWidth() {
         return width;
     }
 

@@ -20,5 +20,4 @@ public class UnbreakableBlock extends Block<Data> {
     public void accept(Visitor v) {
         v.visit(this);
     }
-
 }

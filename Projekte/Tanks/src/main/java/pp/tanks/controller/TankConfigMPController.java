@@ -410,18 +410,33 @@ public class TankConfigMPController extends Controller {
         else return ItemEnum.HEAVY_ARMOR;
     }
 
+    /**
+     * computes correct index for given Turret-Item
+     *
+     * @param item Turret-Item
+     * @return correct index
+     */
     private int getTurretIndex(ItemEnum item) {
         if (item == ItemEnum.LIGHT_TURRET) return 0;
         else if (item == ItemEnum.NORMAL_TURRET) return 1;
         else return 2;
     }
 
+    /**
+     * computes correct index for given Armor-Item
+     *
+     * @param item Armor-Item
+     * @return correct index
+     */
     private int getArmorIndex(ItemEnum item) {
         if (item == ItemEnum.LIGHT_ARMOR) return 0;
         else if (item == ItemEnum.NORMAL_ARMOR) return 1;
         else return 2;
     }
 
+    /**
+     * TODO: add JavaDoc
+     */
     public void playerConnected() {
         if (playerConnected) return;
         Platform.runLater(() -> {
