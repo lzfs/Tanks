@@ -59,6 +59,6 @@ public class Enemy extends Tank {
     public static Enemy mkEnemyTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
         Turret ergTurret = Turret.mkTurret(turret);
         Armor ergArmor = Armor.mkArmor(armor);
-        return new Enemy(model,1, ergArmor, ergTurret, data);
+        return new Enemy(model,3, ergArmor, ergTurret, data);
     }
 }

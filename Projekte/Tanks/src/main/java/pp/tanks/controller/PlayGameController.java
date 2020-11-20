@@ -195,7 +195,7 @@ public class PlayGameController extends Controller {
 
         if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {
             if (engine.getMapCounter() == 3) engine.getModel().setDebug(true);
-            PlayersTank tank = new PlayersTank(engine.getModel(), 1, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
+            PlayersTank tank = new PlayersTank(engine.getModel(), 3, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
             engine.getModel().setTank(tank);
         }
         else {

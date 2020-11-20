@@ -55,7 +55,7 @@ public class PlayersTank extends Tank{
     public static PlayersTank mkPlayersTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
         Turret ergTurret = Turret.mkTurret(turret);
         Armor ergArmor = Armor.mkArmor(armor);
-        return new PlayersTank(model,1, ergArmor, ergTurret, data);
+        return new PlayersTank(model, 3, ergArmor, ergTurret, data);
     }
 
     @Override

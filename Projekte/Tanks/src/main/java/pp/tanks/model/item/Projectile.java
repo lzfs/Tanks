@@ -15,7 +15,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     private static final DoubleVec STAY = new DoubleVec(0, 0);
     protected final int damage;
     protected final Double speed;
-    protected double flag;
+    protected long flag;
     private DataTimeItem<ProjectileData> latestOp;
     private long latestInterpolate;
 
@@ -24,7 +24,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         this.data = data;
         this.damage = damage;
         this.speed = speed;
-        this.flag = 0.5;
+        this.flag = System.nanoTime();
         if (model.getEngine() != null) latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
         for (Block i : model.getTanksMap().getBlocks()) {
             if (collisionWith(i, getPos())) {
@@ -110,13 +110,11 @@ public abstract class Projectile extends Item<ProjectileData> {
     @Override
     public void update(long serverTime) {
         interpolateTime(serverTime);//TODO was ist mit der Flag
-        /*data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
-        if (flag > 0) {
-            flag -= delta;
-        }
-        if (flag < 0) {
+        //data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
+        if (System.nanoTime() - flag > 1000000) {
             flag = 0;
-        }*/
+        }
+
     }
 
     /**

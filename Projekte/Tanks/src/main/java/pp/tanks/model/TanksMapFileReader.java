@@ -129,7 +129,7 @@ class TanksMapFileReader {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    PlayersTank pT = new PlayersTank(model, 1, new Armor(20, 5), new LightTurret(), new TankData(tmpPos, 1000, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
+                    PlayersTank pT = new PlayersTank(model, 3, new Armor(20, 5), new LightTurret(), new TankData(tmpPos, 1000, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
                     map.addTanks(pT);
                     break;
                 }
