@@ -30,6 +30,7 @@ class TanksMapFileReader {
     private final Set<DoubleVec> occupied = new HashSet<>();
     private XMLStreamReader xtr = null;
     private final List<String> errors = new ArrayList<>();
+    private int counter = 2;
 
     /**
      * Creates an instance of this class for the specified game model.
@@ -45,7 +46,8 @@ class TanksMapFileReader {
      * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
      * @throws XMLStreamException if the file is no valid xml file
      */
-    public TanksMap readFile(File file) throws IOException, XMLStreamException {
+    public TanksMap readFile(File file, int counter) throws IOException, XMLStreamException {
+        this.counter = counter;
         XMLInputFactory factory = XMLInputFactory.newInstance();
         Reader reader = new FileReader(file);
         xtr = factory.createXMLStreamReader(reader);
@@ -99,7 +101,8 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock(model, new BBData(tmpPos, 1, 20))); //TODO
+                    map.addBreakableBlock(new BreakableBlock(model, new BBData(tmpPos, counter, 20))); //TODO
+                    counter += 1;
                     break;
 
                 case "uBlock":
@@ -108,7 +111,8 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, 1)); //TODO
+                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, counter)); //TODO
+                    counter += 1;
                     uB.setPos(tmpPos);
                     map.addUnbreakableBlock(uB);
                     break;
@@ -119,7 +123,8 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, 1)); //TODO
+                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, counter)); //TODO
+                    counter += 1;
                     rB.setPos(tmpPos);
                     map.addReflectableBlocks(rB);
                     break;

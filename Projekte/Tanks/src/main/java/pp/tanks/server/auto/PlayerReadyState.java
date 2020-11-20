@@ -104,13 +104,13 @@ public class PlayerReadyState extends TankState {
     public Model loadModel(GameMode gameMode) {
         Model model = new Model(parent.getProperties());
         if (gameMode == GameMode.TUTORIAL) {
-            model.loadMap("map0.xml");
+            model.loadMap("map0.xml", 2);
         }
         else if (gameMode == GameMode.SINGLEPLAYER) {
-            model.loadMap("map1.xml");
+            model.loadMap("map1.xml", 4);
         }
         else {
-            model.loadMap("map1.xml");
+            model.loadMap("map1.xml", 2);
         }
         return model;
     }

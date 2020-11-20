@@ -193,6 +193,10 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         return Collections.unmodifiableList(new ArrayList<>(projectiles.values()));
     }
 
+    public HashMap<Integer, Projectile> getHashProjectiles() {
+        return projectiles;
+    }
+
     /**
      * Returns the width (i.e., the number of columns) of the map
      *

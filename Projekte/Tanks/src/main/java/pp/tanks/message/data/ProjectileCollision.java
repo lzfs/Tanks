@@ -1,6 +1,8 @@
 package pp.tanks.message.data;
 
-public class ProjectileCollision implements Comparable<ProjectileCollision>{
+import java.io.Serializable;
+
+public class ProjectileCollision implements Comparable<ProjectileCollision>, Serializable {
     public final int id1;
     public final int id2;
     public final int dmg1;

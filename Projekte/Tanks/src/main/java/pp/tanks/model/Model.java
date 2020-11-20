@@ -86,14 +86,15 @@ public class Model {
      *
      * @param string xml file name representing a tanks map
      */
-    public void loadMap(String string) {
+    public void loadMap(String string, int counter) {
         String path = "Tanks/src/main/resources/pp/tanks/maps/" + string;
         String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
             File currentFile = new File(absolutePath);
-            setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
+            setTanksMap(new TanksMapFileReader(this).readFile(currentFile, counter));
         } catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
+            System.out.println("APOKALYPSE");
         }
     }
 

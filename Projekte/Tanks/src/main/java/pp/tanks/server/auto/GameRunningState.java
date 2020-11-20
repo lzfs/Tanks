@@ -200,19 +200,19 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     @Override
     public void notify(ProjectileCollision coll) {
         if (coll.dest1) {
-            if (coll.id1 > 999) model.getTanksMap().getProjectiles().get(coll.id1).destroy();
+            if (coll.id1 > 999) model.getTanksMap().getHashProjectiles().get(coll.id1).destroy();
             else model.getTanksMap().get(coll.id1).destroy();
         }
         else {
-            if (coll.id1 > 999) model.getTanksMap().getProjectiles().get(coll.id1).processDamage(coll.dmg1);
+            if (coll.id1 > 999) model.getTanksMap().getHashProjectiles().get(coll.id1).processDamage(coll.dmg1);
             else model.getTanksMap().get(coll.id1).processDamage(coll.dmg1);
         }
         if (coll.dest2) {
-            if (coll.id2 > 999) model.getTanksMap().getProjectiles().get(coll.id2).destroy();
+            if (coll.id2 > 999) model.getTanksMap().getHashProjectiles().get(coll.id2).destroy();
             else model.getTanksMap().get(coll.id2).destroy();
         }
         else {
-            if (coll.id2 > 999) model.getTanksMap().getProjectiles().get(coll.id2).processDamage(coll.dmg2);
+            if (coll.id2 > 999) model.getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
             else model.getTanksMap().get(coll.id2).processDamage(coll.dmg2);
         }
         for (Player pl : parent.getPlayers()) {

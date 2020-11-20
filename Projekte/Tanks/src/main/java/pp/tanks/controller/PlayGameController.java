@@ -195,7 +195,7 @@ public class PlayGameController extends Controller {
         stopWatch.start();
         pressed.clear();
         processed.clear();
-        engine.getModel().loadMap("map" + engine.getMapCounter() + ".xml");
+        engine.getModel().loadMap("map" + engine.getMapCounter() + ".xml", GameMode.getBlockIdStart(engine.getMode(), engine.getMapCounter()));
 
         if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {
             if (engine.getMapCounter() == 3) engine.getModel().setDebug(true);
@@ -359,22 +359,23 @@ public class PlayGameController extends Controller {
     public void handleCollision() {
         for (ProjectileCollision coll : collisionList) {
             if (coll.dest1) {
-                if (coll.id1 > 999) getTanksMap().getProjectiles().get(coll.id1).destroy();
+                if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).destroy();
                 else getTanksMap().get(coll.id1).destroy();
             }
             else {
-                if (coll.id1 > 999) getTanksMap().getProjectiles().get(coll.id1).processDamage(coll.dmg1);
+                if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).processDamage(coll.dmg1);
                 else getTanksMap().get(coll.id1).processDamage(coll.dmg1);
             }
             if (coll.dest2) {
-                if (coll.id2 > 999) getTanksMap().getProjectiles().get(coll.id2).destroy();
+                if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).destroy();
                 else getTanksMap().get(coll.id2).destroy();
             }
             else {
-                if (coll.id2 > 999) getTanksMap().getProjectiles().get(coll.id2).processDamage(coll.dmg2);
+                if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
                 else getTanksMap().get(coll.id2).processDamage(coll.dmg2);
             }
         }
+        collisionList.clear();
     }
 
     public void addCollision(ProjectileCollision coll) {

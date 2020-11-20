@@ -129,7 +129,6 @@ public abstract class Projectile extends Item<ProjectileData> {
         for (BreakableBlock bBlock : model.getTanksMap().getBreakableBlocks()) {
             if (collisionWith(bBlock, getPos())) {
                 model.getTanksMap().notifyObs(this.data.id, bBlock.data.id, 0, damage, true, bBlock.processDestruction(damage), System.nanoTime());
-                destroy();
                 return;
             }
         }
