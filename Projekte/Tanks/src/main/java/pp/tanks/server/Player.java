@@ -177,7 +177,9 @@ public class Player {
                     enemy.add(tank.getLatestOp());
                 }
             }
-            connection.send(new ModelMessage(enemy, r));
+            ModelMessage msg = new ModelMessage(enemy, r);
+            System.out.println(msg);
+            connection.send(msg);
         }
     }
 

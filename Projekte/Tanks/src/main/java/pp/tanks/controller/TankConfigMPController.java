@@ -479,6 +479,6 @@ public class TankConfigMPController extends Controller {
 
     @Override
     public void synchronizationFinished() {
-        engine.activatePlayGameController();
+        Platform.runLater(engine::activatePlayGameController);
     }
 }
