@@ -49,7 +49,7 @@ public class SingleplayerServerTest {
         assertTrue(conn.getMessages().isEmpty());
         execute(1);
 
-        final ModelMessage model = lastMessage(conn, 1);
+        //final ModelMessage model = lastMessage(conn, 1);
 
     }
 

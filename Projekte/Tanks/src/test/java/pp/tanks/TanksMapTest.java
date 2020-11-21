@@ -48,7 +48,6 @@ public class TanksMapTest {
         assertEquals(HEIGHT, map.getHeight());
     }
 
-    //TODO: worked das?
     @Test
     public void existingPlayer() {
         Tank player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(), new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(1, 1)));

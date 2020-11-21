@@ -1,7 +1,7 @@
 package pp.tanks.model;
 
 import pp.tanks.controller.Engine;
-import pp.tanks.model.item.*;
+import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 import pp.tanks.server.GameMode;
@@ -9,7 +9,7 @@ import pp.tanks.server.GameMode;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -87,10 +87,12 @@ public class Model {
      * @param string xml file name representing a tanks map
      */
     public void loadMap(String string) {
-        String path = "Tanks/src/main/resources/pp/tanks/maps/" + string;
-        String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
+        final URL path = getClass().getResource(string);
+        //String path = "Tanks/src/main/resources/pp/tanks/model/" + string;
+        //String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
-            File currentFile = new File(absolutePath);
+            //File currentFile = new File(absolutePath);
+            File currentFile = new File (String.valueOf(path).replace("%20", " ").substring(5));
             setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
         } catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());

@@ -14,6 +14,7 @@ import pp.tanks.model.item.PlayerEnum;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MultiplayerServerTest {
     private ConnectionStub conn1;
@@ -25,12 +26,13 @@ public class MultiplayerServerTest {
             () -> {
                 transmitter.receiveMessage(new ClientReadyMessage(GameMode.MULTIPLAYER), conn1);
                 transmitter.receiveMessage(new ClientReadyMessage(GameMode.MULTIPLAYER), conn2);
+                transmitter.receiveMessage(new UpdateTankConfigMessage(ItemEnum.NORMAL_TURRET, ItemEnum.LIGHT_ARMOR, PlayerEnum.PLAYER1), conn1);
+                transmitter.receiveMessage(new UpdateTankConfigMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, PlayerEnum.PLAYER1), conn1);
+                transmitter.receiveMessage(new StartGameMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.MULTIPLAYER, PlayerEnum.PLAYER1), conn1);
+                transmitter.receiveMessage(new StartGameMessage(ItemEnum.LIGHT_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.MULTIPLAYER, PlayerEnum.PLAYER2), conn2);
             },
             () -> {
-                transmitter.receiveMessage(new UpdateTankConfigMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, PlayerEnum.PLAYER1), conn1);
-                transmitter.receiveMessage(new UpdateTankConfigMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, PlayerEnum.PLAYER2), conn2);
-                transmitter.receiveMessage(new StartGameMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.MULTIPLAYER, PlayerEnum.PLAYER1), conn1);
-                transmitter.receiveMessage(new StartGameMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.MULTIPLAYER, PlayerEnum.PLAYER2), conn2);
+
             }
     );
 
@@ -59,14 +61,10 @@ public class MultiplayerServerTest {
 
     @Test
     public void testStart() {
-        //assertTrue(conn1.getMessages().isEmpty());
-        //assertTrue(conn2.getMessages().isEmpty());
-        //execute(1);
-        //execute(2);
-        //final ServerTankUpdateMessage msg1 = lastMessage2(conn1, 1);
-        //assertEquals(ItemEnum.LIGHT_ARMOR, msg1.armor);
-        //assertEquals(ItemEnum.HEAVY_TURRET, msg1.turret);
-        //final ServerTankUpdateMessage msg2 = lastMessage2(conn2, 1);
+        assertTrue(conn1.getMessages().isEmpty());
+        assertTrue(conn2.getMessages().isEmpty());
+        execute(1);
+
     }
 
     @AfterEach
