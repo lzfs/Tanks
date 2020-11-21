@@ -39,6 +39,7 @@ public abstract class Turret {
      * @param delta time in seconds since the last update call
      */
     public void update(double delta) {
+        if (delta < -1 || delta > 1) return;
         cadence -= delta;
         if (cadence < 0) {
             cadence = 0;
