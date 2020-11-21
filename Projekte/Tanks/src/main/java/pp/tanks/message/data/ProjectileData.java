@@ -71,4 +71,9 @@ public class ProjectileData extends Data {
     public DoubleVec getTargetPos() {
         return this.targetPos;
     }
+
+    @Override
+    public String toString() {
+        return "ProjectileData: " + "dir=" + dir.toString() + ", bounce=" + bounce + ", ItemEnum=" + type + ", targetPos=" + targetPos.toString();
+    }
 }
