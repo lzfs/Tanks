@@ -4,6 +4,7 @@ import pp.network.IConnection;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
+import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.model.item.Item;
@@ -32,6 +33,7 @@ public class Player {
     public final PlayerEnum playerEnum;
     public final List<Projectile> projectiles = new ArrayList<>();
     public final List<Tank> enemyTanks = new ArrayList<>();
+    private boolean gameWon = false;
 
     /**
      * creates new player
@@ -146,6 +148,10 @@ public class Player {
         this.ready = true;
     }
 
+    public void setGameWon(boolean gameWon) {
+        this.gameWon = gameWon;
+    }
+
     /**
      * deletes all projectiles on the list
      */
@@ -173,5 +179,9 @@ public class Player {
             }
             connection.send(new ModelMessage(enemy, r));
         }
+    }
+
+    public void sendEndingMessage(GameMode mode) {
+        connection.send(new GameEndingMessage(mode, gameWon));
     }
 }

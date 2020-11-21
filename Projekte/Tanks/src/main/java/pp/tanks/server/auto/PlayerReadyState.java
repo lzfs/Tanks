@@ -154,7 +154,7 @@ public class PlayerReadyState extends TankState {
      *
      * @param model
      */
-    public void singleplayerGameLvlOne(Model model) {
+    public void singleplayerGameLvlOne(Model model) { //TODO Tanks auf Server Model laden
         Player pl = parent.getPlayers().get(0);
         TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3, MoveDirection.STAY, 0, new DoubleVec(0, 0));
         model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));

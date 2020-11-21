@@ -4,6 +4,7 @@ import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
+import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.ItemEnum;
@@ -56,6 +57,7 @@ public class PlayGameController extends Controller {
     private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
     private final List<DataTimeItem<TankData>> enemyTanks = new ArrayList<>();
     private final PriorityQueue<ProjectileCollision> collisionList = new PriorityQueue<>();
+    private GameEndingMessage endingMessage = null;
 
     /**
      * create a new PlayGameController
@@ -117,6 +119,7 @@ public class PlayGameController extends Controller {
      */
     @Override
     public void update() {
+        if (endingMessage != null) gameEnd();
         // process input events that occurred since the last game step
         if (pressed.size() >= 2) {
             keyPressed(pressed.get(0), pressed.get(1));
@@ -143,7 +146,7 @@ public class PlayGameController extends Controller {
 
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
-        if (engine.getModel().gameWon()) {
+        /*if (engine.getModel().gameWon()) {
             engine.setView(null);
             if (engine.getMode() == GameMode.TUTORIAL) {
                 engine.activateLevelController();
@@ -182,7 +185,7 @@ public class PlayGameController extends Controller {
             }
         }
         else if (pressed.contains(KeyCode.ESCAPE))
-            engine.activatePauseMenuSPController(); //TODO
+            engine.activatePauseMenuSPController(); //TODO*/
 
         engine.getView().updateProgressBar((((double) engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
     }
@@ -381,5 +384,19 @@ public class PlayGameController extends Controller {
 
     public void addCollision(ProjectileCollision coll) {
         collisionList.add(coll);
+    }
+
+    public void setGameEnd(GameEndingMessage msg) {
+        endingMessage = msg;
+    }
+
+    public void gameEnd() {
+        if (endingMessage.mode == GameMode.MULTIPLAYER) {
+            if (endingMessage.won) engine.activateGameWonMPController();
+            else engine.activateGameOverMPController();
+        }
+        else System.out.println("noch nicht implementiert");
+
+        //endingMessage = null;
     }
 }

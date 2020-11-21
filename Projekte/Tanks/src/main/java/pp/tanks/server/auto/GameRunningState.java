@@ -77,6 +77,11 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             tankDat.clear();
             dat.clear();
             model.update(timeStart + step * (i + 1));
+            if (isGameEnd()) {
+                for (Player pl : parent.getPlayers()) {
+                    pl.sendEndingMessage(gameMode);
+                }
+            }
         }
         model.setLatestUpdate(timeStart + 5 * step);
 
@@ -218,5 +223,27 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         for (Player pl : parent.getPlayers()) {
             pl.getConnection().send(new ProjectileCollisionMessage(coll));
         }
+    }
+
+    public boolean isGameEnd() { //TODO Tutorial and Debug mode
+        if (gameMode == GameMode.SINGLEPLAYER) {
+           if (model.gameWon()) {
+               parent.getPlayers().get(0).setGameWon(true);
+               return true;
+           }
+           else return false;
+        }
+        else if (gameMode == GameMode.MULTIPLAYER) {
+            if (model.gameFinished()) {
+                if (model.getTanksMap().get(0).isDestroyed()) {
+                    parent.getPlayers().get(1).setGameWon(true);
+                }
+                else {
+                    parent.getPlayers().get(0).setGameWon(true);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }

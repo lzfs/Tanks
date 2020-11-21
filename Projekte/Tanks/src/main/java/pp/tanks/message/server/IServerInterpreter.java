@@ -18,4 +18,6 @@ public interface IServerInterpreter {
     void visit(StartingSingleplayerMessage msg);
 
     void visit(ProjectileCollisionMessage msg);
+
+    void visit(GameEndingMessage msg);
 }

@@ -6,6 +6,7 @@ import pp.network.MessageReceiver;
 import pp.tanks.message.client.IClientMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.PingResponse;
+import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
@@ -258,6 +259,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(ProjectileCollisionMessage msg) {
         engine.playGameController.addCollision(msg.collision);
+    }
+
+    @Override
+    public void visit(GameEndingMessage msg) {
+        engine.playGameController.setGameEnd(msg);
     }
 }
 

@@ -155,12 +155,16 @@ public class Model {
      */
     public boolean gameWon() {
         if (debug) return false;
-        if (engine.getMode() == GameMode.MULTIPLAYER) return false;  //TODO
         if (map.getTank(engine.getPlayerEnum()).isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
             if (tanks != map.getTank(engine.getPlayerEnum()) && !tanks.isDestroyed()) return false;
         }
         return true;
+    }
+
+    public boolean gameFinished() {
+        if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return true;
+        return map.getTank(PlayerEnum.PLAYER2).isDestroyed();
     }
 
     /**
