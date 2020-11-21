@@ -1,10 +1,10 @@
 package pp.tanks.model;
 
 import pp.tanks.controller.Engine;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
-import pp.tanks.server.GameMode;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -92,7 +92,7 @@ public class Model {
         //String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
             //File currentFile = new File(absolutePath);
-            File currentFile = new File (String.valueOf(path).replace("%20", " ").substring(5));
+            File currentFile = new File (String.valueOf(path).replace("%20", " ").substring(5)); //"%20" eliminates spaces from the URL; .substring(5) erases the "file:" from the beginning
             setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
         } catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
