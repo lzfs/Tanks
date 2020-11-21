@@ -93,7 +93,7 @@ public class PlayerReadyState extends TankState {
         }
         model.getTanksMap().updateHashMap();
         parent.playingState.initializeGame(model, msg.gameMode);
-        parent.goToState(containingState().playingState);
+        parent.goToState(containingState().synchronize);
     }
 
     /**

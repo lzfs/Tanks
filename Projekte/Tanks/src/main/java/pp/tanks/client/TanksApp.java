@@ -215,6 +215,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
         System.out.println(" offset: " + msg.nanoOffset);
+        engine.getController().synchronizationFinished();
     }
 
     /**

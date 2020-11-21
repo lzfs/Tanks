@@ -33,4 +33,6 @@ public class Controller {
      * @param event the event that happened and that is passed to this controller.
      */
     public void handle(Event event) { }
+
+    public void synchronizationFinished() { }
 }

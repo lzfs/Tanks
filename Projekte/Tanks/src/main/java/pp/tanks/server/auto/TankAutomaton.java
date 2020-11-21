@@ -99,7 +99,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * state for the synchronize of client and server
      */
-    private final TankState synchronize = new SynchronizeState(this);
+    public final TankState synchronize = new SynchronizeState(this);
 
     /**
      * the state where the players choose their tank

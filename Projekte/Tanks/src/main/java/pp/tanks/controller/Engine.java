@@ -503,4 +503,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public Connection<IClientMessage, IServerMessage> getConnection() {
         return getTankApp().getConnection();
     }
+
+    public Controller getController() {
+        return controller;
+    }
 }

@@ -474,7 +474,11 @@ public class TankConfigMPController extends Controller {
             engine.setSaveTank(tank);
             engine.setSaveEnemyTank(enemy);
             engine.setMapCounter(1);
-            engine.activatePlayGameController();
         });
+    }
+
+    @Override
+    public void synchronizationFinished() {
+        engine.activatePlayGameController();
     }
 }
