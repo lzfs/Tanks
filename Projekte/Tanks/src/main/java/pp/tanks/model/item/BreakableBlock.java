@@ -24,16 +24,16 @@ public class BreakableBlock extends Block<BBData> {
     /**
      * reduces the lifepoints
      *
-     * @param points the points to reduce the lifepoints
+     * @param damage the points to reduce the lifepoints
      */
     @Override
-    public void processDamage(int points) {
-        if (getLifepoints() - points <= 0) {
+    public void processDamage(int damage) {
+        if (getLifepoints() - damage <= 0) {
             data.reduceLifepoints(data.getLifepoints());
             destroy();
             return;
         }
-        data.reduceLifepoints(points);
+        data.reduceLifepoints(damage);
     }
 
     /**

@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * base class of the data which is sent to the server
  */
-public class Data implements Serializable{
+public class Data implements Serializable {
     private DoubleVec pos;
     public final int id;
     private boolean destroyed;
@@ -21,6 +21,7 @@ public class Data implements Serializable{
 
     /**
      * update the position of the tank
+     *
      * @param pos new position
      */
     public void setPos(DoubleVec pos) {
@@ -43,6 +44,7 @@ public class Data implements Serializable{
 
     /**
      * checks if the current item is destroyed
+     *
      * @return boolean-value
      */
     public boolean isDestroyed() {
@@ -51,9 +53,12 @@ public class Data implements Serializable{
 
     /**
      * updates the destroy-flag
+     *
      * @param bool new status
      */
-    public void setDestroyed(boolean bool){this.destroyed = bool;}
+    public void setDestroyed(boolean bool) {
+        this.destroyed = bool;
+    }
 
     /**
      * @return item id
@@ -64,8 +69,15 @@ public class Data implements Serializable{
 
     /**
      * creates a similar copy of the current Data-class for working processes
+     *
      * @return returns the copy
      */
-    public Data mkCopy() { return  new Data(this.pos, this.id); }
+    public Data mkCopy() {
+        return new Data(this.pos, this.id);
+    }
 
+    @Override
+    public String toString() {
+        return "Data: " + "destroyed=" + destroyed + ", pos=" + pos.toString() + ", id=" + id;
+    }
 }

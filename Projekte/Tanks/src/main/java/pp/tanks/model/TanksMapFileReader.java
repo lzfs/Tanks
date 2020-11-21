@@ -30,7 +30,7 @@ class TanksMapFileReader {
     private final Set<DoubleVec> occupied = new HashSet<>();
     private XMLStreamReader xtr = null;
     private final List<String> errors = new ArrayList<>();
-    private int counter = 2;
+    private int counter = 5;
 
     /**
      * Creates an instance of this class for the specified game model.
@@ -46,8 +46,7 @@ class TanksMapFileReader {
      * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
      * @throws XMLStreamException if the file is no valid xml file
      */
-    public TanksMap readFile(File file, int counter) throws IOException, XMLStreamException {
-        this.counter = counter;
+    public TanksMap readFile(File file) throws IOException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         Reader reader = new FileReader(file);
         xtr = factory.createXMLStreamReader(reader);

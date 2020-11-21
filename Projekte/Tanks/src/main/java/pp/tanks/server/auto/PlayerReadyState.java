@@ -91,6 +91,7 @@ public class PlayerReadyState extends TankState {
         else {
             tutorialGame(model);
         }
+        model.getTanksMap().updateHashMap();
         parent.playingState.initializeGame(model, msg.gameMode);
         parent.goToState(containingState().playingState);
     }
@@ -104,13 +105,13 @@ public class PlayerReadyState extends TankState {
     public Model loadModel(GameMode gameMode) {
         Model model = new Model(parent.getProperties());
         if (gameMode == GameMode.TUTORIAL) {
-            model.loadMap("map0.xml", 2);
+            model.loadMap("map0.xml");
         }
         else if (gameMode == GameMode.SINGLEPLAYER) {
-            model.loadMap("map1.xml", 4);
+            model.loadMap("map1.xml");
         }
         else {
-            model.loadMap("map1.xml", 2);
+            model.loadMap("map1.xml");
         }
         return model;
     }

@@ -120,4 +120,9 @@ public class TankData extends Data {
     public void setMove(boolean move) {
         this.move = move;
     }
+
+    @Override
+    public String toString() {
+        return "TankData: " + "moveDir=" + moveDir + ", turretDir=" + turretDir.toString() + ", moveB=" + move + ", rotation=" + rotation + ", lifepoints=" + lifePoints;
+    }
 }

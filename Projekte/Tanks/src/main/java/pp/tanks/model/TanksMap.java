@@ -30,6 +30,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     private final int height;
     private final Model model;
     private final List<ICollisionObserver> observers = new ArrayList<>();
+    private final HashMap<Integer, Item<? extends Data>> hashMap = new HashMap<>();
 
     /**
      * Creates a map of the specified size and with a droid at position (0,0)
@@ -328,5 +329,20 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         for (ICollisionObserver obs : observers) {
             obs.notify(coll);
         }
+    }
+
+    public void updateHashMap() {
+        for (Item<? extends Data> item : this) {
+            if (!hashMap.containsKey(item.getData().id)) hashMap.put(item.getData().id, item);
+        }
+    }
+
+    /**
+     * !!!NOT for Projectiles!!!
+     * @param id
+     * @return
+     */
+    public Item<? extends Data> getFromID(int id) {
+        return hashMap.get(id);
     }
 }

@@ -50,4 +50,9 @@ public class DataTimeItem<T extends Data> implements Comparable<DataTimeItem<? e
     public int getId() {
         return data.getId();
     }
+
+    @Override
+    public String toString() {
+        return "DataTimeItem: " + "data=" + data.toString() + ", servertime=" + serverTime;
+    }
 }
