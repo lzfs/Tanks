@@ -323,12 +323,13 @@ public class PlayGameController extends Controller {
      */
     private void addProjectiles() {
         if (projectiles.isEmpty()) return;
-        for (DataTimeItem<ProjectileData> item : projectiles) {
+        List<DataTimeItem<ProjectileData>> tmpList = new ArrayList<>(projectiles);
+        projectiles.clear();
+        for (DataTimeItem<ProjectileData> item : tmpList) {
             Projectile p = Projectile.mkProjectile(engine.getModel(), item.data);
             engine.getModel().getTanksMap().addProjectile(p);
             p.interpolateData(item);
         }
-        projectiles.clear();
     }
 
     /**
@@ -336,7 +337,9 @@ public class PlayGameController extends Controller {
      */
     private void processEnemyTanks() {
         if (enemyTanks.isEmpty()) return;
-        for (DataTimeItem<TankData> item : enemyTanks) {
+        List<DataTimeItem<TankData>> tmpList = new ArrayList<>(enemyTanks);
+        enemyTanks.clear();
+        for (DataTimeItem<TankData> item : tmpList) {
             Tank tmp = engine.getModel().getTanksMap().getAllTanks().get(item.getId());
             tmp.interpolateData(item);
         }

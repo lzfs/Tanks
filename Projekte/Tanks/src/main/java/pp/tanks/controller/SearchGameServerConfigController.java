@@ -97,7 +97,7 @@ public class SearchGameServerConfigController extends Controller {
     private void search() {
         // TODO use port, ip to connect to the server
         LOGGER.log(Level.INFO, "clicked SEARCH");
-
+        engine.getTankApp().joinGame(GameMode.MULTIPLAYER, getIpAddress(), getPort());
         /*
         engine.getTankApp().joinGame(GameMode.MULTIPLAYER);
         System.out.println("Client connected to MP");
