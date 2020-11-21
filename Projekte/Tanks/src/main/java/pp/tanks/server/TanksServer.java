@@ -47,6 +47,7 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void receiveMessage(IClientMessage message, IConnection<IServerMessage> conn) {
+        System.out.println("msg: " + message.toString() + " conn: " + conn);
         message.accept(this, conn);
     }
 

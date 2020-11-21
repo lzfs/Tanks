@@ -29,4 +29,9 @@ public class UpdateTankConfigMessage implements IClientMessage {
     public void accept(IClientInterpreter interpreter, IConnection<IServerMessage> from) {
         interpreter.visit(this, from);
     }
+
+    @Override
+    public String toString() {
+        return "UpdateTankConfigMessage: " + "turret=" + turret + ", armor=" + armor + ", player=" + player;
+    }
 }

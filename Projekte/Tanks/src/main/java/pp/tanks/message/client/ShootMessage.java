@@ -25,4 +25,9 @@ public class ShootMessage implements IClientMessage {
     public void accept(IClientInterpreter interpreter, IConnection<IServerMessage> from) {
         interpreter.visit(this, from);
     }
+
+    @Override
+    public String toString() {
+        return "ShootMessage: " + dataTime;
+    }
 }
