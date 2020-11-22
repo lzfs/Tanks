@@ -180,41 +180,19 @@ public abstract class Tank extends Item<TankData> {
      */
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
-        collide(newPos);
+        DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed*2));
+
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
-
-            //haben latest OP
-            //wenn nachricht an server
-            //dataTime item an sich selbst geben
-            //berechenen angefangen und wann fertig
-            //delta größer als deltaT also zeit die ich bräuchte
-            //iwas iwo abziehen
-
-            //es kommt bewegunsgänderung
-            //hat Data
-            //und latestOP  (bräuchte er eigentlich nicht)
-            //wenn stopmovement oder setmovedirection
-            //das datatime item als latestOP abspeichern
-            //delta winkel berechnen  (der zu drehende winkel)
-            //wie lange ich bräuchte kann ich mir deltaT für dauer der drehung berechnen
-            //deltaT abspeichern
-            //iwo oben ne deltaZeit
-            //deltaZeit+=delta
-            //ist deltazeit kleiner als deltaT?
-            //=> current rotation dreh dings
-            //berechnen speichern
-            //deltazeit=deltaT
-            // deltazeit- deltaT=minizeit
-            //setRotation auf moveDirdirection
-            //setPosition(alte + direction * speed*minizeit
             double tmp = (currentRot - moveDirRotation + 180) % 180;
             double tmp1 = (moveDirRotation - currentRot + 180) % 180;
             double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
             if (tmp2 < 4) {
                 data.setRotation(moveDirRotation);
-                setPos(newPos);
+                if(!collide(newPos)) {
+                    setPos(newPos);
+                }
             }
             else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);
@@ -224,6 +202,32 @@ public abstract class Tank extends Item<TankData> {
             }
         }
     }
+
+
+    //haben latest OP
+    //wenn nachricht an server
+    //dataTime item an sich selbst geben
+    //berechenen angefangen und wann fertig
+    //delta größer als deltaT also zeit die ich bräuchte
+    //iwas iwo abziehen
+
+    //es kommt bewegunsgänderung
+    //hat Data
+    //und latestOP  (bräuchte er eigentlich nicht)
+    //wenn stopmovement oder setmovedirection
+    //das datatime item als latestOP abspeichern
+    //delta winkel berechnen  (der zu drehende winkel)
+    //wie lange ich bräuchte kann ich mir deltaT für dauer der drehung berechnen
+    //deltaT abspeichern
+    //iwo oben ne deltaZeit
+    //deltaZeit+=delta
+    //ist deltazeit kleiner als deltaT?
+    //=> current rotation dreh dings
+    //berechnen speichern
+    //deltazeit=deltaT
+    // deltazeit- deltaT=minizeit
+    //setRotation auf moveDirdirection
+    //setPosition(alte + direction * speed*minizeit
 
     /**
      * Method to accept a visitor
@@ -293,20 +297,23 @@ public abstract class Tank extends Item<TankData> {
     /**
      * handles the movement of the tank if it collides with other tanks or blocks in the map
      */
-    private void collide(DoubleVec pos) {
+    private boolean collide(DoubleVec pos) {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (this != tank && collisionWith(tank, pos)) {
-                setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
+                //setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
+                setMoveDirection(STAY);
                 setMove(false);
-                return;
+                return true;
             }
         }
         for (Block block : model.getTanksMap().getBlocks()) {
             if (collisionWith(block, pos)) {
+                setMoveDirection(STAY);
                 setMove(false);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -322,11 +329,11 @@ public abstract class Tank extends Item<TankData> {
 
         if (other instanceof Block) {
             Block block = (Block) other;
-            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
+            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2.0), newPos.y - (effectiveRadius / 2.0), effectiveRadius, effectiveRadius);
             return item1.intersects(other.getPos().x - ((block.getWidth() + buffer) / 2.0), other.getPos().y - ((block.getHeight() + buffer) / 2.0), block.getWidth() + buffer, block.getHeight() + buffer);
         }
         else {
-            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+            return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
 

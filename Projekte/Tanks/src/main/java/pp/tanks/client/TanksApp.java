@@ -160,8 +160,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * @param mode given Player-mode
      */
     public void joinGame(GameMode mode) {
-        //joinGame(mode, "127.0.0.1", "1234");
-        joinGame(mode, "137.193.138.79", "1234");
+        joinGame(mode, "127.0.0.1", "1234");
+        //joinGame(mode, "137.193.138.79", "1234");
     }
 
     /**
