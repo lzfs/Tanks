@@ -297,7 +297,7 @@ public abstract class Tank extends Item<TankData> {
     /**
      * handles the movement of the tank if it collides with other tanks or blocks in the map
      */
-    private boolean collide(DoubleVec pos) {
+    protected boolean collide(DoubleVec pos) {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (this != tank && collisionWith(tank, pos)) {
                 //setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));

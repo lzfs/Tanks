@@ -130,7 +130,6 @@ public class PlayGameController extends Controller {
         else {
             getTank().setMove(false);
         }
-
         if (stopFlag) {
             getTank().stopMovement();
             stopFlag = false;

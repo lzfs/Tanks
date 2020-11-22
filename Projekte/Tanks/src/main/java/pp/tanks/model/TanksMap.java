@@ -245,8 +245,12 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         }
         projectiles.putAll(addedProjectiles);
         addedProjectiles.clear();
-        for (Projectile proj : projectiles.values())
-            proj.processHits();
+        for (Projectile proj : projectiles.values()){
+            if(!proj.isDestroyed()){
+                proj.processHits();
+            }
+        }
+
         List<Item> removed = new ArrayList<>();
         for (Item item : this)
             if (item.isDestroyed())

@@ -4,6 +4,7 @@ import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
+import pp.util.DoubleVec;
 
 /**
  * Represents the tank of the current player
@@ -47,7 +48,7 @@ public class PlayersTank extends Tank {
     }
 
     /**
-     * TODO: add JavaDoc
+     * make a Tank
      *
      * @param turret
      * @param armor
@@ -63,9 +64,12 @@ public class PlayersTank extends Tank {
      */
     @Override
     public void stopMovement() {
-        data.setMoveDir(MoveDirection.STAY);
-        DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
-        model.getEngine().getConnection().send(new MoveMessage(item));
+        if ( getMoveDir() != MoveDirection.STAY){
+            data.setMoveDir(MoveDirection.STAY);
+            DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
+            model.getEngine().getConnection().send(new MoveMessage(item));
+        }
+
     }
 
     /**
@@ -75,11 +79,15 @@ public class PlayersTank extends Tank {
      */
     @Override
     public void setMoveDirection(MoveDirection dir) {
-        if (dir != data.getMoveDir()) {
-            super.setMoveDirection(dir);
-            DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
-            model.getEngine().getConnection().send(new MoveMessage(item));
+        DoubleVec newPos = getPos().add(dir.getVec().mult(0.1 * speed));
+        if (!collide(newPos)){
+            if (dir != data.getMoveDir()) {
+                super.setMoveDirection(dir);
+                DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
+                model.getEngine().getConnection().send(new MoveMessage(item));
+            }
+            else super.setMoveDirection(dir);
         }
-        else super.setMoveDirection(dir);
+
     }
 }

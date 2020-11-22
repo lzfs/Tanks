@@ -105,7 +105,7 @@ public abstract class Item<T extends Data> {
      * @param other the item which is checked for a collision
      */
     public boolean collisionWith(Item other, DoubleVec newPos) {
-        if (getPos() == null || other.isDestroyed()) return false;
+        if (getPos() == null || other.isDestroyed() || this.isDestroyed()) return false;
 
         if (other instanceof Block) {
             Block block = (Block) other;
