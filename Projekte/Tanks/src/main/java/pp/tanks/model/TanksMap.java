@@ -252,16 +252,12 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
             if (item.isDestroyed())
                 removed.add(item);
         breakableBlocks.removeAll(removed);
-        for (Entry<Integer, Projectile> entry : projectiles.entrySet()) {
-            if (removed.contains(entry.getValue())) {
-                if (model.getEngine() != null ) {
-                    model.getEngine().getView().addExplosion(entry.getValue());
-                    Platform.runLater(() -> projectiles.remove(entry.getKey()));
-                }
-                else projectiles.remove(entry.getKey());
-            }
+        projectiles.entrySet().removeIf(e -> removed.contains(e.getValue()));
+        //model.getEngine().getView().addExplosion(entry.getValue()); TODO in die destroy?
+
+
         }
-    }
+
 
     /**
      * Adds a Tank to this map.
