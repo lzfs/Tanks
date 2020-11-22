@@ -35,6 +35,7 @@ public abstract class Projectile extends Item<ProjectileData> {
      * reflect the projectile and gives it a new direction
      */
     public void reflect() {
+        System.out.println("davor "+latestOp.data.getDir());
         int i = 0;
         while (!collisionWith(model.getTanksMap().getReflectable().get(i), getPos())) {
             i++;
@@ -44,16 +45,24 @@ public abstract class Projectile extends Item<ProjectileData> {
         double height = ((double) rBlock.getHeight()) / 2;
         if (getPos().x >= rBlock.getPos().x + width || getPos().x <= rBlock.getPos().x - width) {
             //right and left
-            setDir(new DoubleVec(getDir().x * (-1), getDir().y));
+            latestOp.data.setDir(new DoubleVec(latestOp.data.getDir().x * (-1), latestOp.data.getDir().y));
         }
         else if (getPos().y >= rBlock.getPos().y + height || getPos().y <= rBlock.getPos().y - height) {
             //above and below
-            setDir(new DoubleVec(getDir().x, getDir().y * (-1)));
+            latestOp.data.setDir(new DoubleVec(latestOp.data.getDir().x, latestOp.data.getDir().y * (-1)));
         }
         else {
-            setDir(new DoubleVec(getDir().x * (-1), getDir().y * (-1)));
+            latestOp.data.setDir(new DoubleVec(latestOp.data.getDir().x * (-1), latestOp.data.getDir().y * (-1)));
         }
-        setPos(getPos().add(getDir().mult(0.1)));
+        latestOp.data.setPos(getPos().add(latestOp.data.getDir().mult(0.5)));
+        setPos(latestOp.data.getPos());
+        setDir(latestOp.data.getDir());
+        ProjectileData tmpData = latestOp.data.mkCopy();
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>( tmpData,latestInterpolate);
+        interpolateData(tmp);
+        //System.out.println("danach "+latestOp.data.getDir());
+        //System.out.println("//eigene pos " +getPos());
+        //System.out.println("//latestOP pos " + latestOp.data.getPos());
     }
 
     /**
@@ -114,6 +123,8 @@ public abstract class Projectile extends Item<ProjectileData> {
         if (System.nanoTime() - flag > 1000000) {
             flag = 0;
         }
+        //System.out.println("eigene pos " +getPos());
+        //System.out.println("latestOP pos " + latestOp.data.getPos());
     }
 
     /**
@@ -133,10 +144,11 @@ public abstract class Projectile extends Item<ProjectileData> {
             }
         }
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
-            if (collisionWith(rBlock, getPos())) {
-                if (data.getBounce() > 0) {
+            if (collisionWith(rBlock, getPos()) && flag==0) {
+                if (latestOp.data.getBounce() > 0) {
+                    flag=System.nanoTime();
                     reflect();
-                    data.bounced();
+                    latestOp.data.bounced();
                 }
                 else {
                     destroy();
@@ -199,7 +211,17 @@ public abstract class Projectile extends Item<ProjectileData> {
         long tmp = (time - latestOp.serverTime);
         double deltaT = ((double) tmp) / FACTOR_SEC;
         data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT * speed)));
+        System.out.println("interpol "+latestOp.data.getPos().add(latestOp.data.getDir().mult(deltaT * speed)));
+        System.out.println("deltaT " + deltaT);
         latestInterpolate = time;
         return true;
     }
+/*
+    @Override
+    public void destroy() {
+        super.destroy();
+        model.getEngine().getView().addExplosion(this);
+    }
+ */
+
 }

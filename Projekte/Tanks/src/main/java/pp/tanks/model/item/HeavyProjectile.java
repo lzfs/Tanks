@@ -13,7 +13,6 @@ public class HeavyProjectile extends Projectile {
     public HeavyProjectile(Model model, ProjectileData data) {
         super(model, 0.25, 30, 5.0, data);
         this.targetPos = data.getTargetPos();
-        this.flag = 1;
     }
 
     /**
@@ -40,15 +39,6 @@ public class HeavyProjectile extends Projectile {
     @Override
     public void update(long serverTime) {
         interpolateTime(serverTime);
-       /* if (flag > 0) {
-            flag -= delta;
-        }
-        if (flag < 0) {
-            flag = 0;
-        }
-
-        data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
-        */
         if (getPos().distance(targetPos) <= 0.3) {
             setPos(targetPos);
         }
@@ -69,7 +59,7 @@ public class HeavyProjectile extends Projectile {
      */
     public void collision() {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
-            if (collisionWith(tank, getPos()) && flag == 0) {
+            if (collisionWith(tank, getPos())) {
                 tank.processDamage(damage);
                 destroy();
                 return;

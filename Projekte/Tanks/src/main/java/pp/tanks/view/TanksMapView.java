@@ -106,7 +106,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
                 }
             }
         }
-        projectiles.removeAll(projectiles);
+        projectiles.clear();
 
         context.setFont(TEXT_FONT);
         context.setFill(Color.WHITE);

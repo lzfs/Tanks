@@ -257,7 +257,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
                 removed.add(item);
         breakableBlocks.removeAll(removed);
         projectiles.entrySet().removeIf(e -> removed.contains(e.getValue()));
-        //model.getEngine().getView().addExplosion(entry.getValue()); TODO in die destroy?
+        //model.getEngine().getView().addExplosion(entry.getValue()); //TODO in die destroy?
 
 
         }
