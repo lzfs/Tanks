@@ -74,6 +74,6 @@ public class ProjectileData extends Data {
 
     @Override
     public String toString() {
-        return "ProjectileData: " + "dir=" + dir.toString() + ", bounce=" + bounce + ", ItemEnum=" + type + ", targetPos=" + targetPos.toString();
+        return "ProjectileData: " + "dir=" + dir.toString() + ", bounce=" + bounce + ", ItemEnum=" + type + ", targetPos=" + targetPos.toString() + ", id=" + id;
     }
 }
