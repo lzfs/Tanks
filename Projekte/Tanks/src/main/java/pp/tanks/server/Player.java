@@ -2,11 +2,13 @@ package pp.tanks.server;
 
 import pp.network.IConnection;
 import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
+import pp.tanks.message.server.ProjectileCollisionMessage;
 import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
@@ -33,6 +35,7 @@ public class Player {
     public final PlayerEnum playerEnum;
     public final List<Projectile> projectiles = new ArrayList<>();
     public final List<Tank> enemyTanks = new ArrayList<>();
+    public final List<ProjectileCollision> projCollisions = new ArrayList<>();
     private boolean gameWon = false;
 
     /**
@@ -158,13 +161,14 @@ public class Player {
     public void reset() {
         this.projectiles.clear();
         this.enemyTanks.clear();
+        this.projCollisions.clear();
     }
 
     /**
      * TODO: add JavaDoc
      */
     public void sendMessages() {
-        if (!projectiles.isEmpty() || !enemyTanks.isEmpty()) {
+        if (!projectiles.isEmpty() || !enemyTanks.isEmpty() || !projCollisions.isEmpty()) {
             List<DataTimeItem<ProjectileData>> r = new ArrayList<>();
             List<DataTimeItem<TankData>> enemy = new ArrayList<>();
             if (!projectiles.isEmpty()) {
@@ -178,6 +182,7 @@ public class Player {
                 }
             }
             connection.send(new ModelMessage(enemy, r));
+            if (!projCollisions.isEmpty()) connection.send(new ProjectileCollisionMessage(projCollisions));
         }
     }
 

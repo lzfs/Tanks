@@ -2,10 +2,12 @@ package pp.tanks.message.server;
 
 import pp.tanks.message.data.ProjectileCollision;
 
-public class ProjectileCollisionMessage implements IServerMessage {
-    public final ProjectileCollision collision;
+import java.util.List;
 
-    public ProjectileCollisionMessage(ProjectileCollision collision) {
+public class ProjectileCollisionMessage implements IServerMessage {
+    public final List<ProjectileCollision> collision;
+
+    public ProjectileCollisionMessage(List<ProjectileCollision> collision) {
         this.collision = collision;
     }
 

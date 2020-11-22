@@ -77,9 +77,11 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             tankDat.clear();
             dat.clear();
             model.update(timeStart + step * (i + 1));
-            if (isGameEnd()) {
-                for (Player pl : parent.getPlayers()) {
-                    pl.sendEndingMessage(gameMode);
+            for (Player p : parent.getPlayers()) {
+                if (isGameEnd()) p.sendEndingMessage(gameMode);
+                else {
+                    p.sendMessages();
+                    p.reset();
                 }
             }
         }
@@ -210,18 +212,18 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
         else {
             if (coll.id1 > 999) model.getTanksMap().getHashProjectiles().get(coll.id1).processDamage(coll.dmg1);
-            model.getTanksMap().getFromID(coll.id1).processDamage(coll.dmg1);
+            else model.getTanksMap().getFromID(coll.id1).processDamage(coll.dmg1);
         }
         if (coll.dest2) {
             if (coll.id2 > 999) model.getTanksMap().getHashProjectiles().get(coll.id2).destroy();
-            model.getTanksMap().getFromID(coll.id2).destroy();
+            else model.getTanksMap().getFromID(coll.id2).destroy();
         }
         else {
             if (coll.id2 > 999) model.getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
-            model.getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
+            else model.getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
         }
         for (Player pl : parent.getPlayers()) {
-            pl.getConnection().send(new ProjectileCollisionMessage(coll));
+            pl.projCollisions.add(coll);
         }
     }
 

@@ -371,22 +371,22 @@ public class PlayGameController extends Controller {
             }
             else {
                 if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).processDamage(coll.dmg1);
-                getTanksMap().getFromID(coll.id1).processDamage(coll.dmg1);
+                else getTanksMap().getFromID(coll.id1).processDamage(coll.dmg1);
             }
             if (coll.dest2) {
                 if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).destroy();
-                getTanksMap().getFromID(coll.id2).destroy();
+                else getTanksMap().getFromID(coll.id2).destroy();
             }
             else {
                 if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
-                getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
+                else getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
             }
         }
         collisionList.clear();
     }
 
-    public void addCollision(ProjectileCollision coll) {
-        collisionList.add(coll);
+    public void addCollision(List<ProjectileCollision> coll) {
+        collisionList.addAll(coll);
     }
 
     public void setGameEnd(GameEndingMessage msg) {
