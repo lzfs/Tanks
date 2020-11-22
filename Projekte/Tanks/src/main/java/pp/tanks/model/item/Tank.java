@@ -324,7 +324,7 @@ public abstract class Tank extends Item<TankData> {
     public boolean collisionWith(Item other, DoubleVec newPos) {
         if (getPos() == null || other.isDestroyed()) return false;
 
-        double buffer = 0.4;
+        double buffer = 0.05;
 
         if (other instanceof Block) {
             Block block = (Block) other;
