@@ -4,5 +4,17 @@ package pp.tanks.server;
  * Enumeration for GameMode-Types
  */
 public enum GameMode {
-    SINGLEPLAYER, MULTIPLAYER, TUTORIAL
+    /**
+     * used for singleplayer
+     */
+    SINGLEPLAYER,
+    /**
+     * used for multiplayer
+     */
+    MULTIPLAYER,
+    /**
+     * used for tutorial and debug
+     */
+    TUTORIAL;
+
 }

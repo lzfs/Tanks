@@ -33,4 +33,9 @@ public class StartGameMessage implements IClientMessage {
     public void accept(IClientInterpreter interpreter, IConnection<IServerMessage> from) {
         interpreter.visit(this, from);
     }
+
+    @Override
+    public String toString() {
+        return "StartGameMessage: " + "turret=" + turret + ", armor=" + armor + ", gameMode=" + gameMode + ", player=" + player;
+    }
 }

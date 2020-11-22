@@ -10,4 +10,14 @@ public interface IServerInterpreter {
     void visit(SetPlayerMessage msg);
 
     void visit(ServerTankUpdateMessage msg);
+
+    void visit(StartingMultiplayerMessage msg);
+
+    void visit(ModelMessage msg);
+
+    void visit(StartingSingleplayerMessage msg);
+
+    void visit(ProjectileCollisionMessage msg);
+
+    void visit(GameEndingMessage msg);
 }

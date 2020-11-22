@@ -1,14 +1,15 @@
 package pp.tanks.model;
 
-import pp.tanks.model.item.*;
+import pp.tanks.controller.Engine;
+import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
-import pp.tanks.server.GameMode;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -27,6 +28,8 @@ public class Model {
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
     private boolean debug;
+    private long latestUpdate;
+    private Engine engine;
 
     /**
      * Creates a game model
@@ -84,27 +87,34 @@ public class Model {
      * @param string xml file name representing a tanks map
      */
     public void loadMap(String string) {
-        String path = "Tanks/src/main/resources/pp/tanks/maps/" + string;
-        String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
+        final URL path = getClass().getResource(string);
+        //String path = "Tanks/src/main/resources/pp/tanks/model/" + string;
+        //String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
-            File currentFile = new File(absolutePath);
+            //File currentFile = new File(absolutePath);
+            File currentFile = new File (String.valueOf(path).replace("%20", " ").substring(5)); //"%20" eliminates spaces from the URL; .substring(5) erases the "file:" from the beginning
             setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
         } catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
+            System.out.println("APOKALYPSE");
         }
     }
 
+    /**
+     * updates tank
+     * @param tank new tank
+     */
     public void setTank(Tank tank){
-        map.setPlayerTank0(tank);
+        map.addPlayerTank(tank);
     }
 
     /**
      * Called once per frame. This method triggers any update of the game model based on the elapsed time.
      *
-     * @param deltaTime time in seconds since the last update call
+     * @param serverTime time in seconds since the last update call
      */
-    public void update(double deltaTime) {
-        map.update(deltaTime);
+    public void update(long serverTime) {
+        map.update(serverTime);
     }
 
     /**
@@ -137,7 +147,7 @@ public class Model {
      * Returns true if amd only if own tank is dead.
      */
     public boolean gameLost() {
-        return map.getTank0().isDestroyed();
+        return map.getTank(engine.getPlayerEnum()).isDestroyed();
     }
 
     /**
@@ -145,14 +155,53 @@ public class Model {
      */
     public boolean gameWon() {
         if (debug) return false;
-        if (map.getTank0().isDestroyed()) return false;
+        if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
-            if (tanks != map.getTank0() && !tanks.isDestroyed()) return false;
+            if (tanks != map.getTank(engine.getPlayerEnum()) && !tanks.isDestroyed()) return false;
         }
         return true;
     }
 
+    public boolean gameFinished() {
+        if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return true;
+        return map.getTank(PlayerEnum.PLAYER2).isDestroyed();
+    }
+
+    /**
+     * activates debug-mode
+     * @param debug boolean for activation
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
+    }
+
+    /**
+     * @return latestUpdate
+     */
+    public long getLatestUpdate() {
+        return latestUpdate;
+    }
+
+    /**
+     * updates latestUpdate
+     * @param latestUpdate new latestUpdate
+     */
+    public void setLatestUpdate(long latestUpdate) {
+        this.latestUpdate = latestUpdate;
+    }
+
+    /**
+     * updates engine
+     * @param engine "new" engine
+     */
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
+    /**
+     * @return current engine
+     */
+    public Engine getEngine() {
+        return this.engine;
     }
 }

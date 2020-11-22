@@ -10,10 +10,9 @@ import pp.util.DoubleVec;
 public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
-    public HeavyProjectile(Model model, double effectiveRadius, int damage, double speed, DoubleVec targetPos, ProjectileData data ){
-        super(model, effectiveRadius, damage, speed,data);
-        this.targetPos=targetPos;
-        this.flag=1;
+    public HeavyProjectile(Model model, ProjectileData data) {
+        super(model, 0.25, 30, 5.0, data);
+        this.targetPos = data.getTargetPos();
     }
 
     /**
@@ -35,22 +34,16 @@ public class HeavyProjectile extends Projectile {
     /**
      * Called once per frame. Used for updating this item's position etc.
      *
-     * @param delta time in seconds since the last update call
+     * @param serverTime time in seconds since the last update call
      */
     @Override
-    public void update(double delta) {
-        if (flag > 0) {
-            flag -= delta;
-        }
-        if (flag < 0) {
-            flag = 0;
-        }
-        data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
+    public void update(long serverTime) {
+        interpolateTime(serverTime);
         if (getPos().distance(targetPos) <= 0.3) {
             setPos(targetPos);
         }
         if (getPos().x == targetPos.x && getPos().y == targetPos.y) {
-            this.effectiveRadius = 1.5;
+            this.effectiveRadius = 2;
             collision();
             destroy();
         }
@@ -61,17 +54,20 @@ public class HeavyProjectile extends Projectile {
      */
     public void processHits() {}
 
-    public void collision(){
+    /**
+     * TODO add fitting JavaDoc
+     */
+    public void collision() {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
-            if (collisionWith(tank) && flag == 0) {
+            if (collisionWith(tank, getPos())) {
                 tank.processDamage(damage);
                 destroy();
                 return;
             }
         }
         for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
-            if (collisionWith(bblock)) {
-                bblock.reduce(damage);
+            if (collisionWith(bblock, getPos())) {
+                bblock.processDamage(damage);
                 destroy();
                 return;
             }

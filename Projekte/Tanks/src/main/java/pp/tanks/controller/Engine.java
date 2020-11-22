@@ -1,12 +1,16 @@
 package pp.tanks.controller;
 
+import pp.network.Connection;
 import pp.tanks.*;
 import pp.tanks.client.MiniController;
 import pp.tanks.client.Sounds;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
+import pp.tanks.message.client.IClientMessage;
+import pp.tanks.message.server.IServerMessage;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Tank;
 import pp.tanks.notification.TanksNotification;
@@ -52,6 +56,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final TutorialOverviewController tutorialOverviewController;
 
     public final LobbyController lobbyController;
+    public final SearchGameServerConfigController searchGameServerConfigController;
+    public final TankConfigMPController tankConfigMPController;
     public final GameOverMPController gameOverMPController;
     public final GameWonMPController gameWonMPController;
     public final ConnectionLostController connectionLostController;
@@ -65,6 +71,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     private Controller controller;
     private Tank saveTank = null;
+    private Enemy saveEnemyTank = null;
     private GameMode mode;
     private PlayerEnum playerEnum;
     private int mapCounter = 0;
@@ -89,6 +96,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.tutorialOverviewController = new TutorialOverviewController(this);
 
         this.lobbyController = new LobbyController(this);
+        this.searchGameServerConfigController = new SearchGameServerConfigController(this);
+        this.tankConfigMPController = new TankConfigMPController(this);
         this.gameOverMPController = new GameOverMPController(this);
         this.gameWonMPController = new GameWonMPController(this);
         this.connectionLostController = new ConnectionLostController(this);
@@ -98,6 +107,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.tankApp = tankApp;
         this.stage = stage;
         this.model = new Model(properties);
+        this.model.setEngine(this);
         model.addReceiver(this);
 
         images = new ImageSupport<>(TanksImageProperty.class, properties) {
@@ -129,10 +139,26 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     }
 
-    public void setMapCounter(int counter){
+    /**
+     * updates mapCounter
+     *
+     * @param counter new number
+     */
+    public void setMapCounter(int counter) {
         this.mapCounter = counter;
     }
 
+    public void setSaveEnemyTank(Enemy enemyTank) {
+        this.saveEnemyTank = enemyTank;
+    }
+
+    public Enemy getSaveEnemyTank() {
+        return saveEnemyTank;
+    }
+
+    /**
+     * @return mapCounter
+     */
     public int getMapCounter() {
         return mapCounter;
     }
@@ -249,6 +275,20 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
+     * activate the SearchGameServerConfigController
+     */
+    public void activateSearchGameServerConfigController() {
+        setController(searchGameServerConfigController);
+    }
+
+    /**
+     * activate the TankConfigMPController
+     */
+    public void activateTankConfigMPController() {
+        setController(tankConfigMPController);
+    }
+
+    /**
      * activate the GameOverSPController
      */
     public void activateGameOverSPController() {
@@ -301,18 +341,34 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.controller.entry();
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param tank
+     */
     public void setSaveTank(Tank tank) {
         this.saveTank = tank;
     }
 
+    /**
+     * @return savedTank
+     */
     public Tank getSaveTank() {
         return this.saveTank;
     }
 
+    /**
+     * updates gamemode
+     *
+     * @param mode new gamemode
+     */
     public void setMode(GameMode mode) {
         this.mode = mode;
     }
 
+    /**
+     * @return gamemode
+     */
     public GameMode getMode() {
         return this.mode;
     }
@@ -327,8 +383,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public void handle(Event event) {
         controller.handle(event);
     }
-
-
 
     /**
      * Sets the specified scene and changes the UI that way.
@@ -420,11 +474,37 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
             }
     }
 
+    /**
+     * @return playerEnum
+     */
     public PlayerEnum getPlayerEnum() {
         return playerEnum;
     }
 
+    /**
+     * updates PlayerEnum
+     *
+     * @param playerEnum new playerEnum
+     */
     public void setPlayerEnum(PlayerEnum playerEnum) {
         this.playerEnum = playerEnum;
+    }
+
+    /**
+     * @return offset
+     */
+    public long getOffset() {
+        return getTankApp().getOffset();
+    }
+
+    /**
+     * @return connection
+     */
+    public Connection<IClientMessage, IServerMessage> getConnection() {
+        return getTankApp().getConnection();
+    }
+
+    public Controller getController() {
+        return controller;
     }
 }

@@ -3,31 +3,40 @@ package pp.tanks.client;
 import pp.network.Connection;
 import pp.network.IConnection;
 import pp.network.MessageReceiver;
-import pp.tanks.message.client.IClientMessage;
+import pp.tanks.controller.Engine;
+import pp.tanks.controller.MainMenuController;
 import pp.tanks.message.client.ClientReadyMessage;
+import pp.tanks.message.client.IClientMessage;
 import pp.tanks.message.client.PingResponse;
+import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.ProjectileCollisionMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
+import pp.tanks.message.server.StartingMultiplayerMessage;
+import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
+import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.server.GameMode;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import pp.tanks.controller.Engine;
-import pp.tanks.controller.MainMenuController;
-import pp.tanks.model.item.PlayerEnum;
-import pp.tanks.server.GameMode;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Main class of the Tank app
@@ -77,7 +86,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.setTitle("Tanks");
         stage.show();
         engine.gameLoop();
-        sounds.setMusic(sounds.mainMenu);
+        //sounds.setMusic(sounds.mainMenu);
     }
 
     /**
@@ -119,6 +128,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         LOGGER.fine(() -> "properties: " + properties);
     }
 
+    /**
+     * @return current player
+     */
     public PlayerEnum getPlayer() {
         return player;
     }
@@ -148,17 +160,27 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
 
     /**
      * Establishes a connection to an online server
+     *
      * @param mode given Player-mode
      */
     public void joinGame(GameMode mode) {
+        joinGame(mode, "127.0.0.1", "1234");
+        //joinGame(mode, "137.193.138.79", "1234");
+    }
+
+    /**
+     * Establishes a connection to an online server
+     *
+     * @param mode given Player-mode
+     */
+    public void joinGame(GameMode mode, String ipAddress, String portString) {
         if (connection != null) {
             LOGGER.severe("trying to join a game again"); //NON-NLS
             return;
         }
         try {
-            final int port = 1234;
-            final Socket socket = new Socket("127.0.0.1", port);
-            //final Socket socket = new Socket("137.193.138.79", port);
+            final int port = Integer.parseInt(portString);
+            final Socket socket = new Socket(ipAddress, port);
             socket.setSoTimeout(1000);
             connection = new Connection<>(socket, this);
             if (connection.isConnected()) {
@@ -175,10 +197,16 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         }
     }
 
+    /**
+     * @return conection
+     */
     public Connection<IClientMessage, IServerMessage> getConnection() {
         return connection;
     }
 
+    /**
+     * @return offset
+     */
     public long getOffset() {
         return offset;
     }
@@ -192,6 +220,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
         System.out.println(" offset: " + msg.nanoOffset);
+        engine.getController().synchronizationFinished();
     }
 
     /**
@@ -213,8 +242,35 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
 
     @Override
     public void visit(ServerTankUpdateMessage msg) {
-        engine.miniController.playerConnected();
-        engine.miniController.serverUpdate(msg);
+        engine.tankConfigMPController.playerConnected();
+        engine.tankConfigMPController.serverUpdate(msg);
+    }
+
+    @Override
+    public void visit(StartingMultiplayerMessage msg) {
+        engine.tankConfigMPController.startGame(msg);
+    }
+
+    @Override
+    public void visit(ModelMessage msg) {
+        engine.playGameController.addServerEnemyData(msg.tanks);
+        engine.playGameController.addServerProjectiles(msg.projectile);
+        engine.playGameController.addServerBBlockData(msg.blocks);
+    }
+
+    @Override
+    public void visit(StartingSingleplayerMessage msg) {
+        engine.tankConfigSPController.startGame(msg);
+    }
+
+    @Override
+    public void visit(ProjectileCollisionMessage msg) {
+        engine.playGameController.addCollision(msg.collision);
+    }
+
+    @Override
+    public void visit(GameEndingMessage msg) {
+        engine.playGameController.setGameEnd(msg);
     }
 }
 

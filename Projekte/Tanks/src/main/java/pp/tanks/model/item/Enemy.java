@@ -35,11 +35,11 @@ public class Enemy extends Tank {
     /**
      * Called once per frame. Updates the enemy
      *
-     * @param delta time in seconds since the last update call
+     * @param serverTime the synced nanotime of the server
      */
     @Override
-    public void update(double delta) {
-        super.update(delta);
+    public void update(long serverTime) {
+        interpolateTime(serverTime);
     }
 
     /**
@@ -49,5 +49,17 @@ public class Enemy extends Tank {
     public void destroy() {
         super.destroy();
         model.notifyReceivers(TanksNotification.TANK_DESTROYED);
+    }
+
+    /**
+     * Method for creating a EnemyTank Instance
+     *
+     * @param turret correct turret-type
+     * @param armor correct armor-type
+     */
+    public static Enemy mkEnemyTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
+        Turret ergTurret = Turret.mkTurret(turret);
+        Armor ergArmor = Armor.mkArmor(armor);
+        return new Enemy(model, 3, ergArmor, ergTurret, data);
     }
 }

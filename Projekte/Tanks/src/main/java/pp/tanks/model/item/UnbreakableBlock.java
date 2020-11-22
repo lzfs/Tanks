@@ -13,19 +13,11 @@ public class UnbreakableBlock extends Block<Data> {
     }
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     public void accept(Visitor v) {
         v.visit(this);
-    }
-
-    /**
-     * Called once per frame. Used for updating this item's position etc.
-     *
-     * @param delta time in seconds since the last update call
-     */
-    @Override
-    public void update(double delta) {
-        super.update(delta);
     }
 }

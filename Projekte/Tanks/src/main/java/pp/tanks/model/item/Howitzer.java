@@ -26,14 +26,15 @@ public class Howitzer extends COMEnemy {
 
     /**
      * specifies the behaviour of an Howitzer (driving in their half of the map to avoid getting a contact with faster tanks)
+     *
      * @param delta
      */
     @Override
     public void behaviour(double delta) {
-        turret.setDirection(model.getTanksMap().getTank0().getPos().sub(this.getPos()));
+        getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
         if (canShoot() && Math.random() < 0.8) {
             if (canShoot()) {
-                shoot(model.getTanksMap().getTank0().getPos());
+                shoot(model.getTanksMap().getTank(player1).getPos());
             }
         }
         else {
@@ -55,15 +56,15 @@ public class Howitzer extends COMEnemy {
                     double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
                     if (Math.abs(needToTurnBy) > 2) {
                         //TODO
-                        Double currentRot = getRotation();
-                        Double moveDirRotation = target.sub(getPos()).normalize().angle();
-                        Double tmp = (currentRot - moveDirRotation + 360) % 360;
-                        Double tmp1 = (moveDirRotation - currentRot + 360) % 360;
+                        double currentRot = getRotation();
+                        double moveDirRotation = target.sub(getPos()).normalize().angle();
+                        double tmp = (currentRot - moveDirRotation + 360) % 360;
+                        double tmp1 = (moveDirRotation - currentRot + 360) % 360;
                         if (tmp > tmp1) {
-                            setRotation(currentRot + delta * rotationspeed);
+                            setRotation(currentRot + delta * rotationSpeed);
                         }
                         else {
-                            setRotation(currentRot - delta * rotationspeed);
+                            setRotation(currentRot - delta * rotationSpeed);
                         }
                         delta = 0.;
                     }

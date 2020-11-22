@@ -3,12 +3,14 @@ package pp.tanks.controller;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.data.TankData;
+import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.model.item.Armor;
 import pp.tanks.model.item.HeavyArmor;
 import pp.tanks.model.item.HeavyTurret;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.NormalArmor;
 import pp.tanks.model.item.NormalTurret;
 import pp.tanks.model.item.PlayersTank;
@@ -16,6 +18,7 @@ import pp.tanks.model.item.Turret;
 import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -200,15 +203,30 @@ public class TankConfigSPController extends Controller {
      * method for the confirm button
      */
     @FXML
-    private void confirm() throws IOException, XMLStreamException {
+    private void confirm() {
         LOGGER.log(Level.INFO, "clicked CONFIRM");
 
         DoubleVec position = new DoubleVec(5, 5);
-        PlayersTank tank = new PlayersTank(engine.getModel(), 1, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 1000, 20)); //TODO id
+        PlayersTank tank = new PlayersTank(engine.getModel(), 3, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0, 0), false)); //TODO id
         engine.getTankApp().getConnection().send(new StartGameMessage(getCountTurret(counterTurret), getCountArmor(counterArmor), GameMode.SINGLEPLAYER, engine.getPlayerEnum()));
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
-        engine.activateStartGameSPController();
+        counterArmor = 0;
+        counterTurret = 0;
+        confirm.setDisable(true);
+    }
+
+    /**
+     * starts a new game from incoming message
+     *
+     * @param msg incoming StartingSingleplayerMessage
+     */
+    public void startGame(StartingSingleplayerMessage msg) {
+        Platform.runLater(() -> {
+            engine.playGameController.constructionData.addAll(msg.dataList);
+            engine.playGameController.constructionEnum.addAll(msg.comType);
+            engine.activateStartGameSPController();
+        });
     }
 
     /**
@@ -293,12 +311,20 @@ public class TankConfigSPController extends Controller {
         }
     }
 
+    /**
+     * @param c id of turret
+     * @return correct turret fitting to the id
+     */
     private ItemEnum getCountTurret(int c) {
         if (c == 0) return ItemEnum.LIGHT_TURRET;
         else if (c == 1) return ItemEnum.NORMAL_TURRET;
         else return ItemEnum.HEAVY_TURRET;
     }
 
+    /**
+     * @param c id of armor
+     * @return correct armor fitting to the id
+     */
     private ItemEnum getCountArmor(int c) {
         if (c == 0) return ItemEnum.LIGHT_ARMOR;
         else if (c == 1) return ItemEnum.NORMAL_ARMOR;

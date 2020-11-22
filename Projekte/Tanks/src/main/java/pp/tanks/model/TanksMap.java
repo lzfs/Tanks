@@ -1,29 +1,36 @@
 package pp.tanks.model;
 
 import pp.tanks.message.data.Data;
+import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
+
+import javafx.application.Platform;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Represents the entire game map. It can be accessed as an unmodifiable {@linkplain java.util.List}
  * of all items consisting of the tanks, blocks and projectiles.
  */
-public class TanksMap extends AbstractList<Item <? extends Data>> {
+public class TanksMap extends AbstractList<Item<? extends Data>> {
     private List<Tank> playersTanks = new ArrayList<>();
     private List<COMEnemy> enemy = new ArrayList<>();
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
     private List<BreakableBlock> breakableBlocks = new ArrayList<>();
     private List<UnbreakableBlock> unbreakableBlocks = new ArrayList<>();
-    private List<Projectile> projectiles = new ArrayList<>(); // TODO use map instead of list
-    private final List<Projectile> addedProjectiles = new ArrayList<>();
+    private final HashMap<Integer, Projectile> projectiles = new HashMap<>();
+    private final HashMap<Integer, Projectile> addedProjectiles = new HashMap<>();
     private final int width;
     private final int height;
     private final Model model;
+    private final List<ICollisionObserver> observers = new ArrayList<>();
+    private final HashMap<Integer, Item<? extends Data>> hashMap = new HashMap<>();
 
     /**
      * Creates a map of the specified size and with a droid at position (0,0)
@@ -42,7 +49,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      */
     @Override
     public Item<? extends Data> get(int index) {
-        int i = index ;
+        int i = index;
         if (i < playersTanks.size()) return playersTanks.get(i);
         i -= playersTanks.size();
         if (i < enemy.size()) return enemy.get(i);
@@ -53,7 +60,8 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
         i -= unbreakableBlocks.size();
         if (i < reflectableBlocks.size()) return reflectableBlocks.get(i);
         i -= reflectableBlocks.size();
-        return projectiles.get(i);
+        List<Projectile> tmp = new ArrayList<>(projectiles.values());
+        return tmp.get(i);
     }
 
     /**
@@ -61,7 +69,7 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * to be a neighbor of pos. This method takes into account that one must not make a diagonal move across a corner
      * of a blocked field, i.e., a field with an obstacle.
      *
-     * @param startPos the starting Position
+     * @param startPos  the starting Position
      * @param targetPos the Position you go to
      * @return true or false
      */
@@ -97,10 +105,17 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      *
      * @return the list of all tanks still alive
      */
-    public List<Tank> getCOMTanks() {
+    public List<COMEnemy> getCOMTanks() {
         return Collections.unmodifiableList(enemy);
     }
 
+    public void addCOMTank(COMEnemy tank) {
+        enemy.add(tank);
+    }
+
+    /**
+     * @return list of all tanks
+     */
     public List<Tank> getAllTanks() {
         List<Tank> tmp = new ArrayList<>(playersTanks);
         tmp.addAll(enemy);
@@ -110,17 +125,24 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
     /**
      * returns the playersTank
      */
-    public Tank getTank0() {
-        return playersTanks.get(0);
+    public Tank getTank(PlayerEnum player) {
+        return playersTanks.get(player.tankID);
     }
 
     /**
      * sets the playersTank on the first position in the list of tanks
+     *
      * @param tank
      */
-    public void setPlayerTank0(Tank tank) {
-        playersTanks.set(0, tank);
+    public void addPlayerTank(Tank tank) {
+        playersTanks.add(tank);
+    }
 
+    /**
+     * @return hashMap with
+     */
+    public HashMap<Integer, Projectile> getAddedProjectiles() {
+        return addedProjectiles;
     }
 
     /**
@@ -169,7 +191,11 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * @return the list of all projectiles
      */
     public List<Projectile> getProjectiles() {
-        return Collections.unmodifiableList(projectiles);
+        return Collections.unmodifiableList(new ArrayList<>(projectiles.values()));
+    }
+
+    public HashMap<Integer, Projectile> getHashProjectiles() {
+        return projectiles;
     }
 
     /**
@@ -211,31 +237,40 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * Called once per frame. This method calls the update method of each item in this map and removes items that
      * cease to exist.
      *
-     * @param deltaTime time in seconds since the last update call
+     * @param serverTime time in seconds since the last update call
      */
-    void update(double deltaTime) {
+    void update(long serverTime) {
         for (Item item : this) {
-            item.update(deltaTime);
+            item.update(serverTime);
         }
-        projectiles.addAll(addedProjectiles);
+        projectiles.putAll(addedProjectiles);
         addedProjectiles.clear();
-        for (Projectile proj : projectiles)
-            proj.processHits();
+        for (Projectile proj : projectiles.values()){
+            if(!proj.isDestroyed()){
+                proj.processHits();
+            }
+        }
+
         List<Item> removed = new ArrayList<>();
         for (Item item : this)
             if (item.isDestroyed())
                 removed.add(item);
         breakableBlocks.removeAll(removed);
-        projectiles.removeAll(removed);
-    }
+        projectiles.entrySet().removeIf(e -> removed.contains(e.getValue()));
+        //model.getEngine().getView().addExplosion(entry.getValue()); //TODO in die destroy?
+
+
+        }
+
 
     /**
      * Adds a Tank to this map.
      */
     public void addTanks(Tank tank) {
-        if(tank instanceof COMEnemy){
+        if (tank instanceof COMEnemy) {
             enemy.add((COMEnemy) tank);
-        } else {
+        }
+        else {
             playersTanks.add(tank);
         }
     }
@@ -265,6 +300,55 @@ public class TanksMap extends AbstractList<Item <? extends Data>> {
      * Adds a projectile to this map.
      */
     public void addProjectile(Projectile p) {
-        addedProjectiles.add(p);
+        addedProjectiles.put(p.getProjectileData().id, p);
+    }
+
+    /**
+     * adds a new observer to the ICollisionObserver interface
+     *
+     * @param obs
+     */
+    public void addObserver(ICollisionObserver obs) {
+        observers.add(obs);
+    }
+
+    /**
+     * TODO: add JavaDoc
+     *
+     */
+    public void notifyObsT(Projectile proj, Tank tank, int damage, boolean dest) {
+        if (observers.isEmpty()) return;
+        for (ICollisionObserver obs : observers) {
+            obs.notifyProjTank(proj, tank, damage, dest);
+        }
+    }
+
+    public void notifyObsB(Projectile proj, BreakableBlock block, int damage, boolean dest) {
+        if (observers.isEmpty()) return;
+        for (ICollisionObserver obs : observers) {
+            obs.notifyProjBBlock(proj, block, damage, dest);
+        }
+    }
+
+    public void notifyObsP(Projectile proj1, Projectile proj2) {
+        if (observers.isEmpty()) return;
+        for (ICollisionObserver obs : observers) {
+            obs.notifyProjProj(proj1, proj2);
+        }
+    }
+
+    public void updateHashMap() {
+        for (Item<? extends Data> item : this) {
+            if (!hashMap.containsKey(item.getData().id)) hashMap.put(item.getData().id, item);
+        }
+    }
+
+    /**
+     * !!!NOT for Projectiles!!!
+     * @param id
+     * @return
+     */
+    public Item<? extends Data> getFromID(int id) {
+        return hashMap.get(id);
     }
 }

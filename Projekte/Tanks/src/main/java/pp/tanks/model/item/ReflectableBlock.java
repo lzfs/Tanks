@@ -13,7 +13,9 @@ public class ReflectableBlock extends Block<Data> {
     }
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     public void accept(Visitor v) {
         v.visit(this);

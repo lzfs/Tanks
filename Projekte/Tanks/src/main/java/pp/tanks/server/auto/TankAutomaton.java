@@ -54,15 +54,14 @@ public class TankAutomaton extends TankStateMachine {
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn, PlayerEnum.PLAYER1));
-            if (msg.mode == GameMode.SINGLEPLAYER) {
-                gameMode = GameMode.SINGLEPLAYER;
+            if (msg.mode == GameMode.SINGLEPLAYER || msg.mode == GameMode.TUTORIAL) {
+                gameMode = msg.mode;
                 conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
                 containingState().goToState(playerReady);
             }
             if (msg.mode == GameMode.MULTIPLAYER) {
                 gameMode = GameMode.MULTIPLAYER;
-                if (players.size() == 1) conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
-                else conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
+                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
                 containingState().goToState(waitingFor2Player);
             }
             //else containingState().goToState();
@@ -75,6 +74,7 @@ public class TankAutomaton extends TankStateMachine {
     private final TankState waitingFor2Player = new TankState() {
         private ItemEnum turret = ItemEnum.LIGHT_TURRET;
         private ItemEnum armor = ItemEnum.LIGHT_ARMOR;
+
         @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
@@ -82,9 +82,10 @@ public class TankAutomaton extends TankStateMachine {
 
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
+            players.add(new Player(conn, PlayerEnum.PLAYER2));
             players.get(0).setArmor(armor);
             players.get(0).setTurret(turret);
-            players.add(new Player(conn, PlayerEnum.PLAYER2));
+            conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
             containingState().goToState(playerReady);
         }
 
@@ -98,7 +99,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * state for the synchronize of client and server
      */
-    private final TankState synchronize = new SynchronizeState(this);
+    public final TankState synchronize = new SynchronizeState(this);
 
     /**
      * the state where the players choose their tank
@@ -108,7 +109,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * state for playing
      */
-    public final TankState playingState = new PlayingState(this);
+    public final PlayingState playingState = new PlayingState(this);
 
     // has to be in Model
 
@@ -126,6 +127,9 @@ public class TankAutomaton extends TankStateMachine {
         return null;
     }
 
+    /**
+     * @return list of all players
+     */
     public List<Player> getPlayers() {
         return players;
     }
@@ -135,6 +139,9 @@ public class TankAutomaton extends TankStateMachine {
         return null;
     }
 
+    /**
+     * @return automaton
+     */
     @Override
     TankAutomaton getAuto() {
         return this;
@@ -145,6 +152,9 @@ public class TankAutomaton extends TankStateMachine {
         return init;
     }
 
+    /**
+     * @return current gameMode
+     */
     public GameMode getGameMode() {
         return gameMode;
     }
@@ -188,6 +198,9 @@ public class TankAutomaton extends TankStateMachine {
         LOGGER.fine(() -> "properties: " + properties);
     }
 
+    /**
+     * @return current Properties
+     */
     public Properties getProperties() {
         return this.properties;
     }

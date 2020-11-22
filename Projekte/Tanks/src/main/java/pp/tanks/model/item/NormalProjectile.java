@@ -9,8 +9,8 @@ import pp.util.DoubleVec;
  */
 public class NormalProjectile extends Projectile {
 
-    public NormalProjectile(Model model, double effectiveRadius, int damage, double speed, ProjectileData data) {
-        super(model, effectiveRadius, damage, speed, data);
+    public NormalProjectile(Model model, ProjectileData data) {
+        super(model, 0.25, 20, 5.0, data);
     }
 
     /**
@@ -22,7 +22,9 @@ public class NormalProjectile extends Projectile {
     }
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     @Override
     public void accept(Visitor v) {

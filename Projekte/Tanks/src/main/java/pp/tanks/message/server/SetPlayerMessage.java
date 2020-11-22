@@ -9,6 +9,11 @@ public class SetPlayerMessage implements IServerMessage{
         this.player = player;
     }
 
+    /**
+     * Method to accept a visitor
+     *
+     * @param interpreter       visitor to be used
+     */
     @Override
     public void accept(IServerInterpreter interpreter) {
         interpreter.visit(this);

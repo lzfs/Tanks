@@ -1,7 +1,9 @@
 package pp.tanks.view;
 
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -9,14 +11,20 @@ import javafx.scene.text.Font;
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.HeavyProjectile;
 import pp.tanks.model.item.Item;
+import pp.tanks.model.item.Projectile;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 import pp.util.DoubleVec;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import static pp.tanks.TanksImageProperty.backgroundImage;
+import static pp.tanks.TanksImageProperty.bigExplosion;
+import static pp.tanks.TanksImageProperty.explosion;
 
 /**
  * Represents the view of the game map
@@ -33,6 +41,10 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     private final ImageSupport<TanksImageProperty> images;
     private final VisualizerVisitor visualizer;
 
+    private final List<Projectile> projectiles = new ArrayList<>();
+
+    private ProgressBar progressBar;
+
     /**
      * Creates a view for the specified game model
      *
@@ -42,6 +54,8 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         this.model = model;
         this.images = images;
         this.visualizer = new VisualizerVisitor(this);
+        // override default value
+        this.progressBar = new ProgressBar(1.0);
         setCanvasSize();
         model.addReceiver(this);
     }
@@ -81,6 +95,18 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         for (Item p : model.getTanksMap()) {
             p.accept(visualizer);
         }
+
+        for (Projectile p : projectiles) {
+            for (int i = 0; i < 5; i++) {
+                if (p instanceof HeavyProjectile) {
+                    drawImage(bigExplosion, p.getPos().x, p.getPos().y);
+                }
+                else {
+                    drawImage(explosion, p.getPos().x, p.getPos().y);
+                }
+            }
+        }
+        projectiles.clear();
 
         context.setFont(TEXT_FONT);
         context.setFill(Color.WHITE);
@@ -135,5 +161,42 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
             if (getScene() != null && getScene().getWindow() != null)
                 getScene().getWindow().sizeToScene();
         }
+    }
+
+    public void addExplosion(Projectile projectile) {
+        projectiles.add(projectile);
+    }
+
+    /**
+     * Draws an image if such an image has been configured.
+     *
+     * @param prop the string property indicating an image
+     */
+    private void drawImage(TanksImageProperty prop, double x, double y) {
+        final GraphicsContext context = getGraphicsContext2D();
+        final Image img = getImages().getImage(prop);
+        DoubleVec pos = modelToView(x, y);
+        if (img != null) {
+            context.drawImage(img, pos.x - (img.getWidth() * 0.5), pos.y - (img.getHeight() * 0.5));
+        }
+    }
+
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param progressBar
+     */
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+        this.progressBar.setStyle("-fx-padding: 15; -fx-scale-x: 1.3; -fx-accent: #51d951;");
+    }
+
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param percentage
+     */
+    public void updateProgressBar(double percentage) {
+        this.progressBar.setProgress(percentage);
     }
 }

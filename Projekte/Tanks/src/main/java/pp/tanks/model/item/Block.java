@@ -1,6 +1,7 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.data.Data;
+import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.model.Model;
 import pp.tanks.notification.TanksNotification;
 
@@ -8,20 +9,26 @@ import pp.tanks.notification.TanksNotification;
  * base class for blocks
  */
 public abstract class Block<T extends Data> extends Item<T> {
-    private int width;
-    private int height;
+    private double width;
+    private double height;
 
     public Block(Model model, T data) {
-        super(model, 1, data);
-        this.width = 1;
-        this.height = 1;
+        super(model, 1.25, data);
+        this.width = 1.25;
+        this.height = 1.25;
     }
 
-    public int getHeight(){
+    /**
+     * @return height
+     */
+    public double getHeight() {
         return height;
     }
 
-    public int getWidth(){
+    /**
+     * @return width
+     */
+    public double getWidth() {
         return width;
     }
 
@@ -45,8 +52,19 @@ public abstract class Block<T extends Data> extends Item<T> {
     /**
      * Called once per frame. Used for updating this item's position etc.
      *
-     * @param delta time in seconds since the last update call
+     * @param serverTime the synced nanotime of the server
      */
     @Override
-    public void update(double delta) {}
+    public void update(long serverTime) {}
+
+    @Override
+    public void interpolateData(DataTimeItem<T> item) {
+
+    }
+
+    @Override
+    public boolean interpolateTime(long serverTime) {
+        return false;
+    }
 }
+

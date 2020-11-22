@@ -2,6 +2,7 @@ package pp.tanks.controller;
 
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.server.GameMode;
 
 import javafx.fxml.FXML;
@@ -34,6 +35,9 @@ public class CreditsController extends Controller {
     @FXML
     private Button back;
 
+    /**
+     * the button for debug (in credits)
+     */
     @FXML
     private Button debug;
 
@@ -80,14 +84,32 @@ public class CreditsController extends Controller {
         engine.activateMainMenuController();
     }
 
+    /**
+     * method for the debug button
+     */
     @FXML
     private void debug() {
         engine.getTankApp().joinGame(GameMode.TUTORIAL);
         engine.setMode(GameMode.TUTORIAL);
         engine.setMapCounter(3);
+        while (engine.getPlayerEnum() == null) {
+            sleep();
+        }
         engine.getTankApp().getConnection().send(new StartGameMessage(ItemEnum.LIGHT_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.TUTORIAL, engine.getPlayerEnum()));
         engine.activatePlayGameController();
         //
+    }
+
+    /**
+     * Thread is tired, he sleeps now.
+     */
+    private void sleep() {
+        try {
+            Thread.sleep(20);
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 

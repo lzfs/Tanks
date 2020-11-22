@@ -1,5 +1,7 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.ProjectileData;
+import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
 import java.util.Arrays;
@@ -7,26 +9,28 @@ import java.util.Arrays;
 /**
  * base class of turret that are placed on a tank
  */
-public class Turret {
-    private int damage;
-    private int bounced;
-    private int weight;
-    private double reloadTime;
-    private double[] mag;
+public abstract class Turret {
+    //private int damage;
+    //private int bounced;
+    private final int weight;
+    private final double reloadTime;
+    private final double[] mag;
     private DoubleVec direction;
     private double cadence;
-    private final double currentcadence;
+    private final double currentCadence;
+    public final ItemEnum projectileType;
 
-    public Turret(int damage, int bounced, int weight, double reloadTime, int mag, double cadence) {
-        this.damage = damage;
-        this.bounced = bounced;
+    public Turret(int weight, double reloadTime, int mag, double cadence, ItemEnum projectileType) {
+        //this.damage = damage;
+        //this.bounced = bounced;
         this.weight = weight;
         this.reloadTime = reloadTime;
         this.mag = new double[mag];
-        this.direction =new DoubleVec(0,0);
+        this.direction = new DoubleVec(0, 0);
         Arrays.fill(this.mag, 0.0);
         this.cadence = 0;
-        this.currentcadence = cadence;
+        this.currentCadence = cadence;
+        this.projectileType = projectileType;
     }
 
     /**
@@ -35,6 +39,7 @@ public class Turret {
      * @param delta time in seconds since the last update call
      */
     public void update(double delta) {
+        if (delta < -1 || delta > 1) return;
         cadence -= delta;
         if (cadence < 0) {
             cadence = 0;
@@ -46,16 +51,15 @@ public class Turret {
         }
     }
 
-    public int getBounces(){
-        return bounced;
-    }
-
-
     /**
-     * @return s the size of the magazin
+     * @return s the size of the magazine
      */
     public int getMagSize() {
         return mag.length;
+    }
+
+    public int getWeight() {
+        return this.weight;
     }
 
     /**
@@ -65,15 +69,14 @@ public class Turret {
         for (int i = 0; i < mag.length; i++) {
             if (mag[i] == 0.0) {
                 mag[i] = reloadTime;
-                cadence = currentcadence;
+                cadence = currentCadence;
                 return;
             }
         }
     }
 
     /**
-     * checks if the turret is able to shoot
-     * @return
+     * @return boolean depending on the turret's ability to shoot
      */
     public boolean canShoot() {
         for (double d : mag) {
@@ -84,15 +87,30 @@ public class Turret {
         return false;
     }
 
-    public int getDamage() {
-        return damage;
-    }
+    /**
+     * creates a new projectile
+     *
+     * @param model  TODO
+     * @param data   TODO
+     * @param target new target-position
+     * @return
+     */
+    public abstract Projectile mkProjectile(Model model, ProjectileData data, DoubleVec target);
 
-    public DoubleVec getDirection() {
-        return this.direction;
-    }
+    /**
+     * @return number of bounces
+     */
+    public abstract int getBounces();
 
-    public void setDirection(DoubleVec direction) {
-        this.direction = direction;
+    /**
+     * creates new turret
+     *
+     * @param turret correct turret-type
+     * @return new turret
+     */
+    public static Turret mkTurret(ItemEnum turret) {
+        if (turret == ItemEnum.LIGHT_TURRET) return new LightTurret();
+        else if (turret == ItemEnum.NORMAL_TURRET) return new NormalTurret();
+        else return new HeavyTurret();
     }
 }

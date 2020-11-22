@@ -93,9 +93,7 @@ public class LobbyController extends Controller {
     @FXML
     private void searchForGame() {
         LOGGER.log(Level.INFO, "clicked SEARCH_FOR_GAME");
-        engine.getTankApp().joinGame(GameMode.MULTIPLAYER);
-        System.out.println("Client connected to MP");
-        engine.setScene(new Scene(engine.miniController));
+        engine.activateSearchGameServerConfigController();
     }
 
     /**
@@ -104,8 +102,10 @@ public class LobbyController extends Controller {
     @FXML
     private void createGame() {
         LOGGER.log(Level.INFO, "clicked CREATE_GAME");
+
         engine.getTankApp().joinGame(GameMode.MULTIPLAYER);
         System.out.println("Client connected to MP");
-        engine.setScene(new Scene(engine.miniController));
+
+        engine.activateTankConfigMPController();
     }
 }

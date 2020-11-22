@@ -1,17 +1,22 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.data.Data;
+import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
 import pp.tanks.message.data.Data;
 import pp.util.DoubleVec;
 
 import javafx.geometry.Rectangle2D;
+
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D.Double;
 
 /**
  * Abstract base class of all items in a {@linkplain pp.tanks.model.TanksMap}
  */
 public abstract class Item<T extends Data> {
+    public static final long FACTOR_SEC = 1_000_000_000;
     protected final Model model;
     protected double effectiveRadius;
     protected boolean destroyed = false;
@@ -28,6 +33,10 @@ public abstract class Item<T extends Data> {
         this.model = model;
         this.effectiveRadius = effectiveRadius;
         this.data = data;
+    }
+
+    public T getData() {
+        return data;
     }
 
     /**
@@ -60,11 +69,11 @@ public abstract class Item<T extends Data> {
         return data.isDestroyed();
     }
 
-    /**
+    /*
      * Checks whether there is a collision with another item
      *
      * @param other the item which is checked for a collision
-     */
+     *//*
     public boolean collisionWith(Item other) {
         if (getPos() == null || other.isDestroyed()) return false;
 
@@ -88,8 +97,25 @@ public abstract class Item<T extends Data> {
             return item1.intersects(item2);
         }
     }
+    */
 
+    /**
+     * Checks whether there is a collision with another item
+     *
+     * @param other the item which is checked for a collision
+     */
+    public boolean collisionWith(Item other, DoubleVec newPos) {
+        if (getPos() == null || other.isDestroyed() || this.isDestroyed()) return false;
 
+        if (other instanceof Block) {
+            Block block = (Block) other;
+            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
+            return item1.intersects(other.getPos().x - (block.getWidth() / 2.0), other.getPos().y - (block.getHeight() / 2.0), block.getWidth(), block.getHeight());
+        }
+        else {
+            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+        }
+    }
 
     /**
      * Indicates that this item has been destroyed.
@@ -101,17 +127,36 @@ public abstract class Item<T extends Data> {
     public abstract void isVisible();
 
     /**
-     * Accept method of the visitor pattern.
+     * Method to accept a visitor
+     *
+     * @param v visitor to be used
      */
     public abstract void accept(Visitor v);
 
     /**
      * Called once per frame. Used for updating this item's position etc.
      *
-     * @param delta time in seconds since the last update call
+     * @param serverTime the synced nanotime of the server
      */
-    public abstract void update(double delta);
+    public abstract void update(long serverTime);
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param item
+     */
+    public abstract void interpolateData(DataTimeItem<T> item);
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param serverTime
+     * @return
+     */
+    public abstract boolean interpolateTime(long serverTime);
 
+    /**
+     * for thomases (god's) will
+     */
+    public void processDamage(int damage) {}
 }

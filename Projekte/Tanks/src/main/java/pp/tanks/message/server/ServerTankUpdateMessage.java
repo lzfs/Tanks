@@ -11,6 +11,11 @@ public class ServerTankUpdateMessage implements IServerMessage {
         this.turret = turret;
     }
 
+    /**
+     * Method to accept a visitor
+     *
+     * @param interpreter       visitor to be used
+     */
     @Override
     public void accept(IServerInterpreter interpreter) {
         interpreter.visit(this);
