@@ -8,6 +8,8 @@ import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
+import pp.tanks.message.server.StartingMultiplayerMessage;
+import pp.tanks.message.server.SynchronizeMessage;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
 
@@ -40,14 +42,24 @@ public class MultiplayerServerTest {
         messages.subList(0, n).forEach(Runnable::run);
     }
 
-    private ModelMessage lastMessage(ConnectionStub conn, int n) {
+    private ModelMessage lastModelMessage(ConnectionStub conn, int n) {
         assertEquals(n, conn.getMessages().size());
         return (ModelMessage) conn.getMessages().get(n - 1);
     }
 
-    private ServerTankUpdateMessage lastMessage2(ConnectionStub conn, int n) {
-        assertEquals(2, conn.getMessages().size());
-        return (ServerTankUpdateMessage) conn.getMessages().get(2 - 1);
+    private ServerTankUpdateMessage lastServerTankUpdateMsg(ConnectionStub conn, int n) {
+        assertEquals(n, conn.getMessages().size());
+        return (ServerTankUpdateMessage) conn.getMessages().get(n - 1);
+    }
+
+    private StartingMultiplayerMessage lastStartingMultiplayerMsg(ConnectionStub conn, int n) {
+        assertEquals(n, conn.getMessages().size());
+        return (StartingMultiplayerMessage) conn.getMessages().get(n - 1);
+    }
+
+    private SynchronizeMessage lastSychronizeMsg(ConnectionStub conn, int n) {
+        assertEquals(n, conn.getMessages().size());
+        return (SynchronizeMessage) conn.getMessages().get(n - 1);
     }
 
     @BeforeEach

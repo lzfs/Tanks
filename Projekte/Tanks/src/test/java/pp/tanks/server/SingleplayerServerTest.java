@@ -8,6 +8,7 @@ import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
+import pp.util.DoubleVec;
 
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class SingleplayerServerTest {
                 transmitter.receiveMessage(new StartGameMessage(ItemEnum.LIGHT_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.TUTORIAL, PlayerEnum.PLAYER1), conn);
             }
     );
-
 
     private void execute(int n) {
         messages.subList(0, n).forEach(Runnable::run);
@@ -50,8 +50,7 @@ public class SingleplayerServerTest {
         execute(1);
 
         final ModelMessage model = lastMessage(conn, 1);
-        //assertEquals(TANK, model.tanks.get(0));
-
+        assertEquals(new DoubleVec(3, 6), model.tanks.get(0).getPos());
     }
 
     @AfterEach
