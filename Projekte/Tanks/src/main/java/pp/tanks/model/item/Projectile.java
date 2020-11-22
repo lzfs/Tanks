@@ -36,7 +36,6 @@ public abstract class Projectile extends Item<ProjectileData> {
      * reflect the projectile and gives it a new direction
      */
     public void reflect() {
-        System.out.println("davor "+latestOp.data.getDir());
         int i = 0;
         while (!collisionWith(model.getTanksMap().getReflectable().get(i), getPos())) {
             i++;
@@ -143,7 +142,6 @@ public abstract class Projectile extends Item<ProjectileData> {
             }
         }
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
-<<<<<<< HEAD
             if (collisionWith(rBlock, getPos()) && flag==0) {
                 if (latestOp.data.getBounce() > 0) {
                     flag = System.nanoTime();
