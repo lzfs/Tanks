@@ -13,8 +13,8 @@ public class TankData extends Data {
     private double rotation;
     private int lifePoints;
 
-    public TankData(DoubleVec pos, int id, int lifePoints, MoveDirection moveDir, double rotation, DoubleVec turretDir) {
-        super(pos, id);
+    public TankData(DoubleVec pos, int id, int lifePoints, MoveDirection moveDir, double rotation, DoubleVec turretDir, boolean destroyed) {
+        super(pos, id, destroyed);
         this.moveDir = moveDir;
         this.turretDir = turretDir;
         this.move = false;
@@ -37,7 +37,7 @@ public class TankData extends Data {
      *
      * @return returns the copy
      */
-    public TankData mkCopy() { return new TankData(this.getPos(), this.getId(), this.lifePoints, this.moveDir, this.rotation, this.turretDir);}
+    public TankData mkCopy() { return new TankData(this.getPos(), this.getId(), this.lifePoints, this.moveDir, this.rotation, this.turretDir, isDestroyed());}
 
     /**
      * checks if the tank is moving

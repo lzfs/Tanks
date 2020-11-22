@@ -1,12 +1,16 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.data.BBData;
+import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.model.TanksMap;
+import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
+import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
@@ -23,7 +27,6 @@ import pp.util.StopWatch;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -55,9 +58,10 @@ public class PlayGameController extends Controller {
     public final List<ItemEnum> constructionEnum = new ArrayList<>();
     public final List<TankData> constructionData = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
-    private final List<DataTimeItem<TankData>> enemyTanks = new ArrayList<>();
-    private final PriorityQueue<ProjectileCollision> collisionList = new PriorityQueue<>();
+    private final List<DataTimeItem<TankData>> tanks = new ArrayList<>();
+    private final List<BBData> bbDataList = new ArrayList<>();
     private GameEndingMessage endingMessage = null;
+    private boolean collisionFlag = false;
 
     /**
      * create a new PlayGameController
@@ -201,7 +205,7 @@ public class PlayGameController extends Controller {
 
         if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {
             if (engine.getMapCounter() == 3) engine.getModel().setDebug(true);
-            PlayersTank tank = new PlayersTank(engine.getModel(), 3, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0)));
+            PlayersTank tank = new PlayersTank(engine.getModel(), 3, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
             engine.getModel().setTank(tank);
         }
         else {
@@ -325,8 +329,11 @@ public class PlayGameController extends Controller {
         List<DataTimeItem<ProjectileData>> tmpList = new ArrayList<>(projectiles);
         projectiles.clear();
         for (DataTimeItem<ProjectileData> item : tmpList) {
-            Projectile p = Projectile.mkProjectile(engine.getModel(), item.data);
-            engine.getModel().getTanksMap().addProjectile(p);
+            Projectile p = getTanksMap().getHashProjectiles().get(item.data.id);
+            if (p == null) {
+                p = Projectile.mkProjectile(engine.getModel(), item.data);
+                engine.getModel().getTanksMap().addProjectile(p);
+            }
             p.interpolateData(item);
         }
     }
@@ -335,9 +342,9 @@ public class PlayGameController extends Controller {
      * TODO: add JavaDoc
      */
     private void processEnemyTanks() {
-        if (enemyTanks.isEmpty()) return;
-        List<DataTimeItem<TankData>> tmpList = new ArrayList<>(enemyTanks);
-        enemyTanks.clear();
+        if (tanks.isEmpty()) return;
+        List<DataTimeItem<TankData>> tmpList = new ArrayList<>(tanks);
+        tanks.clear();
         for (DataTimeItem<TankData> item : tmpList) {
             Tank tmp = engine.getModel().getTanksMap().getAllTanks().get(item.getId());
             tmp.interpolateData(item);
@@ -359,11 +366,27 @@ public class PlayGameController extends Controller {
      * @param list processing enemy-actions
      */
     public void addServerEnemyData(List<DataTimeItem<TankData>> list) {
-        this.enemyTanks.addAll(list);
+        this.tanks.addAll(list);
+    }
+
+    public void addServerBBlockData(List<BBData> list) {
+        this.bbDataList.addAll(list);
     }
 
     public void handleCollision() {
-        for (ProjectileCollision coll : collisionList) {
+        if (bbDataList.isEmpty()) return;
+        List<BBData> tmpList = new ArrayList<>(bbDataList);
+        bbDataList.clear();
+        for (BBData bbData : tmpList) {
+            BreakableBlock tmp = (BreakableBlock) engine.getModel().getTanksMap().getFromID(bbData.id);
+            tmp.interpolateData(new DataTimeItem<>(bbData, 0));
+        }
+
+        /*List<ProjectileCollision> tmp = new ArrayList<>(collisionList);
+        collisionList.clear();
+        for (ProjectileCollision coll : tmp) {
+            System.out.println("1: " + isIdDestroyed(coll.id1));
+            System.out.println("2: " + isIdDestroyed(coll.id2));
             if (coll.dest1) {
                 if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).destroy();
                 else getTanksMap().getFromID(coll.id1).destroy();
@@ -380,12 +403,11 @@ public class PlayGameController extends Controller {
                 if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
                 else getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
             }
-        }
-        collisionList.clear();
+        }*/
     }
 
     public void addCollision(List<ProjectileCollision> coll) {
-        collisionList.addAll(coll);
+        //Platform.runLater(() -> collisionList.addAll(coll));
     }
 
     public void setGameEnd(GameEndingMessage msg) {
@@ -400,5 +422,17 @@ public class PlayGameController extends Controller {
         else System.out.println("noch nicht implementiert");
 
         //endingMessage = null;
+    }
+
+    private boolean isIdDestroyed(int id) {
+        if (id > 999) {
+            Projectile pr = getTanksMap().getHashProjectiles().get(id);
+            System.out.println("null: " + (pr == null));
+            return (pr == null) || pr.isDestroyed();
+        }
+        else {
+            Item<? extends Data> item = getTanksMap().getFromID(id);
+            return (item == null) || item.isDestroyed();
+        }
     }
 }

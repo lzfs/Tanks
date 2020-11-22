@@ -122,8 +122,8 @@ public class PlayerReadyState extends TankState {
      * @param model
      */
     public void multiplayerGame(Model model) {
-        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0));
-        TankData data2 = new TankData(new DoubleVec(20, 6), 1, 1, MoveDirection.STAY, 0, new DoubleVec(-1, 0));
+        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData data2 = new TankData(new DoubleVec(20, 6), 1, 1, MoveDirection.STAY, 0, new DoubleVec(-1, 0), false);
         for (Player pl : parent.getPlayers()) {
             ItemEnum turret = parent.getPlayers().get(pl.playerEnum.getEnemyID()).getTurret();
             ItemEnum armor = parent.getPlayers().get(pl.playerEnum.getEnemyID()).getArmor();
@@ -145,7 +145,7 @@ public class PlayerReadyState extends TankState {
      */
     public void tutorialGame(Model model) {
         Player pl = parent.getPlayers().get(0);
-        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0));
+        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
     }
 
@@ -156,11 +156,11 @@ public class PlayerReadyState extends TankState {
      */
     public void singleplayerGameLvlOne(Model model) { //TODO Tanks auf Server Model laden
         Player pl = parent.getPlayers().get(0);
-        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3, MoveDirection.STAY, 0, new DoubleVec(0, 0));
+        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
-        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
-        TankData enemy2 = new TankData(new DoubleVec(20, 5), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
-        TankData enemy3 = new TankData(new DoubleVec(17, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0));
+        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy2 = new TankData(new DoubleVec(20, 5), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy3 = new TankData(new DoubleVec(17, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         List<ItemEnum> enums = new ArrayList<>(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.ACP));
         List<TankData> data = new ArrayList<>(List.of(enemy1, enemy2, enemy3));
         pl.getConnection().send(new StartingSingleplayerMessage(enums, data));

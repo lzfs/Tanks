@@ -13,8 +13,8 @@ public class Data implements Serializable {
     public final int id;
     private boolean destroyed;
 
-    public Data(DoubleVec pos, int id) {
-        this.destroyed = false;
+    public Data(DoubleVec pos, int id, boolean destroyed) {
+        this.destroyed = destroyed;
         this.pos = pos;
         this.id = id;
     }
@@ -73,7 +73,7 @@ public class Data implements Serializable {
      * @return returns the copy
      */
     public Data mkCopy() {
-        return new Data(this.pos, this.id);
+        return new Data(this.pos, this.id, this.destroyed);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package pp.tanks.server;
 
 import pp.network.IConnection;
+import pp.tanks.message.data.BBData;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
@@ -9,7 +10,8 @@ import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.ProjectileCollisionMessage;
-import pp.tanks.model.item.Item;
+import pp.tanks.model.item.Block;
+import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
@@ -17,6 +19,7 @@ import pp.tanks.model.item.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 /**
  * The class "Player" represents a player on the server.
@@ -34,8 +37,8 @@ public class Player {
     private boolean ready;
     public final PlayerEnum playerEnum;
     public final List<Projectile> projectiles = new ArrayList<>();
-    public final List<Tank> enemyTanks = new ArrayList<>();
-    public final List<ProjectileCollision> projCollisions = new ArrayList<>();
+    public final List<Tank> tanks = new ArrayList<>();
+    public final List<BreakableBlock> blocks = new ArrayList<>();
     private boolean gameWon = false;
 
     /**
@@ -160,29 +163,35 @@ public class Player {
      */
     public void reset() {
         this.projectiles.clear();
-        this.enemyTanks.clear();
-        this.projCollisions.clear();
+        this.tanks.clear();
+        this.blocks.clear();
     }
 
     /**
      * TODO: add JavaDoc
      */
     public void sendMessages() {
-        if (!projectiles.isEmpty() || !enemyTanks.isEmpty() || !projCollisions.isEmpty()) {
+        if (!projectiles.isEmpty() || !tanks.isEmpty() || !blocks.isEmpty()) {
             List<DataTimeItem<ProjectileData>> r = new ArrayList<>();
             List<DataTimeItem<TankData>> enemy = new ArrayList<>();
+            List<BBData> blockData = new ArrayList<>();
             if (!projectiles.isEmpty()) {
                 for (Projectile proj : projectiles) {
                     r.add(proj.getLatestOp());
                 }
             }
-            if (!enemyTanks.isEmpty()) {
-                for (Tank tank : enemyTanks) {
+            if (!tanks.isEmpty()) {
+                for (Tank tank : tanks) {
                     enemy.add(tank.getLatestOp());
                 }
             }
-            connection.send(new ModelMessage(enemy, r));
-            if (!projCollisions.isEmpty()) connection.send(new ProjectileCollisionMessage(projCollisions));
+            if (!blocks.isEmpty()) {
+                for (BreakableBlock block : blocks) {
+                    blockData.add(block.getData());
+                }
+            }
+            connection.send(new ModelMessage(enemy, r, blockData));
+
         }
     }
 

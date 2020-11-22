@@ -5,13 +5,12 @@ import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.ProjectileCollisionMessage;
 import pp.tanks.model.ICollisionObserver;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
@@ -158,8 +157,8 @@ public class GameRunningState extends TankState implements ICollisionObserver {
                 int id = d.data.getId();
                 model.getTanksMap().getTank(PlayerEnum.getPlayer(id)).interpolateData(d);
                 if (id == 0)
-                    parent.getPlayers().get(1).enemyTanks.add((Tank) model.getTanksMap().get(id)); //für singleplayer anpassen
-                else parent.getPlayers().get(0).enemyTanks.add((Tank) model.getTanksMap().get(id));
+                    parent.getPlayers().get(1).tanks.add((Tank) model.getTanksMap().get(id)); //für singleplayer anpassen
+                else parent.getPlayers().get(0).tanks.add((Tank) model.getTanksMap().get(id));
             }
         }
     }
@@ -205,8 +204,23 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     @Override
-    public void notify(ProjectileCollision coll) {
-        if (coll.dest1) {
+    public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
+        if (dest) {
+            tank.destroy();
+        }
+        else {
+            tank.processDamage(damage);
+            tank.getLatestOp().data.setLifePoints(tank.getData().getLifePoints());
+        }
+        proj.destroy();
+        proj.getLatestOp().data.destroy();
+
+        for (Player pl : parent.getPlayers()) {
+            pl.tanks.add(tank);
+            pl.projectiles.add(proj);
+        }
+
+    /*if (coll.dest1) {
             if (coll.id1 > 999) model.getTanksMap().getHashProjectiles().get(coll.id1).destroy();
             else model.getTanksMap().getFromID(coll.id1).destroy();
         }
@@ -224,6 +238,35 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
         for (Player pl : parent.getPlayers()) {
             pl.projCollisions.add(coll);
+        }*/
+    }
+
+    @Override
+    public void notifyProjBBlock(Projectile proj, BreakableBlock block, int damage, boolean dest) {
+        if (dest) {
+            block.destroy();
+        }
+        else {
+            block.processDamage(damage);
+        }
+        proj.destroy();
+        proj.getLatestOp().data.destroy();
+
+        for (Player pl : parent.getPlayers()) {
+            pl.blocks.add(block);
+            pl.projectiles.add(proj);
+        }
+    }
+
+    @Override
+    public void notifyProjProj(Projectile proj1, Projectile proj2) {
+        proj1.destroy();
+        proj1.getLatestOp().data.destroy();
+        proj2.destroy();
+        proj2.getLatestOp().data.destroy();
+        for (Player pl : parent.getPlayers()) {
+            pl.projectiles.add(proj1);
+            pl.projectiles.add(proj2);
         }
     }
 

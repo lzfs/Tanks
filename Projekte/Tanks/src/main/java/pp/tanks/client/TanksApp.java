@@ -251,6 +251,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(ModelMessage msg) {
         engine.playGameController.addServerEnemyData(msg.tanks);
         engine.playGameController.addServerProjectiles(msg.projectile);
+        engine.playGameController.addServerBBlockData(msg.blocks);
     }
 
     @Override

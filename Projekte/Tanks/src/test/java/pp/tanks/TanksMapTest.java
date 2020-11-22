@@ -50,7 +50,7 @@ public class TanksMapTest {
 
     @Test
     public void existingPlayer() {
-        Tank player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(), new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(1, 1)));
+        Tank player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(), new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(1, 1), false));
         model.getTanksMap().addTanks(player);
         assertEquals(1, model.getTanksMap().getAllTanks().size());
         assertEquals(player, model.getTanksMap().getAllTanks().get(0));
@@ -58,7 +58,7 @@ public class TanksMapTest {
 
     @Test
     public void existingEnemy() {
-        Tank howitzer = new Howitzer(model, new TankData(new DoubleVec(20, 6), 1000, 100, MoveDirection.STAY, 0.0, new DoubleVec(1, 1)));
+        Tank howitzer = new Howitzer(model, new TankData(new DoubleVec(20, 6), 1000, 100, MoveDirection.STAY, 0.0, new DoubleVec(1, 1), false));
         model.getTanksMap().addTanks(howitzer);
         assertEquals(1, model.getTanksMap().getCOMTanks().size());
         assertEquals(howitzer, model.getTanksMap().getCOMTanks().get(0));
@@ -66,9 +66,9 @@ public class TanksMapTest {
 
     @Test
     public void existingProjectile() {
-        Projectile heavy = new HeavyProjectile(model, new ProjectileData(new DoubleVec(1, 1), 1234, 0, new DoubleVec(1, 1), new DoubleVec(5, 5), ItemEnum.HEAVY_PROJECTILE));
-        Projectile normal = new NormalProjectile(model, new ProjectileData(new DoubleVec(2, 2), 1235, 3, new DoubleVec(1, 1), new DoubleVec(6, 6), ItemEnum.NORMAL_PROJECTILE));
-        Projectile light = new LightProjectile(model, new ProjectileData(new DoubleVec(3, 3), 1236, 5, new DoubleVec(1, 1), new DoubleVec(7, 7), ItemEnum.LIGHT_PROJECTILE));
+        Projectile heavy = new HeavyProjectile(model, new ProjectileData(new DoubleVec(1, 1), 1234, 0, new DoubleVec(1, 1), new DoubleVec(5, 5), ItemEnum.HEAVY_PROJECTILE, false));
+        Projectile normal = new NormalProjectile(model, new ProjectileData(new DoubleVec(2, 2), 1235, 3, new DoubleVec(1, 1), new DoubleVec(6, 6), ItemEnum.NORMAL_PROJECTILE, false));
+        Projectile light = new LightProjectile(model, new ProjectileData(new DoubleVec(3, 3), 1236, 5, new DoubleVec(1, 1), new DoubleVec(7, 7), ItemEnum.LIGHT_PROJECTILE, false));
         model.getTanksMap().addProjectile(heavy);
         model.getTanksMap().addProjectile(normal);
         model.getTanksMap().addProjectile(light);
@@ -82,9 +82,9 @@ public class TanksMapTest {
 
     @Test
     public void existingBlocks() {
-        UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(1, 1), 5000));
-        ReflectableBlock rBlock = new ReflectableBlock(model, new Data(new DoubleVec(1, 2), 5001));
-        BreakableBlock bBlock = new BreakableBlock(model, new BBData(new DoubleVec(1, 3), 5003, 100));
+        UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(1, 1), 5000, false));
+        ReflectableBlock rBlock = new ReflectableBlock(model, new Data(new DoubleVec(1, 2), 5001, false));
+        BreakableBlock bBlock = new BreakableBlock(model, new BBData(new DoubleVec(1, 3), 5003, 100, false));
         model.getTanksMap().addUnbreakableBlock(uBlock);
         model.getTanksMap().addReflectableBlocks(rBlock);
         model.getTanksMap().addBreakableBlock(bBlock);

@@ -33,8 +33,7 @@ public abstract class Tank extends Item<TankData> {
         this.speed = calculateSpeed();
         this.playerEnum = PlayerEnum.getPlayer(data.getId()); //TODO Com enemys beim schießen
         this.projectileId = playerEnum.projectileID;
-        if (model.getEngine() != null)
-            latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
+        latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime());
     }
 
     /**
@@ -270,7 +269,7 @@ public abstract class Tank extends Item<TankData> {
         if (projectileId == playerEnum.projectileID + 999) projectileId = playerEnum.projectileID;
         DoubleVec dir = targetPos.sub(this.getPos()).normalize();
         DoubleVec position = this.getPos().add(dir.mult(1.01));
-        ProjectileData data = new ProjectileData(position, projectileId + 1, turret.getBounces(), dir, targetPos, turret.projectileType);
+        ProjectileData data = new ProjectileData(position, projectileId + 1, turret.getBounces(), dir, targetPos, turret.projectileType, false);
         model.notifyReceivers(TanksNotification.TANK_FIRED);
         projectileId++;
         return turret.mkProjectile(this.model, data, targetPos);

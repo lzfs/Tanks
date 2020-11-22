@@ -315,19 +315,25 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     /**
      * TODO: add JavaDoc
      *
-     * @param id1
-     * @param id2
-     * @param dmg1
-     * @param dmg2
-     * @param dest1
-     * @param dest2
-     * @param serverTime
      */
-    public void notifyObs(int id1, int id2, int dmg1, int dmg2, boolean dest1, boolean dest2, long serverTime) {
+    public void notifyObsT(Projectile proj, Tank tank, int damage, boolean dest) {
         if (observers.isEmpty()) return;
-        ProjectileCollision coll = new ProjectileCollision(id1, id2, dmg1, dmg2, dest1, dest2, serverTime);
         for (ICollisionObserver obs : observers) {
-            obs.notify(coll);
+            obs.notifyProjTank(proj, tank, damage, dest);
+        }
+    }
+
+    public void notifyObsB(Projectile proj, BreakableBlock block, int damage, boolean dest) {
+        if (observers.isEmpty()) return;
+        for (ICollisionObserver obs : observers) {
+            obs.notifyProjBBlock(proj, block, damage, dest);
+        }
+    }
+
+    public void notifyObsP(Projectile proj1, Projectile proj2) {
+        if (observers.isEmpty()) return;
+        for (ICollisionObserver obs : observers) {
+            obs.notifyProjProj(proj1, proj2);
         }
     }
 

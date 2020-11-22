@@ -213,19 +213,25 @@ public class VisualizerVisitor implements Visitor {
         //final DoubleVec pos = view.modelToView(lightProjectile.getPos());
         //context.translate(pos.x, pos.y);
         //context.rotate(lightProjectile.getProjectileData().getDir().angle());
-        drawItem(lightProjectile, TanksImageProperty.lightBullet, Shape.OVAL, Color.GRAY);
+        if (lightProjectile.visible()) {
+            drawItem(lightProjectile, TanksImageProperty.lightBullet, Shape.OVAL, Color.GRAY);
+        }
 
         //context.setTransform(ori);
     }
 
     @Override
     public void visit(NormalProjectile normalProjectile) {
-        drawItem(normalProjectile, TanksImageProperty.normalBullet, Shape.OVAL, Color.GREEN);
+        if (normalProjectile.visible()) {
+            drawItem(normalProjectile, TanksImageProperty.normalBullet, Shape.OVAL, Color.GREEN);
+        }
     }
 
     @Override
     public void visit(HeavyProjectile heavyProjectile) {
-        drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
+        if (heavyProjectile.visible()) {
+            drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
+        }
     }
 
     /**
