@@ -8,6 +8,8 @@ import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.ArmoredPersonnelCarrier;
+import pp.tanks.model.item.Howitzer;
 import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.MoveDirection;
@@ -161,6 +163,9 @@ public class PlayerReadyState extends TankState {
         TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         TankData enemy2 = new TankData(new DoubleVec(20, 5), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         TankData enemy3 = new TankData(new DoubleVec(17, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        model.getTanksMap().addCOMTank(new ArmoredPersonnelCarrier(model, enemy1));
+        model.getTanksMap().addCOMTank(new Howitzer(model, enemy1));
+        model.getTanksMap().addCOMTank(new ArmoredPersonnelCarrier(model, enemy1));
         List<ItemEnum> enums = new ArrayList<>(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.ACP));
         List<TankData> data = new ArrayList<>(List.of(enemy1, enemy2, enemy3));
         pl.getConnection().send(new StartingSingleplayerMessage(enums, data));

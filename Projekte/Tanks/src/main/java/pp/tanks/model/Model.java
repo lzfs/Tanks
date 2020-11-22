@@ -155,7 +155,7 @@ public class Model {
      */
     public boolean gameWon() {
         if (debug) return false;
-        if (map.getTank(engine.getPlayerEnum()).isDestroyed()) return false;
+        if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
             if (tanks != map.getTank(engine.getPlayerEnum()) && !tanks.isDestroyed()) return false;
         }

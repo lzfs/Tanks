@@ -136,8 +136,7 @@ public class AStar {
             Cell c1 = (Cell) o1;
             Cell c2 = (Cell) o2;
 
-            return c1.finalCost < c2.finalCost ? -1 :
-                    c1.finalCost > c2.finalCost ? 1 : 0;
+            return Integer.compare(c1.finalCost, c2.finalCost);
         });
         //Set start position
         setStartCell(si, sj);  //Setting to 0,0 by default. Will be useful for the UI part

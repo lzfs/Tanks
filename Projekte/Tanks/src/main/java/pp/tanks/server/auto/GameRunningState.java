@@ -156,9 +156,10 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             for (DataTimeItem<TankData> d : tmp) {
                 int id = d.data.getId();
                 model.getTanksMap().getTank(PlayerEnum.getPlayer(id)).interpolateData(d);
-                if (id == 0)
-                    parent.getPlayers().get(1).tanks.add((Tank) model.getTanksMap().get(id)); //für singleplayer anpassen
-                else parent.getPlayers().get(0).tanks.add((Tank) model.getTanksMap().get(id));
+                if (gameMode == GameMode.MULTIPLAYER) {
+                    if (id == 0) parent.getPlayers().get(1).tanks.add((Tank) model.getTanksMap().get(id));
+                    else parent.getPlayers().get(0).tanks.add((Tank) model.getTanksMap().get(id));
+                }
             }
         }
     }
@@ -204,7 +205,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     @Override
-    public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
+    public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) { //TODO rückzieh bug
         if (dest) {
             tank.destroy();
         }
@@ -219,26 +220,6 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             pl.tanks.add(tank);
             pl.projectiles.add(proj);
         }
-
-    /*if (coll.dest1) {
-            if (coll.id1 > 999) model.getTanksMap().getHashProjectiles().get(coll.id1).destroy();
-            else model.getTanksMap().getFromID(coll.id1).destroy();
-        }
-        else {
-            if (coll.id1 > 999) model.getTanksMap().getHashProjectiles().get(coll.id1).processDamage(coll.dmg1);
-            else model.getTanksMap().getFromID(coll.id1).processDamage(coll.dmg1);
-        }
-        if (coll.dest2) {
-            if (coll.id2 > 999) model.getTanksMap().getHashProjectiles().get(coll.id2).destroy();
-            else model.getTanksMap().getFromID(coll.id2).destroy();
-        }
-        else {
-            if (coll.id2 > 999) model.getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
-            else model.getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
-        }
-        for (Player pl : parent.getPlayers()) {
-            pl.projCollisions.add(coll);
-        }*/
     }
 
     @Override

@@ -61,7 +61,6 @@ public class PlayGameController extends Controller {
     private final List<DataTimeItem<TankData>> tanks = new ArrayList<>();
     private final List<BBData> bbDataList = new ArrayList<>();
     private GameEndingMessage endingMessage = null;
-    private boolean collisionFlag = false;
 
     /**
      * create a new PlayGameController
@@ -149,46 +148,7 @@ public class PlayGameController extends Controller {
 
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
-        /*if (engine.getModel().gameWon()) {
-            engine.setView(null);
-            if (engine.getMode() == GameMode.TUTORIAL) {
-                engine.activateLevelController();
-            }
-            else if (engine.getMode() == GameMode.SINGLEPLAYER) {
-                if (engine.getMapCounter() == 1) {
-                    engine.activateMission1CompleteController();
-                }
-                else {
-                    engine.activateMission2CompleteController();
-                }
-            }
-            else {
-                //Multiplayer TODO
-                System.out.println("FEHLER1");
-            }
-        }
-        else if (engine.getModel().gameLost()) {
-            engine.setView(null);
-            if (engine.getMode() == GameMode.TUTORIAL) {
-                engine.activateLevelController();
-            }
-            else if (engine.getMode() == GameMode.SINGLEPLAYER) {
-                engine.getSaveTank().decreaseLives();
-                if (engine.getSaveTank().getLives() > 0) {
-                    engine.activateStartGameSPController();
-                }
-                else {
-                    engine.activateGameOverSPController();
-                }
-            }
-            else {
-                //Multiplayer
-                //TODO
-                System.out.println("FEHLER2");
-            }
-        }
-        else if (pressed.contains(KeyCode.ESCAPE))
-            engine.activatePauseMenuSPController(); //TODO*/
+
 
         engine.getView().updateProgressBar((((double) engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
     }
@@ -419,20 +379,10 @@ public class PlayGameController extends Controller {
             if (endingMessage.won) engine.activateGameWonMPController();
             else engine.activateGameOverMPController();
         }
-        else System.out.println("noch nicht implementiert");
+        else if (endingMessage.mode == GameMode.SINGLEPLAYER) {
+            if (endingMessage.won) System.out.println("Gewonnen");
+        }
 
         //endingMessage = null;
-    }
-
-    private boolean isIdDestroyed(int id) {
-        if (id > 999) {
-            Projectile pr = getTanksMap().getHashProjectiles().get(id);
-            System.out.println("null: " + (pr == null));
-            return (pr == null) || pr.isDestroyed();
-        }
-        else {
-            Item<? extends Data> item = getTanksMap().getFromID(id);
-            return (item == null) || item.isDestroyed();
-        }
     }
 }
