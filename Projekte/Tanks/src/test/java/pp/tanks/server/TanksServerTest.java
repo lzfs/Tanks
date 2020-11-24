@@ -25,7 +25,7 @@ public class TanksServerTest {
 
     private final List<Runnable> messages = List.of(
             () -> {
-                transmitter.receiveMessage(new ClientReadyMessage(), conn1);//TODO @Georg da stand mal gamemode Singleplayer drin
+                transmitter.receiveMessage(new ClientReadyMessage(), conn1);
             },
             () -> {
                 transmitter.receiveMessage(new CreateNewLobbyMessage(), conn1);
