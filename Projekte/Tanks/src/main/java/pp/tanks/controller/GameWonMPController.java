@@ -69,6 +69,6 @@ public class GameWonMPController extends Controller {
     @FXML
     private void lobby() {
         LOGGER.log(Level.INFO, "GO TO LobbyController");
-        engine.activateLobbyController();
+        engine.activateTankConfigMPController();
     }
 }

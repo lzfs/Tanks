@@ -36,6 +36,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     private DataTimeItem<? extends Data>[] working;
     private final Thread workWhatEver = new Thread(this::workBuff);
     private final GameMode gameMode;
+    private Timer timer;
     private final List<DataTimeItem<TankData>> tankDat = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectileDat = new ArrayList<>();
 
@@ -76,12 +77,18 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             tankDat.clear();
             dat.clear();
             model.update(timeStart + step * (i + 1));
+            boolean isGameEnd = isGameEnd();
             for (Player p : parent.getPlayers()) {
-                if (isGameEnd()) p.sendEndingMessage(gameMode);
+                if (isGameEnd) p.sendEndingMessage(gameMode);
                 else {
                     p.sendMessages();
                     p.reset();
                 }
+            }
+            if (isGameEnd) {
+                timer.cancel();
+                parent.containingState().goToState(parent.containingState().playerReady);
+                parent.gameFinished();
             }
         }
         model.setLatestUpdate(timeStart + 5 * step);
@@ -99,7 +106,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     @Override
     public void entry() {
         System.out.println("runningState");
-        Timer timer = new Timer();
+        timer = new Timer();
         model.setLatestUpdate(System.nanoTime());
         model.getTanksMap().addObserver(this);
         timer.schedule(new TimerTask() {

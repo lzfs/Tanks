@@ -363,15 +363,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
     }
 
     public void gameEnd() {
-        if (endingMessage.mode == GameMode.MULTIPLAYER) {
-            if (endingMessage.won) engine.activateGameWonMPController();
-            else engine.activateGameOverMPController();
-        }
-        else if (endingMessage.mode == GameMode.SINGLEPLAYER) { // TODO kann wahrscheinlich raus
-            if (endingMessage.won) System.out.println("Gewonnen");
-        }
-
-        //endingMessage = null;
+        if (endingMessage.won) engine.activateGameWonMPController();
+        else engine.activateGameOverMPController();
+        endingMessage = null;
     }
 
     public void handleLocalGameWon() {

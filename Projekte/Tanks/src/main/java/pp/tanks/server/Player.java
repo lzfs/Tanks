@@ -31,7 +31,7 @@ public class Player {
     private ItemEnum turret = null;
     private ItemEnum armor = null;
     private boolean ready;
-    protected PlayerEnum playerEnum;
+    public PlayerEnum playerEnum;
     public final List<Projectile> projectiles = new ArrayList<>();
     public final List<Tank> tanks = new ArrayList<>();
     public final List<BreakableBlock> blocks = new ArrayList<>();

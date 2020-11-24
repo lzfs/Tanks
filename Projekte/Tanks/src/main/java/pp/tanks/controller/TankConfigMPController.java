@@ -212,7 +212,12 @@ public class TankConfigMPController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
-        readyButton.setDisable(true);
+        readyButton.setDisable(!playerConnected);
+        player2ReadyText.setText("");
+        turretButtonLeft.setDisable(false);
+        turretButtonRight.setDisable(false);
+        armorButtonLeft.setDisable(false);
+        armorButtonRight.setDisable(false);
 
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret1));
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret2));

@@ -63,4 +63,8 @@ public class PlayingState extends TankStateMachine {
     public TankState init() {
         return gameRunning;
     }
+
+    public void gameFinished() {
+        gameRunning = null;
+    }
 }

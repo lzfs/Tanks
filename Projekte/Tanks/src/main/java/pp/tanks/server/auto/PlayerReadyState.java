@@ -41,8 +41,10 @@ public class PlayerReadyState extends TankState {
 
     @Override
     public void entry() {
+        for (Player pl : parent.getPlayers()) {
+            pl.setReady(false);
+        }
         if (parent.getPlayers().size() > 1) {
-            System.out.println("drin");
             ItemEnum turret = null;
             ItemEnum armor = null;
             for (Player pl : parent.getPlayers()) {
@@ -66,7 +68,6 @@ public class PlayerReadyState extends TankState {
             //p.getConnection().shutdown();
         //}
         Player lastPlayer = parent.getPlayers().get(0);
-        lastPlayer.setReady(false);
         lastPlayer.playerEnum = PlayerEnum.PLAYER1; // Da lag der Fiesch
         lastPlayer.getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));
         lastPlayer.getConnection().send(new PlayerDisconnectedMessage());
