@@ -132,12 +132,8 @@ public class AStar {
         //Reset
         grid = new Cell[x][y];
         closed = new boolean[x][y];
-        open = new PriorityQueue<>((Object o1, Object o2) -> {
-            Cell c1 = (Cell) o1;
-            Cell c2 = (Cell) o2;
-
-            return Integer.compare(c1.finalCost, c2.finalCost);
-        });
+        open = new PriorityQueue<>(Comparator.comparingInt(c -> c.finalCost)
+        );
         //Set start position
         setStartCell(si, sj);  //Setting to 0,0 by default. Will be useful for the UI part
 

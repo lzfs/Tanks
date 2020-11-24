@@ -42,6 +42,9 @@ public class PlayersTank extends Tank {
         long tmp = (serverTime - latestViewUpdate);
         double delta = ((double) tmp) / FACTOR_SEC;
         latestViewUpdate = serverTime;
+        if (model.getEngine() == null) {
+            interpolateTime(serverTime);
+        }
         turret.update(delta);
         updateMove(delta);
         data.setMove(false);
