@@ -229,9 +229,7 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(HeavyProjectile heavyProjectile) {
-        if (heavyProjectile.visible()) {
             drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
-        }
     }
 
     /**
