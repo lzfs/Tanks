@@ -205,20 +205,13 @@ public class TankConfigSPController extends Controller {
         PlayersTank tank = new PlayersTank(engine.getModel(), 3, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0, 0), false)); //TODO id
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
-        loadLevelOne();
         engine.setMode(GameMode.SINGLEPLAYER);
         counterArmor = 0;
         counterTurret = 0;
         engine.activateStartGameSPController();
     }
 
-    private void loadLevelOne() {
-        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 5), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy3 = new TankData(new DoubleVec(17, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.ACP));
-        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2, enemy3));
-    }
+
 
     /**
      * method for the turretButtonRight button

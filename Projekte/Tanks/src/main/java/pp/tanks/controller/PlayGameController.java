@@ -160,7 +160,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
         if (engine.getView() != null || engine.getMode() == GameMode.MULTIPLAYER) {
-            engine.getView().updateProgressBar(((1.0 * engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
+            engine.getView().updateProgressBar(((1.0 * engine.getModel().getTanksMap().getTank(engine.getPlayerEnum()).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(engine.getPlayerEnum()).getArmor().getMaxPoints())));
         }
     }
 

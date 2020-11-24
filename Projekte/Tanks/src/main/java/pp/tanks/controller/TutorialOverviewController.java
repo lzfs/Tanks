@@ -77,7 +77,6 @@ public class TutorialOverviewController extends Controller {
         LOGGER.log(Level.INFO, "GO TO PlayGameController");
         engine.setMode(GameMode.TUTORIAL);
         engine.setMapCounter(0);
-        engine.getTankApp().getConnection().send(new StartGameMessage(ItemEnum.LIGHT_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.TUTORIAL, engine.getPlayerEnum()));
         engine.activatePlayGameController();
     }
 }

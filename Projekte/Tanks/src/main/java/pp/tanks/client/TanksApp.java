@@ -154,7 +154,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     /**
      * Establishes a connection to an online server
      *
-     * @param mode given Player-mode
      */
     public void joinGame() {
         joinGame("127.0.0.1", "1234");
