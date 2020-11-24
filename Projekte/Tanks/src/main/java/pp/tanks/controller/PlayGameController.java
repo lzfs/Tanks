@@ -144,10 +144,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         addProjectiles();
         handleCollision();
 
-
         if (engine.getMode() != GameMode.MULTIPLAYER) {
             if (engine.getModel().gameWon()) {
-               handleLocalGameWon();
+                handleLocalGameWon();
             }
 
             else if (engine.getModel().gameLost()) {
@@ -156,15 +155,13 @@ public class PlayGameController extends Controller implements ICollisionObserver
             else if (pressed.contains(KeyCode.ESCAPE)) {
                 engine.activatePauseMenuSPController(); //TODO
             }
-
-
         }
 
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
-
-
-        engine.getView().updateProgressBar((((double) engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
+        if (engine.getView() != null || engine.getMode() == GameMode.MULTIPLAYER) {
+            engine.getView().updateProgressBar(((1.0 * engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
+        }
     }
 
     /**
@@ -360,7 +357,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
             tmp.interpolateData(new DataTimeItem<>(bbData, 0));
         }
     }
-
 
     public void setGameEnd(GameEndingMessage msg) {
         endingMessage = msg;
