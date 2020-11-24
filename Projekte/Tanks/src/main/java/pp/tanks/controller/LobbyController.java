@@ -103,7 +103,7 @@ public class LobbyController extends Controller {
     private void createGame() {
         LOGGER.log(Level.INFO, "clicked CREATE_GAME");
 
-        engine.getTankApp().joinGame(GameMode.MULTIPLAYER);
+        engine.getTankApp().joinGame();
         System.out.println("Client connected to MP");
 
         engine.activateTankConfigMPController();

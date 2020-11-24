@@ -89,7 +89,6 @@ public class CreditsController extends Controller {
      */
     @FXML
     private void debug() {
-        engine.getTankApp().joinGame(GameMode.TUTORIAL);
         engine.setMode(GameMode.TUTORIAL);
         engine.setMapCounter(3);
         while (engine.getPlayerEnum() == null) {

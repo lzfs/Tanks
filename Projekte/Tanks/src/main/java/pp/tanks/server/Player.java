@@ -3,14 +3,11 @@ package pp.tanks.server;
 import pp.network.IConnection;
 import pp.tanks.message.data.BBData;
 import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
-import pp.tanks.message.server.ProjectileCollisionMessage;
-import pp.tanks.model.item.Block;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
@@ -19,7 +16,6 @@ import pp.tanks.model.item.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * The class "Player" represents a player on the server.

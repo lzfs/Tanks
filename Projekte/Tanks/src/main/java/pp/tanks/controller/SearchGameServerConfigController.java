@@ -95,16 +95,9 @@ public class SearchGameServerConfigController extends Controller {
      */
     @FXML
     private void search() {
-        // TODO use port, ip to connect to the server
         LOGGER.log(Level.INFO, "clicked SEARCH");
-        engine.getTankApp().joinGame(GameMode.MULTIPLAYER, getIpAddress(), getPort());
-        /*
-        engine.getTankApp().joinGame(GameMode.MULTIPLAYER);
-        System.out.println("Client connected to MP");
-        engine.setScene(new Scene(engine.miniController));
-         */
+        engine.getTankApp().joinGame(getIpAddress(), getPort());
         engine.activateTankConfigMPController();
-        // engine.activateTankConfigMPController();
     }
 
     /**

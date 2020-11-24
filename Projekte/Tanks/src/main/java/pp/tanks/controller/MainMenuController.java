@@ -119,7 +119,6 @@ public class MainMenuController extends Controller {
     @FXML
     private void singlePlayer() {
         LOGGER.log(Level.INFO, "clicked SINGLEPLAYER");
-        engine.getTankApp().joinGame(GameMode.SINGLEPLAYER);
         System.out.println("Client connected to SP");
         engine.activateLevelController();
     }

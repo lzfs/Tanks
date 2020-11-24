@@ -54,17 +54,9 @@ public class TankAutomaton extends TankStateMachine {
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn, PlayerEnum.PLAYER1));
-            if (msg.mode == GameMode.SINGLEPLAYER || msg.mode == GameMode.TUTORIAL) {
-                gameMode = msg.mode;
-                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
-                containingState().goToState(playerReady);
-            }
-            if (msg.mode == GameMode.MULTIPLAYER) {
-                gameMode = GameMode.MULTIPLAYER;
-                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
-                containingState().goToState(waitingFor2Player);
-            }
-            //else containingState().goToState();
+            gameMode = GameMode.MULTIPLAYER;
+            conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+            containingState().goToState(waitingFor2Player);
         }
     };
 

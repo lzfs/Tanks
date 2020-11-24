@@ -67,7 +67,7 @@ public class PlayersTank extends Tank {
         if ( getMoveDir() != MoveDirection.STAY){
             data.setMoveDir(MoveDirection.STAY);
             DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
-            model.getEngine().getConnection().send(new MoveMessage(item));
+            if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
         }
 
     }
@@ -83,8 +83,8 @@ public class PlayersTank extends Tank {
         if (!collide(newPos)){
             if (dir != data.getMoveDir()) {
                 super.setMoveDirection(dir);
-                DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
-                model.getEngine().getConnection().send(new MoveMessage(item));
+                DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
+                if(!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
             }
             else super.setMoveDirection(dir);
         }

@@ -73,7 +73,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private Tank saveTank = null;
     private Enemy saveEnemyTank = null;
     private GameMode mode;
-    private PlayerEnum playerEnum;
+    private PlayerEnum playerEnum = PlayerEnum.PLAYER1;
     private int mapCounter = 0;
 
     /**
@@ -506,5 +506,10 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     public Controller getController() {
         return controller;
+    }
+
+    public boolean isClientGame() {
+        if (this.mode == null) throw new IllegalStateException("No game mode is set");
+        return this.mode != GameMode.MULTIPLAYER;
     }
 }

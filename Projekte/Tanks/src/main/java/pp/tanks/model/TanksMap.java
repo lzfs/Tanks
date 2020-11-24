@@ -312,6 +312,10 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         observers.add(obs);
     }
 
+    public void deleteAllObservers() {
+        observers.clear();
+    }
+
     /**
      * TODO: add JavaDoc
      *

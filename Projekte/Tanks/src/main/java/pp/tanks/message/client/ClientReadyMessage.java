@@ -8,11 +8,8 @@ import pp.tanks.server.GameMode;
  * Message used to establish the connection to the server
  */
 public class ClientReadyMessage implements IClientMessage {
-    public final GameMode mode;
 
-    public ClientReadyMessage(GameMode mode) {
-        this.mode = mode;
-    }
+    public ClientReadyMessage() { }
 
     /**
      * Method to accept a visitor
@@ -27,6 +24,6 @@ public class ClientReadyMessage implements IClientMessage {
 
     @Override
     public String toString() {
-        return "ClientReadyMessage: " + mode;
+        return "ClientReadyMessage:";
     }
 }

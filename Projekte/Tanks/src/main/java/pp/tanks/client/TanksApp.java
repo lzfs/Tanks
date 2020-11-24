@@ -11,11 +11,9 @@ import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.PingMessage;
-import pp.tanks.message.server.ProjectileCollisionMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
-import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
 
 import javafx.application.Application;
@@ -24,7 +22,6 @@ import javafx.stage.Stage;
 import pp.tanks.controller.Engine;
 import pp.tanks.controller.MainMenuController;
 import pp.tanks.model.item.PlayerEnum;
-import pp.tanks.server.GameMode;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -159,17 +156,17 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      *
      * @param mode given Player-mode
      */
-    public void joinGame(GameMode mode) {
-        joinGame(mode, "127.0.0.1", "1234");
+    public void joinGame() {
+        joinGame("127.0.0.1", "1234");
         //joinGame(mode, "137.193.138.79", "1234");
     }
 
     /**
      * Establishes a connection to an online server
      *
-     * @param mode given Player-mode
+
      */
-    public void joinGame(GameMode mode, String ipAddress, String portString) {
+    public void joinGame(String ipAddress, String portString) {
         if (connection != null) {
             LOGGER.severe("trying to join a game again"); //NON-NLS
             return;
@@ -180,7 +177,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             socket.setSoTimeout(1000);
             connection = new Connection<>(socket, this);
             if (connection.isConnected()) {
-                connection.send(new ClientReadyMessage(mode));
+                connection.send(new ClientReadyMessage());
                 new Thread(connection).start();
             }
             else {
@@ -254,15 +251,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         engine.playGameController.addServerBBlockData(msg.blocks);
     }
 
-    @Override
-    public void visit(StartingSingleplayerMessage msg) {
-        engine.tankConfigSPController.startGame(msg);
-    }
 
-    @Override
-    public void visit(ProjectileCollisionMessage msg) {
-        engine.playGameController.addCollision(msg.collision);
-    }
+
+
 
     @Override
     public void visit(GameEndingMessage msg) {

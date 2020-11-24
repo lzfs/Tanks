@@ -7,6 +7,7 @@ import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
+import pp.tanks.model.ICollisionObserver;
 import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
@@ -20,6 +21,7 @@ import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
+import pp.tanks.server.Player;
 import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 import pp.util.StopWatch;
@@ -41,7 +43,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * The controller realizing the game state when the game is really running.
  */
-public class PlayGameController extends Controller {
+public class PlayGameController extends Controller implements ICollisionObserver {
     private static final Logger LOGGER = Logger.getLogger(PlayGameController.class.getName());
 
     public static final KeyCode W = KeyCode.W;
@@ -142,9 +144,21 @@ public class PlayGameController extends Controller {
         addProjectiles();
         handleCollision();
 
-        // update the model
-        /*final double delta = stopWatch.getTime() - lastUpdate;
-        lastUpdate = stopWatch.getTime();*/
+
+        if (engine.getMode() != GameMode.MULTIPLAYER) {
+            if (engine.getModel().gameWon()) {
+               handleLocalGameWon();
+            }
+
+            else if (engine.getModel().gameLost()) {
+                handleLocalGameLost();
+            }
+            else if (pressed.contains(KeyCode.ESCAPE)) {
+                engine.activatePauseMenuSPController(); //TODO
+            }
+
+
+        }
 
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
@@ -158,7 +172,6 @@ public class PlayGameController extends Controller {
      */
     @Override
     public void entry() {
-        stopWatch.start();
         pressed.clear();
         processed.clear();
         engine.getModel().loadMap("map" + engine.getMapCounter() + ".xml");
@@ -199,6 +212,9 @@ public class PlayGameController extends Controller {
             Group group = new Group(engine.getView(), progressBar);
             scene = new Scene(group);
         }
+        if (engine.isClientGame()) {
+            engine.getModel().getTanksMap().addObserver(this);
+        }
         engine.setScene(scene);
         engine.getModel().getTanksMap().updateHashMap();
     }
@@ -212,6 +228,8 @@ public class PlayGameController extends Controller {
                 engine.getModel().getTanksMap().addCOMTank(COMEnemy.mkComEnemy(constructionEnum.get(i), engine.getModel(), constructionData.get(i)));
             }
         }
+        constructionData.clear();
+        constructionEnum.clear();
     }
 
     /**
@@ -341,34 +359,8 @@ public class PlayGameController extends Controller {
             BreakableBlock tmp = (BreakableBlock) engine.getModel().getTanksMap().getFromID(bbData.id);
             tmp.interpolateData(new DataTimeItem<>(bbData, 0));
         }
-
-        /*List<ProjectileCollision> tmp = new ArrayList<>(collisionList);
-        collisionList.clear();
-        for (ProjectileCollision coll : tmp) {
-            System.out.println("1: " + isIdDestroyed(coll.id1));
-            System.out.println("2: " + isIdDestroyed(coll.id2));
-            if (coll.dest1) {
-                if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).destroy();
-                else getTanksMap().getFromID(coll.id1).destroy();
-            }
-            else {
-                if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).processDamage(coll.dmg1);
-                else getTanksMap().getFromID(coll.id1).processDamage(coll.dmg1);
-            }
-            if (coll.dest2) {
-                if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).destroy();
-                else getTanksMap().getFromID(coll.id2).destroy();
-            }
-            else {
-                if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
-                else getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
-            }
-        }*/
     }
 
-    public void addCollision(List<ProjectileCollision> coll) {
-        //Platform.runLater(() -> collisionList.addAll(coll));
-    }
 
     public void setGameEnd(GameEndingMessage msg) {
         endingMessage = msg;
@@ -379,10 +371,71 @@ public class PlayGameController extends Controller {
             if (endingMessage.won) engine.activateGameWonMPController();
             else engine.activateGameOverMPController();
         }
-        else if (endingMessage.mode == GameMode.SINGLEPLAYER) {
+        else if (endingMessage.mode == GameMode.SINGLEPLAYER) { // TODO kann wahrscheinlich raus
             if (endingMessage.won) System.out.println("Gewonnen");
         }
 
         //endingMessage = null;
+    }
+
+    public void handleLocalGameWon() {
+        engine.setView(null);
+        if (engine.getMode() == GameMode.TUTORIAL) {
+            engine.activateLevelController();
+        }
+        else {
+            if (engine.getMapCounter() == 1) {
+                engine.activateMission1CompleteController();
+            }
+            else {
+                engine.activateMission2CompleteController();
+            }
+        }
+        engine.getModel().getTanksMap().deleteAllObservers();
+    }
+
+    public void handleLocalGameLost() {
+        engine.setView(null);
+        if (engine.getMode() == GameMode.TUTORIAL) {
+            engine.activateLevelController();
+        }
+        else {
+            engine.getSaveTank().decreaseLives();
+            if (engine.getSaveTank().getLives() > 0) {
+                engine.activateStartGameSPController();
+            }
+            else {
+                engine.activateGameOverSPController();
+            }
+        }
+        engine.getModel().getTanksMap().deleteAllObservers();
+    }
+
+    @Override
+    public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
+        if (dest) {
+            tank.destroy();
+        }
+        else {
+            tank.processDamage(damage);
+        }
+        proj.destroy();
+    }
+
+    @Override
+    public void notifyProjBBlock(Projectile proj, BreakableBlock block, int damage, boolean dest) {
+        if (dest) {
+            block.destroy();
+        }
+        else {
+            block.processDamage(damage);
+        }
+        proj.destroy();
+    }
+
+    @Override
+    public void notifyProjProj(Projectile proj1, Projectile proj2) {
+        proj1.destroy();
+        proj2.destroy();
     }
 }

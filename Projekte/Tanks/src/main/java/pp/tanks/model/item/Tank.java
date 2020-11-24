@@ -245,7 +245,7 @@ public abstract class Tank extends Item<TankData> {
             turret.shoot();
             Projectile projectile = makeProjectile(pos);
             ShootMessage msg = new ShootMessage(new DataTimeItem<ProjectileData>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
-            model.getEngine().getConnection().send(msg);
+            if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(msg);
             model.getTanksMap().addProjectile(projectile);
         }
     }
