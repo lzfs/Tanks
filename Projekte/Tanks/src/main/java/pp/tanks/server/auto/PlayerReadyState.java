@@ -67,7 +67,7 @@ public class PlayerReadyState extends TankState {
         //}
         Player lastPlayer = parent.getPlayers().get(0);
         lastPlayer.setReady(false);
-        lastPlayer.playerEnum = PlayerEnum.PLAYER1;
+        lastPlayer.playerEnum = PlayerEnum.PLAYER1; // Da lag der Fiesch
         lastPlayer.getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));
         lastPlayer.getConnection().send(new PlayerDisconnectedMessage());
         containingState().goToState(parent.waitingFor2Player);

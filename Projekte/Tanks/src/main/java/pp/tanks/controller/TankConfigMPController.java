@@ -298,7 +298,7 @@ public class TankConfigMPController extends Controller {
         ownTurretCounter -= 1;
 
         if (ownTurretCounter < 0) {
-            ownTurretCounter = turrets.size() - 1;
+            ownTurretCounter = turretList.size() - 1;
         }
 
         harmChartPlayer1.setImage(charts.get(ownTurretCounter));
@@ -334,7 +334,7 @@ public class TankConfigMPController extends Controller {
         ownArmorCounter -= 1;
 
         if (ownArmorCounter < 0) {
-            ownArmorCounter = armors.size() - 1;
+            ownArmorCounter = armorList.size() - 1;
         }
 
         ownArmorImage.setImage(armors.get(ownArmorCounter));
@@ -440,13 +440,11 @@ public class TankConfigMPController extends Controller {
      * TODO: add JavaDoc
      */
     public void playerConnected() {
-        System.out.println("Player connected message received");
         if (playerConnected) return;
         Platform.runLater(() -> {
             player2ReadyText.setText("");
             playerConnected = true;
             readyButton.setDisable(false);
-            System.out.println("message ran");
         });
     }
 
