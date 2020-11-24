@@ -43,6 +43,7 @@ public class PlayerReadyState extends TankState {
     public void entry() {
         for (Player pl : parent.getPlayers()) {
             pl.setReady(false);
+            pl.setGameWon(false);
         }
         if (parent.getPlayers().size() > 1) {
             ItemEnum turret = null;
