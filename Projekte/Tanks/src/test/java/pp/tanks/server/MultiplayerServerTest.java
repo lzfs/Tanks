@@ -24,7 +24,7 @@ public class MultiplayerServerTest {
     private TanksServer server;
     private ServerStub transmitter;
 
-    private final List<Runnable> messages = List.of( //Todo @Georg -> changed
+    private final List<Runnable> messages = List.of(
             () -> {
                 transmitter.receiveMessage(new ClientReadyMessage(), conn1);
                 transmitter.receiveMessage(new ClientReadyMessage(), conn2);
