@@ -1,10 +1,14 @@
 package pp.tanks.server.auto;
 
+import pp.network.IConnection;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.data.TankData;
+import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.PlayerDisconnectedMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
+import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.ArmoredPersonnelCarrier;
@@ -38,6 +42,7 @@ public class PlayerReadyState extends TankState {
     @Override
     public void entry() {
         if (parent.getPlayers().size() > 1) {
+            System.out.println("drin");
             ItemEnum turret = null;
             ItemEnum armor = null;
             for (Player pl : parent.getPlayers()) {
@@ -54,12 +59,18 @@ public class PlayerReadyState extends TankState {
     }
 
     @Override
-    public void back(BackMessage msg) {
-        for (Player p : parent.getPlayers()) {
-            p.getConnection().shutdown();
-        }
-        parent.getPlayers().clear();
-        containingState().goToState(parent.init);
+    public void back(BackMessage msg, IConnection<IServerMessage> conn) {
+        containingState().getPlayers().removeIf(p -> p.getConnection() == conn);
+        conn.shutdown();
+        //for (Player p : parent.getPlayers()) {
+            //p.getConnection().shutdown();
+        //}
+        Player lastPlayer = parent.getPlayers().get(0);
+        lastPlayer.setReady(false);
+        lastPlayer.playerEnum = PlayerEnum.PLAYER1;
+        lastPlayer.getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+        lastPlayer.getConnection().send(new PlayerDisconnectedMessage());
+        containingState().goToState(parent.waitingFor2Player);
     }
 
     @Override
@@ -75,7 +86,7 @@ public class PlayerReadyState extends TankState {
         Player p = parent.getPlayers().get(msg.player.tankID);
         p.setArmor(msg.armor);
         p.setTurret(msg.turret);
-        p.setReady();
+        p.setReady(true);
         for (Player player : parent.getPlayers()) {
             if (!player.isReady()) return;
         }

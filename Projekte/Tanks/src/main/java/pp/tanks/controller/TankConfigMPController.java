@@ -1,6 +1,7 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.data.TankData;
@@ -249,6 +250,8 @@ public class TankConfigMPController extends Controller {
     private void back() {
         LOGGER.log(Level.INFO, "clicked BACK");
         engine.activateLobbyController();
+        playerConnected = false;
+        engine.getTankApp().getConnection().send(new BackMessage());
     }
 
     /**
@@ -277,10 +280,7 @@ public class TankConfigMPController extends Controller {
     @FXML
     private void turretButtonRight() {
         ownTurretCounter += 1;
-
-        if (ownTurretCounter >= turrets.size()) {
-            ownTurretCounter = 0;
-        }
+        ownTurretCounter = ownTurretCounter % 3;
 
         harmChartPlayer1.setImage(charts.get(ownTurretCounter));
         ownTurretImage.setImage(turrets.get(ownTurretCounter));
@@ -316,9 +316,8 @@ public class TankConfigMPController extends Controller {
     private void armorButtonRight() {
         ownArmorCounter += 1;
 
-        if (ownArmorCounter >= armors.size()) {
-            ownArmorCounter = 0;
-        }
+        ownArmorCounter = ownArmorCounter % 3;
+
         ownArmorImage.setImage(armors.get(ownArmorCounter));
 
         currentArmor = armorList.get(ownArmorCounter);
@@ -441,11 +440,13 @@ public class TankConfigMPController extends Controller {
      * TODO: add JavaDoc
      */
     public void playerConnected() {
+        System.out.println("Player connected message received");
         if (playerConnected) return;
         Platform.runLater(() -> {
             player2ReadyText.setText("");
             playerConnected = true;
             readyButton.setDisable(false);
+            System.out.println("message ran");
         });
     }
 
@@ -483,5 +484,16 @@ public class TankConfigMPController extends Controller {
     @Override
     public void synchronizationFinished() {
         Platform.runLater(engine::activatePlayGameController);
+    }
+
+    @Override
+    public void playerDisconnected() {
+        playerConnected = false;
+        readyButton.setDisable(true);
+        player2ReadyText.setText("Warten auf Spieler 2");
+        turretButtonLeft.setDisable(false);
+        turretButtonRight.setDisable(false);
+        armorButtonLeft.setDisable(false);
+        armorButtonRight.setDisable(false);
     }
 }

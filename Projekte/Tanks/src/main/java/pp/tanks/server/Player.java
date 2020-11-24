@@ -31,7 +31,7 @@ public class Player {
     private ItemEnum turret = null;
     private ItemEnum armor = null;
     private boolean ready;
-    public final PlayerEnum playerEnum;
+    public PlayerEnum playerEnum; // made not final for back method in playerreadystate
     public final List<Projectile> projectiles = new ArrayList<>();
     public final List<Tank> tanks = new ArrayList<>();
     public final List<BreakableBlock> blocks = new ArrayList<>();
@@ -146,8 +146,8 @@ public class Player {
     /**
      * sets ready-flag as true
      */
-    public void setReady() {
-        this.ready = true;
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 
     public void setGameWon(boolean gameWon) {

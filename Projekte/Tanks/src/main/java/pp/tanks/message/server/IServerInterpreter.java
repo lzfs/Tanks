@@ -15,8 +15,7 @@ public interface IServerInterpreter {
 
     void visit(ModelMessage msg);
 
-
-
-
     void visit(GameEndingMessage msg);
+
+    void visit(PlayerDisconnectedMessage msg);
 }

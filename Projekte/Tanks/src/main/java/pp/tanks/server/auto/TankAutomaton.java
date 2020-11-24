@@ -1,6 +1,7 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
+import pp.network.IServer;
 import pp.tanks.client.TanksApp;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
@@ -63,7 +64,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * the state when a multiplayer game is started and a second player needs to connect
      */
-    private final TankState waitingFor2Player = new TankState() {
+    protected final TankState waitingFor2Player = new TankState() {
         private ItemEnum turret = ItemEnum.LIGHT_TURRET;
         private ItemEnum armor = ItemEnum.LIGHT_ARMOR;
 
@@ -79,6 +80,12 @@ public class TankAutomaton extends TankStateMachine {
             players.get(0).setTurret(turret);
             conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
             containingState().goToState(playerReady);
+        }
+
+        public void back(BackMessage msg, IConnection<IServerMessage> conn) {
+            players.forEach(p -> p.getConnection().shutdown());
+            players.clear();
+            containingState().goToState(init);
         }
 
         @Override
@@ -196,4 +203,5 @@ public class TankAutomaton extends TankStateMachine {
     public Properties getProperties() {
         return this.properties;
     }
+
 }

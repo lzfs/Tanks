@@ -11,6 +11,7 @@ import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.PingMessage;
+import pp.tanks.message.server.PlayerDisconnectedMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
@@ -250,13 +251,14 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         engine.playGameController.addServerBBlockData(msg.blocks);
     }
 
-
-
-
-
     @Override
     public void visit(GameEndingMessage msg) {
         engine.playGameController.setGameEnd(msg);
+    }
+
+    @Override
+    public void visit(PlayerDisconnectedMessage msg) {
+        engine.getController().playerDisconnected();
     }
 }
 
