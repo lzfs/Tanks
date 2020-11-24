@@ -82,22 +82,26 @@ public class TanksMapTest {
 
     @Test
     public void existingBlocks() {
-        UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(1, 1), 5000, false));
-        ReflectableBlock rBlock = new ReflectableBlock(model, new Data(new DoubleVec(1, 2), 5001, false));
         BreakableBlock bBlock = new BreakableBlock(model, new BBData(new DoubleVec(1, 3), 5003, 100, false));
-        model.getTanksMap().addUnbreakableBlock(uBlock);
-        model.getTanksMap().addReflectableBlocks(rBlock);
         model.getTanksMap().addBreakableBlock(bBlock);
         model.update(System.nanoTime());
-        assertEquals(3, model.getTanksMap().getBlocks().size());
+        assertEquals(1, model.getTanksMap().getBreakableBlocks().size());
+        assertEquals(bBlock, model.getTanksMap().getBreakableBlocks().get(0));
+        model.getTanksMap().getBreakableBlocks().get(0).processDamage(100);
+        model.update(System.nanoTime());
+        assertEquals(0, model.getTanksMap().getBreakableBlocks().size());
+        UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(1, 1), 5000, false));
+        ReflectableBlock rBlock = new ReflectableBlock(model, new Data(new DoubleVec(1, 2), 5001, false));
+        model.getTanksMap().addUnbreakableBlock(uBlock);
+        model.getTanksMap().addReflectableBlocks(rBlock);
+        model.update(System.nanoTime());
+        assertEquals(2, model.getTanksMap().getBlocks().size());
         assertEquals(1, model.getTanksMap().getUnbreakableBlocks().size());
         assertEquals(1, model.getTanksMap().getReflectable().size());
         assertEquals(1, model.getTanksMap().getReflectable().size());
-        assertEquals(uBlock, model.getTanksMap().getBlocks().get(1));
+        assertEquals(uBlock, model.getTanksMap().getBlocks().get(0));
         assertEquals(uBlock, model.getTanksMap().getUnbreakableBlocks().get(0));
-        assertEquals(rBlock, model.getTanksMap().getBlocks().get(2));
+        assertEquals(rBlock, model.getTanksMap().getBlocks().get(1));
         assertEquals(rBlock, model.getTanksMap().getReflectable().get(0));
-        assertEquals(bBlock, model.getTanksMap().getBlocks().get(0));
-        assertEquals(bBlock, model.getTanksMap().getBreakableBlocks().get(0));
     }
 }
