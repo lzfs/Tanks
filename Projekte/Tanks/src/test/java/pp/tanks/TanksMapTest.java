@@ -62,6 +62,8 @@ public class TanksMapTest {
         model.getTanksMap().addTanks(howitzer);
         assertEquals(1, model.getTanksMap().getCOMTanks().size());
         assertEquals(howitzer, model.getTanksMap().getCOMTanks().get(0));
+        //model.getTanksMap().getCOMTanks().get(0).processDamage(100); //TODO: I want to destroy the tank by command
+        //assertEquals(0, model.getTanksMap().getCOMTanks().size());
     }
 
     @Test

@@ -17,6 +17,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * only for Test purposes
+ */
 public class TanksServerTest {
     private ConnectionStub conn1;
     private ConnectionStub conn2;
