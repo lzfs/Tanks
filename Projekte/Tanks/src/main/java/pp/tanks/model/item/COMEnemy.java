@@ -1,13 +1,13 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.data.TankData;
-import pp.tanks.model.AStar;
 import pp.tanks.model.Model;
 import pp.util.DoubleVec;
 
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -17,14 +17,14 @@ public class COMEnemy extends Enemy {
     public final PlayerEnum player1 = PlayerEnum.PLAYER1;
     private long latestViewUpdate;
 
-    private List<DoubleVec> path;
+    protected List<DoubleVec> path;
     private List<MoveDirection> dirs;
 
     protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, effectiveRadius, armor, turret, data);
         if (model.getEngine() != null) latestViewUpdate = System.nanoTime() + model.getEngine().getOffset();
         else latestViewUpdate = System.nanoTime();
-        this.path = new ArrayList<>();
+        this.path = new LinkedList<>();
         this.dirs = new ArrayList<>();
     }
 
@@ -67,45 +67,92 @@ public class COMEnemy extends Enemy {
         double delta = ((double) tmp) / FACTOR_SEC;
         turret.update(delta);
         if (model.getEngine() != null) {
-            /*if (isMoving()) {
-                //hier
-                super.update(delta);
+            if (isMoving()) {
+                updateMove(delta);
+                // move(delta);
             }
-            else {*/
-            if (!this.isDestroyed()) {
-                // behaviour(delta);
+            else {
+                if (!this.isDestroyed()) {
+                    behaviour(delta);
+                }
             }
-            //}
         }
-        else interpolateTime(serverTime);
-
         latestViewUpdate = serverTime;
+    }
 
-        setMove(true);
-        if (!path.isEmpty() && !dirs.isEmpty()) {
-            updateMove(delta);
-            // setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
-            if (getPos().distance(path.get(0)) < 0.5) {
-                setPos(path.get(0));
-                //setMoveDir()
-                setMoveDirection(dirs.get(0));
+    public void move(double delta) {
+        if (path != null && !path.isEmpty()) {
+            final DoubleVec target = path.get(0);
+            if (getPos().distance(target) < 0.3) {
+                setPos(target);
                 path.remove(0);
-                dirs.remove(0);
+                if (path.size() >= 1) {
+                    setMoveDirection(getMoveDirToVec(path.get(0).sub(target)));
+                }
+            } else {
+                setPos(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)));
             }
         }
-        else if (path == null || path.isEmpty()) {
-            setMove(false);
-            if (!shootIsBlocked()) {
-                shoot(model.getTanksMap().getTank(PlayerEnum.PLAYER1).getPos());
+    }
+
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param vec
+     * @return
+     */
+    public static MoveDirection getMoveDirToVec(DoubleVec vec) {
+        if (vec.equals(MoveDirection.UP.getVec())) {
+            return MoveDirection.UP;
+        }
+        else if (vec.equals(MoveDirection.DOWN.getVec())) {
+            return MoveDirection.DOWN;
+        }
+        else if (vec.equals(MoveDirection.LEFT.getVec())) {
+            return MoveDirection.LEFT;
+        }
+        else if (vec.equals(MoveDirection.RIGHT.getVec())) {
+            return MoveDirection.RIGHT;
+        }
+        else if (vec.equals(MoveDirection.RIGHT_DOWN.getVec())) {
+            return MoveDirection.RIGHT_DOWN;
+        }
+        else if (vec.equals(MoveDirection.RIGHT_UP.getVec())) {
+            return MoveDirection.RIGHT_UP;
+        }
+        else if (vec.equals(MoveDirection.LEFT_DOWN.getVec())) {
+            return MoveDirection.LEFT_DOWN;
+        }
+        else if (vec.equals(MoveDirection.LEFT_UP.getVec())) {
+            return MoveDirection.LEFT_UP;
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * updates the movement of a tank
+     *
+     * @param delta
+     */
+    public void updateMove(double delta) {
+        collide(getPos());
+        if (isMoving() && !data.isDestroyed()) {
+            double currentRot = data.getRotation();
+            double moveDirRotation = data.getMoveDir().getRotation();
+            double tmp = (currentRot - moveDirRotation + 180) % 180;
+            double tmp1 = (moveDirRotation - currentRot + 180) % 180;
+            double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
+            if (tmp2 < 2) {
+                // setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
+                move(delta);
             }
-            double r = Math.random() * 4;
-            r -= 2;
-            r = Math.toIntExact(Math.round(r));
-            int x = Math.toIntExact(Math.round(model.getTanksMap().getTank(PlayerEnum.PLAYER1).getPos().x + r));
-            int y = Math.toIntExact(Math.round(model.getTanksMap().getTank(PlayerEnum.PLAYER1).getPos().y + r));
-            if (x != getPos().x || y != getPos().y) {
-                navigate(x, y);
-                setMoveDirection(dirs.get(0));
+            else if (tmp > tmp1) {
+                data.setRotation(currentRot + delta * rotationSpeed);
+            }
+            else {
+                data.setRotation(currentRot - delta * rotationSpeed);
             }
         }
     }
@@ -140,56 +187,11 @@ public class COMEnemy extends Enemy {
         else return new Howitzer(model, data);
     }
 
-    public void navigate(int x, int y) {
-        //TODO
-        path.clear();
-        dirs.clear();
-        int panzerX = Math.toIntExact(Math.round(getPos().x));
-        int panzerY = Math.toIntExact(Math.round(getPos().y));
-        int width = model.getTanksMap().getWidth();
-        int height = model.getTanksMap().getHeight();
-
-        int n = model.getTanksMap().getBlocks().size() + model.getTanksMap().getAllTanks().size() - 1;
-        int[][] blocked = new int[n][2];
-
-        int i = 0;
-        while (i < model.getTanksMap().getBlocks().size()) {
-            blocked[i][1] = Math.toIntExact(Math.round(model.getTanksMap().getBlocks().get(i).getPos().x));
-            blocked[i][0] = Math.toIntExact(Math.round(model.getTanksMap().getBlocks().get(i).getPos().y));
-            i++;
-        }
-
-        int j = 0;
-        while (i < n) {
-            if (model.getTanksMap().getAllTanks().get(j) != this) {
-                blocked[i][1] = Math.toIntExact(Math.round(model.getTanksMap().getAllTanks().get(j).getPos().x));
-                blocked[i][0] = Math.toIntExact(Math.round(model.getTanksMap().getAllTanks().get(j).getPos().y));
-                i++;
-            }
-            j++;
-        }
-
-
-        path = AStar.execute(height, width, panzerY, panzerX, y, x, blocked);
-        Collections.reverse(path);
-
-        List<DoubleVec> tmpPath = new ArrayList<>();
-        for (DoubleVec p : path) {
-            tmpPath.add(new DoubleVec(p.y, p.x));
-        }
-        path = tmpPath;
-
-        dirs = AStar.getDirsList(path);
-        Collections.reverse(dirs);
-
-        // path.remove(0);
-    }
-
     /**
      * test if a ComEnemy can hit the players Tank if he would shoot
      *
      * @return if the way is blocked
-     */
+     */ /*
     public boolean shootIsBlocked() {
         DoubleVec pos = model.getTanksMap().getTank(PlayerEnum.PLAYER1).getPos();
         DoubleVec dir = getPos().sub(pos).normalize().mult(0.5);
@@ -206,4 +208,5 @@ public class COMEnemy extends Enemy {
         }
         return false;
     }
+    */
 }

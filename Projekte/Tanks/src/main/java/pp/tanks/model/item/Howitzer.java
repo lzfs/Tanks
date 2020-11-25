@@ -37,53 +37,13 @@ public class Howitzer extends COMEnemy {
                 shoot(model.getTanksMap().getTank(player1).getPos());
             }
         }
-        else {
-            MoveDirection[] movingDirs;
-            int idx;
-            movingDirs = MoveDirection.values();
-            idx = (int) (Math.random() * movingDirs.length);
-            DoubleVec targetPos = getPos().add(movingDirs[idx].getVec().mult(7));
-            navigateTo(targetPos);
-            while (path.size() > 0 && delta > 0.) {
-                final DoubleVec target = path.get(0);
-                if (getPos().distanceSq(target) < 1e-4) {
-                    setPos(target);
-                    path.remove(0);
-                }
-                else {
-                    //TODO
-                    final double bearing = target.sub(getPos()).angle() % 180;
-                    double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
-                    if (Math.abs(needToTurnBy) > 2) {
-                        //TODO
-                        double currentRot = getRotation();
-                        double moveDirRotation = target.sub(getPos()).normalize().angle();
-                        double tmp = (currentRot - moveDirRotation + 360) % 360;
-                        double tmp1 = (moveDirRotation - currentRot + 360) % 360;
-                        if (tmp > tmp1) {
-                            setRotation(currentRot + delta * rotationSpeed);
-                        }
-                        else {
-                            setRotation(currentRot - delta * rotationSpeed);
-                        }
-                        delta = 0.;
-                    }
-                    else {
-                        setRotation((int) bearing);
-                        final double distanceToGo = getPos().distance(target);
-                        if (distanceToGo >= delta * speed) {
-                            DoubleVec dir = target.sub(getPos()).normalize();
-                            setPos(getPos().add(dir.mult(delta * speed)));
-                            delta = 0.;
-                        }
-                        else {
-                            setPos(target);
-                            path.remove(0);
-                            delta -= distanceToGo / speed;
-                        }
-                    }
-                }
-            }
+        else if (path == null || path.isEmpty()){
+            Tank playersTank = model.getTanksMap().getTank(player1);
+            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2, 2)));
+            navigateTo(new DoubleVec(7, 7));
+            setPos(new DoubleVec(Math.round(getPos().x), Math.round(getPos().y)));
+            setMoveDirection(getMoveDirToVec(path.get(0).sub(getPos())));
+            setMove(true);
         }
     }
 
