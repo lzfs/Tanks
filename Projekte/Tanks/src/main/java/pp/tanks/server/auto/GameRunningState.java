@@ -218,7 +218,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
         else {
             tank.processDamage(damage);
-            tank.getLatestOp().data.setLifePoints(tank.getData().getLifePoints());
+            tank.getLatestOp().data.setLifePoints(tank.getArmor().getArmorPoints());
         }
         proj.destroy();
         proj.getLatestOp().data.destroy();

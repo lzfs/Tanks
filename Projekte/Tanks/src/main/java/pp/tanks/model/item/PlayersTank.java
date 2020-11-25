@@ -96,7 +96,10 @@ public class PlayersTank extends Tank {
 
     @Override
     public void interpolateData(DataTimeItem<TankData> item) {
-        if (model.getEngine() != null) return;
+        if (model.getEngine() != null) {
+            this.getArmor().setArmorPoints(item.data.getLifePoints());
+            return;
+        }
         this.data = item.data.mkCopy();
         setLatestOp(item);
     }
