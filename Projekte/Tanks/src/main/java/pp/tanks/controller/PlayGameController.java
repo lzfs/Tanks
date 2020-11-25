@@ -309,6 +309,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
                 p = Projectile.mkProjectile(engine.getModel(), item.data);
                 engine.getModel().getTanksMap().addProjectile(p);
             }
+            if (item.data.isDestroyed()) {
+                p.destroy();
+            }
             p.interpolateData(item);
         }
     }

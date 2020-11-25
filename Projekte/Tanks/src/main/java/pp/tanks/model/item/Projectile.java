@@ -58,7 +58,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         setPos(latestOp.data.getPos());
         setDir(latestOp.data.getDir());
         ProjectileData tmpData = latestOp.data.mkCopy();
-        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>( tmpData,latestInterpolate);
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(tmpData, latestInterpolate);
         interpolateData(tmp);
         //System.out.println("danach "+latestOp.data.getDir());
         //System.out.println("//eigene pos " +getPos());
@@ -142,7 +142,7 @@ public abstract class Projectile extends Item<ProjectileData> {
             }
         }
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
-            if (collisionWith(rBlock, getPos()) && flag==0) {
+            if (collisionWith(rBlock, getPos()) && flag == 0) {
                 if (latestOp.data.getBounce() > 0) {
                     flag = System.nanoTime();
                     reflect();
@@ -213,14 +213,13 @@ public abstract class Projectile extends Item<ProjectileData> {
         return true;
     }
 
-/*
     @Override
     public void destroy() {
-        super.destroy();
-        model.getEngine().getView().addExplosion(this);
+        data.destroy();
+        if (model.getEngine() != null) {
+            model.getEngine().getView().addExplosion(this);
+        }
     }
- */
-
 
     public boolean visible() {
         return visible;
