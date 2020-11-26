@@ -91,7 +91,7 @@
             </ImageView>
             <ImageView fx:id="ownArmorImage" fitHeight="76.0" fitWidth="97.0" layoutX="302.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                 <image>
-                    <Image url="@../client/images/armor1.png" />
+                    <Image url="@../client/images/armor1Small.png" />
                 </image>
             </ImageView>
             <ImageView fx:id="harmChartPlayer1" fitHeight="19.0" fitWidth="102.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
@@ -155,7 +155,7 @@
          </ImageView>
          <ImageView fx:id="armorPlayer2" fitHeight="76.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
              <image>
-                 <Image url="@../client/images/armor1.png" />
+                 <Image url="@../client/images/armor1Small.png" />
              </image>
             <GridPane.margin>
                <Insets right="5.0" />

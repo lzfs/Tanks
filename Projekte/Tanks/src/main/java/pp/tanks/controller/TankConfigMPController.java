@@ -223,8 +223,8 @@ public class TankConfigMPController extends Controller {
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret2));
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret3));
 
-        armors.add(engine.getImages().getImage(TanksImageProperty.armor1));
-        armors.add(engine.getImages().getImage(TanksImageProperty.armor2));
+        armors.add(engine.getImages().getImage(TanksImageProperty.armor1Small));
+        armors.add(engine.getImages().getImage(TanksImageProperty.armor2Small));
         armors.add(engine.getImages().getImage(TanksImageProperty.armor3));
 
         charts.add(engine.getImages().getImage(TanksImageProperty.chart1));
