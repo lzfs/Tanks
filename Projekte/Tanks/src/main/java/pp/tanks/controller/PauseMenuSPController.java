@@ -101,7 +101,6 @@ public class PauseMenuSPController extends Controller {
     @FXML
     private void mainMenu() {
         LOGGER.log(Level.INFO, "clicked MAIN_MENU");
-        engine.getModel().setDebug(false);
         engine.activateMainMenuController();
     }
 

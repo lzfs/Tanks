@@ -92,7 +92,6 @@ public class LevelController extends Controller {
     @FXML
     private void back() {
         LOGGER.log(Level.INFO, "clicked BACK");
-        engine.getModel().setDebug(false);
         engine.activateMainMenuController();
     }
 

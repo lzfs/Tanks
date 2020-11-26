@@ -27,7 +27,6 @@ public class Model {
     private final List<TanksNotificationReceiver> receivers = new ArrayList<>();
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
-    private boolean debug;
     private long latestUpdate;
     private Engine engine;
 
@@ -154,7 +153,6 @@ public class Model {
      * Returns true if and only if there are no tanks left.
      */
     public boolean gameWon() {
-        if (debug) return false;
         if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
             if (tanks != map.getTank(engine.getPlayerEnum()) && !tanks.isDestroyed()) return false;
@@ -165,14 +163,6 @@ public class Model {
     public boolean gameFinished() {
         if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return true;
         return map.getTank(PlayerEnum.PLAYER2).isDestroyed();
-    }
-
-    /**
-     * activates debug-mode
-     * @param debug boolean for activation
-     */
-    public void setDebug(boolean debug) {
-        this.debug = debug;
     }
 
     /**
