@@ -3,6 +3,7 @@ package pp.tanks.client;
 import pp.network.Connection;
 import pp.network.IConnection;
 import pp.network.MessageReceiver;
+import pp.tanks.TanksImageProperty;
 import pp.tanks.message.client.IClientMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.PingResponse;
@@ -80,6 +81,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.setTitle("Tanks");
         stage.show();
         engine.gameLoop();
+        stage.getIcons().add(engine.getImages().getImage(TanksImageProperty.greenTank));
         //sounds.setMusic(sounds.mainMenu);
     }
 
