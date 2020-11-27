@@ -4,14 +4,12 @@ import pp.tanks.TanksImageProperty;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
-import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
-import pp.util.DoubleVec;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -466,6 +464,8 @@ public class TankConfigMPController extends Controller {
             opponentArmorCounter = getArmorIndex(msg.armor);
             turretPlayer2.setImage(turrets.get(opponentTurretCounter));
             armorPlayer2.setImage(armors.get(opponentArmorCounter));
+            magazineSizeTextPlayer2.setText(magazine.get(opponentTurretCounter).toString());
+            cadenceTextPlayer2.setText(cadence.get(opponentTurretCounter).toString());
             changeOpponentCharts();
         });
     }

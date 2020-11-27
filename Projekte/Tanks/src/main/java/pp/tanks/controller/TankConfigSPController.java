@@ -211,8 +211,6 @@ public class TankConfigSPController extends Controller {
         engine.activateStartGameSPController();
     }
 
-
-
     /**
      * method for the turretButtonRight button
      */
