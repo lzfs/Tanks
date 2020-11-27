@@ -59,7 +59,6 @@ public class PlayerReadyState extends TankState {
             }
         }
         parent.getLogger().info("Player Ready State");
-        //System.out.println("Player Ready State"); //TODO: delete
     }
 
     @Override

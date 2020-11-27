@@ -33,6 +33,5 @@ public class PlayerDisconnectState extends TankState {
     @Override
     public void entry() {
         parent.getLogger().info("Player Disconnected");
-        //System.out.println("PlayerDisconnected"); //TODO: delete
     }
 }

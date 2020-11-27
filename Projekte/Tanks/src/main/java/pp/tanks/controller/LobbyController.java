@@ -5,7 +5,9 @@ import pp.tanks.server.GameMode;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +46,9 @@ public class LobbyController extends Controller {
     @FXML
     private Button back;
 
+    @FXML
+    private Text infoText;
+
     /**
      * Create the scene displaying the lobby settings.
      */
@@ -60,6 +65,7 @@ public class LobbyController extends Controller {
         LOGGER.log(Level.INFO, "ENTRY LobbyController");
         if (scene == null)
             scene = makeScene();
+        infoText.setText("");
         engine.setScene(scene);
     }
 
@@ -102,8 +108,13 @@ public class LobbyController extends Controller {
     @FXML
     private void createGame() {
         LOGGER.log(Level.INFO, "clicked CREATE_GAME");
-
-        engine.getTankApp().joinGame();
+        try {
+            engine.getTankApp().joinGame();
+        }
+        catch (IllegalArgumentException | IOException e) {
+            infoText.setText("Es läuft kein Server auf ihrem System!");
+            return;
+        }
         System.out.println("Client connected to MP");
 
         engine.activateTankConfigMPController();

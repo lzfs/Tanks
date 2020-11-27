@@ -3,7 +3,6 @@ package pp.tanks.controller;
 import pp.network.Connection;
 import pp.tanks.*;
 import pp.tanks.client.MiniController;
-import pp.tanks.client.Sounds;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
@@ -390,7 +389,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      * @param scene the scene to be shown in the stage of the game.
      */
     void setScene(Scene scene) {
-        //-------------------
         //Image image = images.getImage(TankImageProperty.cursor);
         //scene.setCursor(new ImageCursor(image));
         //---------------------------------

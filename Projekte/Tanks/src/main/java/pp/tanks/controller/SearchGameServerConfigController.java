@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,6 +56,9 @@ public class SearchGameServerConfigController extends Controller {
     @FXML
     private Text infoText;
 
+    @FXML
+    private Button back;
+
     /**
      * Create the scene displaying the ServerConfig.
      */
@@ -96,8 +100,22 @@ public class SearchGameServerConfigController extends Controller {
     @FXML
     private void search() {
         LOGGER.log(Level.INFO, "clicked SEARCH");
-        engine.getTankApp().joinGame(getIpAddress(), getPort());
+        try {
+            engine.getTankApp().joinGame(getIpAddress(), getPort());
+        }catch (NumberFormatException e) {
+            infoText.setText("Falscher Port!");
+            return;
+        }
+        catch (IllegalArgumentException | IOException e) {
+            infoText.setText("Server existiert nicht!");
+            return;
+        }
         engine.activateTankConfigMPController();
+    }
+
+    @FXML
+    private void back() {
+        engine.activateLobbyController();
     }
 
     /**
@@ -114,6 +132,10 @@ public class SearchGameServerConfigController extends Controller {
      */
     public String getIpAddress() {
         return ipField.getText().trim();
+    }
+
+    public Text getInfoText(){
+        return infoText;
     }
 }
 

@@ -88,6 +88,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
                 }
             }
             if (isGameEnd) {
+                timer.cancel();
                 parent.containingState().goToState(parent.containingState().playerReady);
                 parent.gameFinished();
             }
@@ -106,8 +107,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
      */
     @Override
     public void entry() {
-
-        System.out.println("runningState");
+        parent.getLogger().info("Game running State");
         timer = new Timer();
         model.setLatestUpdate(System.nanoTime());
         model.getTanksMap().addObserver(this);
@@ -121,10 +121,6 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }, 100, 100);
     }
 
-    @Override
-    public void exit() {
-        timer.cancel();
-    }
 
     /**
      * Override method mandatory to use methods of StateSupport

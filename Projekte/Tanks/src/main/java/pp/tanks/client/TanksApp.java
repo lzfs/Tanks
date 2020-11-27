@@ -158,7 +158,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * Establishes a connection to an online server
      *
      */
-    public void joinGame() {
+    public void joinGame() throws IOException{
         joinGame("127.0.0.1", "1234");
         //joinGame(mode, "137.193.138.79", "1234");
     }
@@ -168,7 +168,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      *
 
      */
-    public void joinGame(String ipAddress, String portString) {
+    public void joinGame(String ipAddress, String portString) throws IOException {
         if (connection != null) {
             LOGGER.severe("trying to join a game again"); //NON-NLS
             return;
@@ -187,8 +187,14 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
                 connection = null;
             }
         }
+        catch (NumberFormatException e) {
+            //TODO Logger ausgabe
+            throw e;
+            //setInfoText(Resources.getString("port.number.must.be.an.integer"));
+        }
         catch (IllegalArgumentException | IOException e) {
             LOGGER.info("when creating the Client: " + e.getMessage()); //NON-NLS
+            throw e;
         }
     }
 

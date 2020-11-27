@@ -39,7 +39,6 @@ public class SynchronizeState extends TankState {
     @Override
     public void entry() {
         parent.getLogger().info("Synchronize State");
-        //System.out.println("synchronize State"); //TODO: delete
         call();
     }
 
