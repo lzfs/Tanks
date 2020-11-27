@@ -1,9 +1,8 @@
 package pp.tanks.controller;
 
+import pp.tanks.TanksImageProperty;
 import pp.tanks.message.data.BBData;
-import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
@@ -11,7 +10,6 @@ import pp.tanks.model.ICollisionObserver;
 import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
-import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
@@ -21,11 +19,12 @@ import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
-import pp.tanks.server.Player;
 import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 import pp.util.StopWatch;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,12 +32,17 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
 /**
  * The controller realizing the game state when the game is really running.
@@ -63,6 +67,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private final List<DataTimeItem<TankData>> tanks = new ArrayList<>();
     private final List<BBData> bbDataList = new ArrayList<>();
     private GameEndingMessage endingMessage = null;
+    private Scene menuMPController = new Scene(new PauseMenuMPController());
 
     /**
      * create a new PlayGameController
@@ -155,6 +160,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
             else if (pressed.contains(KeyCode.ESCAPE)) {
                 engine.activatePauseMenuSPController(); //TODO
             }
+        }
+        else {
+            if (pressed.contains(KeyCode.ESCAPE)) engine.setScene(menuMPController);
         }
 
         engine.getModel().update(System.nanoTime() + engine.getOffset());
@@ -434,5 +442,102 @@ public class PlayGameController extends Controller implements ICollisionObserver
     @Override
     public void playerDisconnected() {
         engine.gameWonMPController.playerDisconnected();
+    }
+
+    private class PauseMenuMPController extends GridPane {
+        private static final String PAUSE_MENU_MP_FXML = "PauseMenuMP.fxml"; //NON-NLS
+
+        PauseMenuMPController() {
+            final URL location = getClass().getResource(PAUSE_MENU_MP_FXML);
+            FXMLLoader fxmlLoader = new FXMLLoader(location);
+            fxmlLoader.setRoot(this);
+            fxmlLoader.setController(this);
+            try {
+                fxmlLoader.load();
+            }
+            catch (
+                    IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        /**
+         * the button to continue the game
+         */
+        @FXML
+        private Button continueGame;
+
+        /**
+         * the image to display the status icon of the music preferences
+         */
+        @FXML
+        private ImageView musicImage;
+
+        /**
+         * the image to display the status icon of the sound preferences
+         */
+        @FXML
+        private ImageView soundImage;
+
+        /**
+         * the button to get back to the main menu
+         */
+        @FXML
+        private Button mainMenu;
+
+        /**
+         * method to continue the game
+         */
+        @FXML
+        private void continueGame() {
+            engine.setScene(scene);
+        }
+
+        /**
+         * method to go back to the main menu
+         */
+        @FXML
+        private void mainMenu() {
+            engine.getConnection().shutdown();
+            engine.activateMainMenuController();
+        }
+
+        /**
+         * method for the sound button
+         */
+        @FXML
+        private void sound() {
+            // TODO
+            /*if (engine.getTankApp().sounds.getMuted()) {
+                engine.getTankApp().sounds.mute(false);
+            }
+            else {
+                engine.getTankApp().sounds.mute(true);
+            }
+
+            if (engine.getTankApp().sounds.getMuted()) {
+                soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+            }
+            else {
+                soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+            }
+            LOGGER.log(Level.INFO, "clicked SOUND");*/
+        }
+
+        /**
+         * method for the music button
+         */
+        @FXML
+        private void music() {
+            //TODO
+           /* engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
+            if (engine.getTankApp().sounds.getMuted()) {
+                musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+            }
+            else {
+                musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+            }
+            LOGGER.log(Level.INFO, "clicked MUSIC");*/
+        }
     }
 }
