@@ -41,6 +41,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     private Timer timer;
     private final List<DataTimeItem<TankData>> tankDat = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectileDat = new ArrayList<>();
+    private boolean gameEnded = false;
 
     /**
      * Constructor of the GameRunningState
@@ -58,6 +59,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
      * only printing out the data
      */
     public void workBuff() {
+        if (gameEnded) return;
         DataTimeItem<? extends Data>[] tmp = working;
         working = null;
         long timeEnd = System.nanoTime();
@@ -88,6 +90,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
                 }
             }
             if (isGameEnd) {
+                gameEnded = true;
                 timer.cancel();
                 parent.containingState().goToState(parent.containingState().playerReady);
                 parent.gameFinished();

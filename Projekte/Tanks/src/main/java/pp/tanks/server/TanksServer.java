@@ -6,6 +6,7 @@ import pp.network.MessageReceiver;
 import pp.network.Server;
 import pp.tanks.message.client.*;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.model.item.Tank;
 import pp.tanks.server.auto.TankAutomaton;
 
 import java.io.IOException;
@@ -47,15 +48,15 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void receiveMessage(IClientMessage message, IConnection<IServerMessage> conn) {
-        System.out.println("msg: " + message.toString() + " conn: " + conn);
+        //System.out.println("msg: " + message.toString() + " conn: " + conn);
         message.accept(this, conn);
     }
 
     @Override
     public void onConnectionClosed(IConnection<IServerMessage> conn) {
         auto.playerDisconnected(conn);
-        System.out.println("Player disconnected");
-        //System.exit(0);
+        TankAutomaton.LOGGER.info("Player disconnected");
+
     }
 
     @Override

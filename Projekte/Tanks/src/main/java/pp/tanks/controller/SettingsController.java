@@ -68,7 +68,7 @@ public class SettingsController extends Controller {
      * i.e., when the user clicked on settings in the main menu.
      */
     @Override
-    public void entry(){
+    public void entry() {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
@@ -105,13 +105,13 @@ public class SettingsController extends Controller {
     @FXML
     private void sound() {
         // TODO fix this when TankSoundProperty is done
-        if(engine.getTankApp().sounds.getMuted()) {
+        if (engine.getTankApp().sounds.getMuted() == true) {
             engine.getTankApp().sounds.mute(false);
         } else {
             engine.getTankApp().sounds.mute(true);
         }
 
-        if(engine.getTankApp().sounds.getMuted()){
+        if (engine.getTankApp().sounds.getMuted() == false) {
             soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
         } else {
             soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
@@ -124,8 +124,8 @@ public class SettingsController extends Controller {
      */
     @FXML
     private void music() {
-        engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
-        if(engine.getTankApp().sounds.getMuted()){
+        //engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
+        if (engine.getTankApp().sounds.getMuted() == false) {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
         } else {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));

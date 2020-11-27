@@ -11,9 +11,12 @@ import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 import pp.tanks.server.TanksServer;
+
+import javafx.fxml.LoadException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,6 +51,11 @@ public class TankAutomaton extends TankStateMachine {
      */
     public final TankState init = new TankState() {
         @Override
+        public void entry(){
+            TankAutomaton.LOGGER.info("init State");
+        }
+
+        @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
         }
@@ -65,6 +73,11 @@ public class TankAutomaton extends TankStateMachine {
      * the state when a multiplayer game is started and a second player needs to connect
      */
     protected final TankState waitingFor2Player = new TankState() {
+        @Override
+        public void entry(){
+            TankAutomaton.LOGGER.info("waiting for player 2");
+        }
+
         private ItemEnum turret = ItemEnum.LIGHT_TURRET;
         private ItemEnum armor = ItemEnum.LIGHT_ARMOR;
 
@@ -91,7 +104,7 @@ public class TankAutomaton extends TankStateMachine {
 
         @Override
         public void playerDisconnected(IConnection<IServerMessage> conn) {
-            back(conn);
+            if (conn == players.get(0).getConnection()) back(conn);
         }
 
         @Override
