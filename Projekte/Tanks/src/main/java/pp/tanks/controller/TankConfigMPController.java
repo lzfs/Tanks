@@ -453,7 +453,7 @@ public class TankConfigMPController extends Controller {
     }
 
     /**
-     * updates the server
+     * updates local view of opponent
      *
      * @param msg update message
      */
