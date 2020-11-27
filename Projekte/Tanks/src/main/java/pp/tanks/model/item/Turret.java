@@ -52,12 +52,15 @@ public abstract class Turret {
     }
 
     /**
-     * @return s the size of the magazine
+     * @return the size of the magazine
      */
     public int getMagSize() {
         return mag.length;
     }
 
+    /**
+     * @return the weight of the tank
+     */
     public int getWeight() {
         return this.weight;
     }

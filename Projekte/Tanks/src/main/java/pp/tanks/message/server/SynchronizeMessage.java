@@ -1,7 +1,5 @@
 package pp.tanks.message.server;
 
-import pp.tanks.model.item.PlayerEnum;
-
 public class SynchronizeMessage implements IServerMessage {
     public final long nanoOffset;
 
@@ -12,7 +10,7 @@ public class SynchronizeMessage implements IServerMessage {
     /**
      * Method to accept a visitor
      *
-     * @param interpreter       visitor to be used
+     * @param interpreter visitor to be used
      */
     @Override
     public void accept(IServerInterpreter interpreter) {

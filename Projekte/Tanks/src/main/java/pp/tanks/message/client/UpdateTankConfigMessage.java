@@ -22,8 +22,8 @@ public class UpdateTankConfigMessage implements IClientMessage {
     /**
      * Method to accept a visitor
      *
-     * @param interpreter       visitor to be used
-     * @param from              the connectionID
+     * @param interpreter visitor to be used
+     * @param from        the connectionID
      */
     @Override
     public void accept(IClientInterpreter interpreter, IConnection<IServerMessage> from) {

@@ -3,7 +3,6 @@ package pp.tanks.model.item.navigation;
 import pp.util.WithDistance;
 
 /**
- *
  * @param <N> the type of each node in the graph
  */
 class PathNode<N extends WithDistance<N>> implements Comparable<PathNode<N>> {

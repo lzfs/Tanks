@@ -36,7 +36,7 @@ public class TankDestroyer extends COMEnemy {
                 shoot(model.getTanksMap().getTank(player1).getPos());
             }
         }
-        else if (path == null || path.isEmpty()){
+        else if (path == null || path.isEmpty()) {
             Tank playersTank = model.getTanksMap().getTank(player1);
             DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2, 2)));
             navigateTo(new DoubleVec(8, 8));

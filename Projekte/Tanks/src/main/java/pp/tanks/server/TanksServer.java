@@ -4,9 +4,22 @@ import pp.network.IConnection;
 import pp.network.IServer;
 import pp.network.MessageReceiver;
 import pp.network.Server;
-import pp.tanks.message.client.*;
+import pp.tanks.message.client.BackMessage;
+import pp.tanks.message.client.ClientReadyMessage;
+import pp.tanks.message.client.CollisionMessage;
+import pp.tanks.message.client.CreateNewLobbyMessage;
+import pp.tanks.message.client.IClientInterpreter;
+import pp.tanks.message.client.IClientMessage;
+import pp.tanks.message.client.JoinLobbyXMessage;
+import pp.tanks.message.client.LevelSelectedMessage;
+import pp.tanks.message.client.MoveMessage;
+import pp.tanks.message.client.PingResponse;
+import pp.tanks.message.client.ReadyMessage;
+import pp.tanks.message.client.ShootMessage;
+import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.message.client.TankSelectedMessage;
+import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.model.item.Tank;
 import pp.tanks.server.auto.TankAutomaton;
 
 import java.io.IOException;
@@ -56,7 +69,6 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
     public void onConnectionClosed(IConnection<IServerMessage> conn) {
         auto.playerDisconnected(conn);
         TankAutomaton.LOGGER.info("Player disconnected");
-
     }
 
     @Override

@@ -179,7 +179,7 @@ public abstract class Tank extends Item<TankData> {
      */
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
-        DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed*2));
+        DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed * 2));
 
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
@@ -189,7 +189,7 @@ public abstract class Tank extends Item<TankData> {
             double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
             if (tmp2 < 4) {
                 data.setRotation(moveDirRotation);
-                if(!collide(newPos)) {
+                if (!collide(newPos)) {
                     setPos(newPos);
                 }
             }
@@ -201,7 +201,6 @@ public abstract class Tank extends Item<TankData> {
             }
         }
     }
-
 
     //haben latest OP
     //wenn nachricht an server

@@ -1,22 +1,15 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
-import pp.network.IServer;
-import pp.tanks.client.TanksApp;
-import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
-import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 import pp.tanks.server.TanksServer;
-
-import javafx.fxml.LoadException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,7 +44,7 @@ public class TankAutomaton extends TankStateMachine {
      */
     public final TankState init = new TankState() {
         @Override
-        public void entry(){
+        public void entry() {
             TankAutomaton.LOGGER.info("init State");
         }
 
@@ -74,7 +67,7 @@ public class TankAutomaton extends TankStateMachine {
      */
     protected final TankState waitingFor2Player = new TankState() {
         @Override
-        public void entry(){
+        public void entry() {
             TankAutomaton.LOGGER.info("waiting for player 2");
         }
 
@@ -223,7 +216,10 @@ public class TankAutomaton extends TankStateMachine {
         return this.properties;
     }
 
-    public Logger getLogger(){
+    /**
+     * @return logger
+     */
+    public Logger getLogger() {
         return LOGGER;
     }
 }

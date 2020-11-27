@@ -44,6 +44,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
+
 /**
  * The controller realizing the game state when the game is really running.
  */
@@ -354,10 +360,18 @@ public class PlayGameController extends Controller implements ICollisionObserver
         this.tanks.addAll(list);
     }
 
+    /**
+     * adds breakable block to bbDatalist
+     *
+     * @param list list of breakable blocks
+     */
     public void addServerBBlockData(List<BBData> list) {
         this.bbDataList.addAll(list);
     }
 
+    /**
+     * called when items collide
+     */
     public void handleCollision() {
         if (bbDataList.isEmpty()) return;
         List<BBData> tmpList = new ArrayList<>(bbDataList);
@@ -368,16 +382,27 @@ public class PlayGameController extends Controller implements ICollisionObserver
         }
     }
 
+    /**
+     * ends a game
+     *
+     * @param msg
+     */
     public void setGameEnd(GameEndingMessage msg) {
         endingMessage = msg;
     }
 
+    /**
+     * shows the correct screen at the end of a game
+     */
     public void gameEnd() {
         if (endingMessage.won) engine.activateGameWonMPController();
         else engine.activateGameOverMPController();
         endingMessage = null;
     }
 
+    /**
+     * handles the event of a won game
+     */
     public void handleLocalGameWon() {
         engine.setView(null);
         if (engine.getMode() == GameMode.TUTORIAL) {
@@ -394,6 +419,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         engine.getModel().getTanksMap().deleteAllObservers();
     }
 
+    /**
+     * handles the event of a lost game
+     */
     public void handleLocalGameLost() {
         engine.setView(null);
         if (engine.getMode() == GameMode.TUTORIAL) {
@@ -439,6 +467,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         proj2.destroy();
     }
 
+    /**
+     * calls the playerDisconnected method
+     */
     @Override
     public void playerDisconnected() {
         engine.gameWonMPController.playerDisconnected();

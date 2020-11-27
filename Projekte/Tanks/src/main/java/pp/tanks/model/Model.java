@@ -91,9 +91,10 @@ public class Model {
         //String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
             //File currentFile = new File(absolutePath);
-            File currentFile = new File (String.valueOf(path).replace("%20", " ").substring(5)); //"%20" eliminates spaces from the URL; .substring(5) erases the "file:" from the beginning
+            File currentFile = new File(String.valueOf(path).replace("%20", " ").substring(5)); //"%20" eliminates spaces from the URL; .substring(5) erases the "file:" from the beginning
             setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
-        } catch (IOException | XMLStreamException ex) {
+        }
+        catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
             System.out.println("APOKALYPSE");
         }
@@ -101,9 +102,10 @@ public class Model {
 
     /**
      * updates tank
+     *
      * @param tank new tank
      */
-    public void setTank(Tank tank){
+    public void setTank(Tank tank) {
         map.addPlayerTank(tank);
     }
 
@@ -160,6 +162,9 @@ public class Model {
         return true;
     }
 
+    /**
+     * @return boolean-value if game has finished
+     */
     public boolean gameFinished() {
         if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return true;
         return map.getTank(PlayerEnum.PLAYER2).isDestroyed();
@@ -174,6 +179,7 @@ public class Model {
 
     /**
      * updates latestUpdate
+     *
      * @param latestUpdate new latestUpdate
      */
     public void setLatestUpdate(long latestUpdate) {
@@ -182,6 +188,7 @@ public class Model {
 
     /**
      * updates engine
+     *
      * @param engine "new" engine
      */
     public void setEngine(Engine engine) {

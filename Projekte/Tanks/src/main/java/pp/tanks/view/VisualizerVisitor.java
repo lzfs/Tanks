@@ -1,14 +1,29 @@
 package pp.tanks.view;
 
+import pp.tanks.TanksImageProperty;
+import pp.tanks.model.item.Armor;
+import pp.tanks.model.item.BreakableBlock;
+import pp.tanks.model.item.COMEnemy;
+import pp.tanks.model.item.Enemy;
+import pp.tanks.model.item.HeavyProjectile;
+import pp.tanks.model.item.Item;
+import pp.tanks.model.item.LightArmor;
+import pp.tanks.model.item.LightProjectile;
+import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.NormalArmor;
+import pp.tanks.model.item.NormalProjectile;
+import pp.tanks.model.item.NormalTurret;
+import pp.tanks.model.item.PlayersTank;
+import pp.tanks.model.item.ReflectableBlock;
+import pp.tanks.model.item.Turret;
+import pp.tanks.model.item.UnbreakableBlock;
+import pp.tanks.model.item.Visitor;
+import pp.util.DoubleVec;
+
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
-
-import pp.tanks.TanksImageProperty;
-import pp.tanks.model.item.*;
-import pp.util.DoubleVec;
 
 /**
  * Item visitor that adds visual representations of items to the tanks map view
@@ -229,7 +244,7 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(HeavyProjectile heavyProjectile) {
-            drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
+        drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
     }
 
     /**

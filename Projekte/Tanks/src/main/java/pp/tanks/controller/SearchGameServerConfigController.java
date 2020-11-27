@@ -1,13 +1,8 @@
 package pp.tanks.controller;
 
-import pp.tanks.message.client.StartGameMessage;
-import pp.tanks.model.item.ItemEnum;
-import pp.tanks.server.GameMode;
-
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
@@ -56,6 +51,9 @@ public class SearchGameServerConfigController extends Controller {
     @FXML
     private Text infoText;
 
+    /**
+     * back button
+     */
     @FXML
     private Button back;
 
@@ -102,7 +100,8 @@ public class SearchGameServerConfigController extends Controller {
         LOGGER.log(Level.INFO, "clicked SEARCH");
         try {
             engine.getTankApp().joinGame(getIpAddress(), getPort());
-        }catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             infoText.setText("Falscher Port!");
             return;
         }
@@ -120,6 +119,7 @@ public class SearchGameServerConfigController extends Controller {
 
     /**
      * getter method for the port given in the text field of the GUI
+     *
      * @return the port as a string
      */
     public String getPort() {
@@ -128,14 +128,11 @@ public class SearchGameServerConfigController extends Controller {
 
     /**
      * getter method for the ip-address given in the text field of the GUI
+     *
      * @return the ip-address as a string
      */
     public String getIpAddress() {
         return ipField.getText().trim();
-    }
-
-    public Text getInfoText(){
-        return infoText;
     }
 }
 

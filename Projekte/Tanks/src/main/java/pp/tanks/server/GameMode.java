@@ -16,5 +16,4 @@ public enum GameMode {
      * used for tutorial and debug
      */
     TUTORIAL;
-
 }

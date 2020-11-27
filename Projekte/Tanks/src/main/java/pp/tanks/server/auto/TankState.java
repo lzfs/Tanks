@@ -2,7 +2,6 @@ package pp.tanks.server.auto;
 
 import pp.automaton.StateSupport;
 import pp.network.IConnection;
-import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.PingResponse;
@@ -61,7 +60,6 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a BackMessage and is received by the server
-     *
      */
     public void back(IConnection<IServerMessage> conn) {
         handle(s -> s.back(conn));
@@ -85,6 +83,11 @@ public abstract class TankState extends StateSupport<TankState> {
         handle(s -> s.updateTankConfig(msg));
     }
 
+    /**
+     * is called when a player is disconnected
+     *
+     * @param conn correct message
+     */
     public void playerDisconnected(IConnection<IServerMessage> conn) {
         handle(s -> s.playerDisconnected(conn));
     }

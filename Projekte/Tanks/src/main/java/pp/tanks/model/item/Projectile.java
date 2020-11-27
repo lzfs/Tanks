@@ -213,6 +213,9 @@ public abstract class Projectile extends Item<ProjectileData> {
         return true;
     }
 
+    /**
+     * destroys an item
+     */
     @Override
     public void destroy() {
         data.destroy();
@@ -221,6 +224,9 @@ public abstract class Projectile extends Item<ProjectileData> {
         }
     }
 
+    /**
+     * @return boolean value for visibility
+     */
     public boolean visible() {
         return visible;
     }

@@ -183,14 +183,21 @@ public class Player {
                 }
             }
             connection.send(new ModelMessage(enemy, r, blockData));
-
         }
     }
 
+    /**
+     * sends new ending Message
+     *
+     * @param mode gamemode
+     */
     public void sendEndingMessage(GameMode mode) {
         connection.send(new GameEndingMessage(mode, gameWon));
     } //TODO
 
+    /**
+     * called when player lost connection
+     */
     public void otherPlayerDisconnected() {
         playerEnum = PlayerEnum.PLAYER1; // Da lag der Fiesch
         getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));

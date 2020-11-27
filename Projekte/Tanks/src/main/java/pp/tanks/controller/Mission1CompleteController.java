@@ -3,15 +3,12 @@ package pp.tanks.controller;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.MoveDirection;
-import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +81,9 @@ public class Mission1CompleteController extends Controller {
         engine.activatePlayGameController();
     }
 
+    /**
+     * loads level two of the game
+     */
     private void loadLevelTwo() {
         TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         TankData enemy2 = new TankData(new DoubleVec(20, 6), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);

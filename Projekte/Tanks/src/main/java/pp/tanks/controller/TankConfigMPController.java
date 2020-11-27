@@ -465,7 +465,7 @@ public class TankConfigMPController extends Controller {
             turretPlayer2.setImage(turrets.get(opponentTurretCounter));
             armorPlayer2.setImage(armors.get(opponentArmorCounter));
             magazineSizeTextPlayer2.setText(magazine.get(opponentTurretCounter).toString());
-            cadenceTextPlayer2.setText(cadence.get(opponentTurretCounter).toString());
+            cadenceTextPlayer2.setText(cadence.get(opponentTurretCounter) + " s");
             changeOpponentCharts();
         });
     }
@@ -485,11 +485,17 @@ public class TankConfigMPController extends Controller {
         });
     }
 
+    /**
+     * TODO: addJavaDoc
+     */
     @Override
     public void synchronizationFinished() {
         Platform.runLater(engine::activatePlayGameController);
     }
 
+    /**
+     * called when player is disconnected
+     */
     @Override
     public void playerDisconnected() {
         playerConnected = false;
@@ -501,6 +507,9 @@ public class TankConfigMPController extends Controller {
         armorButtonRight.setDisable(false);
     }
 
+    /**
+     * gives a player a disconnected-status
+     */
     public void setPlayerDisconnected() {
         playerConnected = false;
     }

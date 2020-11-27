@@ -12,11 +12,13 @@ public class BBData extends Data {
         super(pos, id, destroyed);
         this.lifePoints = lifePoints;
     }
+
     /**
      * creates a similar copy of the current BBData-class for working processes
+     *
      * @return returns the copy
      */
-    public BBData mkCopy(){ return new BBData(this.getPos(), this.getId(), this.lifePoints, isDestroyed());}
+    public BBData mkCopy() { return new BBData(this.getPos(), this.getId(), this.lifePoints, isDestroyed());}
 
     /**
      * @return current lifepoints
@@ -27,6 +29,7 @@ public class BBData extends Data {
 
     /**
      * reduces the lifepoints of the breakable block after getting hit by a projectile
+     *
      * @param points number of reducing lifepoints (taken damage)
      */
     public void reduceLifepoints(int points) {

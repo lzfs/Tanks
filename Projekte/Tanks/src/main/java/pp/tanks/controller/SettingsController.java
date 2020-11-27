@@ -20,6 +20,7 @@ public class SettingsController extends Controller {
 
     /**
      * create a new SettingsController
+     *
      * @param engine the engine this controller belongs to
      */
     public SettingsController(Engine engine) {
@@ -59,7 +60,7 @@ public class SettingsController extends Controller {
     /**
      * Create the scene displaying the settings of the game.
      */
-    public Scene makeScene()  {
+    public Scene makeScene() {
         return new Scene(engine.getViewForController(SETTINGS_FXML, this));
     }
 
@@ -79,14 +80,14 @@ public class SettingsController extends Controller {
      * i.e., when the the user returned to the main menu.
      */
     @Override
-    public void exit(){
+    public void exit() {
         LOGGER.log(Level.INFO, "EXIT SettingsController");
     }
 
     /**
      * @return the name of the used file as a String
      */
-    public String getString(){
+    public String getString() {
         return SETTINGS_FXML;
     }
 
@@ -107,13 +108,15 @@ public class SettingsController extends Controller {
         // TODO fix this when TankSoundProperty is done
         if (engine.getTankApp().sounds.getMuted() == true) {
             engine.getTankApp().sounds.mute(false);
-        } else {
+        }
+        else {
             engine.getTankApp().sounds.mute(true);
         }
 
         if (engine.getTankApp().sounds.getMuted() == false) {
             soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
-        } else {
+        }
+        else {
             soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
         }
         LOGGER.log(Level.INFO, "clicked SOUND");
@@ -127,7 +130,8 @@ public class SettingsController extends Controller {
         //engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
         if (engine.getTankApp().sounds.getMuted() == false) {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
-        } else {
+        }
+        else {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
         }
         LOGGER.log(Level.INFO, "clicked MUSIC");

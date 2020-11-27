@@ -12,8 +12,8 @@ public interface IClientMessage extends Serializable {
     /**
      * Method to accept a visitor
      *
-     * @param interpreter       visitor to be used
-     * @param from              the connectionID
+     * @param interpreter visitor to be used
+     * @param from        the connectionID
      */
     void accept(IClientInterpreter interpreter, IConnection<IServerMessage> from);
 }

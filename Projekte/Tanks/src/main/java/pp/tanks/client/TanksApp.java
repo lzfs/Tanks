@@ -4,8 +4,10 @@ import pp.network.Connection;
 import pp.network.IConnection;
 import pp.network.MessageReceiver;
 import pp.tanks.TanksImageProperty;
-import pp.tanks.message.client.IClientMessage;
+import pp.tanks.controller.Engine;
+import pp.tanks.controller.MainMenuController;
 import pp.tanks.message.client.ClientReadyMessage;
+import pp.tanks.message.client.IClientMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerInterpreter;
@@ -17,21 +19,23 @@ import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
+import pp.tanks.model.item.PlayerEnum;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import pp.tanks.controller.Engine;
-import pp.tanks.controller.MainMenuController;
-import pp.tanks.model.item.PlayerEnum;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
-import java.net.Socket;
 
 /**
  * Main class of the Tank app
@@ -156,17 +160,14 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
 
     /**
      * Establishes a connection to an online server
-     *
      */
-    public void joinGame() throws IOException{
+    public void joinGame() throws IOException {
         joinGame("127.0.0.1", "1234");
         //joinGame(mode, "137.193.138.79", "1234");
     }
 
     /**
      * Establishes a connection to an online server
-     *
-
      */
     public void joinGame(String ipAddress, String portString) throws IOException {
         if (connection != null) {

@@ -8,8 +8,6 @@ import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.PlayerDisconnectedMessage;
-import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.model.ICollisionObserver;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.BreakableBlock;
@@ -123,7 +121,6 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             }
         }, 100, 100);
     }
-
 
     /**
      * Override method mandatory to use methods of StateSupport
@@ -266,11 +263,11 @@ public class GameRunningState extends TankState implements ICollisionObserver {
 
     public boolean isGameEnd() { //TODO Tutorial and Debug mode
         if (gameMode == GameMode.SINGLEPLAYER) {
-           if (model.gameWon()) {
-               parent.getPlayers().get(0).setGameWon(true);
-               return true;
-           }
-           else return false;
+            if (model.gameWon()) {
+                parent.getPlayers().get(0).setGameWon(true);
+                return true;
+            }
+            else return false;
         }
         else if (gameMode == GameMode.MULTIPLAYER) {
             if (model.gameFinished()) {

@@ -67,12 +67,11 @@ public class PlayersTank extends Tank {
      */
     @Override
     public void stopMovement() {
-        if ( getMoveDir() != MoveDirection.STAY){
+        if (getMoveDir() != MoveDirection.STAY) {
             data.setMoveDir(MoveDirection.STAY);
             DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
             if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
         }
-
     }
 
     /**
@@ -83,17 +82,21 @@ public class PlayersTank extends Tank {
     @Override
     public void setMoveDirection(MoveDirection dir) {
         DoubleVec newPos = getPos().add(dir.getVec().mult(0.1 * speed));
-        if (!collide(newPos)){
+        if (!collide(newPos)) {
             if (dir != data.getMoveDir()) {
                 super.setMoveDirection(dir);
                 DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
-                if(!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
+                if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
             }
             else super.setMoveDirection(dir);
         }
-
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param item represents the given DataTimeItem-object
+     */
     @Override
     public void interpolateData(DataTimeItem<TankData> item) {
         if (model.getEngine() != null) {
