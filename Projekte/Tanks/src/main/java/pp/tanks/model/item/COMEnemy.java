@@ -2,7 +2,9 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
+import pp.util.IntVec;
 
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -89,7 +91,8 @@ public class COMEnemy extends Enemy {
                 if (path.size() >= 1) {
                     setMoveDirection(getMoveDirToVec(path.get(0).sub(target)));
                 }
-            } else {
+            }
+            else {
                 setPos(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)));
             }
         }
@@ -137,23 +140,21 @@ public class COMEnemy extends Enemy {
      * @param delta
      */
     public void updateMove(double delta) {
-        collide(getPos());
-        if (isMoving() && !data.isDestroyed()) {
-            double currentRot = data.getRotation();
-            double moveDirRotation = data.getMoveDir().getRotation();
-            double tmp = (currentRot - moveDirRotation + 180) % 180;
-            double tmp1 = (moveDirRotation - currentRot + 180) % 180;
-            double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
-            if (tmp2 < 2) {
-                // setPos(getPos().add(getMoveDir().getVec().mult(delta * speed)));
-                move(delta);
-            }
-            else if (tmp > tmp1) {
-                data.setRotation(currentRot + delta * rotationSpeed);
-            }
-            else {
-                data.setRotation(currentRot - delta * rotationSpeed);
-            }
+        double currentRot = data.getRotation();
+        double moveDirRotation = data.getMoveDir().getRotation();
+        double tmp = (currentRot - moveDirRotation + 180) % 180;
+        double tmp1 = (moveDirRotation - currentRot + 180) % 180;
+        double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
+        if (tmp2 < 5) {
+            move(delta);
+        }
+        /*
+        else if (tmp > tmp1) {
+            data.setRotation(currentRot + delta * rotationSpeed);
+        }
+         */
+        else {
+            data.setRotation(currentRot - delta * rotationSpeed);
         }
     }
 
@@ -209,4 +210,36 @@ public class COMEnemy extends Enemy {
         return false;
     }
     */
+
+    /**
+     * Searches for an optimal, collision-free path to the specified position and moves the droid there.
+     *
+     * @param target point to go
+     */
+    public void navigateTo(DoubleVec target) {
+        path.clear();
+        Navigator<IntVec> navigator = new TanksNavigator(model.getTanksMap(), getPos().toIntVec(), target.toIntVec());
+        List<IntVec> pPath = navigator.findPath();
+        if (pPath != null) {
+            for (IntVec v : pPath)
+                path.add(v.toFloatVec());
+            if (path.size() > 1) path.remove(0);
+        }
+        setMoveDirection(MoveDirection.LEFT);
+    }
+
+    /**
+     * Normalizes the specified angle such the returned angle lies in the range -180 degrees
+     * to 180 degrees.
+     *
+     * @param angle an angle in degrees
+     * @return returns an angle equivalent to {@code angle} that lies in the range -180
+     * degrees to 180 degrees.
+     */
+    static double normalizeAngle(double angle) {
+        final double res = angle % 360.;
+        if (res < -180.) return res + 360.;
+        else if (res > 180.) return res - 360.;
+        return res;
+    }
 }

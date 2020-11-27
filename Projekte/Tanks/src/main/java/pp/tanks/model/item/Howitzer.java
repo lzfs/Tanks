@@ -46,35 +46,4 @@ public class Howitzer extends COMEnemy {
             setMove(true);
         }
     }
-
-    /**
-     * Searches for an optimal, collision-free path to the specified position and moves the droid there.
-     *
-     * @param target point to go
-     */
-    public void navigateTo(DoubleVec target) {
-        path.clear();
-        Navigator<IntVec> navigator = new TanksNavigator(model.getTanksMap(), getPos().toIntVec(), target.toIntVec());
-        List<IntVec> pPath = navigator.findPath();
-        if (pPath != null) {
-            for (IntVec v : pPath)
-                path.add(v.toFloatVec());
-            if (path.size() > 1) path.remove(0);
-        }
-    }
-
-    /**
-     * Normalizes the specified angle such the returned angle lies in the range -180 degrees
-     * to 180 degrees.
-     *
-     * @param angle an angle in degrees
-     * @return returns an angle equivalent to {@code angle} that lies in the range -180
-     * degrees to 180 degrees.
-     */
-    static double normalizeAngle(double angle) {
-        final double res = angle % 360.;
-        if (res < -180.) return res + 360.;
-        else if (res > 180.) return res - 360.;
-        return res;
-    }
 }
