@@ -74,6 +74,11 @@ public class PlayerReadyState extends TankState {
     }
 
     @Override
+    public void playerDisconnected(IConnection<IServerMessage> conn) {
+        back(conn);
+    }
+
+    @Override
     public void updateTankConfig(UpdateTankConfigMessage msg) {
         if (msg.player == PlayerEnum.PLAYER1) {
             parent.getPlayers().get(1).getConnection().send(new ServerTankUpdateMessage(msg.turret, msg.armor));
