@@ -121,8 +121,8 @@ public class TankAutomaton extends TankStateMachine {
         final Optional<Player> player = players.stream().filter(p -> p.getConnection() == conn).findAny();
         if (player.isPresent())
             return player.get();
-        //LOGGER.severe("no player found with connection " + conn); //NON-NLS
-        System.out.println("no player found with connection" + conn);
+        LOGGER.severe("no player found with connection " + conn); //NON-NLS
+        //System.out.println("no player found with connection" + conn);
         return null;
     }
 
@@ -204,4 +204,7 @@ public class TankAutomaton extends TankStateMachine {
         return this.properties;
     }
 
+    public Logger getLogger(){
+        return LOGGER;
+    }
 }

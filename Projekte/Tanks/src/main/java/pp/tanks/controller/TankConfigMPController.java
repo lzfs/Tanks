@@ -214,6 +214,7 @@ public class TankConfigMPController extends Controller {
         engine.setScene(scene);
         readyButton.setDisable(!playerConnected);
         player2ReadyText.setText("");
+        if (!playerConnected) player2ReadyText.setText("Warte auf einen zweiten Spieler");
         turretButtonLeft.setDisable(false);
         turretButtonRight.setDisable(false);
         armorButtonLeft.setDisable(false);
@@ -493,10 +494,14 @@ public class TankConfigMPController extends Controller {
     public void playerDisconnected() {
         playerConnected = false;
         readyButton.setDisable(true);
-        player2ReadyText.setText("Warten auf Spieler 2");
+        player2ReadyText.setText("Warten auf einen zweiten Spieler");
         turretButtonLeft.setDisable(false);
         turretButtonRight.setDisable(false);
         armorButtonLeft.setDisable(false);
         armorButtonRight.setDisable(false);
+    }
+
+    public void setPlayerDisconnected() {
+        playerConnected = false;
     }
 }

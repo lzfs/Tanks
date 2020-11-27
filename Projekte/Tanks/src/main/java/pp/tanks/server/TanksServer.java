@@ -53,6 +53,7 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void onConnectionClosed(IConnection<IServerMessage> conn) {
+        auto.playerDisconnected(conn);
         System.out.println("Player disconnected");
         //System.exit(0);
     }

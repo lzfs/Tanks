@@ -58,7 +58,8 @@ public class PlayerReadyState extends TankState {
                 armor = null;
             }
         }
-        System.out.println("Player Ready State");
+        parent.getLogger().info("Player Ready State");
+        //System.out.println("Player Ready State"); //TODO: delete
     }
 
     @Override
@@ -69,9 +70,7 @@ public class PlayerReadyState extends TankState {
             //p.getConnection().shutdown();
         //}
         Player lastPlayer = parent.getPlayers().get(0);
-        lastPlayer.playerEnum = PlayerEnum.PLAYER1; // Da lag der Fiesch
-        lastPlayer.getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));
-        lastPlayer.getConnection().send(new PlayerDisconnectedMessage());
+        lastPlayer.otherPlayerDisconnected();
         containingState().goToState(parent.waitingFor2Player);
     }
 

@@ -8,6 +8,8 @@ import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
+import pp.tanks.message.server.PlayerDisconnectedMessage;
+import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
@@ -88,12 +90,6 @@ public class Player {
                 smallestPing = ping.get(k);
             }
         }
-        /*System.out.println("ping:");  // used for visual test of the serverteam
-        for (long p : ping) System.out.println(p);
-        System.out.println(ping.size());
-        System.out.println("\nnano:");
-        for (long p : nano) System.out.println(p);
-        System.out.println(nano.size());*/
         return nano.get(indexPing);
     }
 
@@ -193,5 +189,13 @@ public class Player {
 
     public void sendEndingMessage(GameMode mode) {
         connection.send(new GameEndingMessage(mode, gameWon));
+    } //TODO
+
+    public void otherPlayerDisconnected() {
+        playerEnum = PlayerEnum.PLAYER1; // Da lag der Fiesch
+        getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+        getConnection().send(new PlayerDisconnectedMessage());
+        ping.clear();
+        nano.clear();
     }
 }

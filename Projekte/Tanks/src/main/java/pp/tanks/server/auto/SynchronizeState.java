@@ -38,7 +38,8 @@ public class SynchronizeState extends TankState {
      */
     @Override
     public void entry() {
-        System.out.println("synchronize State");
+        parent.getLogger().info("Synchronize State");
+        //System.out.println("synchronize State"); //TODO: delete
         call();
     }
 
@@ -90,5 +91,11 @@ public class SynchronizeState extends TankState {
                 containingState().goToState(parent.playingState);
             }
         }
+    }
+
+    @Override
+    public void exit() {
+        counter = 0;
+        playerCount = 0;
     }
 }

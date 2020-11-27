@@ -3,6 +3,7 @@ package pp.tanks.server.auto;
 import pp.tanks.model.Model;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
+import java.util.logging.Logger;
 
 import java.util.List;
 
@@ -67,4 +68,9 @@ public class PlayingState extends TankStateMachine {
     public void gameFinished() {
         gameRunning = null;
     }
+
+    public Logger getLogger(){
+        return parent.getLogger();
+    }
+
 }

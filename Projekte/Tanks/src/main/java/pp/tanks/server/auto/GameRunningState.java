@@ -8,6 +8,8 @@ import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.PlayerDisconnectedMessage;
+import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.model.ICollisionObserver;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.BreakableBlock;
@@ -86,7 +88,6 @@ public class GameRunningState extends TankState implements ICollisionObserver {
                 }
             }
             if (isGameEnd) {
-                timer.cancel();
                 parent.containingState().goToState(parent.containingState().playerReady);
                 parent.gameFinished();
             }
@@ -105,6 +106,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
      */
     @Override
     public void entry() {
+
         System.out.println("runningState");
         timer = new Timer();
         model.setLatestUpdate(System.nanoTime());
@@ -117,6 +119,11 @@ public class GameRunningState extends TankState implements ICollisionObserver {
                 workWhatEver.run();
             }
         }, 100, 100);
+    }
+
+    @Override
+    public void exit() {
+        timer.cancel();
     }
 
     /**
@@ -278,5 +285,17 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             }
         }
         return false;
+    }
+
+    @Override
+    public void playerDisconnected(IConnection<IServerMessage> conn) {
+        parent.getPlayers().removeIf(p -> p.getConnection() == conn);
+        conn.shutdown();
+        Player lastPlayer = parent.getPlayers().get(0);
+        lastPlayer.otherPlayerDisconnected();
+        lastPlayer.setGameWon(true);
+        lastPlayer.sendEndingMessage(gameMode);
+
+        parent.goToState(parent.containingState().waitingFor2Player);
     }
 }

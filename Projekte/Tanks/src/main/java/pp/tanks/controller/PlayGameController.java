@@ -430,4 +430,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         proj1.destroy();
         proj2.destroy();
     }
+
+    @Override
+    public void playerDisconnected() {
+        engine.gameWonMPController.playerDisconnected();
+    }
 }

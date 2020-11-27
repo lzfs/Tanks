@@ -85,4 +85,8 @@ public abstract class TankState extends StateSupport<TankState> {
     public void updateTankConfig(UpdateTankConfigMessage msg) {
         handle(s -> s.updateTankConfig(msg));
     }
+
+    public void playerDisconnected(IConnection<IServerMessage> conn) {
+        handle(s -> s.playerDisconnected(conn));
+    }
 }
