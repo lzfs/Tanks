@@ -16,7 +16,17 @@ public enum TanksIntProperty implements IntProperty {
     /**
      * The width of each single filed of the game map.
      */
-    fieldSizeY(10);
+    fieldSizeY(10),
+
+    /**
+     * The status of the music boolean.
+     */
+    musicMuted(0),
+
+    /**
+     * The status of the sound boolean.
+     */
+    soundMuted(0);
 
     private final int defaultValue;
 

@@ -37,6 +37,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static pp.tanks.TanksIntProperty.musicMuted;
+import static pp.tanks.TanksIntProperty.soundMuted;
+
 /**
  * Main class of the Tank app
  */
@@ -49,7 +52,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
 
     private long offset;
 
-    private final Properties properties = new Properties();
+    public final Properties properties = new Properties();
     private Engine engine;
 
     private Stage stage;
@@ -86,7 +89,14 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.show();
         engine.gameLoop();
         stage.getIcons().add(engine.getImages().getImage(TanksImageProperty.greenTank));
-        //sounds.setMusic(sounds.mainMenu);
+        sounds.setMusic(sounds.mainMenu);
+
+        if (musicMuted.value(engine.getModel().getProperties()) == 0) {
+            engine.getTankApp().sounds.mute(false);
+        }
+        else {
+            engine.getTankApp().sounds.mute(true);
+        }
     }
 
     /**

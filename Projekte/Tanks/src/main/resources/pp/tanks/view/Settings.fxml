@@ -34,7 +34,7 @@
                 <Font size="17.0" />
             </font>
         </Button>
-        <Button fx:id="music" mnemonicParsing="false" onAction="#music" text="Musik" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+        <Button fx:id="music" mnemonicParsing="false" onAction="#musicClicked" text="Musik" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
             <font>
                 <Font size="17.0" />
             </font>

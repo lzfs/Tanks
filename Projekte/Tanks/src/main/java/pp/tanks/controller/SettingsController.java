@@ -7,6 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,6 +75,7 @@ public class SettingsController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
+        changeMusic(engine.getTankApp().sounds.getMuted());
     }
 
     /**
@@ -126,13 +129,31 @@ public class SettingsController extends Controller {
      * method for the music button
      */
     @FXML
-    private void music() {
-        //engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
-        if (engine.getTankApp().sounds.getMuted() == false) {
+    private void musicClicked() {
+        engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
+        changeMusic(engine.getTankApp().sounds.getMuted());
+    }
+
+    public void changeMusic(boolean mute) {
+        if (mute) {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+            engine.getTankApp().properties.setProperty("musicMuted", "1");
+            try {
+                engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
+            }
         }
         else {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+            engine.getTankApp().properties.setProperty("musicMuted", "0");
+            try {
+                engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
+            }
         }
         LOGGER.log(Level.INFO, "clicked MUSIC");
     }

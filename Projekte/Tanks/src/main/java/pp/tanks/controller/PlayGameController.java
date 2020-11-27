@@ -23,12 +23,14 @@ import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 import pp.util.StopWatch;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.event.Event;
@@ -560,15 +562,32 @@ public class PlayGameController extends Controller implements ICollisionObserver
          */
         @FXML
         private void music() {
-            //TODO
-           /* engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
-            if (engine.getTankApp().sounds.getMuted()) {
+            engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
+            changeMusic(engine.getTankApp().sounds.getMuted());
+        }
+
+        public void changeMusic(boolean mute) {
+            if (mute) {
                 musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+                engine.getTankApp().properties.setProperty("musicMuted", "1");
+                try {
+                    engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+                }
+                catch (IOException e) {
+                    LOGGER.log(Level.INFO, e.getMessage());
+                }
             }
             else {
                 musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+                engine.getTankApp().properties.setProperty("musicMuted", "0");
+                try {
+                    engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+                }
+                catch (IOException e) {
+                    LOGGER.log(Level.INFO, e.getMessage());
+                }
             }
-            LOGGER.log(Level.INFO, "clicked MUSIC");*/
+            LOGGER.log(Level.INFO, "clicked MUSIC");
         }
     }
 }
