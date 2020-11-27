@@ -62,10 +62,9 @@ public abstract class TankState extends StateSupport<TankState> {
     /**
      * is called when a player sends a BackMessage and is received by the server
      *
-     * @param msg the BackMessage
      */
-    public void back(BackMessage msg ,IConnection<IServerMessage> conn) {
-        handle(s -> s.back(msg, conn));
+    public void back(IConnection<IServerMessage> conn) {
+        handle(s -> s.back(conn));
     }
 
     /**

@@ -120,6 +120,6 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
 
     @Override
     public void visit(BackMessage msg, IConnection<IServerMessage> from) {
-        auto.back(msg, from);
+        auto.back(from);
     }
 }

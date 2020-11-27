@@ -82,10 +82,16 @@ public class TankAutomaton extends TankStateMachine {
             containingState().goToState(playerReady);
         }
 
-        public void back(BackMessage msg, IConnection<IServerMessage> conn) {
+        @Override
+        public void back(IConnection<IServerMessage> conn) {
             players.forEach(p -> p.getConnection().shutdown());
             players.clear();
             containingState().goToState(init);
+        }
+
+        @Override
+        public void playerDisconnected(IConnection<IServerMessage> conn) {
+            back(conn);
         }
 
         @Override

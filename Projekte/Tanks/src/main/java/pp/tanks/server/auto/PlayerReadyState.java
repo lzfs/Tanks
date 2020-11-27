@@ -62,7 +62,7 @@ public class PlayerReadyState extends TankState {
     }
 
     @Override
-    public void back(BackMessage msg, IConnection<IServerMessage> conn) {
+    public void back(IConnection<IServerMessage> conn) {
         containingState().getPlayers().removeIf(p -> p.getConnection() == conn);
         conn.shutdown();
         //for (Player p : parent.getPlayers()) {
