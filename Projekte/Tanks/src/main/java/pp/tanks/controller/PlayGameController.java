@@ -75,7 +75,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private final List<DataTimeItem<TankData>> tanks = new ArrayList<>();
     private final List<BBData> bbDataList = new ArrayList<>();
     private GameEndingMessage endingMessage = null;
-    private Scene menuMPController = new Scene(new PauseMenuMPController());
+    private final Scene menuMPController = new Scene(new PauseMenuMPController());
 
     /**
      * create a new PlayGameController
@@ -171,9 +171,13 @@ public class PlayGameController extends Controller implements ICollisionObserver
         }
         else {
             if (pressed.contains(KeyCode.ESCAPE)) engine.setScene(menuMPController);
-        }
-        if (engine.getOffset() != 0) {
             if (engine.getAnimationTime() == 0) engine.computeAnimationTime();
+            final double delta = stopWatch.getTime() - lastUpdate;
+            if (delta > 0.2) {
+                lastUpdate = stopWatch.getTime();
+                getTanksMap().getAllTanks().forEach(Tank::sendTurretUpdate);
+            }
+
         }
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
@@ -189,6 +193,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     public void entry() {
         pressed.clear();
         processed.clear();
+        stopWatch.start();
         engine.getModel().loadMap("map" + engine.getMapCounter() + ".xml");
 
         if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {

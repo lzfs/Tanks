@@ -1,6 +1,7 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.client.MoveMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
@@ -105,5 +106,10 @@ public class PlayersTank extends Tank {
         }
         this.data = item.data.mkCopy();
         setLatestOp(item);
+    }
+
+    @Override
+    public void sendTurretUpdate() {
+        if (model.getEngine() != null) model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
     }
 }

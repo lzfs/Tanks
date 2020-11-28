@@ -34,4 +34,6 @@ public interface IClientInterpreter {
 
     void visit(BackMessage msg, IConnection<IServerMessage> from);
 
+    void visit(TurretUpdateMessage msg, IConnection<IServerMessage> from);
+
 }

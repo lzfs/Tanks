@@ -7,6 +7,7 @@ import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
 
@@ -90,5 +91,9 @@ public abstract class TankState extends StateSupport<TankState> {
      */
     public void playerDisconnected(IConnection<IServerMessage> conn) {
         handle(s -> s.playerDisconnected(conn));
+    }
+
+    public void turretUpdate(TurretUpdateMessage msg) {
+        handle(s -> s.turretUpdate(msg));
     }
 }

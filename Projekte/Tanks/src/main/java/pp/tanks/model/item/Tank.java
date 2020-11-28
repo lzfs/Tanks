@@ -424,4 +424,6 @@ public abstract class Tank extends Item<TankData> {
         latestInterpolate = time;
         return true;
     }
+
+    public void sendTurretUpdate() { }
 }

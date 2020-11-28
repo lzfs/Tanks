@@ -18,6 +18,7 @@ import pp.tanks.message.client.ReadyMessage;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.TankSelectedMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.server.auto.TankAutomaton;
@@ -134,5 +135,10 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
     @Override
     public void visit(BackMessage msg, IConnection<IServerMessage> from) {
         auto.back(from);
+    }
+
+    @Override
+    public void visit(TurretUpdateMessage msg, IConnection<IServerMessage> from) {
+        auto.turretUpdate(msg);
     }
 }
