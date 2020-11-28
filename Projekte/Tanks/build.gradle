@@ -8,7 +8,7 @@ apply plugin: 'org.openjfx.javafxplugin'
 
 javafx {
     version = "$openjfx_version"
-    modules = [ 'javafx.fxml', 'javafx.media', 'javafx.controls' ]
+    modules = ['javafx.fxml', 'javafx.media', 'javafx.controls']
 }
 
 dependencies {
@@ -22,26 +22,15 @@ application {
     mainClassName = "$moduleName/pp.tanks.client.TanksApp"
 }
 
-task runServer(type: ModularJavaExec){
+task runServer(type: ModularJavaExec) {
     main = "$moduleName/pp.tanks.server.TanksServer"
 }
 
-task createStartScriptsServer(type: ModularCreateStartScripts){
+task createStartScriptsServer(type: ModularCreateStartScripts) {
     runTask = tasks.runServer
     applicationName = 'TanksServer'
 }
 
 
-task runGame(type: ModularJavaExec){
-    main = "$moduleName/pp.tanks.client.TanksApp"
-}
-
-task createStartScriptsClient(type: ModularCreateStartScripts){
-    runTask = tasks.runGame
-    applicationName = 'TanksApp'
-}
-
-
 installDist.finalizedBy tasks.createStartScriptsServer
-installDist.finalizedBy tasks.createStartScriptsClient
 
