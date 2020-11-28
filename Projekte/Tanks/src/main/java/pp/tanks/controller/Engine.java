@@ -517,10 +517,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     public void computeAnimationTime() {
-        long sng = (long) Math.signum(getOffset());
-        System.out.println(sng);
         long tmp = getLatency();
-        animationTime = -1 * tmp * sng;
+        animationTime = -1 * tmp;
         System.out.println(animationTime);
     }
 
