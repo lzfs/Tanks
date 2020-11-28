@@ -6,6 +6,7 @@ import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
 import pp.util.IntVec;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,10 +19,12 @@ import java.util.List;
 public class Howitzer extends COMEnemy {
     private int movingCounter;
     private final List<DoubleVec> path = new LinkedList<>();
+    private final List<Block> usedBlocks = new ArrayList<>();
 
     public Howitzer(Model model, TankData data) {
         super(model, 3, new HeavyArmor(), new HeavyTurret(), data);
         movingCounter = 2;
+        navigateTo(getHidingBlockPos().add(new DoubleVec(1, 0)));
     }
 
     /**
@@ -33,17 +36,33 @@ public class Howitzer extends COMEnemy {
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
         if (canShoot() && Math.random() < 0.8) {
-            if (canShoot()) {
-                shoot(model.getTanksMap().getTank(player1).getPos());
+            shoot(model.getTanksMap().getTank(player1).getPos());
+        }
+        else if (path == null || path.isEmpty()) {
+            if (model.getTanksMap().getTank(player1).getPos().distance(this.getPos()) < 5) {
+                navigateTo(getHidingBlockPos().add(new DoubleVec(1, 0)));
+            } else {
+                usedBlocks.clear();
             }
         }
-        else if (path == null || path.isEmpty()){
-            Tank playersTank = model.getTanksMap().getTank(player1);
-            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2, 2)));
-            navigateTo(new DoubleVec(7, 7));
-            setPos(new DoubleVec(Math.round(getPos().x), Math.round(getPos().y)));
-            setMoveDirection(getMoveDirToVec(path.get(0).sub(getPos())));
-            setMove(true);
+    }
+
+    /**
+     * TODO doc
+     *
+     * @return
+     */
+    public DoubleVec getHidingBlockPos() {
+        for (int col = model.getTanksMap().getWidth() - 3; col > 2; col--) {
+            for (int row = 2; row < model.getTanksMap().getHeight() - 2; row++) {
+                for (Block block : model.getTanksMap().getBlocks()) {
+                    if (!usedBlocks.contains(block) && block.getPos().equals(new DoubleVec(col, row))) {
+                        usedBlocks.add(block);
+                        return block.getPos();
+                    }
+                }
+            }
         }
+        return getPos(); // default
     }
 }

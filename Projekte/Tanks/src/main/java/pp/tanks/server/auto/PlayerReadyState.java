@@ -66,7 +66,7 @@ public class PlayerReadyState extends TankState {
         containingState().getPlayers().removeIf(p -> p.getConnection() == conn);
         conn.shutdown();
         //for (Player p : parent.getPlayers()) {
-            //p.getConnection().shutdown();
+        //p.getConnection().shutdown();
         //}
         Player lastPlayer = parent.getPlayers().get(0);
         lastPlayer.otherPlayerDisconnected();
@@ -146,35 +146,5 @@ public class PlayerReadyState extends TankState {
                 model.setTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data2));
             }
         }
-    }
-
-    /**
-     * TODO: add JavaDoc
-     *
-     * @param model
-     */
-    public void tutorialGame(Model model) {
-        Player pl = parent.getPlayers().get(0);
-        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
-    }
-
-    /**
-     * TODO: add JavaDoc
-     *
-     * @param model
-     */
-    public void singleplayerGameLvlOne(Model model) {
-        Player pl = parent.getPlayers().get(0);
-        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
-        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 5), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy3 = new TankData(new DoubleVec(17, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        model.getTanksMap().addCOMTank(new ArmoredPersonnelCarrier(model, enemy1));
-        model.getTanksMap().addCOMTank(new Howitzer(model, enemy2));
-        model.getTanksMap().addCOMTank(new ArmoredPersonnelCarrier(model, enemy3));
-        List<ItemEnum> enums = new ArrayList<>(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.ACP));
-        List<TankData> data = new ArrayList<>(List.of(enemy1, enemy2, enemy3));
     }
 }

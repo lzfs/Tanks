@@ -85,7 +85,7 @@ public class COMEnemy extends Enemy {
     public void move(double delta) {
         if (path != null && !path.isEmpty()) {
             final DoubleVec target = path.get(0);
-            if (getPos().distance(target) < 0.3) {
+            if (getPos().distance(target) < 0.05) {
                 setPos(target);
                 path.remove(0);
                 if (path.size() >= 1) {
@@ -95,6 +95,9 @@ public class COMEnemy extends Enemy {
             else {
                 setPos(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)));
             }
+        }
+        else {
+            setMove(false);
         }
     }
 
@@ -140,19 +143,18 @@ public class COMEnemy extends Enemy {
      * @param delta
      */
     public void updateMove(double delta) {
-        double currentRot = data.getRotation();
+        double currentRot = data.getRotation() %180;
         double moveDirRotation = data.getMoveDir().getRotation();
         double tmp = (currentRot - moveDirRotation + 180) % 180;
         double tmp1 = (moveDirRotation - currentRot + 180) % 180;
         double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
         if (tmp2 < 5) {
+            setRotation(moveDirRotation);
             move(delta);
         }
-        /*
         else if (tmp > tmp1) {
             data.setRotation(currentRot + delta * rotationSpeed);
         }
-         */
         else {
             data.setRotation(currentRot - delta * rotationSpeed);
         }
@@ -192,24 +194,22 @@ public class COMEnemy extends Enemy {
      * test if a ComEnemy can hit the players Tank if he would shoot
      *
      * @return if the way is blocked
-     */ /*
+     */
     public boolean shootIsBlocked() {
         DoubleVec pos = model.getTanksMap().getTank(PlayerEnum.PLAYER1).getPos();
-        DoubleVec dir = getPos().sub(pos).normalize().mult(0.5);
-        while (pos.distance(getPos()) < 0.1) {
+        DoubleVec dir = getPos().sub(pos).normalize().mult(0.1);
+        while (pos.distance(getPos()) > 0.1) {
             for (Block other : model.getTanksMap().getBlocks()) {
-                Block block = (Block) other;
+                Block block = other;
                 Ellipse2D item1 = new Ellipse2D.Double(pos.x - (effectiveRadius / 2), pos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
-                if (item1.intersects(other.getPos().x - (block.getWidth() / 2.0),
-                                     other.getPos().y - (block.getHeight() / 2.0), block.getWidth(), block.getHeight())) {
+                if (item1.intersects(other.getPos().x - (block.getWidth() / 2.0), other.getPos().y - (block.getHeight() / 2.0), block.getWidth(), block.getHeight())) {
                     return true;
                 }
-                pos = pos.add(dir);
             }
+            pos = pos.add(dir);
         }
         return false;
     }
-    */
 
     /**
      * Searches for an optimal, collision-free path to the specified position and moves the droid there.
@@ -226,6 +226,12 @@ public class COMEnemy extends Enemy {
             if (path.size() > 1) path.remove(0);
         }
         setMoveDirection(MoveDirection.LEFT);
+
+        setPos(new DoubleVec(Math.round(getPos().x), Math.round(getPos().y)));
+        if (path != null && !path.isEmpty()) {
+            setMoveDirection(getMoveDirToVec(path.get(0).sub(getPos())));
+            setMove(true);
+        }
     }
 
     /**
@@ -241,5 +247,12 @@ public class COMEnemy extends Enemy {
         if (res < -180.) return res + 360.;
         else if (res > 180.) return res - 360.;
         return res;
+    }
+
+    @Override
+    public void destroy(){
+        data.destroy();
+        path.clear();
+        setMoveDirection(MoveDirection.STAY);
     }
 }

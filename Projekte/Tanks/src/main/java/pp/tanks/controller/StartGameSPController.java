@@ -208,8 +208,8 @@ public class StartGameSPController extends Controller {
     private void loadLevelOne() {
         TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         TankData enemy2 = new TankData(new DoubleVec(20, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP/*, ItemEnum.HOWITZER */));
-        engine.playGameController.constructionData.addAll(List.of(enemy1/*, enemy2*/));
+        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER));
+        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2));
     }
 
     /**

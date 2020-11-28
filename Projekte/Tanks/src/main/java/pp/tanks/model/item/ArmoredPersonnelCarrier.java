@@ -30,18 +30,15 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
     @Override
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
-        if (canShoot() && Math.random() < 0.8) {
+        if (!shootIsBlocked() && canShoot() && Math.random() < 0.8) {
             if (canShoot()) {
                 shoot(model.getTanksMap().getTank(player1).getPos());
             }
         }
-        else if (path == null || path.isEmpty()){
+        else if (path == null || path.isEmpty()) {
             Tank playersTank = model.getTanksMap().getTank(player1);
             DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2, 2)));
             navigateTo(targetPos);
-            setPos(new DoubleVec(Math.round(getPos().x), Math.round(getPos().y)));
-            setMoveDirection(getMoveDirToVec(path.get(0).sub(getPos())));
-            setMove(true);
         }
     }
 

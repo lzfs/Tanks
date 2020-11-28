@@ -31,18 +31,15 @@ public class TankDestroyer extends COMEnemy {
     @Override
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
-        if (canShoot() && Math.random() < 0.8) {
-            if (canShoot()) {
-                shoot(model.getTanksMap().getTank(player1).getPos());
-            }
+        if (!shootIsBlocked() && canShoot() && Math.random() < 0.8) {
+            shoot(model.getTanksMap().getTank(player1).getPos());
         }
         else if (path == null || path.isEmpty()) {
             Tank playersTank = model.getTanksMap().getTank(player1);
-            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2, 2)));
-            navigateTo(new DoubleVec(8, 8));
-            setPos(new DoubleVec(Math.round(getPos().x), Math.round(getPos().y)));
-            setMoveDirection(getMoveDirToVec(path.get(0).sub(getPos())));
-            setMove(true);
+            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(2));
+            if (playersTank.getMoveDir() != MoveDirection.STAY) {
+                navigateTo(targetPos);
+            }
         }
     }
 
