@@ -95,7 +95,8 @@ public class PauseMenuSPController extends Controller {
     @FXML
     private void continueGame() {
         LOGGER.log(Level.INFO, "clicked CONTINUE_GAME");
-        engine.activatePlayGameController();
+        //engine.setScene(engine.playGameController.sceneBackup);
+        engine.resumeGame();
     }
 
     /**

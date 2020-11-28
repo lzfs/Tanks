@@ -68,6 +68,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private final StopWatch stopWatch = new StopWatch();
     private double lastUpdate;
     private Scene scene;
+    private Scene sceneBackup;
     private boolean stopFlag = false;
     public final List<ItemEnum> constructionEnum = new ArrayList<>();
     public final List<TankData> constructionData = new ArrayList<>();
@@ -177,7 +178,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
                 lastUpdate = stopWatch.getTime();
                 getTanksMap().getAllTanks().forEach(Tank::sendTurretUpdate);
             }
-
         }
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
@@ -256,9 +256,17 @@ public class PlayGameController extends Controller implements ICollisionObserver
      */
     @Override
     void exit() {
-        System.out.println("exit playgame");
+        LOGGER.info("Exit PlayGameController");
+        sceneBackup = scene;
         scene = null;
         stopWatch.stop();
+        pressed.clear();
+        processed.clear();
+    }
+
+    public void resumeGame() {
+        stopWatch.start();
+        engine.setScene(sceneBackup);
     }
 
     /**
@@ -316,6 +324,10 @@ public class PlayGameController extends Controller implements ICollisionObserver
      */
     private Tank getTank() {
         return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 
     /**

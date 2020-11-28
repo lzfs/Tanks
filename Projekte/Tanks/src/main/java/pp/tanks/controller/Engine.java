@@ -341,6 +341,12 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.controller.entry();
     }
 
+    public void resumeGame() {
+        this.controller.exit();
+        this.controller = playGameController;
+        playGameController.resumeGame();
+    }
+
     /**
      * TODO: add JavaDoc
      *
