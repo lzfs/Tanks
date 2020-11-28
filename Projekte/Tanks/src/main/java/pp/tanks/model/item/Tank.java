@@ -416,16 +416,16 @@ public abstract class Tank extends Item<TankData> {
             }
         }
 
-        double newTurretAngle = this.latestOp.data.getTurretDir().normalize().angle();
-        if (lastTurretAngle != newTurretAngle) {
-            double deltaTurretAngle = Math.abs(lastTurretAngle - newTurretAngle);
-            double tFinTurret = (deltaTurretAngle + latestSec * rotationSpeed);
-            double tTimeTurret = tFinTurret - latestSec;
-            double rx = (data.getTurretDir().x * Math.cos(lastTurretAngle + deltaT * rotationSpeed * 5)) - (data.getTurretDir().y * Math.sin(lastTurretAngle + deltaT * rotationSpeed * 5));
-            double ry = (data.getTurretDir().x * Math.sin(lastTurretAngle + deltaT * rotationSpeed * 5)) + (data.getTurretDir().y * Math.cos(lastTurretAngle + deltaT * rotationSpeed * 5));
-            DoubleVec newTurretDir = new DoubleVec(rx, ry);
-            data.setTurretDir(newTurretDir);
-        }
+       // double newTurretAngle = this.latestOp.data.getTurretDir().normalize().angle();
+       // double deltaTurretAngle = Math.abs(lastTurretAngle - newTurretAngle);
+       // double tFinTurret = (deltaTurretAngle + latestSec * rotationSpeed);
+       // double tTimeTurret = tFinTurret - latestSec;
+       // if (tTimeTurret > deltaT) {
+       //     double rx = (data.getTurretDir().x * Math.cos(lastTurretAngle + deltaT * rotationSpeed)) - (data.getTurretDir().y * Math.sin(lastTurretAngle + deltaT * rotationSpeed));
+       //     double ry = (data.getTurretDir().x * Math.sin(lastTurretAngle + deltaT * rotationSpeed)) + (data.getTurretDir().y * Math.cos(lastTurretAngle + deltaT * rotationSpeed));
+       //     DoubleVec newTurretDir = new DoubleVec(rx, ry);
+       //     data.setTurretDir(new xTurretDir);
+       // }
 
         //data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(deltaT * speed)));
         latestInterpolate = time;

@@ -38,7 +38,7 @@ public abstract class Turret {
      *
      * @param delta time in seconds since the last update call
      */
-    public void update(double delta) {
+    public void update(double delta, DoubleVec dir) {
         if (delta < -1 || delta > 1) return;
         cadence -= delta;
         if (cadence < 0) {
@@ -48,6 +48,14 @@ public abstract class Turret {
             mag[i] -= delta;
             if (mag[i] < 0)
                 mag[i] = 0;
+        }
+
+        double newTurretAngle = dir.normalize().angle();
+        double deltaTurretAngle = Math.abs(direction.normalize().angle() - newTurretAngle);
+        if (deltaTurretAngle < 2) {
+                double rx = (direction.x * Math.cos(1)) - (direction.y * Math.sin(1));
+                double ry = (direction.x * Math.sin(1)) + (direction.y * Math.cos(1));
+                DoubleVec newTurretDir = new DoubleVec(rx, ry);
         }
     }
 
