@@ -15,7 +15,6 @@ public abstract class Turret {
     private final int weight;
     private final double reloadTime;
     private final double[] mag;
-    private DoubleVec direction;
     private double cadence;
     private final double currentCadence;
     public final ItemEnum projectileType;
@@ -26,7 +25,6 @@ public abstract class Turret {
         this.weight = weight;
         this.reloadTime = reloadTime;
         this.mag = new double[mag];
-        this.direction = new DoubleVec(0, 0);
         Arrays.fill(this.mag, 0.0);
         this.cadence = 0;
         this.currentCadence = cadence;
@@ -38,7 +36,7 @@ public abstract class Turret {
      *
      * @param delta time in seconds since the last update call
      */
-    public void update(double delta, DoubleVec dir) {
+    public void update(double delta) {
         if (delta < -1 || delta > 1) return;
         cadence -= delta;
         if (cadence < 0) {
@@ -50,13 +48,6 @@ public abstract class Turret {
                 mag[i] = 0;
         }
 
-        double newTurretAngle = dir.normalize().angle();
-        double deltaTurretAngle = Math.abs(direction.normalize().angle() - newTurretAngle);
-        if (deltaTurretAngle < 1) {
-                double rx = (direction.x * Math.cos(0.0005)) - (direction.y * Math.sin(0.0005));
-                double ry = (direction.x * Math.sin(0.0005)) + (direction.y * Math.cos(0.0005));
-                direction = new DoubleVec(rx, ry);
-        }
     }
 
     /**

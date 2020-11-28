@@ -46,7 +46,7 @@ public class PlayersTank extends Tank {
         if (model.getEngine() == null) {
             interpolateTime(serverTime);
         }
-        turret.update(delta, data.getTurretDir());
+        turret.update(delta);
         updateMove(delta);
         data.setMove(false);
     }

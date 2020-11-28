@@ -21,11 +21,14 @@ public abstract class Tank extends Item<TankData> {
     protected Armor armor;
     protected double speed;
     protected double rotationSpeed = 150;
+    protected double turretRotationSpeed = 1000;
     private int lives = 1;
     public final PlayerEnum playerEnum;
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
     private long latestInterpolate;
+    private DoubleVec lastTurretDir = new DoubleVec(0, 0);
+    protected DoubleVec newTurretDir = new DoubleVec(1, 0);
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, 1, data);
@@ -365,7 +368,11 @@ public abstract class Tank extends Item<TankData> {
      */
     @Override
     public void interpolateData(DataTimeItem<TankData> item) {
-        this.data = item.data.mkCopy();
+        TankData newData = item.data.mkCopy();
+        newData.setTurretDir(lastTurretDir);
+        this.data = newData;
+        lastTurretDir = newTurretDir;
+        newTurretDir = item.data.getTurretDir();
         this.latestOp = item;
     }
 
@@ -377,17 +384,26 @@ public abstract class Tank extends Item<TankData> {
      */
     @Override
     public boolean interpolateTime(long time) {
-        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
-        if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
+        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
         double deltaT = ((double) tmp) / FACTOR_SEC;
-
+        double newTurretAngle = (newTurretDir.angle() + 180) % 360;
+        double lastTurretAngle = (lastTurretDir.angle() + 180) % 360;
+        double deltaTurretAngle = Math.abs(lastTurretAngle - newTurretAngle);
+        double tFinTurret = (deltaTurretAngle + latestSec * turretRotationSpeed) / turretRotationSpeed;
+        double tTimeTurret = (tFinTurret - latestSec);
+        if (tTimeTurret > deltaT) {
+            double rx = (lastTurretDir.x * Math.cos(lastTurretAngle + deltaT * turretRotationSpeed)) - (lastTurretDir.y * Math.sin(lastTurretAngle + deltaT * turretRotationSpeed));
+            double ry = (lastTurretDir.x * Math.sin(lastTurretAngle + deltaT * turretRotationSpeed)) + (lastTurretDir.y * Math.cos(lastTurretAngle + deltaT * turretRotationSpeed));
+            data.setTurretDir(new DoubleVec(rx, ry));
+        }
+        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
+        if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
         double latestRot = (latestOp.data.getRotation() + 180) % 180;
         double moveDirRotation = latestOp.data.getMoveDir().getRotation();
 
         double tmp0 = (latestRot - moveDirRotation + 180) % 180;
         double tmp1 = (moveDirRotation - latestRot + 180) % 180;
-        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
 
         if (tmp0 > tmp1) {
             double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
