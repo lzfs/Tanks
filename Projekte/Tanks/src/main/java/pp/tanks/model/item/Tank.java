@@ -1,6 +1,7 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.client.ShootMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
@@ -244,7 +245,10 @@ public abstract class Tank extends Item<TankData> {
             turret.shoot();
             Projectile projectile = makeProjectile(pos);
             ShootMessage msg = new ShootMessage(new DataTimeItem<ProjectileData>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
-            if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(msg);
+            if (!model.getEngine().isClientGame()) {
+                model.getEngine().getConnection().send(msg);
+                model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
+            }
             model.getTanksMap().addProjectile(projectile);
         }
     }
@@ -272,17 +276,7 @@ public abstract class Tank extends Item<TankData> {
         model.notifyReceivers(TanksNotification.TANK_FIRED);
         projectileId++;
         return turret.mkProjectile(this.model, data, targetPos);
-        /*
-        if (turret instanceof LightTurret) {
-            return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);  //TODO
-        }
-        else if (turret instanceof NormalTurret) {
-            return new NormalProjectile(model, 0.3, turret.getDamage(), 4, data); //TODO
-        }
-        else if (turret instanceof HeavyTurret) {
-            return new HeavyProjectile(model, 0.3, turret.getDamage(), 4, targetPos, data); //TODO
-        }
-        return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);*/
+
     }
 
     /**
