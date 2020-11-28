@@ -67,7 +67,7 @@ public class COMEnemy extends Enemy {
     public void update(long serverTime) {
         long tmp = serverTime - latestViewUpdate;
         double delta = ((double) tmp) / FACTOR_SEC;
-        turret.update(delta);
+        turret.update(delta, data.getTurretDir());
         if (model.getEngine() != null) {
             if (isMoving()) {
                 updateMove(delta);
