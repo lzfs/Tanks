@@ -28,7 +28,7 @@ public abstract class Tank extends Item<TankData> {
     private long latestInterpolate;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, 0.75, data);
+        super(model, 1, data);
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();

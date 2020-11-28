@@ -120,7 +120,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     public void update(long serverTime) {
         interpolateTime(serverTime);//TODO was ist mit der Flag
         //data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
-        if (System.nanoTime() - flag > 10000000) {
+        if (System.nanoTime() - flag > 100000000) {
             flag = 0;
         }
     }
