@@ -70,8 +70,12 @@ public class COMEnemy extends Enemy {
         turret.update(delta, data.getTurretDir());
         if (model.getEngine() != null) {
             if (isMoving()) {
-                updateMove(delta);
                 // move(delta);
+                if (!collide(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)))) {
+                    updateMove(delta);
+                } else {
+                    path.clear();
+                }
             }
             else {
                 if (!this.isDestroyed()) {
@@ -143,7 +147,7 @@ public class COMEnemy extends Enemy {
      * @param delta
      */
     public void updateMove(double delta) {
-        double currentRot = data.getRotation() %180;
+        double currentRot = data.getRotation() % 180;
         double moveDirRotation = data.getMoveDir().getRotation();
         double tmp = (currentRot - moveDirRotation + 180) % 180;
         double tmp1 = (moveDirRotation - currentRot + 180) % 180;
@@ -250,9 +254,19 @@ public class COMEnemy extends Enemy {
     }
 
     @Override
-    public void destroy(){
+    public void destroy() {
         data.destroy();
         path.clear();
         setMoveDirection(MoveDirection.STAY);
+    }
+
+    /**
+     * TODO doc
+     *
+     * @param pos
+     * @return
+     */
+    public boolean isWithinMap(DoubleVec pos) {
+        return !(model.getTanksMap().getHeight() > pos.y) && model.getTanksMap().getHeight() >= 0 && !(model.getTanksMap().getWidth() > pos.x) && model.getTanksMap().getWidth() >= 0;
     }
 }

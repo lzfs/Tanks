@@ -13,9 +13,9 @@ public abstract class Block<T extends Data> extends Item<T> {
     private double height;
 
     public Block(Model model, T data) {
-        super(model, 1, data);
-        this.width = 1;
-        this.height = 1;
+        super(model, 0.9, data);
+        this.width = 0.9;
+        this.height = 0.9;
     }
 
     /**

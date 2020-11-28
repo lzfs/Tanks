@@ -50,17 +50,17 @@ public class VisualizerVisitor implements Visitor {
         if (!destroyed) {
             //context.rotate(-90);
             context.rotate((playersTank.getRotation() + 90) % 360);
-            context.scale(0.75, 0.75);
+            context.scale(0.7, 0.7);
 
             Armor armor = playersTank.getArmor();
             if (armor instanceof LightArmor) {
-                drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else if (armor instanceof NormalArmor) {
-                drawImage(TanksImageProperty.armor2, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor2, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else {
-                drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
@@ -69,18 +69,18 @@ public class VisualizerVisitor implements Visitor {
 
             Turret turret = playersTank.getTurret();
             if (turret instanceof LightTurret) {
-                drawImage(TanksImageProperty.turret1, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret1, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else if (turret instanceof NormalTurret) {
-                drawImage(TanksImageProperty.turret2, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret2, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else {
-                drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
-            drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN);
+            drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
         }
         context.setTransform(ori);
     }
@@ -101,17 +101,17 @@ public class VisualizerVisitor implements Visitor {
         if (!destroyed) {
             //context.rotate(-90);
             context.rotate((enemy.getRotation() + 90) % 360);
-            context.scale(0.75, 0.75);
+            context.scale(0.7, 0.7);
 
             Armor armor = enemy.getArmor();
             if (armor instanceof LightArmor) {
-                drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else if (armor instanceof NormalArmor) {
-                drawImage(TanksImageProperty.armor2, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor2, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else {
-                drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
@@ -120,45 +120,25 @@ public class VisualizerVisitor implements Visitor {
 
             Turret turret = enemy.getTurret();
             if (turret instanceof LightTurret) {
-                drawImage(TanksImageProperty.turret1, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret1, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else if (turret instanceof NormalTurret) {
-                drawImage(TanksImageProperty.turret2, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret2, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else {
-                drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
-            drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN);
+            drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
         }
         context.setTransform(ori);
     }
 
     @Override
     public void visit(COMEnemy comEnemy) {
-        /*
-        //vielleicht noch extra drawimage funktion mit rotation
-        if(!comEnemy.isDestroyed()){
-            if(comEnemy instanceof ArmoredPersonnelCarrier){
-
-                drawItem(comEnemy, TanksImageProperty.armor1, Shape.RECTANGLE, Color.BLUE);
-                drawItem(comEnemy,TanksImageProperty.turret1,Shape.RECTANGLE, Color.BLUE,comEnemy.getTurret().getDirection().angle());
-                //System.out.println(comEnemy.getTurret().getDirection());
-
-            }else if(comEnemy instanceof TankDestroyer){
-                drawItem(comEnemy, TanksImageProperty.armor2, Shape.RECTANGLE, Color.BLUE);
-            }else{
-                drawItem(comEnemy, TanksImageProperty.armor3, Shape.RECTANGLE, Color.BLUE);
-            }
-        }else{
-            drawItem(comEnemy,TanksImageProperty.tankDestroyed,Shape.DIRECTED_OVAL, Color.GREEN);
-        }
-        //drawItem(comEnemy, TanksImageProperty.armor2, Shape.RECTANGLE, Color.BLUE);
-         */
-
-        Boolean destroyed = comEnemy.isDestroyed();
+        boolean destroyed = comEnemy.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
@@ -168,17 +148,17 @@ public class VisualizerVisitor implements Visitor {
         if (!destroyed) {
             //context.rotate(-90);
             context.rotate((comEnemy.getRotation() + 90) % 360);
-            context.scale(0.75, 0.75);
+            context.scale(0.7, 0.7);
 
             Armor armor = comEnemy.getArmor();
             if (armor instanceof LightArmor) {
-                drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN, 0.9);
             }
             else if (armor instanceof NormalArmor) {
-                drawImage(TanksImageProperty.armor2, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor2, Shape.DIRECTED_OVAL, Color.GREEN, 0.7);
             }
             else {
-                drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 0.65);
             }
             //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
@@ -187,18 +167,18 @@ public class VisualizerVisitor implements Visitor {
 
             Turret turret = comEnemy.getTurret();
             if (turret instanceof LightTurret) {
-                drawImage(TanksImageProperty.turret1, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret1, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else if (turret instanceof NormalTurret) {
-                drawImage(TanksImageProperty.turret2, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret2, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             else {
-                drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN);
+                drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
             //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
-            drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN);
+            drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
         }
         context.setTransform(ori);
     }
@@ -206,18 +186,18 @@ public class VisualizerVisitor implements Visitor {
     @Override
     public void visit(BreakableBlock bBlock) {
         if (!bBlock.isDestroyed()) {
-            drawItem(bBlock, TanksImageProperty.bBlock, Shape.RECTANGLE, Color.BLUE);
+            drawItemScale(bBlock, TanksImageProperty.bBlock, Shape.RECTANGLE, Color.BLUE, 0.9);
         }
     }
 
     @Override
     public void visit(ReflectableBlock rBlock) {
-        drawItem(rBlock, TanksImageProperty.rBlock, Shape.RECTANGLE, Color.BLUE);
+        drawItemScale(rBlock, TanksImageProperty.rBlock, Shape.RECTANGLE, Color.BLUE, 0.9);
     }
 
     @Override
     public void visit(UnbreakableBlock uBlock) {
-        drawItem(uBlock, TanksImageProperty.uBlock, Shape.RECTANGLE, Color.BLUE);
+        drawItemScale(uBlock, TanksImageProperty.uBlock, Shape.RECTANGLE, Color.BLUE, 0.9);
     }
 
     @Override
@@ -260,7 +240,17 @@ public class VisualizerVisitor implements Visitor {
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(item.getPos());
         context.translate(pos.x, pos.y);
-        drawImage(prop, shape, color);
+        drawImage(prop, shape, color, 1);
+        context.setTransform(ori);
+    }
+
+    private void drawItemScale(Item item, TanksImageProperty prop, Shape shape, Color color, double scale) {
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        final DoubleVec pos = view.modelToView(item.getPos());
+        context.translate(pos.x, pos.y);
+        context.scale(scale, scale);
+        drawImage(prop, shape, color, 1);
         context.setTransform(ori);
     }
 
@@ -285,8 +275,9 @@ public class VisualizerVisitor implements Visitor {
      * @param shape the shape to be used when the image is missing
      * @param color the color that is used as a circle color if the image is missing
      */
-    private void drawImage(TanksImageProperty prop, Shape shape, Color color) {
+    private void drawImage(TanksImageProperty prop, Shape shape, Color color, double scale) {
         final GraphicsContext context = view.getGraphicsContext2D();
+        context.scale(1, 1);
         final Image img = view.getImages().getImage(prop);
         if (img != null)
             context.drawImage(img, -img.getWidth() * 0.5, -img.getHeight() * 0.5);

@@ -38,7 +38,13 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
         else if (path == null || path.isEmpty()) {
             Tank playersTank = model.getTanksMap().getTank(player1);
             DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().add(new DoubleVec(2, 2)));
-            navigateTo(targetPos);
+            if (!isWithinMap(targetPos)) {
+                navigateTo(targetPos);
+            } else if (!isWithinMap(targetPos.sub(new DoubleVec(0,4)))) {
+                navigateTo(targetPos.sub(new DoubleVec(0,4)));
+            } else {
+                navigateTo(playersTank.getPos());
+            }
         }
     }
 
