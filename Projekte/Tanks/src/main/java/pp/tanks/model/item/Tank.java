@@ -26,7 +26,6 @@ public abstract class Tank extends Item<TankData> {
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
     private long latestInterpolate;
-    private double lastTurretAngle;
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, 0.75, data);
@@ -366,7 +365,6 @@ public abstract class Tank extends Item<TankData> {
      */
     @Override
     public void interpolateData(DataTimeItem<TankData> item) {
-        this.lastTurretAngle = this.data.getTurretDir().normalize().angle() + 180;
         this.data = item.data.mkCopy();
         this.latestOp = item;
     }
@@ -415,17 +413,6 @@ public abstract class Tank extends Item<TankData> {
                 data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
             }
         }
-
-       // double newTurretAngle = this.latestOp.data.getTurretDir().normalize().angle();
-       // double deltaTurretAngle = Math.abs(lastTurretAngle - newTurretAngle);
-       // double tFinTurret = (deltaTurretAngle + latestSec * rotationSpeed);
-       // double tTimeTurret = tFinTurret - latestSec;
-       // if (tTimeTurret > deltaT) {
-       //     double rx = (data.getTurretDir().x * Math.cos(lastTurretAngle + deltaT * rotationSpeed)) - (data.getTurretDir().y * Math.sin(lastTurretAngle + deltaT * rotationSpeed));
-       //     double ry = (data.getTurretDir().x * Math.sin(lastTurretAngle + deltaT * rotationSpeed)) + (data.getTurretDir().y * Math.cos(lastTurretAngle + deltaT * rotationSpeed));
-       //     DoubleVec newTurretDir = new DoubleVec(rx, ry);
-       //     data.setTurretDir(new xTurretDir);
-       // }
 
         //data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(deltaT * speed)));
         latestInterpolate = time;

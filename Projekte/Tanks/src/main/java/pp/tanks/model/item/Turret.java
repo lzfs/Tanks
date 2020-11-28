@@ -52,10 +52,10 @@ public abstract class Turret {
 
         double newTurretAngle = dir.normalize().angle();
         double deltaTurretAngle = Math.abs(direction.normalize().angle() - newTurretAngle);
-        if (deltaTurretAngle < 2) {
-                double rx = (direction.x * Math.cos(1)) - (direction.y * Math.sin(1));
-                double ry = (direction.x * Math.sin(1)) + (direction.y * Math.cos(1));
-                DoubleVec newTurretDir = new DoubleVec(rx, ry);
+        if (deltaTurretAngle < 1) {
+                double rx = (direction.x * Math.cos(0.0005)) - (direction.y * Math.sin(0.0005));
+                double ry = (direction.x * Math.sin(0.0005)) + (direction.y * Math.cos(0.0005));
+                direction = new DoubleVec(rx, ry);
         }
     }
 
