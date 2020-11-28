@@ -172,7 +172,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         else {
             if (pressed.contains(KeyCode.ESCAPE)) engine.setScene(menuMPController);
         }
-
+        if (engine.getOffset() != 0) {
+            if (engine.getAnimationTime() == 0) engine.computeAnimationTime();
+        }
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
         if (engine.getView() != null || engine.getMode() == GameMode.MULTIPLAYER) {

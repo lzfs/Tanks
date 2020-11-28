@@ -385,6 +385,7 @@ public abstract class Tank extends Item<TankData> {
     public boolean interpolateTime(long time) {
         if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
+        if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
         double deltaT = ((double) tmp) / FACTOR_SEC;
 
         double latestRot = (latestOp.data.getRotation() + 180) % 180;

@@ -2,9 +2,11 @@ package pp.tanks.message.server;
 
 public class SynchronizeMessage implements IServerMessage {
     public final long nanoOffset;
+    public final long latency;
 
-    public SynchronizeMessage(long offset) {
+    public SynchronizeMessage(long offset, long latency) {
         this.nanoOffset = offset;
+        this.latency = latency;
     }
 
     /**

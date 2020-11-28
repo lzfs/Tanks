@@ -84,7 +84,7 @@ public class SynchronizeState extends TankState {
             }
             else {
                 for (Player p : players) {
-                    SynchronizeMessage msg = new SynchronizeMessage(p.getOffset());
+                    SynchronizeMessage msg = new SynchronizeMessage(p.getOffset(), p.getLatency());
                     p.getConnection().send(msg);
                 }
                 containingState().goToState(parent.playingState);

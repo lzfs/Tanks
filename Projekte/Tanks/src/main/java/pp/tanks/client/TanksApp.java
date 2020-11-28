@@ -51,6 +51,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     private PlayerEnum player;
 
     private long offset;
+    private long latency;
 
     public final Properties properties = new Properties();
     private Engine engine;
@@ -223,6 +224,10 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         return offset;
     }
 
+    public long getLatency() {
+        return latency;
+    }
+
     /**
      * method used by the visitor to react to this message
      *
@@ -231,7 +236,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
-        System.out.println(" offset: " + msg.nanoOffset);
+        this.latency = msg.latency;
+        System.out.println(" offset: " + msg.nanoOffset + "\nlatency: " + msg.latency);
         engine.getController().synchronizationFinished();
     }
 

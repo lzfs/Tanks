@@ -74,6 +74,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private GameMode mode;
     private PlayerEnum playerEnum = PlayerEnum.PLAYER1;
     private int mapCounter = 0;
+    private long animationTime;
 
     /**
      * Creates a new engine
@@ -495,6 +496,10 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         return getTankApp().getOffset();
     }
 
+    public long getLatency() {
+        return getTankApp().getLatency();
+    }
+
     /**
      * @return connection
      */
@@ -509,5 +514,17 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public boolean isClientGame() {
         if (this.mode == null) throw new IllegalStateException("No game mode is set");
         return this.mode != GameMode.MULTIPLAYER;
+    }
+
+    public void computeAnimationTime() {
+        long sng = (long) Math.signum(getOffset());
+        System.out.println(sng);
+        long tmp = getLatency();
+        animationTime = -1 * tmp * sng;
+        System.out.println(animationTime);
+    }
+
+    public long getAnimationTime() {
+        return animationTime;
     }
 }

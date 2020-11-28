@@ -93,6 +93,14 @@ public class Player {
         return nano.get(indexPing);
     }
 
+    public long getLatency() {
+        long smallestPing = ping.get(0);
+        for (long lat : ping) {
+            if (lat < smallestPing) smallestPing = lat;
+        }
+        return smallestPing;
+    }
+
     /**
      * sets the info text to be displayed
      */
