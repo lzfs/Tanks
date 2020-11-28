@@ -27,6 +27,7 @@ import pp.util.DoubleVec;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TanksMapTest {
     public static final int WIDTH = 23;
@@ -115,5 +116,15 @@ public class TanksMapTest {
         assertEquals(87, model.getTanksMap().getBlocks().size());
         model.loadMap("map2.xml");
         assertEquals(92, model.getTanksMap().getBlocks().size());
+    }
+
+    @Test
+    public void endingTest() {
+        Tank player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(),
+                                      new TankData(new DoubleVec(3,6), 0, 100, MoveDirection.STAY,
+                                                   0.0, new DoubleVec(0,1), false));
+        model.getTanksMap().addPlayerTank(player);
+        model.update(System.nanoTime());
+        assertTrue(model.gameWon());
     }
 }
