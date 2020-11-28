@@ -11,8 +11,11 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,13 +45,13 @@ class TanksMapFileReader {
     /**
      * Reads an xml file and returns the represented game map.
      *
-     * @param file xml file representing a game map
+     * @param stream xml file representing a game map
      * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
      * @throws XMLStreamException if the file is no valid xml file
      */
-    public TanksMap readFile(File file) throws IOException, XMLStreamException {
+    public TanksMap readFile(InputStream stream) throws IOException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
-        Reader reader = new FileReader(file);
+        Reader reader = new InputStreamReader(stream);
         xtr = factory.createXMLStreamReader(reader);
         map = null;
         errors.clear();

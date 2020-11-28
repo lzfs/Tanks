@@ -8,7 +8,9 @@ import pp.tanks.notification.TanksNotificationReceiver;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,13 +88,10 @@ public class Model {
      * @param string xml file name representing a tanks map
      */
     public void loadMap(String string) {
-        final URL path = getClass().getResource(string);
-        //String path = "Tanks/src/main/resources/pp/tanks/model/" + string;
-        //String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
+        final InputStream stream = getClass().getResourceAsStream(string);
+
         try {
-            //File currentFile = new File(absolutePath);
-            File currentFile = new File(String.valueOf(path).replace("%20", " ").substring(5)); //"%20" eliminates spaces from the URL; .substring(5) erases the "file:" from the beginning
-            setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
+            setTanksMap(new TanksMapFileReader(this).readFile(stream));
         }
         catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
