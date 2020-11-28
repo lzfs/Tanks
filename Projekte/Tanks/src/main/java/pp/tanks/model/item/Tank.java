@@ -368,11 +368,7 @@ public abstract class Tank extends Item<TankData> {
      */
     @Override
     public void interpolateData(DataTimeItem<TankData> item) {
-        TankData newData = item.data.mkCopy();
-        newData.setTurretDir(lastTurretDir);
-        this.data = newData;
-        lastTurretDir = newTurretDir;
-        newTurretDir = item.data.getTurretDir();
+        this.data = item.data.mkCopy();
         this.latestOp = item;
     }
 
@@ -387,16 +383,6 @@ public abstract class Tank extends Item<TankData> {
         long tmp = (time - latestOp.serverTime);
         double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
         double deltaT = ((double) tmp) / FACTOR_SEC;
-        double newTurretAngle = (newTurretDir.angle() + 180) % 360;
-        double lastTurretAngle = (lastTurretDir.angle() + 180) % 360;
-        double deltaTurretAngle = Math.abs(lastTurretAngle - newTurretAngle);
-        double tFinTurret = (deltaTurretAngle + latestSec * turretRotationSpeed) / turretRotationSpeed;
-        double tTimeTurret = (tFinTurret - latestSec);
-        if (tTimeTurret > deltaT) {
-            double rx = (lastTurretDir.x * Math.cos(lastTurretAngle + deltaT * turretRotationSpeed)) - (lastTurretDir.y * Math.sin(lastTurretAngle + deltaT * turretRotationSpeed));
-            double ry = (lastTurretDir.x * Math.sin(lastTurretAngle + deltaT * turretRotationSpeed)) + (lastTurretDir.y * Math.cos(lastTurretAngle + deltaT * turretRotationSpeed));
-            data.setTurretDir(new DoubleVec(rx, ry));
-        }
         if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
         if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
         double latestRot = (latestOp.data.getRotation() + 180) % 180;
