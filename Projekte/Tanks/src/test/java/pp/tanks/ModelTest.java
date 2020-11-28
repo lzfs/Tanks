@@ -6,6 +6,8 @@ import pp.tanks.model.Model;
 
 import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ModelTest {
     private static final String FILE_NAME = "pp/tanks/maps/map0.xml";
     private Model model;
@@ -16,8 +18,8 @@ public class ModelTest {
     }
 
     @Test
-    public void loadMapTest() {
-        String test = "map0.xml";
-        model.loadMap(test);
+    public void test() {
+        model.loadMap("map0.xml");
+        assertEquals(71, model.getTanksMap().getBlocks().size());
     }
 }

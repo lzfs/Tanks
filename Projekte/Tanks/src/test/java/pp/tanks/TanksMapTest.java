@@ -106,4 +106,14 @@ public class TanksMapTest {
         assertEquals(rBlock, model.getTanksMap().getBlocks().get(1));
         assertEquals(rBlock, model.getTanksMap().getReflectable().get(0));
     }
+
+    @Test
+    public void loadMap() {
+        model.loadMap("map0.xml");
+        assertEquals(71, model.getTanksMap().getBlocks().size());
+        model.loadMap("map1.xml");
+        assertEquals(87, model.getTanksMap().getBlocks().size());
+        model.loadMap("map2.xml");
+        assertEquals(92, model.getTanksMap().getBlocks().size());
+    }
 }
