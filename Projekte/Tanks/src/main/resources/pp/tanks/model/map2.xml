@@ -81,6 +81,8 @@
    <uBlock x="5" y="7"></uBlock>
    <bBlock x="4" y="8"></bBlock>
    <bBlock x="4" y="9"></bBlock>
+   <uBlock x="5" y="4"></uBlock>
+   <uBlock x="5" y="8"></uBlock>
 
    <bBlock x="18" y="3"></bBlock>
    <bBlock x="18" y="4"></bBlock>
@@ -89,6 +91,8 @@
    <uBlock x="17" y="7"></uBlock>
    <bBlock x="18" y="8"></bBlock>
    <bBlock x="18" y="9"></bBlock>
+   <uBlock x="17" y="4"></uBlock>
+   <uBlock x="17" y="8"></uBlock>
 
    <rBlock x="9" y="3"></rBlock>
    <bBlock x="10" y="3"></bBlock>
@@ -102,7 +106,4 @@
    <bBlock x="12" y="9"></bBlock>
    <rBlock x="13" y="9"></rBlock>
 
-   <!--<apc x="20" y="4"></apc>
-   <howitzer x="20" y="6"></howitzer>
-   <tankDestroyer x="20" y="8"></tankDestroyer>-->
 </map>
