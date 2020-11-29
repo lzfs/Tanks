@@ -324,7 +324,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
      * @return the players tank
      */
     private Tank getTank() {
-        System.out.println(engine.getPlayerEnum());
         return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
     }
 
