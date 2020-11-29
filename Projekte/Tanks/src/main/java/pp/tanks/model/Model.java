@@ -105,7 +105,6 @@ public class Model {
      * @param tank new tank
      */
     public void setTank(Tank tank) {
-        System.out.println("TANK " + tank);
         map.addPlayerTank(tank);
     }
 
