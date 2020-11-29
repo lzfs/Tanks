@@ -60,9 +60,16 @@ public abstract class Projectile extends Item<ProjectileData> {
         ProjectileData tmpData = latestOp.data.mkCopy();
         DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(tmpData, latestInterpolate);
         interpolateData(tmp);
-        //System.out.println("danach "+latestOp.data.getDir());
-        //System.out.println("//eigene pos " +getPos());
-        //System.out.println("//latestOP pos " + latestOp.data.getPos());
+    }
+
+    /**
+     *  Reset the Interpolation
+     */
+    public void resetInterpolateTime() {
+        latestOp.data.setPos(getPos());
+        ProjectileData tmpData = latestOp.data.mkCopy();
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(tmpData, System.nanoTime());
+        interpolateData(tmp);
     }
 
     /**
@@ -208,6 +215,7 @@ public abstract class Projectile extends Item<ProjectileData> {
         if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
         double deltaT = ((double) tmp) / FACTOR_SEC;
+        System.out.println("DELTA " + deltaT);
         data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT * speed)));
         latestInterpolate = time;
         return true;

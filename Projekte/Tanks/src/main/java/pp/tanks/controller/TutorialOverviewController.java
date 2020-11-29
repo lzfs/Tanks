@@ -1,13 +1,20 @@
 package pp.tanks.controller;
 
 import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.LightArmor;
+import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.MoveDirection;
+import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
+import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,6 +77,15 @@ public class TutorialOverviewController extends Controller {
     }
 
     /**
+     * called when level one gets loaded
+     */
+    private void loadLevelTutorial() {
+        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP));
+        engine.playGameController.constructionData.addAll(List.of(enemy1));
+    }
+
+    /**
      * method for the next button
      */
     @FXML
@@ -77,6 +93,9 @@ public class TutorialOverviewController extends Controller {
         LOGGER.log(Level.INFO, "GO TO PlayGameController");
         engine.setMode(GameMode.TUTORIAL);
         engine.setMapCounter(0);
+        loadLevelTutorial();
+        PlayersTank tank = new PlayersTank(engine.getModel(), 3, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
+        engine.setSaveTank(tank);
         engine.activatePlayGameController();
     }
 }

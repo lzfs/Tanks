@@ -1,6 +1,7 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.model.item.Projectile;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -67,6 +68,7 @@ public class PauseMenuSPController extends Controller {
     @Override
     public void entry() {
         LOGGER.log(Level.INFO, "ENTRY PauseMenuSPController");
+        engine.viewUpdate=false;
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
@@ -94,8 +96,12 @@ public class PauseMenuSPController extends Controller {
      */
     @FXML
     private void continueGame() {
+        engine.viewUpdate=true;
         LOGGER.log(Level.INFO, "clicked CONTINUE_GAME");
         //engine.setScene(engine.playGameController.sceneBackup);
+        for( Projectile p :  engine.getModel().getTanksMap().getProjectiles()){
+            p.resetInterpolateTime();
+        }
         engine.resumeGame();
     }
 
@@ -105,7 +111,10 @@ public class PauseMenuSPController extends Controller {
     @FXML
     private void mainMenu() {
         LOGGER.log(Level.INFO, "clicked MAIN_MENU");
+        engine.setView(null);
         engine.activateMainMenuController();
+        engine.viewUpdate=true;
+
     }
 
     /**

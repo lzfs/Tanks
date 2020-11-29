@@ -40,6 +40,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private final TanksApp tankApp;
     private MenuView menuView;
     private TanksMapView view;
+    public boolean viewUpdate = true;
 
     public final MainMenuController mainMenuController;
     public final CreditsController creditsController;
@@ -180,7 +181,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
             public void handle(long now) {
                 controller.update();
                 menuView.update();
-                if (view != null) {
+                if (view != null && viewUpdate) {
                     view.update();
                 }
             }

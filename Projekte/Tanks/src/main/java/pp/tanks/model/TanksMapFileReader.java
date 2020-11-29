@@ -165,7 +165,6 @@ class TanksMapFileReader {
                     map.addTanks(howitzer);
                     break;
                 }
-
                 case "tankDestroyer": {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);

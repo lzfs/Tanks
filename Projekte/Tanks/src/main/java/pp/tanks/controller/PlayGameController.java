@@ -195,33 +195,27 @@ public class PlayGameController extends Controller implements ICollisionObserver
         processed.clear();
         stopWatch.start();
         engine.getModel().loadMap("map" + engine.getMapCounter() + ".xml");
-
-        if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {
-            PlayersTank tank = new PlayersTank(engine.getModel(), 3, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
-            engine.getModel().setTank(tank);
+        if (engine.getMode() == GameMode.SINGLEPLAYER || engine.getMode() == GameMode.TUTORIAL) {
+            engine.getSaveTank().setDestroyed(false);
+            engine.getSaveTank().setPos(new DoubleVec(3, 6));
+            engine.getModel().setTank(engine.getSaveTank());
+            loadSingleplayerEnemy();
         }
         else {
-            if (engine.getMode() == GameMode.SINGLEPLAYER) {
+            if (engine.getPlayerEnum() == PlayerEnum.PLAYER1) {
                 engine.getSaveTank().setDestroyed(false);
-                engine.getSaveTank().setPos(new DoubleVec(3, 6));
                 engine.getModel().setTank(engine.getSaveTank());
-                loadSingleplayerEnemy();
+                engine.getSaveEnemyTank().setDestroyed(false);
+                engine.getModel().setTank(engine.getSaveEnemyTank());
             }
             else {
-                if (engine.getPlayerEnum() == PlayerEnum.PLAYER1) {
-                    engine.getSaveTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveTank());
-                    engine.getSaveEnemyTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveEnemyTank());
-                }
-                else {
-                    engine.getSaveEnemyTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveEnemyTank());
-                    engine.getSaveTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveTank());
-                }
+                engine.getSaveEnemyTank().setDestroyed(false);
+                engine.getModel().setTank(engine.getSaveEnemyTank());
+                engine.getSaveTank().setDestroyed(false);
+                engine.getModel().setTank(engine.getSaveTank());
             }
         }
+
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
         engine.setView(mapview);
 
@@ -264,9 +258,16 @@ public class PlayGameController extends Controller implements ICollisionObserver
         processed.clear();
     }
 
+    /**
+     * Resumes the Game
+     */
     public void resumeGame() {
         stopWatch.start();
-        engine.setScene(sceneBackup);
+        ProgressBar progressBar = new ProgressBar(1.0);
+        engine.getView().setProgressBar(progressBar);
+        Group group = new Group(engine.getView(), progressBar);
+        scene = new Scene(group);
+        engine.setScene(scene);
     }
 
     /**
@@ -323,6 +324,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
      * @return the players tank
      */
     private Tank getTank() {
+        System.out.println(engine.getPlayerEnum());
         return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
     }
 
