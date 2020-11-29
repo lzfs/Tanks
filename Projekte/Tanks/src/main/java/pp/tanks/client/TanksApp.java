@@ -3,6 +3,7 @@ package pp.tanks.client;
 import pp.network.Connection;
 import pp.network.IConnection;
 import pp.network.MessageReceiver;
+import pp.tanks.TanksImageProperty;
 import pp.tanks.controller.Engine;
 import pp.tanks.controller.MainMenuController;
 import pp.tanks.message.client.ClientReadyMessage;
@@ -13,14 +14,12 @@ import pp.tanks.message.server.IServerInterpreter;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
 import pp.tanks.message.server.PingMessage;
-import pp.tanks.message.server.ProjectileCollisionMessage;
+import pp.tanks.message.server.PlayerDisconnectedMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
-import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.message.server.SynchronizeMessage;
 import pp.tanks.model.item.PlayerEnum;
-import pp.tanks.server.GameMode;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -38,6 +37,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static pp.tanks.TanksIntProperty.musicMuted;
+import static pp.tanks.TanksIntProperty.soundMuted;
+
 /**
  * Main class of the Tank app
  */
@@ -49,8 +51,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     private PlayerEnum player;
 
     private long offset;
+    private long latency;
 
-    private final Properties properties = new Properties();
+    public final Properties properties = new Properties();
     private Engine engine;
 
     private Stage stage;
@@ -86,7 +89,15 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.setTitle("Tanks");
         stage.show();
         engine.gameLoop();
-        //sounds.setMusic(sounds.mainMenu);
+        stage.getIcons().add(engine.getImages().getImage(TanksImageProperty.greenTank));
+        sounds.setMusic(sounds.mainMenu);
+
+        if (musicMuted.value(engine.getModel().getProperties()) == 0) {
+            engine.getTankApp().sounds.mute(false);
+        }
+        else {
+            engine.getTankApp().sounds.mute(true);
+        }
     }
 
     /**
@@ -160,20 +171,16 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
 
     /**
      * Establishes a connection to an online server
-     *
-     * @param mode given Player-mode
      */
-    public void joinGame(GameMode mode) {
-        joinGame(mode, "127.0.0.1", "1234");
+    public void joinGame() throws IOException {
+        joinGame("127.0.0.1", "1234");
         //joinGame(mode, "137.193.138.79", "1234");
     }
 
     /**
      * Establishes a connection to an online server
-     *
-     * @param mode given Player-mode
      */
-    public void joinGame(GameMode mode, String ipAddress, String portString) {
+    public void joinGame(String ipAddress, String portString) throws IOException {
         if (connection != null) {
             LOGGER.severe("trying to join a game again"); //NON-NLS
             return;
@@ -184,7 +191,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             socket.setSoTimeout(1000);
             connection = new Connection<>(socket, this);
             if (connection.isConnected()) {
-                connection.send(new ClientReadyMessage(mode));
+                connection.send(new ClientReadyMessage());
                 new Thread(connection).start();
             }
             else {
@@ -192,8 +199,14 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
                 connection = null;
             }
         }
+        catch (NumberFormatException e) {
+            //TODO Logger ausgabe
+            throw e;
+            //setInfoText(Resources.getString("port.number.must.be.an.integer"));
+        }
         catch (IllegalArgumentException | IOException e) {
             LOGGER.info("when creating the Client: " + e.getMessage()); //NON-NLS
+            throw e;
         }
     }
 
@@ -211,6 +224,10 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         return offset;
     }
 
+    public long getLatency() {
+        return latency;
+    }
+
     /**
      * method used by the visitor to react to this message
      *
@@ -219,7 +236,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
-        System.out.println(" offset: " + msg.nanoOffset);
+        this.latency = msg.latency;
+        System.out.println(" offset: " + msg.nanoOffset + "\nlatency: " + msg.latency);
         engine.getController().synchronizationFinished();
     }
 
@@ -259,18 +277,13 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     }
 
     @Override
-    public void visit(StartingSingleplayerMessage msg) {
-        engine.tankConfigSPController.startGame(msg);
-    }
-
-    @Override
-    public void visit(ProjectileCollisionMessage msg) {
-        engine.playGameController.addCollision(msg.collision);
-    }
-
-    @Override
     public void visit(GameEndingMessage msg) {
         engine.playGameController.setGameEnd(msg);
+    }
+
+    @Override
+    public void visit(PlayerDisconnectedMessage msg) {
+        engine.getController().playerDisconnected();
     }
 }
 

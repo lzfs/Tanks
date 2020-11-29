@@ -35,4 +35,6 @@ public class Controller {
     public void handle(Event event) { }
 
     public void synchronizationFinished() { }
+
+    public void playerDisconnected() {}
 }

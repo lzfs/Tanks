@@ -26,8 +26,8 @@ public class MultiplayerServerTest {
 
     private final List<Runnable> messages = List.of(
             () -> {
-                transmitter.receiveMessage(new ClientReadyMessage(GameMode.MULTIPLAYER), conn1);
-                transmitter.receiveMessage(new ClientReadyMessage(GameMode.MULTIPLAYER), conn2);
+                transmitter.receiveMessage(new ClientReadyMessage(), conn1);
+                transmitter.receiveMessage(new ClientReadyMessage(), conn2);
                 transmitter.receiveMessage(new UpdateTankConfigMessage(ItemEnum.NORMAL_TURRET, ItemEnum.LIGHT_ARMOR, PlayerEnum.PLAYER1), conn1);
                 transmitter.receiveMessage(new UpdateTankConfigMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, PlayerEnum.PLAYER1), conn1);
                 transmitter.receiveMessage(new StartGameMessage(ItemEnum.HEAVY_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.MULTIPLAYER, PlayerEnum.PLAYER1), conn1);

@@ -36,6 +36,5 @@
             <Insets left="60.0" />
          </GridPane.margin>
       </Text>
-      <Button fx:id="debug" onAction="#debug" mnemonicParsing="false" text="!!DEBUG!!" GridPane.rowIndex="2" />
     </children>
 </fx:root>

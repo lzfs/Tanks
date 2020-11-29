@@ -1,18 +1,18 @@
 package pp.tanks.message.server;
 
-import pp.tanks.model.item.PlayerEnum;
-
 public class SynchronizeMessage implements IServerMessage {
     public final long nanoOffset;
+    public final long latency;
 
-    public SynchronizeMessage(long offset) {
+    public SynchronizeMessage(long offset, long latency) {
         this.nanoOffset = offset;
+        this.latency = latency;
     }
 
     /**
      * Method to accept a visitor
      *
-     * @param interpreter       visitor to be used
+     * @param interpreter visitor to be used
      */
     @Override
     public void accept(IServerInterpreter interpreter) {

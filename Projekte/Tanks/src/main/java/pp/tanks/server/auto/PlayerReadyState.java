@@ -1,16 +1,18 @@
 package pp.tanks.server.auto;
 
+import pp.network.IConnection;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.data.TankData;
+import pp.tanks.message.server.IServerMessage;
+import pp.tanks.message.server.PlayerDisconnectedMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
+import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
-import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.ArmoredPersonnelCarrier;
 import pp.tanks.model.item.Howitzer;
-import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.PlayerEnum;
@@ -39,6 +41,10 @@ public class PlayerReadyState extends TankState {
 
     @Override
     public void entry() {
+        for (Player pl : parent.getPlayers()) {
+            pl.setReady(false);
+            pl.setGameWon(false);
+        }
         if (parent.getPlayers().size() > 1) {
             ItemEnum turret = null;
             ItemEnum armor = null;
@@ -52,16 +58,24 @@ public class PlayerReadyState extends TankState {
                 armor = null;
             }
         }
-        System.out.println("Player Ready State");
+        parent.getLogger().info("Player Ready State");
     }
 
     @Override
-    public void back(BackMessage msg) {
-        for (Player p : parent.getPlayers()) {
-            p.getConnection().shutdown();
-        }
-        parent.getPlayers().clear();
-        containingState().goToState(parent.init);
+    public void back(IConnection<IServerMessage> conn) {
+        containingState().getPlayers().removeIf(p -> p.getConnection() == conn);
+        conn.shutdown();
+        //for (Player p : parent.getPlayers()) {
+        //p.getConnection().shutdown();
+        //}
+        Player lastPlayer = parent.getPlayers().get(0);
+        lastPlayer.otherPlayerDisconnected();
+        containingState().goToState(parent.waitingFor2Player);
+    }
+
+    @Override
+    public void playerDisconnected(IConnection<IServerMessage> conn) {
+        back(conn);
     }
 
     @Override
@@ -77,22 +91,16 @@ public class PlayerReadyState extends TankState {
         Player p = parent.getPlayers().get(msg.player.tankID);
         p.setArmor(msg.armor);
         p.setTurret(msg.turret);
-        p.setReady();
+        p.setReady(true);
         for (Player player : parent.getPlayers()) {
             if (!player.isReady()) return;
         }
 
-        Model model = loadModel(msg.gameMode);
+        Model model = new Model(parent.getProperties());
+        model.loadMap("map1.xml");
 
-        if (msg.gameMode == GameMode.MULTIPLAYER) {
-            multiplayerGame(model);
-        }
-        else if (msg.gameMode == GameMode.SINGLEPLAYER) {
-            singleplayerGameLvlOne(model);
-        }
-        else {
-            tutorialGame(model);
-        }
+        multiplayerGame(model);
+
         model.getTanksMap().updateHashMap();
         parent.playingState.initializeGame(model, msg.gameMode);
         parent.goToState(containingState().synchronize);
@@ -138,36 +146,5 @@ public class PlayerReadyState extends TankState {
                 model.setTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data2));
             }
         }
-    }
-
-    /**
-     * TODO: add JavaDoc
-     *
-     * @param model
-     */
-    public void tutorialGame(Model model) {
-        Player pl = parent.getPlayers().get(0);
-        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 1, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
-    }
-
-    /**
-     * TODO: add JavaDoc
-     *
-     * @param model
-     */
-    public void singleplayerGameLvlOne(Model model) { //TODO Tanks auf Server Model laden
-        Player pl = parent.getPlayers().get(0);
-        TankData data1 = new TankData(new DoubleVec(3, 6), 0, 3, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        model.getTanksMap().addPlayerTank(PlayersTank.mkPlayersTank(model, pl.getTurret(), pl.getArmor(), data1));
-        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 5), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy3 = new TankData(new DoubleVec(17, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        model.getTanksMap().addCOMTank(new ArmoredPersonnelCarrier(model, enemy1));
-        model.getTanksMap().addCOMTank(new Howitzer(model, enemy1));
-        model.getTanksMap().addCOMTank(new ArmoredPersonnelCarrier(model, enemy1));
-        List<ItemEnum> enums = new ArrayList<>(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.ACP));
-        List<TankData> data = new ArrayList<>(List.of(enemy1, enemy2, enemy3));
-        pl.getConnection().send(new StartingSingleplayerMessage(enums, data));
     }
 }

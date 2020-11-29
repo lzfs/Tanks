@@ -1,16 +1,15 @@
 package pp.tanks.controller;
 
+import pp.tanks.TanksImageProperty;
 import pp.tanks.message.data.BBData;
-import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
+import pp.tanks.model.ICollisionObserver;
 import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
-import pp.tanks.model.item.Item;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
@@ -24,24 +23,39 @@ import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 import pp.util.StopWatch;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javafx.event.Event;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javafx.event.Event;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-
 /**
  * The controller realizing the game state when the game is really running.
  */
-public class PlayGameController extends Controller {
+public class PlayGameController extends Controller implements ICollisionObserver {
     private static final Logger LOGGER = Logger.getLogger(PlayGameController.class.getName());
 
     public static final KeyCode W = KeyCode.W;
@@ -54,6 +68,7 @@ public class PlayGameController extends Controller {
     private final StopWatch stopWatch = new StopWatch();
     private double lastUpdate;
     private Scene scene;
+    private Scene sceneBackup;
     private boolean stopFlag = false;
     public final List<ItemEnum> constructionEnum = new ArrayList<>();
     public final List<TankData> constructionData = new ArrayList<>();
@@ -61,6 +76,7 @@ public class PlayGameController extends Controller {
     private final List<DataTimeItem<TankData>> tanks = new ArrayList<>();
     private final List<BBData> bbDataList = new ArrayList<>();
     private GameEndingMessage endingMessage = null;
+    private final Scene menuMPController = new Scene(new PauseMenuMPController());
 
     /**
      * create a new PlayGameController
@@ -142,15 +158,32 @@ public class PlayGameController extends Controller {
         addProjectiles();
         handleCollision();
 
-        // update the model
-        /*final double delta = stopWatch.getTime() - lastUpdate;
-        lastUpdate = stopWatch.getTime();*/
+        if (engine.getMode() != GameMode.MULTIPLAYER) {
+            if (engine.getModel().gameWon()) {
+                handleLocalGameWon();
+            }
 
+            else if (engine.getModel().gameLost()) {
+                handleLocalGameLost();
+            }
+            else if (pressed.contains(KeyCode.ESCAPE)) {
+                engine.activatePauseMenuSPController(); //TODO
+            }
+        }
+        else {
+            if (pressed.contains(KeyCode.ESCAPE)) engine.setScene(menuMPController);
+            if (engine.getAnimationTime() == 0) engine.computeAnimationTime();
+            final double delta = stopWatch.getTime() - lastUpdate;
+            if (delta > 0.2) {
+                lastUpdate = stopWatch.getTime();
+                getTanksMap().getAllTanks().forEach(Tank::sendTurretUpdate);
+            }
+        }
         engine.getModel().update(System.nanoTime() + engine.getOffset());
 
-
-
-        engine.getView().updateProgressBar((((double) engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(PlayerEnum.PLAYER1).getArmor().getMaxPoints())));
+        if (engine.getView() != null || engine.getMode() == GameMode.MULTIPLAYER) {
+            engine.getView().updateProgressBar(((1.0 * engine.getModel().getTanksMap().getTank(engine.getPlayerEnum()).getArmor().getArmorPoints() / engine.getModel().getTanksMap().getTank(engine.getPlayerEnum()).getArmor().getMaxPoints())));
+        }
     }
 
     /**
@@ -158,38 +191,31 @@ public class PlayGameController extends Controller {
      */
     @Override
     public void entry() {
-        stopWatch.start();
         pressed.clear();
         processed.clear();
+        stopWatch.start();
         engine.getModel().loadMap("map" + engine.getMapCounter() + ".xml");
-
-        if (engine.getMapCounter() == 0 || engine.getMapCounter() == 3) {
-            if (engine.getMapCounter() == 3) engine.getModel().setDebug(true);
-            PlayersTank tank = new PlayersTank(engine.getModel(), 3, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
-            engine.getModel().setTank(tank);
+        if (engine.getMode() == GameMode.SINGLEPLAYER || engine.getMode() == GameMode.TUTORIAL) {
+            engine.getSaveTank().setDestroyed(false);
+            engine.getSaveTank().setPos(new DoubleVec(3, 6));
+            engine.getModel().setTank(engine.getSaveTank());
+            loadSingleplayerEnemy();
         }
         else {
-            if (engine.getMode() == GameMode.SINGLEPLAYER) {
+            if (engine.getPlayerEnum() == PlayerEnum.PLAYER1) {
                 engine.getSaveTank().setDestroyed(false);
-                engine.getSaveTank().setPos(new DoubleVec(3, 6));
                 engine.getModel().setTank(engine.getSaveTank());
-                loadSingleplayerEnemy();
+                engine.getSaveEnemyTank().setDestroyed(false);
+                engine.getModel().setTank(engine.getSaveEnemyTank());
             }
             else {
-                if (engine.getPlayerEnum() == PlayerEnum.PLAYER1) {
-                    engine.getSaveTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveTank());
-                    engine.getSaveEnemyTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveEnemyTank());
-                }
-                else {
-                    engine.getSaveEnemyTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveEnemyTank());
-                    engine.getSaveTank().setDestroyed(false);
-                    engine.getModel().setTank(engine.getSaveTank());
-                }
+                engine.getSaveEnemyTank().setDestroyed(false);
+                engine.getModel().setTank(engine.getSaveEnemyTank());
+                engine.getSaveTank().setDestroyed(false);
+                engine.getModel().setTank(engine.getSaveTank());
             }
         }
+
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
         engine.setView(mapview);
 
@@ -198,6 +224,9 @@ public class PlayGameController extends Controller {
             engine.getView().setProgressBar(progressBar);
             Group group = new Group(engine.getView(), progressBar);
             scene = new Scene(group);
+        }
+        if (engine.isClientGame()) {
+            engine.getModel().getTanksMap().addObserver(this);
         }
         engine.setScene(scene);
         engine.getModel().getTanksMap().updateHashMap();
@@ -212,6 +241,8 @@ public class PlayGameController extends Controller {
                 engine.getModel().getTanksMap().addCOMTank(COMEnemy.mkComEnemy(constructionEnum.get(i), engine.getModel(), constructionData.get(i)));
             }
         }
+        constructionData.clear();
+        constructionEnum.clear();
     }
 
     /**
@@ -219,9 +250,24 @@ public class PlayGameController extends Controller {
      */
     @Override
     void exit() {
-        System.out.println("exit playgame");
+        LOGGER.info("Exit PlayGameController");
+        sceneBackup = scene;
         scene = null;
         stopWatch.stop();
+        pressed.clear();
+        processed.clear();
+    }
+
+    /**
+     * Resumes the Game
+     */
+    public void resumeGame() {
+        stopWatch.start();
+        ProgressBar progressBar = new ProgressBar(1.0);
+        engine.getView().setProgressBar(progressBar);
+        Group group = new Group(engine.getView(), progressBar);
+        scene = new Scene(group);
+        engine.setScene(scene);
     }
 
     /**
@@ -278,7 +324,12 @@ public class PlayGameController extends Controller {
      * @return the players tank
      */
     private Tank getTank() {
+        System.out.println(engine.getPlayerEnum());
         return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 
     /**
@@ -293,6 +344,9 @@ public class PlayGameController extends Controller {
             if (p == null) {
                 p = Projectile.mkProjectile(engine.getModel(), item.data);
                 engine.getModel().getTanksMap().addProjectile(p);
+            }
+            if (item.data.isDestroyed()) {
+                p.destroy();
             }
             p.interpolateData(item);
         }
@@ -329,10 +383,18 @@ public class PlayGameController extends Controller {
         this.tanks.addAll(list);
     }
 
+    /**
+     * adds breakable block to bbDatalist
+     *
+     * @param list list of breakable blocks
+     */
     public void addServerBBlockData(List<BBData> list) {
         this.bbDataList.addAll(list);
     }
 
+    /**
+     * called when items collide
+     */
     public void handleCollision() {
         if (bbDataList.isEmpty()) return;
         List<BBData> tmpList = new ArrayList<>(bbDataList);
@@ -341,48 +403,212 @@ public class PlayGameController extends Controller {
             BreakableBlock tmp = (BreakableBlock) engine.getModel().getTanksMap().getFromID(bbData.id);
             tmp.interpolateData(new DataTimeItem<>(bbData, 0));
         }
-
-        /*List<ProjectileCollision> tmp = new ArrayList<>(collisionList);
-        collisionList.clear();
-        for (ProjectileCollision coll : tmp) {
-            System.out.println("1: " + isIdDestroyed(coll.id1));
-            System.out.println("2: " + isIdDestroyed(coll.id2));
-            if (coll.dest1) {
-                if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).destroy();
-                else getTanksMap().getFromID(coll.id1).destroy();
-            }
-            else {
-                if (coll.id1 > 999) getTanksMap().getHashProjectiles().get(coll.id1).processDamage(coll.dmg1);
-                else getTanksMap().getFromID(coll.id1).processDamage(coll.dmg1);
-            }
-            if (coll.dest2) {
-                if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).destroy();
-                else getTanksMap().getFromID(coll.id2).destroy();
-            }
-            else {
-                if (coll.id2 > 999) getTanksMap().getHashProjectiles().get(coll.id2).processDamage(coll.dmg2);
-                else getTanksMap().getFromID(coll.id2).processDamage(coll.dmg2);
-            }
-        }*/
     }
 
-    public void addCollision(List<ProjectileCollision> coll) {
-        //Platform.runLater(() -> collisionList.addAll(coll));
-    }
-
+    /**
+     * ends a game
+     *
+     * @param msg
+     */
     public void setGameEnd(GameEndingMessage msg) {
         endingMessage = msg;
     }
 
+    /**
+     * shows the correct screen at the end of a game
+     */
     public void gameEnd() {
-        if (endingMessage.mode == GameMode.MULTIPLAYER) {
-            if (endingMessage.won) engine.activateGameWonMPController();
-            else engine.activateGameOverMPController();
+        if (endingMessage.won) engine.activateGameWonMPController();
+        else engine.activateGameOverMPController();
+        endingMessage = null;
+    }
+
+    /**
+     * handles the event of a won game
+     */
+    public void handleLocalGameWon() {
+        engine.setView(null);
+        if (engine.getMode() == GameMode.TUTORIAL) {
+            engine.activateLevelController();
         }
-        else if (endingMessage.mode == GameMode.SINGLEPLAYER) {
-            if (endingMessage.won) System.out.println("Gewonnen");
+        else {
+            if (engine.getMapCounter() == 1) {
+                engine.activateMission1CompleteController();
+            }
+            else {
+                engine.activateMission2CompleteController();
+            }
+        }
+        engine.getModel().getTanksMap().deleteAllObservers();
+    }
+
+    /**
+     * handles the event of a lost game
+     */
+    public void handleLocalGameLost() {
+        engine.setView(null);
+        if (engine.getMode() == GameMode.TUTORIAL) {
+            engine.activateLevelController();
+        }
+        else {
+            engine.getSaveTank().decreaseLives();
+            if (engine.getSaveTank().getLives() > 0) {
+                engine.activateStartGameSPController();
+            }
+            else {
+                engine.activateGameOverSPController();
+            }
+        }
+        engine.getModel().getTanksMap().deleteAllObservers();
+    }
+
+    @Override
+    public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
+        if (dest) {
+            tank.destroy();
+        }
+        else {
+            tank.processDamage(damage);
+        }
+        proj.destroy();
+    }
+
+    @Override
+    public void notifyProjBBlock(Projectile proj, BreakableBlock block, int damage, boolean dest) {
+        if (dest) {
+            block.destroy();
+        }
+        else {
+            block.processDamage(damage);
+        }
+        proj.destroy();
+    }
+
+    @Override
+    public void notifyProjProj(Projectile proj1, Projectile proj2) {
+        proj1.destroy();
+        proj2.destroy();
+    }
+
+    /**
+     * calls the playerDisconnected method
+     */
+    @Override
+    public void playerDisconnected() {
+        engine.gameWonMPController.playerDisconnected();
+    }
+
+    private class PauseMenuMPController extends GridPane {
+        private static final String PAUSE_MENU_MP_FXML = "PauseMenuMP.fxml"; //NON-NLS
+
+        PauseMenuMPController() {
+            final URL location = getClass().getResource(PAUSE_MENU_MP_FXML);
+            FXMLLoader fxmlLoader = new FXMLLoader(location);
+            fxmlLoader.setRoot(this);
+            fxmlLoader.setController(this);
+            try {
+                fxmlLoader.load();
+            }
+            catch (
+                    IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        //endingMessage = null;
+        /**
+         * the button to continue the game
+         */
+        @FXML
+        private Button continueGame;
+
+        /**
+         * the image to display the status icon of the music preferences
+         */
+        @FXML
+        private ImageView musicImage;
+
+        /**
+         * the image to display the status icon of the sound preferences
+         */
+        @FXML
+        private ImageView soundImage;
+
+        /**
+         * the button to get back to the main menu
+         */
+        @FXML
+        private Button mainMenu;
+
+        /**
+         * method to continue the game
+         */
+        @FXML
+        private void continueGame() {
+            engine.setScene(scene);
+        }
+
+        /**
+         * method to go back to the main menu
+         */
+        @FXML
+        private void mainMenu() {
+            engine.getConnection().shutdown();
+            engine.activateMainMenuController();
+        }
+
+        /**
+         * method for the sound button
+         */
+        @FXML
+        private void sound() {
+            // TODO
+            /*if (engine.getTankApp().sounds.getMuted()) {
+                engine.getTankApp().sounds.mute(false);
+            }
+            else {
+                engine.getTankApp().sounds.mute(true);
+            }
+
+            if (engine.getTankApp().sounds.getMuted()) {
+                soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+            }
+            else {
+                soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+            }
+            LOGGER.log(Level.INFO, "clicked SOUND");*/
+        }
+
+        /**
+         * method for the music button
+         */
+        @FXML
+        private void music() {
+            engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
+            changeMusic(engine.getTankApp().sounds.getMuted());
+        }
+
+        public void changeMusic(boolean mute) {
+            if (mute) {
+                musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+                engine.getTankApp().properties.setProperty("musicMuted", "1");
+                try {
+                    engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+                }
+                catch (IOException e) {
+                    LOGGER.log(Level.INFO, e.getMessage());
+                }
+            }
+            else {
+                musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+                engine.getTankApp().properties.setProperty("musicMuted", "0");
+                try {
+                    engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+                }
+                catch (IOException e) {
+                    LOGGER.log(Level.INFO, e.getMessage());
+                }
+            }
+            LOGGER.log(Level.INFO, "clicked MUSIC");
+        }
     }
 }

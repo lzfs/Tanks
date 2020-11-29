@@ -1,9 +1,7 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
-import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.data.TankData;
-import pp.tanks.message.server.StartingSingleplayerMessage;
 import pp.tanks.model.item.Armor;
 import pp.tanks.model.item.HeavyArmor;
 import pp.tanks.model.item.HeavyTurret;
@@ -18,7 +16,6 @@ import pp.tanks.model.item.Turret;
 import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,8 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -165,8 +160,8 @@ public class TankConfigSPController extends Controller {
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret2));
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret3));
 
-        armors.add(engine.getImages().getImage(TanksImageProperty.armor1));
-        armors.add(engine.getImages().getImage(TanksImageProperty.armor2));
+        armors.add(engine.getImages().getImage(TanksImageProperty.armor1Small));
+        armors.add(engine.getImages().getImage(TanksImageProperty.armor2Small));
         armors.add(engine.getImages().getImage(TanksImageProperty.armor3));
 
         charts.add(engine.getImages().getImage(TanksImageProperty.chart1));
@@ -208,25 +203,12 @@ public class TankConfigSPController extends Controller {
 
         DoubleVec position = new DoubleVec(5, 5);
         PlayersTank tank = new PlayersTank(engine.getModel(), 3, armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0, 0), false)); //TODO id
-        engine.getTankApp().getConnection().send(new StartGameMessage(getCountTurret(counterTurret), getCountArmor(counterArmor), GameMode.SINGLEPLAYER, engine.getPlayerEnum()));
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
+        engine.setMode(GameMode.SINGLEPLAYER);
         counterArmor = 0;
         counterTurret = 0;
-        confirm.setDisable(true);
-    }
-
-    /**
-     * starts a new game from incoming message
-     *
-     * @param msg incoming StartingSingleplayerMessage
-     */
-    public void startGame(StartingSingleplayerMessage msg) {
-        Platform.runLater(() -> {
-            engine.playGameController.constructionData.addAll(msg.dataList);
-            engine.playGameController.constructionEnum.addAll(msg.comType);
-            engine.activateStartGameSPController();
-        });
+        engine.activateStartGameSPController();
     }
 
     /**

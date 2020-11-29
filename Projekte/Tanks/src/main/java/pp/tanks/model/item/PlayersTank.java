@@ -1,6 +1,7 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.client.MoveMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
@@ -42,6 +43,9 @@ public class PlayersTank extends Tank {
         long tmp = (serverTime - latestViewUpdate);
         double delta = ((double) tmp) / FACTOR_SEC;
         latestViewUpdate = serverTime;
+        if (model.getEngine() == null) {
+            interpolateTime(serverTime);
+        }
         turret.update(delta);
         updateMove(delta);
         data.setMove(false);
@@ -64,12 +68,11 @@ public class PlayersTank extends Tank {
      */
     @Override
     public void stopMovement() {
-        if ( getMoveDir() != MoveDirection.STAY){
+        if (getMoveDir() != MoveDirection.STAY) {
             data.setMoveDir(MoveDirection.STAY);
             DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
-            model.getEngine().getConnection().send(new MoveMessage(item));
+            if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
         }
-
     }
 
     /**
@@ -80,14 +83,33 @@ public class PlayersTank extends Tank {
     @Override
     public void setMoveDirection(MoveDirection dir) {
         DoubleVec newPos = getPos().add(dir.getVec().mult(0.1 * speed));
-        if (!collide(newPos)){
+        if (!collide(newPos)) {
             if (dir != data.getMoveDir()) {
                 super.setMoveDirection(dir);
-                DataTimeItem<TankData> item = new DataTimeItem<TankData>(data, System.nanoTime() + model.getEngine().getOffset());
-                model.getEngine().getConnection().send(new MoveMessage(item));
+                DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
+                if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
             }
             else super.setMoveDirection(dir);
         }
+    }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param item represents the given DataTimeItem-object
+     */
+    @Override
+    public void interpolateData(DataTimeItem<TankData> item) {
+        if (model.getEngine() != null) {
+            this.getArmor().setArmorPoints(item.data.getLifePoints());
+            return;
+        }
+        this.data = item.data.mkCopy();
+        setLatestOp(item);
+    }
+
+    @Override
+    public void sendTurretUpdate() {
+        if (model.getEngine() != null) model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
     }
 }

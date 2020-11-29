@@ -38,7 +38,7 @@ public class SynchronizeState extends TankState {
      */
     @Override
     public void entry() {
-        System.out.println("synchronize State");
+        parent.getLogger().info("Synchronize State");
         call();
     }
 
@@ -83,12 +83,19 @@ public class SynchronizeState extends TankState {
                 call();
             }
             else {
+                long latency = Math.max(players.get(0).getLatency(), players.get(1).getLatency());
                 for (Player p : players) {
-                    SynchronizeMessage msg = new SynchronizeMessage(p.getOffset());
+                    SynchronizeMessage msg = new SynchronizeMessage(p.getOffset(), latency);
                     p.getConnection().send(msg);
                 }
                 containingState().goToState(parent.playingState);
             }
         }
+    }
+
+    @Override
+    public void exit() {
+        counter = 0;
+        playerCount = 0;
     }
 }

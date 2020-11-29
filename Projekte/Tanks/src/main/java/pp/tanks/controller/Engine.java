@@ -3,7 +3,6 @@ package pp.tanks.controller;
 import pp.network.Connection;
 import pp.tanks.*;
 import pp.tanks.client.MiniController;
-import pp.tanks.client.Sounds;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
@@ -41,6 +40,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private final TanksApp tankApp;
     private MenuView menuView;
     private TanksMapView view;
+    public boolean viewUpdate = true;
 
     public final MainMenuController mainMenuController;
     public final CreditsController creditsController;
@@ -73,8 +73,9 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private Tank saveTank = null;
     private Enemy saveEnemyTank = null;
     private GameMode mode;
-    private PlayerEnum playerEnum;
+    private PlayerEnum playerEnum = PlayerEnum.PLAYER1;
     private int mapCounter = 0;
+    private long animationTime;
 
     /**
      * Creates a new engine
@@ -180,7 +181,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
             public void handle(long now) {
                 controller.update();
                 menuView.update();
-                if (view != null) {
+                if (view != null && viewUpdate) {
                     view.update();
                 }
             }
@@ -341,6 +342,12 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.controller.entry();
     }
 
+    public void resumeGame() {
+        this.controller.exit();
+        this.controller = playGameController;
+        playGameController.resumeGame();
+    }
+
     /**
      * TODO: add JavaDoc
      *
@@ -390,7 +397,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      * @param scene the scene to be shown in the stage of the game.
      */
     void setScene(Scene scene) {
-        //-------------------
         //Image image = images.getImage(TankImageProperty.cursor);
         //scene.setCursor(new ImageCursor(image));
         //---------------------------------
@@ -497,6 +503,10 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         return getTankApp().getOffset();
     }
 
+    public long getLatency() {
+        return getTankApp().getLatency();
+    }
+
     /**
      * @return connection
      */
@@ -506,5 +516,20 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
     public Controller getController() {
         return controller;
+    }
+
+    public boolean isClientGame() {
+        if (this.mode == null) throw new IllegalStateException("No game mode is set");
+        return this.mode != GameMode.MULTIPLAYER;
+    }
+
+    public void computeAnimationTime() {
+        long tmp = getLatency();
+        animationTime = -1 * tmp;
+        System.out.println(animationTime);
+    }
+
+    public long getAnimationTime() {
+        return animationTime;
     }
 }

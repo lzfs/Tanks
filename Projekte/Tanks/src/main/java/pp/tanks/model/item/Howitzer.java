@@ -6,6 +6,7 @@ import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
 import pp.util.IntVec;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,10 +19,14 @@ import java.util.List;
 public class Howitzer extends COMEnemy {
     private int movingCounter;
     private final List<DoubleVec> path = new LinkedList<>();
+    private final List<Block> usedBlocks = new ArrayList<>();
+    private DoubleVec roundedPos;
 
     public Howitzer(Model model, TankData data) {
         super(model, 3, new HeavyArmor(), new HeavyTurret(), data);
         movingCounter = 2;
+        this.roundedPos = getHidingBlockPos();
+        navigateTo(roundedPos.add(new DoubleVec(1, 0)));
     }
 
     /**
@@ -33,88 +38,35 @@ public class Howitzer extends COMEnemy {
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
         if (canShoot() && Math.random() < 0.8) {
-            if (canShoot()) {
-                shoot(model.getTanksMap().getTank(player1).getPos());
-            }
+            shoot(model.getTanksMap().getTank(player1).getPos());
+            setPos(roundedPos.add(new DoubleVec(1.1, 0)));
         }
-        else {
-            MoveDirection[] movingDirs;
-            int idx;
-            movingDirs = MoveDirection.values();
-            idx = (int) (Math.random() * movingDirs.length);
-            DoubleVec targetPos = getPos().add(movingDirs[idx].getVec().mult(7));
-            navigateTo(targetPos);
-            while (path.size() > 0 && delta > 0.) {
-                final DoubleVec target = path.get(0);
-                if (getPos().distanceSq(target) < 1e-4) {
-                    setPos(target);
-                    path.remove(0);
-                }
-                else {
-                    //TODO
-                    final double bearing = target.sub(getPos()).angle() % 180;
-                    double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
-                    if (Math.abs(needToTurnBy) > 2) {
-                        //TODO
-                        double currentRot = getRotation();
-                        double moveDirRotation = target.sub(getPos()).normalize().angle();
-                        double tmp = (currentRot - moveDirRotation + 360) % 360;
-                        double tmp1 = (moveDirRotation - currentRot + 360) % 360;
-                        if (tmp > tmp1) {
-                            setRotation(currentRot + delta * rotationSpeed);
-                        }
-                        else {
-                            setRotation(currentRot - delta * rotationSpeed);
-                        }
-                        delta = 0.;
-                    }
-                    else {
-                        setRotation((int) bearing);
-                        final double distanceToGo = getPos().distance(target);
-                        if (distanceToGo >= delta * speed) {
-                            DoubleVec dir = target.sub(getPos()).normalize();
-                            setPos(getPos().add(dir.mult(delta * speed)));
-                            delta = 0.;
-                        }
-                        else {
-                            setPos(target);
-                            path.remove(0);
-                            delta -= distanceToGo / speed;
-                        }
-                    }
-                }
+        else if (path == null || path.isEmpty()) {
+            if (model.getTanksMap().getTank(player1).getPos().distance(this.getPos()) < 5) {
+                roundedPos = getHidingBlockPos().add(new DoubleVec(1, 0));
+                navigateTo(roundedPos);
+            } else {
+                usedBlocks.clear();
             }
         }
     }
 
     /**
-     * Searches for an optimal, collision-free path to the specified position and moves the droid there.
+     * TODO doc
      *
-     * @param target point to go
+     * @return
      */
-    public void navigateTo(DoubleVec target) {
-        path.clear();
-        Navigator<IntVec> navigator = new TanksNavigator(model.getTanksMap(), getPos().toIntVec(), target.toIntVec());
-        List<IntVec> pPath = navigator.findPath();
-        if (pPath != null) {
-            for (IntVec v : pPath)
-                path.add(v.toFloatVec());
-            if (path.size() > 1) path.remove(0);
+    public DoubleVec getHidingBlockPos() {
+        for (int col = model.getTanksMap().getWidth() - 3; col > 2; col--) {
+            for (int row = 2; row < model.getTanksMap().getHeight() - 2; row++) {
+                for (Block block : model.getTanksMap().getBlocks()) {
+                    if (!usedBlocks.contains(block) && block.getPos().equals(new DoubleVec(col, row))) {
+                        usedBlocks.add(block);
+                        return block.getPos();
+                    }
+                }
+            }
         }
-    }
-
-    /**
-     * Normalizes the specified angle such the returned angle lies in the range -180 degrees
-     * to 180 degrees.
-     *
-     * @param angle an angle in degrees
-     * @return returns an angle equivalent to {@code angle} that lies in the range -180
-     * degrees to 180 degrees.
-     */
-    static double normalizeAngle(double angle) {
-        final double res = angle % 360.;
-        if (res < -180.) return res + 360.;
-        else if (res > 180.) return res - 360.;
-        return res;
+        return getPos(); // default
     }
 }

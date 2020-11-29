@@ -19,12 +19,11 @@ public class ProjectileCollision implements Comparable<ProjectileCollision>, Ser
         this.dest1 = dest1;
         this.dest2 = dest2;
         this.serverTime = serverTime;
-
-
     }
 
     /**
      * uses the compareTo-methode of Priority-queues
+     *
      * @param o given serverTime
      * @return returns 1 or -1 depending which is time is bigger
      */

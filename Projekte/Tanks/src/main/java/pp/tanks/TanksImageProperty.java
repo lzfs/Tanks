@@ -129,6 +129,21 @@ public enum TanksImageProperty {
     /**
      * Path of the big explosion image
      */
-    bigExplosion
+    bigExplosion,
+
+    /**
+     * Path of the green tank image (used as game icon and to show the amount of lives left before a level starts)
+     */
+    greenTank,
+
+    /**
+     * Path of small armor1 image (used for the tank configuration)
+     */
+    armor1Small,
+
+    /**
+     * Path of small armor2 image (used for the tank configuration)
+     */
+    armor2Small
 }
 

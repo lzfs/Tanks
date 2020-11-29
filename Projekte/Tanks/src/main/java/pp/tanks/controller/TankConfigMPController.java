@@ -1,16 +1,15 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
-import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
-import pp.util.DoubleVec;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -211,14 +210,20 @@ public class TankConfigMPController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
-        readyButton.setDisable(true);
+        readyButton.setDisable(!playerConnected);
+        player2ReadyText.setText("");
+        if (!playerConnected) player2ReadyText.setText("Warte auf einen zweiten Spieler");
+        turretButtonLeft.setDisable(false);
+        turretButtonRight.setDisable(false);
+        armorButtonLeft.setDisable(false);
+        armorButtonRight.setDisable(false);
 
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret1));
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret2));
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret3));
 
-        armors.add(engine.getImages().getImage(TanksImageProperty.armor1));
-        armors.add(engine.getImages().getImage(TanksImageProperty.armor2));
+        armors.add(engine.getImages().getImage(TanksImageProperty.armor1Small));
+        armors.add(engine.getImages().getImage(TanksImageProperty.armor2Small));
         armors.add(engine.getImages().getImage(TanksImageProperty.armor3));
 
         charts.add(engine.getImages().getImage(TanksImageProperty.chart1));
@@ -249,6 +254,8 @@ public class TankConfigMPController extends Controller {
     private void back() {
         LOGGER.log(Level.INFO, "clicked BACK");
         engine.activateLobbyController();
+        playerConnected = false;
+        engine.getTankApp().getConnection().send(new BackMessage());
     }
 
     /**
@@ -277,10 +284,7 @@ public class TankConfigMPController extends Controller {
     @FXML
     private void turretButtonRight() {
         ownTurretCounter += 1;
-
-        if (ownTurretCounter >= turrets.size()) {
-            ownTurretCounter = 0;
-        }
+        ownTurretCounter = ownTurretCounter % 3;
 
         harmChartPlayer1.setImage(charts.get(ownTurretCounter));
         ownTurretImage.setImage(turrets.get(ownTurretCounter));
@@ -298,7 +302,7 @@ public class TankConfigMPController extends Controller {
         ownTurretCounter -= 1;
 
         if (ownTurretCounter < 0) {
-            ownTurretCounter = turrets.size() - 1;
+            ownTurretCounter = turretList.size() - 1;
         }
 
         harmChartPlayer1.setImage(charts.get(ownTurretCounter));
@@ -316,9 +320,8 @@ public class TankConfigMPController extends Controller {
     private void armorButtonRight() {
         ownArmorCounter += 1;
 
-        if (ownArmorCounter >= armors.size()) {
-            ownArmorCounter = 0;
-        }
+        ownArmorCounter = ownArmorCounter % 3;
+
         ownArmorImage.setImage(armors.get(ownArmorCounter));
 
         currentArmor = armorList.get(ownArmorCounter);
@@ -335,7 +338,7 @@ public class TankConfigMPController extends Controller {
         ownArmorCounter -= 1;
 
         if (ownArmorCounter < 0) {
-            ownArmorCounter = armors.size() - 1;
+            ownArmorCounter = armorList.size() - 1;
         }
 
         ownArmorImage.setImage(armors.get(ownArmorCounter));
@@ -450,7 +453,7 @@ public class TankConfigMPController extends Controller {
     }
 
     /**
-     * updates the server
+     * updates local view of opponent
      *
      * @param msg update message
      */
@@ -461,6 +464,8 @@ public class TankConfigMPController extends Controller {
             opponentArmorCounter = getArmorIndex(msg.armor);
             turretPlayer2.setImage(turrets.get(opponentTurretCounter));
             armorPlayer2.setImage(armors.get(opponentArmorCounter));
+            magazineSizeTextPlayer2.setText(magazine.get(opponentTurretCounter).toString());
+            cadenceTextPlayer2.setText(cadence.get(opponentTurretCounter) + " s");
             changeOpponentCharts();
         });
     }
@@ -480,8 +485,32 @@ public class TankConfigMPController extends Controller {
         });
     }
 
+    /**
+     * TODO: addJavaDoc
+     */
     @Override
     public void synchronizationFinished() {
         Platform.runLater(engine::activatePlayGameController);
+    }
+
+    /**
+     * called when player is disconnected
+     */
+    @Override
+    public void playerDisconnected() {
+        playerConnected = false;
+        readyButton.setDisable(true);
+        player2ReadyText.setText("Warten auf einen zweiten Spieler");
+        turretButtonLeft.setDisable(false);
+        turretButtonRight.setDisable(false);
+        armorButtonLeft.setDisable(false);
+        armorButtonRight.setDisable(false);
+    }
+
+    /**
+     * gives a player a disconnected-status
+     */
+    public void setPlayerDisconnected() {
+        playerConnected = false;
     }
 }

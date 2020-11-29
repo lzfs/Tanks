@@ -61,14 +61,14 @@
          <font>
             <Font size="18.0" />
          </font></Text>
-        <ImageView fx:id="image1" fitHeight="108.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+        <ImageView fx:id="image1" fitHeight="69.0" fitWidth="19.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
             <image>
                 <Image url="@../client/images/turret1.png" />
             </image>
         </ImageView>
         <ImageView fx:id="image2" fitHeight="87.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
             <image>
-                <Image url="@../client/images/armor1.png" />
+                <Image url="@../client/images/armor1Small.png" />
             </image>
         </ImageView>
         <Text fx:id="magazineSizeText" fill="WHITE" layoutX="10.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5" wrappingWidth="88.13671875" GridPane.columnIndex="4" GridPane.rowIndex="2" />

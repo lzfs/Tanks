@@ -23,7 +23,7 @@ class TanksNavigator extends Navigator<IntVec> {
         this.map = map;
         for (Item obs : map.getBlocks())
             obstacles.add(obs.getPos().toIntVec());
-        for (Item obs : map.getCOMTanks())
+        for (Item obs : map.getAllTanks())
             obstacles.add(obs.getPos().toIntVec());
     }
 

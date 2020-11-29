@@ -14,6 +14,7 @@ public class GameWonMPController extends Controller {
     private static final Logger LOGGER = Logger.getLogger(GameWonMPController.class.getName());
     private static final String GAME_WON_MP_FXML = "GameWonMP.fxml"; //NON-NLS
     private Scene scene;
+    private boolean disconnected;
 
     /**
      * create a new GameWonMPController
@@ -69,6 +70,15 @@ public class GameWonMPController extends Controller {
     @FXML
     private void lobby() {
         LOGGER.log(Level.INFO, "GO TO LobbyController");
-        engine.activateLobbyController();
+        engine.activateTankConfigMPController();
+        if (disconnected) engine.tankConfigMPController.playerDisconnected();
+        disconnected = false;
+
+    }
+
+    @Override
+    public void playerDisconnected() {
+        //System.out.println("Drin");
+        disconnected = true;
     }
 }

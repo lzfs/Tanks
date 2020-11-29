@@ -58,11 +58,18 @@ public abstract class Projectile extends Item<ProjectileData> {
         setPos(latestOp.data.getPos());
         setDir(latestOp.data.getDir());
         ProjectileData tmpData = latestOp.data.mkCopy();
-        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>( tmpData,latestInterpolate);
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(tmpData, latestInterpolate);
         interpolateData(tmp);
-        //System.out.println("danach "+latestOp.data.getDir());
-        //System.out.println("//eigene pos " +getPos());
-        //System.out.println("//latestOP pos " + latestOp.data.getPos());
+    }
+
+    /**
+     *  Reset the Interpolation
+     */
+    public void resetInterpolateTime() {
+        latestOp.data.setPos(getPos());
+        ProjectileData tmpData = latestOp.data.mkCopy();
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(tmpData, System.nanoTime());
+        interpolateData(tmp);
     }
 
     /**
@@ -120,7 +127,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     public void update(long serverTime) {
         interpolateTime(serverTime);//TODO was ist mit der Flag
         //data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
-        if (System.nanoTime() - flag > 10000000) {
+        if (System.nanoTime() - flag > 100000000) {
             flag = 0;
         }
     }
@@ -142,7 +149,7 @@ public abstract class Projectile extends Item<ProjectileData> {
             }
         }
         for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
-            if (collisionWith(rBlock, getPos()) && flag==0) {
+            if (collisionWith(rBlock, getPos()) && flag == 0) {
                 if (latestOp.data.getBounce() > 0) {
                     flag = System.nanoTime();
                     reflect();
@@ -208,20 +215,26 @@ public abstract class Projectile extends Item<ProjectileData> {
         if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
         double deltaT = ((double) tmp) / FACTOR_SEC;
+        System.out.println("DELTA " + deltaT);
         data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT * speed)));
         latestInterpolate = time;
         return true;
     }
 
-/*
+    /**
+     * destroys an item
+     */
     @Override
     public void destroy() {
-        super.destroy();
-        model.getEngine().getView().addExplosion(this);
+        data.destroy();
+        if (model.getEngine() != null) {
+            model.getEngine().getView().addExplosion(this);
+        }
     }
- */
 
-
+    /**
+     * @return boolean value for visibility
+     */
     public boolean visible() {
         return visible;
     }

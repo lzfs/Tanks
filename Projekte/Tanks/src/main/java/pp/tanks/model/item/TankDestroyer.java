@@ -31,71 +31,21 @@ public class TankDestroyer extends COMEnemy {
     @Override
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
-        if (canShoot() && Math.random() < 0.6) {
-            if (canShoot()) {
-                shoot(model.getTanksMap().getTank(player1).getPos());
-            }
+        if (!shootIsBlocked() && canShoot() && Math.random() < 0.8) {
+            shoot(model.getTanksMap().getTank(player1).getPos());
         }
-        else {
+        else if (path == null || path.isEmpty()) {
             Tank playersTank = model.getTanksMap().getTank(player1);
-            DoubleVec targetPos = playersTank.getPos().add(new DoubleVec(2, 2));
-            navigateTo(targetPos);
-            while (path.size() > 0 && delta > 0.) {
-                final DoubleVec target = path.get(0);
-                if (getPos().distanceSq(target) < 1e-4) {
-                    setPos(target);
-                    path.remove(0);
+            DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(2));
+            DoubleVec targetPosReverse = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(-2));
+            if (playersTank.getMoveDir() != MoveDirection.STAY) {
+                if (isWithinMap(targetPos)) {
+                    navigateTo(targetPos);
                 }
-                else {
-                    //TODO
-                    final double bearing = target.sub(getPos()).angle() % 180;
-                    double needToTurnBy = normalizeAngle(bearing - getRotation()) % 180;
-                    if (Math.abs(needToTurnBy) > 2) {
-                        //TODO
-                        double currentRot = getRotation();
-                        double moveDirRotation = target.sub(getPos()).normalize().angle();
-                        double tmp = (currentRot - moveDirRotation + 360) % 360;
-                        double tmp1 = (moveDirRotation - currentRot + 360) % 360;
-                        if (tmp > tmp1) {
-                            setRotation(currentRot + delta * rotationSpeed);
-                        }
-                        else {
-                            setRotation(currentRot - delta * rotationSpeed);
-                        }
-                        delta = 0.;
-                    }
-                    else {
-                        setRotation((int) bearing);
-                        final double distanceToGo = getPos().distance(target);
-                        if (distanceToGo >= delta * speed) {
-                            DoubleVec dir = target.sub(getPos()).normalize();
-                            setPos(getPos().add(dir.mult(delta * speed)));
-                            delta = 0.;
-                        }
-                        else {
-                            setPos(target);
-                            path.remove(0);
-                            delta -= distanceToGo / speed;
-                        }
-                    }
+                else if (isWithinMap(targetPosReverse)) {
+                    navigateTo(targetPosReverse);
                 }
             }
-        }
-    }
-
-    /**
-     * Searches for an optimal, collision-free path to the specified position and moves the droid there.
-     *
-     * @param target point to go
-     */
-    public void navigateTo(DoubleVec target) {
-        path.clear();
-        Navigator<IntVec> navigator = new TanksNavigator(model.getTanksMap(), getPos().toIntVec(), target.toIntVec());
-        List<IntVec> pPath = navigator.findPath();
-        if (pPath != null) {
-            for (IntVec v : pPath)
-                path.add(v.toFloatVec());
-            if (path.size() > 1) path.remove(0);
         }
     }
 
@@ -104,20 +54,5 @@ public class TankDestroyer extends COMEnemy {
      */
     public List<DoubleVec> getPath() {
         return Collections.unmodifiableList(path);
-    }
-
-    /**
-     * Normalizes the specified angle such the returned angle lies in the range -180 degrees
-     * to 180 degrees.
-     *
-     * @param angle an angle in degrees
-     * @return returns an angle equivalent to {@code angle} that lies in the range -180
-     * degrees to 180 degrees.
-     */
-    static double normalizeAngle(double angle) {
-        final double res = angle % 360.;
-        if (res < -180.) return res + 360.;
-        else if (res > 180.) return res - 360.;
-        return res;
     }
 }

@@ -15,7 +15,6 @@ public abstract class Turret {
     private final int weight;
     private final double reloadTime;
     private final double[] mag;
-    private DoubleVec direction;
     private double cadence;
     private final double currentCadence;
     public final ItemEnum projectileType;
@@ -26,7 +25,6 @@ public abstract class Turret {
         this.weight = weight;
         this.reloadTime = reloadTime;
         this.mag = new double[mag];
-        this.direction = new DoubleVec(0, 0);
         Arrays.fill(this.mag, 0.0);
         this.cadence = 0;
         this.currentCadence = cadence;
@@ -49,15 +47,19 @@ public abstract class Turret {
             if (mag[i] < 0)
                 mag[i] = 0;
         }
+
     }
 
     /**
-     * @return s the size of the magazine
+     * @return the size of the magazine
      */
     public int getMagSize() {
         return mag.length;
     }
 
+    /**
+     * @return the weight of the tank
+     */
     public int getWeight() {
         return this.weight;
     }

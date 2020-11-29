@@ -1,6 +1,10 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.data.TankData;
+import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.MoveDirection;
 import pp.tanks.server.GameMode;
+import pp.util.DoubleVec;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -16,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.FileSystems;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -116,6 +121,9 @@ public class StartGameSPController extends Controller {
     private void startGameSP() {
 
         engine.setMode(GameMode.SINGLEPLAYER);
+        engine.getSaveTank().getArmor().setArmorPoints(engine.getSaveTank().getArmor().getMaxPoints());
+        if (engine.getMapCounter() == 1) loadLevelOne();
+        else loadLevelTwo();
 
         LOGGER.log(Level.INFO, "clicked START_GAME_SP");
         engine.activatePlayGameController();
@@ -192,5 +200,26 @@ public class StartGameSPController extends Controller {
             if (xtr.getAttributeLocalName(i).equals(name))
                 return xtr.getAttributeValue(i);
         return null;
+    }
+
+    /**
+     * called when level one gets loaded
+     */
+    private void loadLevelOne() {
+        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy2 = new TankData(new DoubleVec(20, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER));
+        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2));
+    }
+
+    /**
+     * called when level two gets loaded
+     */
+    private void loadLevelTwo() {
+        TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy2 = new TankData(new DoubleVec(20, 6), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy3 = new TankData(new DoubleVec(20, 8), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.TANK_DESTROYER));
+        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2, enemy3));
     }
 }

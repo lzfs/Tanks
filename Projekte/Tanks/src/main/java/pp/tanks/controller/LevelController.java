@@ -5,6 +5,7 @@ import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.PlayersTank;
+import pp.tanks.server.GameMode;
 import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
 
@@ -91,8 +92,6 @@ public class LevelController extends Controller {
     @FXML
     private void back() {
         LOGGER.log(Level.INFO, "clicked BACK");
-        engine.getTankApp().getConnection().send(new BackMessage());
-        engine.getModel().setDebug(false);
         engine.activateMainMenuController();
     }
 

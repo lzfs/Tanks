@@ -36,12 +36,6 @@ public class CreditsController extends Controller {
     private Button back;
 
     /**
-     * the button for debug (in credits)
-     */
-    @FXML
-    private Button debug;
-
-    /**
      * Create the scene displaying the credits.
      */
     public Scene makeScene() {
@@ -82,22 +76,6 @@ public class CreditsController extends Controller {
     private void back() {
         LOGGER.log(Level.INFO, "GO TO MainMenuController");
         engine.activateMainMenuController();
-    }
-
-    /**
-     * method for the debug button
-     */
-    @FXML
-    private void debug() {
-        engine.getTankApp().joinGame(GameMode.TUTORIAL);
-        engine.setMode(GameMode.TUTORIAL);
-        engine.setMapCounter(3);
-        while (engine.getPlayerEnum() == null) {
-            sleep();
-        }
-        engine.getTankApp().getConnection().send(new StartGameMessage(ItemEnum.LIGHT_TURRET, ItemEnum.LIGHT_ARMOR, GameMode.TUTORIAL, engine.getPlayerEnum()));
-        engine.activatePlayGameController();
-        //
     }
 
     /**

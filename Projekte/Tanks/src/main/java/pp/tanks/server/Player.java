@@ -3,14 +3,13 @@ package pp.tanks.server;
 import pp.network.IConnection;
 import pp.tanks.message.data.BBData;
 import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.GameEndingMessage;
 import pp.tanks.message.server.IServerMessage;
 import pp.tanks.message.server.ModelMessage;
-import pp.tanks.message.server.ProjectileCollisionMessage;
-import pp.tanks.model.item.Block;
+import pp.tanks.message.server.PlayerDisconnectedMessage;
+import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
@@ -19,7 +18,6 @@ import pp.tanks.model.item.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * The class "Player" represents a player on the server.
@@ -35,7 +33,7 @@ public class Player {
     private ItemEnum turret = null;
     private ItemEnum armor = null;
     private boolean ready;
-    public final PlayerEnum playerEnum;
+    public PlayerEnum playerEnum;
     public final List<Projectile> projectiles = new ArrayList<>();
     public final List<Tank> tanks = new ArrayList<>();
     public final List<BreakableBlock> blocks = new ArrayList<>();
@@ -92,13 +90,15 @@ public class Player {
                 smallestPing = ping.get(k);
             }
         }
-        /*System.out.println("ping:");  // used for visual test of the serverteam
-        for (long p : ping) System.out.println(p);
-        System.out.println(ping.size());
-        System.out.println("\nnano:");
-        for (long p : nano) System.out.println(p);
-        System.out.println(nano.size());*/
         return nano.get(indexPing);
+    }
+
+    public long getLatency() {
+        long smallestPing = ping.get(0);
+        for (long lat : ping) {
+            if (lat < smallestPing) smallestPing = lat;
+        }
+        return smallestPing;
     }
 
     /**
@@ -150,8 +150,8 @@ public class Player {
     /**
      * sets ready-flag as true
      */
-    public void setReady() {
-        this.ready = true;
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 
     public void setGameWon(boolean gameWon) {
@@ -191,11 +191,26 @@ public class Player {
                 }
             }
             connection.send(new ModelMessage(enemy, r, blockData));
-
         }
     }
 
+    /**
+     * sends new ending Message
+     *
+     * @param mode gamemode
+     */
     public void sendEndingMessage(GameMode mode) {
         connection.send(new GameEndingMessage(mode, gameWon));
+    } //TODO
+
+    /**
+     * called when player lost connection
+     */
+    public void otherPlayerDisconnected() {
+        playerEnum = PlayerEnum.PLAYER1; // Da lag der Fiesch
+        getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+        getConnection().send(new PlayerDisconnectedMessage());
+        ping.clear();
+        nano.clear();
     }
 }

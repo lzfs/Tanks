@@ -3,6 +3,7 @@ package pp.tanks.server.auto;
 import pp.network.IConnection;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.ShootMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -33,11 +35,14 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     private final Model model;
     private final PlayingState parent;
     private final Queue<DataTimeItem<? extends Data>> buffer = new PriorityBlockingQueue<>();
+    private final Queue<TurretUpdateMessage> turretUpdates = new ArrayBlockingQueue<>(5);
     private DataTimeItem<? extends Data>[] working;
     private final Thread workWhatEver = new Thread(this::workBuff);
     private final GameMode gameMode;
+    private Timer timer;
     private final List<DataTimeItem<TankData>> tankDat = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectileDat = new ArrayList<>();
+    private boolean gameEnded = false;
 
     /**
      * Constructor of the GameRunningState
@@ -55,6 +60,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
      * only printing out the data
      */
     public void workBuff() {
+        if (gameEnded) return;
         DataTimeItem<? extends Data>[] tmp = working;
         working = null;
         long timeEnd = System.nanoTime();
@@ -72,16 +78,24 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             makeDatLists(dat);
             processProjectiles(timeStart + step * (i + 1), new ArrayList<>(projectileDat));
             processTanks(timeStart + step * (i + 1), new ArrayList<>(tankDat));
+            processTurretUpdates();
             projectileDat.clear();
             tankDat.clear();
             dat.clear();
             model.update(timeStart + step * (i + 1));
+            boolean isGameEnd = isGameEnd();
             for (Player p : parent.getPlayers()) {
-                if (isGameEnd()) p.sendEndingMessage(gameMode);
+                if (isGameEnd) p.sendEndingMessage(gameMode);
                 else {
                     p.sendMessages();
                     p.reset();
                 }
+            }
+            if (isGameEnd) {
+                gameEnded = true;
+                timer.cancel();
+                parent.containingState().goToState(parent.containingState().playerReady);
+                parent.gameFinished();
             }
         }
         model.setLatestUpdate(timeStart + 5 * step);
@@ -98,8 +112,8 @@ public class GameRunningState extends TankState implements ICollisionObserver {
      */
     @Override
     public void entry() {
-        System.out.println("runningState");
-        Timer timer = new Timer();
+        parent.getLogger().info("Game running State");
+        timer = new Timer();
         model.setLatestUpdate(System.nanoTime());
         model.getTanksMap().addObserver(this);
         timer.schedule(new TimerTask() {
@@ -185,6 +199,19 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
     }
 
+    private void processTurretUpdates() {
+        if (turretUpdates.isEmpty()) return;
+        TurretUpdateMessage[] tmp = turretUpdates.toArray(new TurretUpdateMessage[turretUpdates.size()]);
+        turretUpdates.clear();
+        for (TurretUpdateMessage msg : tmp) {
+            Tank tank =  model.getTanksMap().getTank(PlayerEnum.getPlayer(msg.id));
+            tank.getLatestOp().data.setTurretDir(msg.turDir);
+            int idEn = msg.id == 0 ? 1 : 0;
+            if (!parent.getPlayers().get(idEn).tanks.contains(tank)) parent.getPlayers().get(idEn).tanks.add(tank);
+        }
+
+    }
+
     /**
      * separates incoming DataTimeItem and adds the elements of the list to the correct Data List
      *
@@ -211,7 +238,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
         else {
             tank.processDamage(damage);
-            tank.getLatestOp().data.setLifePoints(tank.getData().getLifePoints());
+            tank.getLatestOp().data.setLifePoints(tank.getArmor().getArmorPoints());
         }
         proj.destroy();
         proj.getLatestOp().data.destroy();
@@ -253,11 +280,11 @@ public class GameRunningState extends TankState implements ICollisionObserver {
 
     public boolean isGameEnd() { //TODO Tutorial and Debug mode
         if (gameMode == GameMode.SINGLEPLAYER) {
-           if (model.gameWon()) {
-               parent.getPlayers().get(0).setGameWon(true);
-               return true;
-           }
-           else return false;
+            if (model.gameWon()) {
+                parent.getPlayers().get(0).setGameWon(true);
+                return true;
+            }
+            else return false;
         }
         else if (gameMode == GameMode.MULTIPLAYER) {
             if (model.gameFinished()) {
@@ -271,5 +298,22 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             }
         }
         return false;
+    }
+
+    @Override
+    public void playerDisconnected(IConnection<IServerMessage> conn) {
+        parent.getPlayers().removeIf(p -> p.getConnection() == conn);
+        conn.shutdown();
+        Player lastPlayer = parent.getPlayers().get(0);
+        lastPlayer.otherPlayerDisconnected();
+        lastPlayer.setGameWon(true);
+        lastPlayer.sendEndingMessage(gameMode);
+
+        parent.goToState(parent.containingState().waitingFor2Player);
+    }
+
+    @Override
+    public void turretUpdate(TurretUpdateMessage msg) {
+        turretUpdates.add(msg);
     }
 }

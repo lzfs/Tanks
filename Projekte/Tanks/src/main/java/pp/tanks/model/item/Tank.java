@@ -1,6 +1,7 @@
 package pp.tanks.model.item;
 
 import pp.tanks.message.client.ShootMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
@@ -20,14 +21,17 @@ public abstract class Tank extends Item<TankData> {
     protected Armor armor;
     protected double speed;
     protected double rotationSpeed = 150;
+    protected double turretRotationSpeed = 1000;
     private int lives = 1;
     public final PlayerEnum playerEnum;
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
     private long latestInterpolate;
+    private DoubleVec lastTurretDir = new DoubleVec(0, 0);
+    protected DoubleVec newTurretDir = new DoubleVec(1, 0);
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, 0.75, data);
+        super(model, 1, data);
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
@@ -179,7 +183,7 @@ public abstract class Tank extends Item<TankData> {
      */
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
-        DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed*2));
+        DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed * 2));
 
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
@@ -189,7 +193,7 @@ public abstract class Tank extends Item<TankData> {
             double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
             if (tmp2 < 4) {
                 data.setRotation(moveDirRotation);
-                if(!collide(newPos)) {
+                if (!collide(newPos)) {
                     setPos(newPos);
                 }
             }
@@ -201,7 +205,6 @@ public abstract class Tank extends Item<TankData> {
             }
         }
     }
-
 
     //haben latest OP
     //wenn nachricht an server
@@ -245,7 +248,10 @@ public abstract class Tank extends Item<TankData> {
             turret.shoot();
             Projectile projectile = makeProjectile(pos);
             ShootMessage msg = new ShootMessage(new DataTimeItem<ProjectileData>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
-            model.getEngine().getConnection().send(msg);
+            if (!model.getEngine().isClientGame()) {
+                model.getEngine().getConnection().send(msg);
+                model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
+            }
             model.getTanksMap().addProjectile(projectile);
         }
     }
@@ -273,17 +279,7 @@ public abstract class Tank extends Item<TankData> {
         model.notifyReceivers(TanksNotification.TANK_FIRED);
         projectileId++;
         return turret.mkProjectile(this.model, data, targetPos);
-        /*
-        if (turret instanceof LightTurret) {
-            return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);  //TODO
-        }
-        else if (turret instanceof NormalTurret) {
-            return new NormalProjectile(model, 0.3, turret.getDamage(), 4, data); //TODO
-        }
-        else if (turret instanceof HeavyTurret) {
-            return new HeavyProjectile(model, 0.3, turret.getDamage(), 4, targetPos, data); //TODO
-        }
-        return new LightProjectile(model, 0.3, turret.getDamage(), 4, data);*/
+
     }
 
     /**
@@ -386,14 +382,14 @@ public abstract class Tank extends Item<TankData> {
     public boolean interpolateTime(long time) {
         if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
+        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
         double deltaT = ((double) tmp) / FACTOR_SEC;
-
+        if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
         double latestRot = (latestOp.data.getRotation() + 180) % 180;
         double moveDirRotation = latestOp.data.getMoveDir().getRotation();
 
         double tmp0 = (latestRot - moveDirRotation + 180) % 180;
         double tmp1 = (moveDirRotation - latestRot + 180) % 180;
-        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
 
         if (tmp0 > tmp1) {
             double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
@@ -424,4 +420,6 @@ public abstract class Tank extends Item<TankData> {
         latestInterpolate = time;
         return true;
     }
+
+    public void sendTurretUpdate() { }
 }

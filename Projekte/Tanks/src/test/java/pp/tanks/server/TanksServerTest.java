@@ -17,6 +17,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * only for Test purposes
+ */
 public class TanksServerTest {
     private ConnectionStub conn1;
     private ConnectionStub conn2;
@@ -25,7 +28,7 @@ public class TanksServerTest {
 
     private final List<Runnable> messages = List.of(
             () -> {
-                transmitter.receiveMessage(new ClientReadyMessage(GameMode.SINGLEPLAYER), conn1);
+                transmitter.receiveMessage(new ClientReadyMessage(), conn1);
             },
             () -> {
                 transmitter.receiveMessage(new CreateNewLobbyMessage(), conn1);

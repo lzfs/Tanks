@@ -1,18 +1,22 @@
 package pp.tanks.model;
 
 import pp.tanks.message.data.Data;
-import pp.tanks.message.data.ProjectileCollision;
-import pp.tanks.model.item.*;
+import pp.tanks.model.item.Block;
+import pp.tanks.model.item.BreakableBlock;
+import pp.tanks.model.item.COMEnemy;
+import pp.tanks.model.item.Item;
+import pp.tanks.model.item.PlayerEnum;
+import pp.tanks.model.item.Projectile;
+import pp.tanks.model.item.ReflectableBlock;
+import pp.tanks.model.item.Tank;
+import pp.tanks.model.item.UnbreakableBlock;
 import pp.util.DoubleVec;
-
-import javafx.application.Platform;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * Represents the entire game map. It can be accessed as an unmodifiable {@linkplain java.util.List}
@@ -245,8 +249,8 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         }
         projectiles.putAll(addedProjectiles);
         addedProjectiles.clear();
-        for (Projectile proj : projectiles.values()){
-            if(!proj.isDestroyed()){
+        for (Projectile proj : projectiles.values()) {
+            if (!proj.isDestroyed()) {
                 proj.processHits();
             }
         }
@@ -259,9 +263,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         projectiles.entrySet().removeIf(e -> removed.contains(e.getValue()));
         //model.getEngine().getView().addExplosion(entry.getValue()); //TODO in die destroy?
 
-
-        }
-
+    }
 
     /**
      * Adds a Tank to this map.
@@ -313,8 +315,19 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
+     * deletes all observers
+     */
+    public void deleteAllObservers() {
+        observers.clear();
+    }
+
+    /**
      * TODO: add JavaDoc
      *
+     * @param proj
+     * @param tank
+     * @param damage
+     * @param dest
      */
     public void notifyObsT(Projectile proj, Tank tank, int damage, boolean dest) {
         if (observers.isEmpty()) return;
@@ -323,6 +336,14 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         }
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param proj
+     * @param block
+     * @param damage
+     * @param dest
+     */
     public void notifyObsB(Projectile proj, BreakableBlock block, int damage, boolean dest) {
         if (observers.isEmpty()) return;
         for (ICollisionObserver obs : observers) {
@@ -330,6 +351,12 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         }
     }
 
+    /**
+     * TODO: add JavaDoc
+     *
+     * @param proj1
+     * @param proj2
+     */
     public void notifyObsP(Projectile proj1, Projectile proj2) {
         if (observers.isEmpty()) return;
         for (ICollisionObserver obs : observers) {
@@ -337,6 +364,9 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         }
     }
 
+    /**
+     * TODO: add JavaDoc
+     */
     public void updateHashMap() {
         for (Item<? extends Data> item : this) {
             if (!hashMap.containsKey(item.getData().id)) hashMap.put(item.getData().id, item);
@@ -345,6 +375,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
 
     /**
      * !!!NOT for Projectiles!!!
+     *
      * @param id
      * @return
      */

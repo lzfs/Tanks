@@ -1,16 +1,12 @@
 package pp.tanks.controller;
 
-import pp.tanks.message.client.StartGameMessage;
-import pp.tanks.model.item.ItemEnum;
-import pp.tanks.server.GameMode;
-
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,6 +52,12 @@ public class SearchGameServerConfigController extends Controller {
     private Text infoText;
 
     /**
+     * back button
+     */
+    @FXML
+    private Button back;
+
+    /**
      * Create the scene displaying the ServerConfig.
      */
     public Scene makeScene() {
@@ -95,20 +97,29 @@ public class SearchGameServerConfigController extends Controller {
      */
     @FXML
     private void search() {
-        // TODO use port, ip to connect to the server
         LOGGER.log(Level.INFO, "clicked SEARCH");
-        engine.getTankApp().joinGame(GameMode.MULTIPLAYER, getIpAddress(), getPort());
-        /*
-        engine.getTankApp().joinGame(GameMode.MULTIPLAYER);
-        System.out.println("Client connected to MP");
-        engine.setScene(new Scene(engine.miniController));
-         */
+        try {
+            engine.getTankApp().joinGame(getIpAddress(), getPort());
+        }
+        catch (NumberFormatException e) {
+            infoText.setText("Falscher Port!");
+            return;
+        }
+        catch (IllegalArgumentException | IOException e) {
+            infoText.setText("Server existiert nicht!");
+            return;
+        }
         engine.activateTankConfigMPController();
-        // engine.activateTankConfigMPController();
+    }
+
+    @FXML
+    private void back() {
+        engine.activateLobbyController();
     }
 
     /**
      * getter method for the port given in the text field of the GUI
+     *
      * @return the port as a string
      */
     public String getPort() {
@@ -117,6 +128,7 @@ public class SearchGameServerConfigController extends Controller {
 
     /**
      * getter method for the ip-address given in the text field of the GUI
+     *
      * @return the ip-address as a string
      */
     public String getIpAddress() {

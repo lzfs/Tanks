@@ -1,12 +1,15 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.model.item.Projectile;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,9 +68,11 @@ public class PauseMenuSPController extends Controller {
     @Override
     public void entry() {
         LOGGER.log(Level.INFO, "ENTRY PauseMenuSPController");
+        engine.viewUpdate=false;
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
+        changeMusic(engine.getTankApp().sounds.getMuted());
     }
 
     /**
@@ -91,8 +96,13 @@ public class PauseMenuSPController extends Controller {
      */
     @FXML
     private void continueGame() {
+        engine.viewUpdate=true;
         LOGGER.log(Level.INFO, "clicked CONTINUE_GAME");
-        engine.activatePlayGameController();
+        //engine.setScene(engine.playGameController.sceneBackup);
+        for( Projectile p :  engine.getModel().getTanksMap().getProjectiles()){
+            p.resetInterpolateTime();
+        }
+        engine.resumeGame();
     }
 
     /**
@@ -101,8 +111,10 @@ public class PauseMenuSPController extends Controller {
     @FXML
     private void mainMenu() {
         LOGGER.log(Level.INFO, "clicked MAIN_MENU");
-        engine.getModel().setDebug(false);
+        engine.setView(null);
         engine.activateMainMenuController();
+        engine.viewUpdate=true;
+
     }
 
     /**
@@ -133,11 +145,29 @@ public class PauseMenuSPController extends Controller {
     @FXML
     private void music() {
         engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
-        if (engine.getTankApp().sounds.getMuted()) {
+        changeMusic(engine.getTankApp().sounds.getMuted());
+    }
+
+    public void changeMusic(boolean mute) {
+        if (mute) {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+            engine.getTankApp().properties.setProperty("musicMuted", "1");
+            try {
+                engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
+            }
         }
         else {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+            engine.getTankApp().properties.setProperty("musicMuted", "0");
+            try {
+                engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
+            }
         }
         LOGGER.log(Level.INFO, "clicked MUSIC");
     }

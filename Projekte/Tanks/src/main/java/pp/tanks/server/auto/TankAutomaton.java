@@ -1,12 +1,9 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
-import pp.tanks.client.TanksApp;
-import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.ServerTankUpdateMessage;
 import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.PlayerEnum;
@@ -47,6 +44,11 @@ public class TankAutomaton extends TankStateMachine {
      */
     public final TankState init = new TankState() {
         @Override
+        public void entry() {
+            TankAutomaton.LOGGER.info("init State");
+        }
+
+        @Override
         public TankAutomaton containingState() {
             return TankAutomaton.this;
         }
@@ -54,24 +56,21 @@ public class TankAutomaton extends TankStateMachine {
         @Override
         public void playerConnected(ClientReadyMessage msg, IConnection<IServerMessage> conn) {
             players.add(new Player(conn, PlayerEnum.PLAYER1));
-            if (msg.mode == GameMode.SINGLEPLAYER || msg.mode == GameMode.TUTORIAL) {
-                gameMode = msg.mode;
-                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
-                containingState().goToState(playerReady);
-            }
-            if (msg.mode == GameMode.MULTIPLAYER) {
-                gameMode = GameMode.MULTIPLAYER;
-                conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
-                containingState().goToState(waitingFor2Player);
-            }
-            //else containingState().goToState();
+            gameMode = GameMode.MULTIPLAYER;
+            conn.send(new SetPlayerMessage(PlayerEnum.PLAYER1));
+            containingState().goToState(waitingFor2Player);
         }
     };
 
     /**
      * the state when a multiplayer game is started and a second player needs to connect
      */
-    private final TankState waitingFor2Player = new TankState() {
+    protected final TankState waitingFor2Player = new TankState() {
+        @Override
+        public void entry() {
+            TankAutomaton.LOGGER.info("waiting for player 2");
+        }
+
         private ItemEnum turret = ItemEnum.LIGHT_TURRET;
         private ItemEnum armor = ItemEnum.LIGHT_ARMOR;
 
@@ -87,6 +86,18 @@ public class TankAutomaton extends TankStateMachine {
             players.get(0).setTurret(turret);
             conn.send(new SetPlayerMessage(PlayerEnum.PLAYER2));
             containingState().goToState(playerReady);
+        }
+
+        @Override
+        public void back(IConnection<IServerMessage> conn) {
+            players.forEach(p -> p.getConnection().shutdown());
+            players.clear();
+            containingState().goToState(init);
+        }
+
+        @Override
+        public void playerDisconnected(IConnection<IServerMessage> conn) {
+            if (conn == players.get(0).getConnection()) back(conn);
         }
 
         @Override
@@ -122,8 +133,8 @@ public class TankAutomaton extends TankStateMachine {
         final Optional<Player> player = players.stream().filter(p -> p.getConnection() == conn).findAny();
         if (player.isPresent())
             return player.get();
-        //LOGGER.severe("no player found with connection " + conn); //NON-NLS
-        System.out.println("no player found with connection" + conn);
+        LOGGER.severe("no player found with connection " + conn); //NON-NLS
+        //System.out.println("no player found with connection" + conn);
         return null;
     }
 
@@ -203,5 +214,12 @@ public class TankAutomaton extends TankStateMachine {
      */
     public Properties getProperties() {
         return this.properties;
+    }
+
+    /**
+     * @return logger
+     */
+    public Logger getLogger() {
+        return LOGGER;
     }
 }

@@ -2,12 +2,12 @@ package pp.tanks.server.auto;
 
 import pp.automaton.StateSupport;
 import pp.network.IConnection;
-import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.PingResponse;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.client.StartGameMessage;
+import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
 
@@ -61,11 +61,9 @@ public abstract class TankState extends StateSupport<TankState> {
 
     /**
      * is called when a player sends a BackMessage and is received by the server
-     *
-     * @param msg the BackMessage
      */
-    public void back(BackMessage msg) {
-        handle(s -> s.back(msg));
+    public void back(IConnection<IServerMessage> conn) {
+        handle(s -> s.back(conn));
     }
 
     /**
@@ -84,5 +82,18 @@ public abstract class TankState extends StateSupport<TankState> {
      */
     public void updateTankConfig(UpdateTankConfigMessage msg) {
         handle(s -> s.updateTankConfig(msg));
+    }
+
+    /**
+     * is called when a player is disconnected
+     *
+     * @param conn correct message
+     */
+    public void playerDisconnected(IConnection<IServerMessage> conn) {
+        handle(s -> s.playerDisconnected(conn));
+    }
+
+    public void turretUpdate(TurretUpdateMessage msg) {
+        handle(s -> s.turretUpdate(msg));
     }
 }

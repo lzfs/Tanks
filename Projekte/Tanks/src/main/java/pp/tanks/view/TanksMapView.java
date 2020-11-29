@@ -11,11 +11,14 @@ import javafx.scene.text.Font;
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.model.Model;
+import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.HeavyProjectile;
 import pp.tanks.model.item.Item;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
+import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
 import java.util.ArrayList;
@@ -94,6 +97,9 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         // render items
         for (Item p : model.getTanksMap()) {
             p.accept(visualizer);
+        }
+        if (model.getEngine().getMode() == GameMode.SINGLEPLAYER) {
+            model.getTanksMap().getTank(PlayerEnum.PLAYER1).accept(visualizer);
         }
 
         for (Projectile p : projectiles) {

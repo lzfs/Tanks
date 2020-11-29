@@ -43,7 +43,7 @@ public class HeavyProjectile extends Projectile {
             setPos(targetPos);
         }
         if (getPos().x == targetPos.x && getPos().y == targetPos.y) {
-            this.effectiveRadius = 2;
+            this.effectiveRadius = 1;
             collision();
             destroy();
         }

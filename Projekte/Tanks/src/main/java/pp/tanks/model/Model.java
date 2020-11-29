@@ -8,7 +8,9 @@ import pp.tanks.notification.TanksNotificationReceiver;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,6 @@ public class Model {
     private final List<TanksNotificationReceiver> receivers = new ArrayList<>();
     private TanksMap map;
     private boolean muted = prefs.getBoolean(MUTED, false);
-    private boolean debug;
     private long latestUpdate;
     private Engine engine;
 
@@ -87,14 +88,12 @@ public class Model {
      * @param string xml file name representing a tanks map
      */
     public void loadMap(String string) {
-        final URL path = getClass().getResource(string);
-        //String path = "Tanks/src/main/resources/pp/tanks/model/" + string;
-        //String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
+        final InputStream stream = getClass().getResourceAsStream(string);
+
         try {
-            //File currentFile = new File(absolutePath);
-            File currentFile = new File (String.valueOf(path).replace("%20", " ").substring(5)); //"%20" eliminates spaces from the URL; .substring(5) erases the "file:" from the beginning
-            setTanksMap(new TanksMapFileReader(this).readFile(currentFile));
-        } catch (IOException | XMLStreamException ex) {
+            setTanksMap(new TanksMapFileReader(this).readFile(stream));
+        }
+        catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
             System.out.println("APOKALYPSE");
         }
@@ -102,9 +101,11 @@ public class Model {
 
     /**
      * updates tank
+     *
      * @param tank new tank
      */
-    public void setTank(Tank tank){
+    public void setTank(Tank tank) {
+        System.out.println("TANK " + tank);
         map.addPlayerTank(tank);
     }
 
@@ -154,7 +155,6 @@ public class Model {
      * Returns true if and only if there are no tanks left.
      */
     public boolean gameWon() {
-        if (debug) return false;
         if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return false;
         for (Tank tanks : map.getCOMTanks()) {
             if (tanks != map.getTank(engine.getPlayerEnum()) && !tanks.isDestroyed()) return false;
@@ -162,17 +162,12 @@ public class Model {
         return true;
     }
 
+    /**
+     * @return boolean-value if game has finished
+     */
     public boolean gameFinished() {
         if (map.getTank(PlayerEnum.PLAYER1).isDestroyed()) return true;
         return map.getTank(PlayerEnum.PLAYER2).isDestroyed();
-    }
-
-    /**
-     * activates debug-mode
-     * @param debug boolean for activation
-     */
-    public void setDebug(boolean debug) {
-        this.debug = debug;
     }
 
     /**
@@ -184,6 +179,7 @@ public class Model {
 
     /**
      * updates latestUpdate
+     *
      * @param latestUpdate new latestUpdate
      */
     public void setLatestUpdate(long latestUpdate) {
@@ -192,6 +188,7 @@ public class Model {
 
     /**
      * updates engine
+     *
      * @param engine "new" engine
      */
     public void setEngine(Engine engine) {
