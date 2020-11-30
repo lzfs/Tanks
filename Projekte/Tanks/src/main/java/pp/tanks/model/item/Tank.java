@@ -196,11 +196,9 @@ public abstract class Tank extends Item<TankData> {
                 if (!collide(newPos)) {
                     setPos(newPos);
                 }
-            }
-            else if (tmp > tmp1) {
+            } else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);
-            }
-            else {
+            } else {
                 data.setRotation(currentRot - delta * rotationSpeed);
             }
         }
@@ -326,8 +324,7 @@ public abstract class Tank extends Item<TankData> {
             Block block = (Block) other;
             Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2.0), newPos.y - (effectiveRadius / 2.0), effectiveRadius, effectiveRadius);
             return item1.intersects(other.getPos().x - ((block.getWidth() + buffer) / 2.0), other.getPos().y - ((block.getHeight() + buffer) / 2.0), block.getWidth() + buffer, block.getHeight() + buffer);
-        }
-        else {
+        } else {
             return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
@@ -342,8 +339,7 @@ public abstract class Tank extends Item<TankData> {
         if (armor.getArmorPoints() - damage <= 0) {
             armor.setArmorPoints(0);
             destroy();
-        }
-        else {
+        } else {
             armor.takeDamage(damage);
         }
         data.setLifePoints(armor.getArmorPoints());
@@ -359,7 +355,8 @@ public abstract class Tank extends Item<TankData> {
     /**
      * over written in PlayersTank
      */
-    public void stopMovement() {}
+    public void stopMovement() {
+    }
 
     /**
      * makes a copy of the interpolating Data-object and overwrites the current data
@@ -380,9 +377,9 @@ public abstract class Tank extends Item<TankData> {
      */
     @Override
     public boolean interpolateTime(long time) {
-        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
+        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;  //TODO == statt equals
         long tmp = (time - latestOp.serverTime);
-        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
+        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC; //TODO ggf. 10e^-9
         double deltaT = ((double) tmp) / FACTOR_SEC;
         if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
         double latestRot = (latestOp.data.getRotation() + 180) % 180;
@@ -396,20 +393,17 @@ public abstract class Tank extends Item<TankData> {
             double tTime = (tFin - latestSec);
             if (tTime > deltaT) {
                 data.setRotation(latestRot + deltaT * rotationSpeed);
-            }
-            else {
+            } else {
                 double rest = deltaT - tTime;
                 data.setRotation(moveDirRotation);
                 data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
             }
-        }
-        else {
+        } else {
             double tFin = (tmp0 + latestSec * rotationSpeed) / rotationSpeed;
             double tTime = (tFin - latestSec);
             if (tTime > deltaT) {
                 data.setRotation(latestRot - deltaT * rotationSpeed);
-            }
-            else {
+            } else {
                 double rest = deltaT - tTime;
                 data.setRotation(moveDirRotation);
                 data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
@@ -421,5 +415,6 @@ public abstract class Tank extends Item<TankData> {
         return true;
     }
 
-    public void sendTurretUpdate() { }
+    public void sendTurretUpdate() {
+    }
 }

@@ -111,8 +111,7 @@ public abstract class Item<T extends Data> {
             Block block = (Block) other;
             Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
             return item1.intersects(other.getPos().x - (block.getWidth() / 2.0), other.getPos().y - (block.getHeight() / 2.0), block.getWidth(), block.getHeight());
-        }
-        else {
+        } else {
             return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
@@ -158,5 +157,6 @@ public abstract class Item<T extends Data> {
     /**
      * for thomases (god's) will
      */
-    public void processDamage(int damage) {}
+    public void processDamage(int damage) {
+    }
 }
