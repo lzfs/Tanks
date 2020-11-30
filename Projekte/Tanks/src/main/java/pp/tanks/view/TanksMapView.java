@@ -5,8 +5,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Affine;
 
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
@@ -204,5 +206,11 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
      */
     public void updateProgressBar(double percentage) {
         this.progressBar.setProgress(percentage);
+    }
+
+    public void drawLostTank(DoubleVec position){
+        //TODO
+        drawImage(bigExplosion, position.x,position.y);
+
     }
 }

@@ -78,6 +78,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private GameEndingMessage endingMessage = null;
     private final Scene menuMPController = new Scene(new PauseMenuMPController());
 
+    private boolean wonSP=false;
+    private long time=0;
+
     /**
      * create a new PlayGameController
      *
@@ -162,9 +165,20 @@ public class PlayGameController extends Controller implements ICollisionObserver
             if (engine.getModel().gameWon()) {
                 handleLocalGameWon();
             }
-
             else if (engine.getModel().gameLost()) {
-                handleLocalGameLost();
+                engine.getView().drawLostTank(getTank().getPos());  //TODO geht noch nicht
+                if(wonSP==false) {
+                    for(COMEnemy enemy : engine.getModel().getTanksMap().getCOMTanks()) {
+                        enemy.setShootable(false);
+                    }
+                    wonSP=true;
+                    time = System.currentTimeMillis();
+                }
+                if(System.currentTimeMillis()-time>3000){
+                    time=0;
+                    wonSP=false;
+                    handleLocalGameLost();
+                }
             }
             else if (pressed.contains(KeyCode.ESCAPE)) {
                 engine.activatePauseMenuSPController(); //TODO

@@ -26,6 +26,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -33,6 +34,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
 import javafx.util.Duration;
 
+import javax.imageio.ImageIO;
+import java.awt.AlphaComposite;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -42,7 +51,6 @@ public class VisualizerVisitor implements Visitor {
     private enum Shape {RECTANGLE, OVAL, DIRECTED_OVAL}
 
     private final TanksMapView view;
-    private boolean first=true;
 
     public VisualizerVisitor(TanksMapView view) {
         this.view = view;
@@ -79,7 +87,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
             context.rotate(-playersTank.getRotation());
             context.rotate(playersTank.getData().getTurretDir().angle());
@@ -94,22 +101,11 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
             drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
         }
-
         context.setTransform(ori);
-
-
-        if(first){
-            first=false;
-            fadeAThing();
-        }
-        /*
-
-         */
     }
 
     public void fadeAThing(){
@@ -136,9 +132,6 @@ public class VisualizerVisitor implements Visitor {
 
         System.out.println("WHOOp");
 
-
-        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
-        Rectangle rect = new Rectangle (pos.x, pos.y, 300, 100);
         rect.setArcHeight(50);
         rect.setArcWidth(50);
         rect.setFill(Color.VIOLET);
@@ -148,14 +141,56 @@ public class VisualizerVisitor implements Visitor {
         ft.setToValue(0.3);
         ft.setCycleCount(4);
         ft.setAutoReverse(true);
+       ft.play();
 
+
+        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        context.translate(pos.x, pos.y);
+
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.1);
+        context.setEffect(colorAdjust);
+
+        drawImage(TanksImageProperty.armor1,Shape.DIRECTED_OVAL,Color.RED,1);
+        context.setTransform(ori);
+
+
+
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        context.translate(pos.x, pos.y);
+
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(0.1);
+        context.setEffect(colorAdjust);
+
+        drawImage(TanksImageProperty.armor1,Shape.DIRECTED_OVAL,Color.RED,1);
+        context.setTransform(ori);
+
+
+          final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        context.translate(pos.x, pos.y);
+
+
+        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
+        ImageView imageView = new ImageView(view.getImages().getImage(TanksImageProperty.armor1));
+        imageView.setX(pos.x);
+        imageView.setY(pos.y);
+        //imageView.setOpacity();
+        FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.3);
+        ft.setCycleCount(4);
+        ft.setAutoReverse(true);
         ft.play();
          */
 
-
-
-
     }
+
 
     /**
      *  //TODO
@@ -173,7 +208,6 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(Enemy enemy) {
-
         /*
         drawItem(enemy, TanksImageProperty.armor2, Shape.RECTANGLE, Color.BLUE);
          */
@@ -199,7 +233,7 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
+
 
             context.rotate(-enemy.getRotation());
             context.rotate(enemy.getData().getTurretDir().angle());
@@ -214,7 +248,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
             drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
@@ -229,23 +262,17 @@ public class VisualizerVisitor implements Visitor {
         List<Track> posList = comEnemy.getPosList();
 
         for(Track posTrack : posList) {
-
             drawMeATrack(posTrack);
-
         }
 
         boolean destroyed = comEnemy.isDestroyed();
-
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(comEnemy.getPos());
         context.translate(pos.x, pos.y);
-
         if (!destroyed) {
-            //context.rotate(-90);
             context.rotate((comEnemy.getRotation() + 90) % 360);
             context.scale(0.7, 0.7);
-
             Armor armor = comEnemy.getArmor();
             if (armor instanceof LightArmor) {
                 drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN, 0.9);
@@ -256,8 +283,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 0.65);
             }
-            //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
-
             context.rotate(-comEnemy.getRotation());
             context.rotate(comEnemy.getData().getTurretDir().angle());
 
@@ -271,7 +296,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
             drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
@@ -298,17 +322,9 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(LightProjectile lightProjectile) {
-        //bullets drehen
-        //final GraphicsContext context = view.getGraphicsContext2D();
-        //final Affine ori = context.getTransform();
-        //final DoubleVec pos = view.modelToView(lightProjectile.getPos());
-        //context.translate(pos.x, pos.y);
-        //context.rotate(lightProjectile.getProjectileData().getDir().angle());
         if (lightProjectile.visible()) {
             drawItem(lightProjectile, TanksImageProperty.lightBullet, Shape.OVAL, Color.GRAY);
         }
-
-        //context.setTransform(ori);
     }
 
     @Override

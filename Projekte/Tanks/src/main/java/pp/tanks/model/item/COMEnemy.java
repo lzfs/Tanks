@@ -18,6 +18,7 @@ import java.util.List;
 public class COMEnemy extends Enemy {
     public final PlayerEnum player1 = PlayerEnum.PLAYER1;
     private long latestViewUpdate;
+    private boolean shootable=true;
 
     protected List<DoubleVec> path;
     private List<MoveDirection> dirs;
@@ -51,7 +52,7 @@ public class COMEnemy extends Enemy {
      */
     @Override
     public void shoot(DoubleVec pos) {
-        if (canShoot() && !this.isDestroyed()) {
+        if (canShoot() && !this.isDestroyed()&&shootable) {
             turret.shoot();
             Projectile projectile = super.makeProjectile(pos);
             model.getTanksMap().addProjectile(projectile);
@@ -68,6 +69,7 @@ public class COMEnemy extends Enemy {
         long tmp = serverTime - latestViewUpdate;
         double delta = ((double) tmp) / FACTOR_SEC;
         turret.update(delta);
+        data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
         if (model.getEngine() != null) {
             if (isMoving()) {
                 // move(delta);
@@ -273,5 +275,13 @@ public class COMEnemy extends Enemy {
      */
     public boolean isWithinMap(DoubleVec pos) {
         return !(model.getTanksMap().getHeight() > pos.y) && model.getTanksMap().getHeight() >= 0 && !(model.getTanksMap().getWidth() > pos.x) && model.getTanksMap().getWidth() >= 0;
+    }
+
+    public boolean getShootable() {
+        return shootable;
+    }
+
+    public void setShootable(boolean shootable) {
+        this.shootable = shootable;
     }
 }

@@ -84,7 +84,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void start(Stage stage) {
         this.engine = new Engine(stage, this, properties);
         this.stage = stage;
-
         stage.setResizable(false);
         stage.setTitle("Tanks");
         stage.show();
