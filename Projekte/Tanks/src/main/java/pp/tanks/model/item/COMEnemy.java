@@ -98,6 +98,11 @@ public class COMEnemy extends Enemy {
             }
             else {
                 setPos(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)));
+                DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.5));
+                if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) >0.3) {
+                    posList.add(new Track(refPos, data.getRotation()));
+                    if(posList.size() >50) posList.remove(0);
+                }
             }
         }
         else {

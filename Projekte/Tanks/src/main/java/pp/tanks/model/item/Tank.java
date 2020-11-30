@@ -10,6 +10,8 @@ import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import static pp.tanks.model.item.MoveDirection.*;
 
@@ -17,6 +19,7 @@ import static pp.tanks.model.item.MoveDirection.*;
  * abstract base class of all tanks in a {@linkplain pp.tanks.model.TanksMap}
  */
 public abstract class Tank extends Item<TankData> {
+    protected List<Track> posList = new ArrayList<Track>();
     protected Turret turret;
     protected Armor armor;
     protected double speed;
@@ -38,6 +41,7 @@ public abstract class Tank extends Item<TankData> {
         this.playerEnum = PlayerEnum.getPlayer(data.getId()); //TODO Com enemys beim schießen
         this.projectileId = playerEnum.projectileID;
         latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime());
+        posList.add(new Track(data.getPos(),data.getRotation()));
     }
 
     /**
@@ -162,6 +166,14 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
+     *
+     * @return the list with the positions we want to draw
+     */
+    public List<Track> getPosList() {
+        return posList;
+    }
+
+    /**
      * Called once per frame. Used for updating this item's position etc.
      * TODO: what the heck is with this comment?
      * //@param delta time in seconds since the last update call
@@ -195,6 +207,13 @@ public abstract class Tank extends Item<TankData> {
                 data.setRotation(moveDirRotation);
                 if (!collide(newPos)) {
                     setPos(newPos);
+                    DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
+                    if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) >0.3) {
+                        posList.add(new Track(refPos,data.getRotation()));
+                        if(posList.size() >50) posList.remove(0);
+                        //erstes elemente löschen
+
+                    }
                 }
             } else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);

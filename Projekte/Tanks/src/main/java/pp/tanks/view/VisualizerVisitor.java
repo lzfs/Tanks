@@ -15,15 +15,25 @@ import pp.tanks.model.item.NormalProjectile;
 import pp.tanks.model.item.NormalTurret;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.ReflectableBlock;
+import pp.tanks.model.item.Track;
 import pp.tanks.model.item.Turret;
 import pp.tanks.model.item.UnbreakableBlock;
 import pp.tanks.model.item.Visitor;
 import pp.util.DoubleVec;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
+import javafx.util.Duration;
+
+import java.util.List;
 
 /**
  * Item visitor that adds visual representations of items to the tanks map view
@@ -32,6 +42,7 @@ public class VisualizerVisitor implements Visitor {
     private enum Shape {RECTANGLE, OVAL, DIRECTED_OVAL}
 
     private final TanksMapView view;
+    private boolean first=true;
 
     public VisualizerVisitor(TanksMapView view) {
         this.view = view;
@@ -40,13 +51,19 @@ public class VisualizerVisitor implements Visitor {
     @Override
     public void visit(PlayersTank playersTank) {
 
-        Boolean destroyed = playersTank.isDestroyed();
+
+        List<Track> posList = playersTank.getPosList();
+
+        for(Track posTrack : posList) {
+            drawMeATrack(posTrack);
+        }
+
+        boolean destroyed = playersTank.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(playersTank.getPos());
         context.translate(pos.x, pos.y);
-
         if (!destroyed) {
             //context.rotate(-90);
             context.rotate((playersTank.getRotation() + 90) % 360);
@@ -82,6 +99,75 @@ public class VisualizerVisitor implements Visitor {
         else {
             drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
         }
+
+        context.setTransform(ori);
+
+
+        if(first){
+            first=false;
+            fadeAThing();
+        }
+        /*
+
+         */
+    }
+
+    public void fadeAThing(){
+        /*
+        KeyFrame keyFrame1On = new KeyFrame(Duration.seconds(0), new KeyValue(imageView.imageProperty(), image1));
+        KeyFrame startFadeOut = new KeyFrame(Duration.seconds(0.2), new KeyValue(imageView.opacityProperty(), 1.0));
+        KeyFrame endFadeOut = new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.opacityProperty(), 0.0));
+        //KeyFrame keyFrame2On = new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.imageProperty(), image2));
+        KeyFrame endFadeIn = new KeyFrame(Duration.seconds(0.8), new KeyValue(imageView.opacityProperty(), 1.0));
+        Timeline timelineOn = new Timeline(keyFrame1On, startFadeOut, endFadeOut, keyFrame2On, endFadeIn);
+
+
+        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
+
+        ImageView imageView = new ImageView(view.getImages().getImage(TanksImageProperty.armor1));
+        imageView.setX(pos.x);
+        imageView.setY(pos.y);
+        FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.3);
+        ft.setCycleCount(4);
+        ft.setAutoReverse(true);
+        ft.play();
+
+        System.out.println("WHOOp");
+
+
+        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
+        Rectangle rect = new Rectangle (pos.x, pos.y, 300, 100);
+        rect.setArcHeight(50);
+        rect.setArcWidth(50);
+        rect.setFill(Color.VIOLET);
+
+        FadeTransition ft = new FadeTransition(Duration.millis(3000), rect);
+        ft.setFromValue(1.0);
+        ft.setToValue(0.3);
+        ft.setCycleCount(4);
+        ft.setAutoReverse(true);
+
+        ft.play();
+         */
+
+
+
+
+    }
+
+    /**
+     *  //TODO
+     * @param posTrack
+     */
+    public void drawMeATrack(Track posTrack) {
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        final DoubleVec pos = view.modelToView(posTrack.getVec());
+        context.translate(pos.x, pos.y);
+        context.rotate((posTrack.getRotation()+90)%360);
+        drawImage(TanksImageProperty.tracks,Shape.DIRECTED_OVAL,Color.RED,1);
         context.setTransform(ori);
     }
 
@@ -136,8 +222,18 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
+
     @Override
     public void visit(COMEnemy comEnemy) {
+
+        List<Track> posList = comEnemy.getPosList();
+
+        for(Track posTrack : posList) {
+
+            drawMeATrack(posTrack);
+
+        }
+
         boolean destroyed = comEnemy.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();

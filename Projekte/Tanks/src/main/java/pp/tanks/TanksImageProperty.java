@@ -144,6 +144,11 @@ public enum TanksImageProperty {
     /**
      * Path of small armor2 image (used for the tank configuration)
      */
-    armor2Small
+    armor2Small,
+
+    /**
+     * Path of tracks
+     */
+    tracks
 }
 
