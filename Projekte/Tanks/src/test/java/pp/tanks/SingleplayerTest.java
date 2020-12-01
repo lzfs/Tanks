@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import pp.tanks.client.TanksApp;
 import pp.tanks.controller.Engine;
 import pp.tanks.message.data.Data;
+import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.TanksMap;
@@ -15,7 +17,7 @@ import pp.util.DoubleVec;
 
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SingleplayerTest {
     public static final int WIDTH = 23;
@@ -34,12 +36,12 @@ public class SingleplayerTest {
         model.setTanksMap(map);
     }
 
-    @Test
-    public void movementTest(){
+    @Disabled
+    public void movementTest() {
         player = new PlayersTank(model, 0.3, new HeavyArmor(), new LightTurret(),
-                new TankData(new DoubleVec(3,6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0,1), false)); //TODO: multiply
+                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
         model.getTanksMap().addPlayerTank(player);
-        assertEquals(new DoubleVec(3,6), player.getPos());
+        assertEquals(new DoubleVec(3, 6), player.getPos());
         player.setMoveDirection(MoveDirection.DOWN);
         assertEquals(MoveDirection.DOWN, player.getMoveDir());
         player.setMove(true);
@@ -48,61 +50,61 @@ public class SingleplayerTest {
     }
 
     @Test
-    public void testLightTurret(){  //TODO: unvollständig
-        Long time = System.nanoTime();
+    public void lightTurretTest() {  //TODO: unvollständig
+        long time;
         player = new PlayersTank(model, 0.3, new HeavyArmor(), new LightTurret(),
-                new TankData(new DoubleVec(3,6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0,1), false)); //TODO: multiply
+                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
         model.getTanksMap().addPlayerTank(player);
         assertEquals(0, model.getTanksMap().getProjectiles().size());
-        UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(3,10), 10, false));
-        model.getTanksMap().addUnbreakableBlock(uBlock);
-        player.shoot(new DoubleVec(3,10));
-
-        player.interpolateTime(time);
-        player.shoot(new DoubleVec(3,10));
-
-        //assertEquals(1, model.getTanksMap().getProjectiles().size());
-
-        assertEquals(model.getTanksMap().getUnbreakableBlocks().get(0), uBlock);    //always the last test of shoot
+        player.shoot(new DoubleVec(10, 6));
+        assertFalse(model.getTanksMap().getAddedProjectiles().isEmpty());
+        time = System.nanoTime();
+        Projectile firstShot = model.getTanksMap().getAddedProjectiles().get(1001);
+        model.getTanksMap().getHashProjectiles().put(firstShot.getData().id, firstShot);
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(firstShot.getData().mkCopy(), time);
+        assertEquals(1, model.getTanksMap().getProjectiles().size());
+        firstShot.interpolateData(tmp);
+        firstShot.interpolateTime(time + 1_100_000_000);
+        assertEquals(new DoubleVec(9.51, 6), model.getTanksMap().getProjectiles().get(0).getPos());
     }
 
     @Test
-    public void testNormalTurret(){ //TODO: unvollständig
+    public void normalTurretTest() { //TODO: unvollständig
+        long time;
         assertEquals(0, model.getTanksMap().getProjectiles().size());
         player = new PlayersTank(model, 0.3, new HeavyArmor(), new NormalTurret(),
-                new TankData(new DoubleVec(3,6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0,1), false));
+                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
-        UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(3,10), 10, false));
-        model.getTanksMap().addUnbreakableBlock(uBlock);
-        player.shoot(new DoubleVec(3,10));
-        model.update(System.nanoTime());
+        assertEquals(0, model.getTanksMap().getProjectiles().size());
+        player.shoot(new DoubleVec(10, 6));
+        assertFalse(model.getTanksMap().getAddedProjectiles().isEmpty());
+        time = System.nanoTime();
+        Projectile firstShot = model.getTanksMap().getAddedProjectiles().get(1001);
+        model.getTanksMap().getHashProjectiles().put(firstShot.getData().id, firstShot);
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(firstShot.getData().mkCopy(), time);
         assertEquals(1, model.getTanksMap().getProjectiles().size());
-
-        assertEquals(model.getTanksMap().getUnbreakableBlocks().get(0), uBlock);    //always the last test of shoot
+        firstShot.interpolateData(tmp);
+        firstShot.interpolateTime(time + 1_100_000_000);
+        assertEquals(new DoubleVec(9.51, 6), model.getTanksMap().getProjectiles().get(0).getPos());
     }
 
     @Test
-    public void testHeavyTurret(){  //TODO: unvollständig
+    public void HeavyTurretTest() {  //TODO: unvollständig
+        long time;
         assertEquals(0, model.getTanksMap().getProjectiles().size());
         player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(),
-                new TankData(new DoubleVec(3,6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0,1), false));
+                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
-        UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(3,10), 10, false));
-        model.getTanksMap().addUnbreakableBlock(uBlock);
-        player.shoot(new DoubleVec(3,10));
-        model.update(System.nanoTime());
+        assertEquals(0, model.getTanksMap().getProjectiles().size());
+        player.shoot(new DoubleVec(10, 6));
+        assertFalse(model.getTanksMap().getAddedProjectiles().isEmpty());
+        time = System.nanoTime();
+        Projectile firstShot = model.getTanksMap().getAddedProjectiles().get(1001);
+        model.getTanksMap().getHashProjectiles().put(firstShot.getData().id, firstShot);
+        DataTimeItem<ProjectileData> tmp = new DataTimeItem<>(firstShot.getData().mkCopy(), time);
         assertEquals(1, model.getTanksMap().getProjectiles().size());
-
-        assertEquals(model.getTanksMap().getUnbreakableBlocks().get(0), uBlock);    //always the last test of shoot
-    }
-
-    @Test
-    public void testReflectableBlock(){
-
-    }
-
-    @Test
-    public void testBreakableBlock(){
-
+        firstShot.interpolateData(tmp);
+        firstShot.interpolateTime(time + 1_100_000_000);
+        assertEquals(new DoubleVec(9.51, 6), model.getTanksMap().getProjectiles().get(0).getPos());
     }
 }
