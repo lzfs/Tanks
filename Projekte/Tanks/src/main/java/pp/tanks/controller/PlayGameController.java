@@ -473,6 +473,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
         }
         engine.getModel().getTanksMap().deleteAllObservers();
+        engine.getSaveTank().getPosList().clear();
     }
 
     @Override

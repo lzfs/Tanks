@@ -208,11 +208,13 @@ public abstract class Tank extends Item<TankData> {
                 if (!collide(newPos)) {
                     setPos(newPos);
                     DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
-                    if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) >0.3) {
+                    if (posList.size() == 0) {
+                        posList.add(new Track(getPos(), getRotation()));
+                    }
+                    if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
                         posList.add(new Track(refPos,data.getRotation()));
-                        if(posList.size() >50) posList.remove(0);
+                        if(posList.size() > 50) posList.remove(0);
                         //erstes elemente löschen
-
                     }
                 }
             } else if (tmp > tmp1) {
