@@ -29,9 +29,7 @@ public abstract class Tank extends Item<TankData> {
     public final PlayerEnum playerEnum;
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
-    private long latestInterpolate;
-    private DoubleVec lastTurretDir = new DoubleVec(0, 0);
-    protected DoubleVec newTurretDir = new DoubleVec(1, 0);
+
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
         super(model, 1, data);
@@ -217,31 +215,6 @@ public abstract class Tank extends Item<TankData> {
         }
     }
 
-    //haben latest OP
-    //wenn nachricht an server
-    //dataTime item an sich selbst geben
-    //berechenen angefangen und wann fertig
-    //delta größer als deltaT also zeit die ich bräuchte
-    //iwas iwo abziehen
-
-    //es kommt bewegunsgänderung
-    //hat Data
-    //und latestOP  (bräuchte er eigentlich nicht)
-    //wenn stopmovement oder setmovedirection
-    //das datatime item als latestOP abspeichern
-    //delta winkel berechnen  (der zu drehende winkel)
-    //wie lange ich bräuchte kann ich mir deltaT für dauer der drehung berechnen
-    //deltaT abspeichern
-    //iwo oben ne deltaZeit
-    //deltaZeit+=delta
-    //ist deltazeit kleiner als deltaT?
-    //=> current rotation dreh dings
-    //berechnen speichern
-    //deltazeit=deltaT
-    // deltazeit- deltaT=minizeit
-    //setRotation auf moveDirdirection
-    //setPosition(alte + direction * speed*minizeit
-
     /**
      * Method to accept a visitor
      *
@@ -354,7 +327,7 @@ public abstract class Tank extends Item<TankData> {
             destroy();
         } else {
             armor.takeDamage(damage);
-            model.getEngine().notify(TanksNotification.ARMOR_HIT);
+            if (model.getEngine() != null) model.getEngine().notify(TanksNotification.ARMOR_HIT);
         }
         data.setLifePoints(armor.getArmorPoints());
     }
@@ -391,43 +364,28 @@ public abstract class Tank extends Item<TankData> {
      */
     @Override
     public boolean interpolateTime(long time) {
-        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;  //TODO == statt equals
-        long tmp = (time - latestOp.serverTime);
-        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC; //TODO ggf. 10e^-9
-        double deltaT = ((double) tmp) / FACTOR_SEC;
-        if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
-        double latestRot = (latestOp.data.getRotation() + 180) % 180;
+        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
+        double latestSec = FACTOR_SEC * latestOp.serverTime;
+        double deltaT = FACTOR_SEC * (time - latestOp.serverTime);
+
+        double latestRot = latestOp.data.getRotation();
         double moveDirRotation = latestOp.data.getMoveDir().getRotation();
 
-        double tmp0 = (latestRot - moveDirRotation + 180) % 180;
-        double tmp1 = (moveDirRotation - latestRot + 180) % 180;
+        double turnRightAngle = (latestRot - moveDirRotation + 180) % 180;
+        double turnLeftAngle = (moveDirRotation - latestRot + 180) % 180;
+        boolean turnLeft = turnRightAngle > turnLeftAngle;
+        double turnBy = Math.min(turnRightAngle, turnLeftAngle);
+        double tTime = ((turnBy + latestSec * rotationSpeed) / rotationSpeed) - latestSec;
 
-        if (tmp0 > tmp1) {
-            double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
-            double tTime = (tFin - latestSec);
-            if (tTime > deltaT) {
-                data.setRotation(latestRot + deltaT * rotationSpeed);
-            } else {
-                double rest = deltaT - tTime;
-                data.setRotation(moveDirRotation);
-                data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
-                addTrack();
-            }
-        } else {
-            double tFin = (tmp0 + latestSec * rotationSpeed) / rotationSpeed;
-            double tTime = (tFin - latestSec);
-            if (tTime > deltaT) {
-                data.setRotation(latestRot - deltaT * rotationSpeed);
-            } else {
-                double rest = deltaT - tTime;
-                data.setRotation(moveDirRotation);
-                data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
-                addTrack();
-            }
+        if (tTime > deltaT) {
+            if (turnLeft) data.setRotation(latestRot + deltaT * rotationSpeed);
+            else data.setRotation(latestRot - deltaT * rotationSpeed);
         }
-
-        //data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(deltaT * speed)));
-        latestInterpolate = time;
+        else {
+            double rest = deltaT - tTime;
+            data.setRotation(moveDirRotation);
+            data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
+        }
         return true;
     }
 

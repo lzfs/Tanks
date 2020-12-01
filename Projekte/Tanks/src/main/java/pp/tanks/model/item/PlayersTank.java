@@ -45,7 +45,7 @@ public class PlayersTank extends Tank {
     @Override
     public void update(long serverTime) {
         long tmp = (serverTime - latestViewUpdate);
-        double delta = ((double) tmp) / FACTOR_SEC;
+        double delta = FACTOR_SEC *tmp;
         latestViewUpdate = serverTime;
         if (model.getEngine() == null) {
             interpolateTime(serverTime);

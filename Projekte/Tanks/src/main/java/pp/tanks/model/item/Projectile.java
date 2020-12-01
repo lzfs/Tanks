@@ -214,7 +214,7 @@ public abstract class Projectile extends Item<ProjectileData> {
     public boolean interpolateTime(long time) {
         if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;
         long tmp = (time - latestOp.serverTime);
-        double deltaT = ((double) tmp) / FACTOR_SEC;
+        double deltaT = FACTOR_SEC * tmp;
         data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT * speed)));
         latestInterpolate = time;
         return true;

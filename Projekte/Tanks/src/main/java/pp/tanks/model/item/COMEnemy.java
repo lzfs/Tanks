@@ -68,7 +68,7 @@ public class COMEnemy extends Enemy {
     @Override
     public void update(long serverTime) {
         long tmp = serverTime - latestViewUpdate;
-        double delta = ((double) tmp) / FACTOR_SEC;
+        double delta = FACTOR_SEC * tmp;
         turret.update(delta);
         data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
         if (model.getEngine() != null) {
