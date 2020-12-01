@@ -207,15 +207,7 @@ public abstract class Tank extends Item<TankData> {
                 data.setRotation(moveDirRotation);
                 if (!collide(newPos)) {
                     setPos(newPos);
-                    DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
-                    if (posList.size() == 0) {
-                        posList.add(new Track(getPos(), getRotation()));
-                    }
-                    if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
-                        posList.add(new Track(refPos,data.getRotation()));
-                        if(posList.size() > 50) posList.remove(0);
-                        //erstes elemente löschen
-                    }
+                    addTrack();
                 }
             } else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);
@@ -362,6 +354,7 @@ public abstract class Tank extends Item<TankData> {
             destroy();
         } else {
             armor.takeDamage(damage);
+            model.getEngine().notify(TanksNotification.ARMOR_HIT);
         }
         data.setLifePoints(armor.getArmorPoints());
     }
@@ -418,6 +411,7 @@ public abstract class Tank extends Item<TankData> {
                 double rest = deltaT - tTime;
                 data.setRotation(moveDirRotation);
                 data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
+                addTrack();
             }
         } else {
             double tFin = (tmp0 + latestSec * rotationSpeed) / rotationSpeed;
@@ -428,12 +422,24 @@ public abstract class Tank extends Item<TankData> {
                 double rest = deltaT - tTime;
                 data.setRotation(moveDirRotation);
                 data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
+                addTrack();
             }
         }
 
         //data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(deltaT * speed)));
         latestInterpolate = time;
         return true;
+    }
+
+    public void addTrack(){
+        DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
+        if (posList.size() == 0) {
+            posList.add(new Track(getPos(), getRotation()));
+        }
+        if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
+            posList.add(new Track(refPos,data.getRotation()));
+            if(posList.size() > 50) posList.remove(0);
+        }
     }
 
     public void sendTurretUpdate() {

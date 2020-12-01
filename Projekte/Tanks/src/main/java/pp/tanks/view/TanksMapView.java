@@ -18,6 +18,7 @@ import pp.tanks.model.item.HeavyProjectile;
 import pp.tanks.model.item.Item;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
+import pp.tanks.model.item.Track;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 import pp.tanks.server.GameMode;
@@ -97,12 +98,20 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         if (bgImage != null) context.drawImage(bgImage, 0, 0);
 
         // render items
+        List<Track> trackList = model.getTanksMap().getTank(model.getEngine().getPlayerEnum()).getPosList();
+
+        for(Track track : trackList){
+            visualizer.drawMeATrack(track);
+        }
         for (Item p : model.getTanksMap()) {
             p.accept(visualizer);
         }
         if (model.getEngine().getMode() == GameMode.SINGLEPLAYER) {
             model.getTanksMap().getTank(PlayerEnum.PLAYER1).accept(visualizer);
         }
+
+
+
 
         for (Projectile p : projectiles) {
             for (int i = 0; i < 5; i++) {

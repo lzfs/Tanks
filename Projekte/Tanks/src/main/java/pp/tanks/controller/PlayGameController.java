@@ -156,11 +156,20 @@ public class PlayGameController extends Controller implements ICollisionObserver
 
         if (engine.getMode() != GameMode.MULTIPLAYER) {
             if (engine.getModel().gameWon()) {
-                handleLocalGameWon();
+                if (!wonSP) {
+                    wonSP = true;
+                    time = System.currentTimeMillis();
+                }
+                if (System.currentTimeMillis() - time > 3000) {
+                    time = 0;
+                    wonSP = false;
+                    handleLocalGameWon();
+                }
+
             }
             else if (engine.getModel().gameLost()) {
                 engine.getView().drawLostTank(getTank().getPos());  //TODO geht noch nicht
-                if (wonSP == false) {
+                if (!wonSP) {
                     for (COMEnemy enemy : engine.getModel().getTanksMap().getCOMTanks()) {
                         enemy.setShootable(false);
                     }
@@ -381,9 +390,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
      * @param list processing projectiles
      */
     public void addServerProjectiles(List<DataTimeItem<ProjectileData>> list) {
-        if (list.size() > 0) {
-            engine.notify(TanksNotification.TANK_FIRED);
-        }
         this.projectiles.addAll(list);
     }
 
@@ -453,6 +459,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
         }
         engine.getModel().getTanksMap().deleteAllObservers();
+        engine.getSaveTank().getPosList().clear();
     }
 
     /**

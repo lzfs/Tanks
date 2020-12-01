@@ -486,6 +486,9 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
                 case BLOCK_DESTROYED:
                     sound.play(TanksSoundProperty.blockDestroyedSound);
                     break;
+                case ARMOR_HIT:
+                    sound.play(TanksSoundProperty.armorHit);
+                    break;
             }
         }
     }

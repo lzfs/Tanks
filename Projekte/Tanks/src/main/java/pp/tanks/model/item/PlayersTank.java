@@ -5,6 +5,7 @@ import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 import java.util.ArrayList;
@@ -114,5 +115,11 @@ public class PlayersTank extends Tank {
     @Override
     public void sendTurretUpdate() {
         if (model.getEngine() != null) model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
+    }
+
+    @Override
+    public void destroy(){
+        super.destroy();
+        model.notifyReceivers(TanksNotification.TANK_DESTROYED);
     }
 }

@@ -59,13 +59,6 @@ public class VisualizerVisitor implements Visitor {
     @Override
     public void visit(PlayersTank playersTank) {
 
-
-        List<Track> posList = playersTank.getPosList();
-
-        for(Track posTrack : posList) {
-            drawMeATrack(posTrack);
-        }
-
         boolean destroyed = playersTank.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();
@@ -208,6 +201,12 @@ public class VisualizerVisitor implements Visitor {
 
     @Override
     public void visit(Enemy enemy) {
+
+        List<Track> posList = enemy.getPosList();
+
+        for(Track posTrack : posList) {
+            drawMeATrack(posTrack);
+        }
         /*
         drawItem(enemy, TanksImageProperty.armor2, Shape.RECTANGLE, Color.BLUE);
          */

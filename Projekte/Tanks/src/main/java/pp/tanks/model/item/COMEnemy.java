@@ -3,6 +3,7 @@ package pp.tanks.model.item;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 import pp.util.IntVec;
 
@@ -260,10 +261,15 @@ public class COMEnemy extends Enemy {
         return res;
     }
 
+
+    /**
+     * Indicates that this enemy has been destroyed.
+     */
     @Override
     public void destroy() {
         data.destroy();
         path.clear();
+        model.notifyReceivers(TanksNotification.TANK_DESTROYED);
         setMoveDirection(MoveDirection.STAY);
     }
 
