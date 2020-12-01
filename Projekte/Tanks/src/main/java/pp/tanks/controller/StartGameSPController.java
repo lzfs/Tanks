@@ -87,11 +87,11 @@ public class StartGameSPController extends Controller {
         }
         flag = true;
 
-        String path = "Tanks/src/main/resources/pp/tanks/maps/" + "map" + engine.getMapCounter() + ".xml";
+        String path = "Tanks/src/main/resources/pp/tanks/model/" + "map" + engine.getMapCounter() + ".xml";
         String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
             File currentFile = new File(absolutePath);
-            readFile(currentFile);
+            setLevelInformation(currentFile);
         }
         catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
@@ -136,7 +136,7 @@ public class StartGameSPController extends Controller {
      * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
      * @throws XMLStreamException if the file is no valid xml file
      */
-    public void readFile(File file) throws IOException, XMLStreamException {
+    public void setLevelInformation(File file) throws IOException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         Reader reader = new FileReader(file);
         XMLStreamReader xtr = factory.createXMLStreamReader(reader);
