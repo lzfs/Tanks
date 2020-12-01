@@ -72,7 +72,6 @@ public class COMEnemy extends Enemy {
         long tmp = serverTime - latestViewUpdate;
         double delta = FACTOR_SEC * tmp;
         turret.update(delta);
-        System.out.println(delta);
         data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
         if (model.getEngine() != null) {
             if (isMoving()) {

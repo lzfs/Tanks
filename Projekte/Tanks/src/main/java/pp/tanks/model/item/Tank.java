@@ -29,10 +29,11 @@ public abstract class Tank extends Item<TankData> {
     public final PlayerEnum playerEnum;
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
+    private double trackRotation=0.0;
 
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, 1, data);
+        super(model, effectiveRadius, data);
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
@@ -194,13 +195,12 @@ public abstract class Tank extends Item<TankData> {
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
         DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed * 2));
-        System.out.println(newPos);
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
             double tmp = (currentRot - moveDirRotation + 180) % 180;
             double tmp1 = (moveDirRotation - currentRot + 180) % 180;
-            double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
+            double tmp2 = Math.abs(currentRot - moveDirRotation) % 180;
             if (tmp2 < 4) {
                 data.setRotation(moveDirRotation);
                 if (!collide(newPos)) {
@@ -209,8 +209,10 @@ public abstract class Tank extends Item<TankData> {
                 }
             } else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);
+                addTrackRotation();
             } else {
                 data.setRotation(currentRot - delta * rotationSpeed);
+                addTrackRotation();
             }
         }
     }
@@ -395,10 +397,46 @@ public abstract class Tank extends Item<TankData> {
             posList.add(new Track(getPos(), getRotation()));
         }
         if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
-            posList.add(new Track(refPos,data.getRotation()));
-            if(posList.size() > 50) posList.remove(0);
+            posList.add(new Track(refPos, data.getRotation()));
+            trackRotation = getRotation();
+            if (posList.size() > 50) posList.remove(0);
         }
     }
+
+    public void addTrackRotation(){
+        if (posList.size() == 0) {
+            posList.add(new Track(getPos(), getRotation()));
+        }
+        if ( Math.abs(getRotation()-trackRotation)>22.4) {
+            posList.add(new Track(getPos(), getRotation()));
+            trackRotation=getRotation();
+        }
+        //TODO
+        //nachjustieren
+        //distance wird teilweise 4
+        if (posList.size() > 50) posList.remove(0);
+    }
+    /*
+        public void addTrackRotation(){
+        if (posList.size() == 0) {
+            posList.add(new Track(getPos(), getRotation()));
+        }
+        double currentRot = data.getRotation() % 180;
+        double moveDirRotation = data.getMoveDir().getRotation();
+        double tmp2 = Math.abs(currentRot - moveDirRotation) % 180;
+        //DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
+        System.out.println("winkel abs " + Math.abs(tmp2-trackRotation));
+        System.out.println("distance "+Math.abs(getPos().distance(posList.get(posList.size() - 1).getVec())) );
+        if (Math.abs(getPos().distance(posList.get(posList.size() - 1).getVec())) > 0.1 && Math.abs(tmp2-trackRotation)>15){
+            posList.add(new Track(getPos(), getRotation()));
+            trackRotation=getRotation();
+        }
+        //TODO
+        //nachjustieren
+        //distance wird teilweise 4
+        if (posList.size() > 50) posList.remove(0);
+    }
+     */
 
     public void sendTurretUpdate() {
     }
