@@ -20,16 +20,6 @@ public class TankData extends Data {
         this.move = false;
         this.rotation = rotation;
         this.lifePoints = lifePoints;
-        /*
-        {
-            super(pos, id);
-            this.moveDir = MoveDirection.RIGHT;
-            this.turretDir = new DoubleVec(0, 0);
-            this.move = false;
-            this.rotation = 0;
-            this.lifePoints = lifePoints;
-        }
-         */
     }
 
     /**

@@ -285,5 +285,9 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(PlayerDisconnectedMessage msg) {
         engine.getController().playerDisconnected();
     }
+
+    public Stage getStage(){
+        return stage;
+    }
 }
 

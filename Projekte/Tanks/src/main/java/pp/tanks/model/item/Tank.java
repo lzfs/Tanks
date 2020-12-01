@@ -194,7 +194,7 @@ public abstract class Tank extends Item<TankData> {
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
         DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed * 2));
-
+        System.out.println(newPos);
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
@@ -231,8 +231,8 @@ public abstract class Tank extends Item<TankData> {
         if (canShoot() && !this.isDestroyed()) {
             turret.shoot();
             Projectile projectile = makeProjectile(pos);
-            ShootMessage msg = new ShootMessage(new DataTimeItem<ProjectileData>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
-            if (!model.getEngine().isClientGame()) {
+            if (model.getEngine() != null && !model.getEngine().isClientGame()) {
+                ShootMessage msg = new ShootMessage(new DataTimeItem<ProjectileData>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
                 model.getEngine().getConnection().send(msg);
                 model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
             }
