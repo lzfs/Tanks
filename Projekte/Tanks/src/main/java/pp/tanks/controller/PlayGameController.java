@@ -15,6 +15,7 @@ import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
+import pp.tanks.notification.TanksNotification;
 import pp.tanks.server.GameMode;
 import pp.tanks.view.TanksMapView;
 import pp.util.DoubleVec;
@@ -70,8 +71,8 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private PauseMenuMPController pauseMenuMPController = new PauseMenuMPController();
     private final Scene menuMPController = new Scene(pauseMenuMPController);
 
-    private boolean wonSP=false;
-    private long time=0;
+    private boolean wonSP = false;
+    private long time = 0;
 
     /**
      * create a new PlayGameController
@@ -159,16 +160,16 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
             else if (engine.getModel().gameLost()) {
                 engine.getView().drawLostTank(getTank().getPos());  //TODO geht noch nicht
-                if(wonSP==false) {
-                    for(COMEnemy enemy : engine.getModel().getTanksMap().getCOMTanks()) {
+                if (wonSP == false) {
+                    for (COMEnemy enemy : engine.getModel().getTanksMap().getCOMTanks()) {
                         enemy.setShootable(false);
                     }
-                    wonSP=true;
+                    wonSP = true;
                     time = System.currentTimeMillis();
                 }
-                if(System.currentTimeMillis()-time>3000){
-                    time=0;
-                    wonSP=false;
+                if (System.currentTimeMillis() - time > 3000) {
+                    time = 0;
+                    wonSP = false;
                     handleLocalGameLost();
                 }
             }
@@ -380,6 +381,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
      * @param list processing projectiles
      */
     public void addServerProjectiles(List<DataTimeItem<ProjectileData>> list) {
+        if (list.size() > 0) {
+            engine.notify(TanksNotification.TANK_FIRED);
+        }
         this.projectiles.addAll(list);
     }
 
