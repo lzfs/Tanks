@@ -238,6 +238,7 @@ public class TankConfigSPController extends Controller {
         if (counterTurret < 0) {
             counterTurret = turrets.size() - 1;
         }
+        harmChart.setImage(charts.get(counterTurret));
         image1.setImage(turrets.get(counterTurret));
         magazineSizeText.setText(magazine.get(counterTurret).toString());
         cadenceText.setText(cadence.get(counterTurret).toString() + "s");
