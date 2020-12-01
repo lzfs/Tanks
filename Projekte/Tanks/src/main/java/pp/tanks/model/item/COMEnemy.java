@@ -1,5 +1,7 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
@@ -70,6 +72,7 @@ public class COMEnemy extends Enemy {
         long tmp = serverTime - latestViewUpdate;
         double delta = ((double) tmp) / FACTOR_SEC;
         turret.update(delta);
+        System.out.println(delta);
         data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
         if (model.getEngine() != null) {
             if (isMoving()) {
@@ -289,5 +292,12 @@ public class COMEnemy extends Enemy {
 
     public void setShootable(boolean shootable) {
         this.shootable = shootable;
+    }
+
+    /**
+     *  Reset the Interpolation
+     */
+    public void resetInterpolateTime() {
+        latestViewUpdate=System.nanoTime();
     }
 }
