@@ -37,4 +37,6 @@ public class Controller {
     public void synchronizationFinished() { }
 
     public void playerDisconnected() {}
+
+    public void lostConnection() { }
 }

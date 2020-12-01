@@ -163,7 +163,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     @Override
     public void onConnectionClosed(IConnection<IClientMessage> conn) {
         //System.exit(0);
-        System.out.println("quit connection");
+        LOGGER.info("Server connection lost");
+        engine.getController().lostConnection();
         connection.shutdown();
         connection = null;
     }
@@ -173,7 +174,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      */
     public void joinGame() throws IOException {
         joinGame("127.0.0.1", "1234");
-        //joinGame(mode, "137.193.138.79", "1234");
+        //joinGame("137.193.138.79", "1234");
     }
 
     /**

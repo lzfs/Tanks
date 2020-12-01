@@ -513,4 +513,9 @@ public class TankConfigMPController extends Controller {
     public void setPlayerDisconnected() {
         playerConnected = false;
     }
+
+    @Override
+    public void lostConnection() {
+        Platform.runLater(engine::activateConnectionLostController);
+    }
 }
