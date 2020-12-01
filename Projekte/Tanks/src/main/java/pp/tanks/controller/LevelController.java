@@ -4,6 +4,7 @@ import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.LightArmor;
 import pp.tanks.model.item.LightTurret;
+import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
 import pp.tanks.view.TanksMapView;
@@ -69,6 +70,7 @@ public class LevelController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
+        engine.setPlayerEnum(PlayerEnum.PLAYER1);
     }
 
     /**

@@ -115,7 +115,7 @@ public class TanksMapTest {
         model.loadMap("map1.xml");
         assertEquals(87, model.getTanksMap().getBlocks().size());
         model.loadMap("map2.xml");
-        assertEquals(92, model.getTanksMap().getBlocks().size());
+        assertEquals(96, model.getTanksMap().getBlocks().size());
     }
 
     @Test

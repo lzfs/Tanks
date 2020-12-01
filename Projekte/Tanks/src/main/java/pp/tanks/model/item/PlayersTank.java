@@ -45,7 +45,7 @@ public class PlayersTank extends Tank {
     @Override
     public void update(long serverTime) {
         long tmp = (serverTime - latestViewUpdate);
-        double delta = ((double) tmp) / FACTOR_SEC;
+        double delta = FACTOR_SEC *tmp;
         latestViewUpdate = serverTime;
         if (model.getEngine() == null) {
             interpolateTime(serverTime);
@@ -90,8 +90,10 @@ public class PlayersTank extends Tank {
         if (!collide(newPos)) {
             if (dir != data.getMoveDir()) {
                 super.setMoveDirection(dir);
-                DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
-                if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
+                if (model.getEngine() != null && !model.getEngine().isClientGame()){
+                    DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
+                    model.getEngine().getConnection().send(new MoveMessage(item));
+                }
             }
             else super.setMoveDirection(dir);
         }
