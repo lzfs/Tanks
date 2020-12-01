@@ -11,11 +11,8 @@ import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.ItemEnum;
-import pp.tanks.model.item.LightArmor;
-import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.PlayerEnum;
-import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
 import pp.tanks.server.GameMode;
@@ -46,12 +43,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-
 /**
  * The controller realizing the game state when the game is really running.
  */
@@ -76,7 +67,8 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private final List<DataTimeItem<TankData>> tanks = new ArrayList<>();
     private final List<BBData> bbDataList = new ArrayList<>();
     private GameEndingMessage endingMessage = null;
-    private final Scene menuMPController = new Scene(new PauseMenuMPController());
+    private PauseMenuMPController pauseMenuMPController = new PauseMenuMPController();
+    private final Scene menuMPController = new Scene(pauseMenuMPController);
 
     private boolean wonSP=false;
     private long time=0;
@@ -185,7 +177,11 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
         }
         else {
-            if (pressed.contains(KeyCode.ESCAPE)) engine.setScene(menuMPController);
+            if (pressed.contains(KeyCode.ESCAPE)) {
+                engine.setScene(menuMPController);
+                pauseMenuMPController.changeSound(engine.isSoundMuted());
+                pauseMenuMPController.changeMusic(engine.getTankApp().sounds.getMutedMusic());
+            }
             if (engine.getAnimationTime() == 0) engine.computeAnimationTime();
             final double delta = stopWatch.getTime() - lastUpdate;
             if (delta > 0.2) {
@@ -522,8 +518,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
             try {
                 fxmlLoader.load();
             }
-            catch (
-                    IOException e) {
+            catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -573,22 +568,33 @@ public class PlayGameController extends Controller implements ICollisionObserver
          * method for the sound button
          */
         @FXML
-        private void sound() {
-            // TODO
-            /*if (engine.getTankApp().sounds.getMuted()) {
-                engine.getTankApp().sounds.mute(false);
-            }
-            else {
-                engine.getTankApp().sounds.mute(true);
-            }
+        private void soundClicked() {
+            engine.setSoundMuted(!engine.isSoundMuted());
+            changeSound(engine.isSoundMuted());
+        }
 
-            if (engine.getTankApp().sounds.getMuted()) {
+        public void changeSound(boolean mute) {
+            if (mute) {
                 soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+                engine.getTankApp().properties.setProperty("soundMuted", "1");
+                try {
+                    engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+                }
+                catch (IOException e) {
+                    LOGGER.log(Level.INFO, e.getMessage());
+                }
             }
             else {
                 soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+                engine.getTankApp().properties.setProperty("soundMuted", "0");
+                try {
+                    engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+                }
+                catch (IOException e) {
+                    LOGGER.log(Level.INFO, e.getMessage());
+                }
             }
-            LOGGER.log(Level.INFO, "clicked SOUND");*/
+            LOGGER.log(Level.INFO, "clicked SOUND");
         }
 
         /**
@@ -596,8 +602,8 @@ public class PlayGameController extends Controller implements ICollisionObserver
          */
         @FXML
         private void music() {
-            engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
-            changeMusic(engine.getTankApp().sounds.getMuted());
+            engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMutedMusic());
+            changeMusic(engine.getTankApp().sounds.getMutedMusic());
         }
 
         public void changeMusic(boolean mute) {

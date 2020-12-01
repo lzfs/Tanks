@@ -54,7 +54,7 @@
             <font>
                <Font size="17.0" />
             </font></Button>
-      <Button fx:id="sound" mnemonicParsing="false" onAction="#sound" prefHeight="35.0" prefWidth="80.0" text="Sound" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP">
+      <Button fx:id="sound" mnemonicParsing="false" onAction="#soundClicked" prefHeight="35.0" prefWidth="80.0" text="Sound" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="TOP">
             <font>
                <Font size="17.0" />
             </font></Button>

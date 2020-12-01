@@ -76,6 +76,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private PlayerEnum playerEnum = PlayerEnum.PLAYER1;
     private int mapCounter = 0;
     private long animationTime;
+    private boolean soundMuted = false;
 
     /**
      * Creates a new engine
@@ -380,6 +381,14 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         return this.mode;
     }
 
+    public boolean isSoundMuted() {
+        return soundMuted;
+    }
+
+    public void setSoundMuted(boolean soundMuted) {
+        this.soundMuted = soundMuted;
+    }
+
     /**
      * The handle method of the state pattern. Any event is forwarded to the currently active controller, which then
      * selects the appropriate action, if any.
@@ -466,7 +475,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     @Override
     public void notify(TanksNotification notification) {
         LOGGER.finer("received " + notification);
-        if (!getModel().isMuted())
+        if (!soundMuted) {
             switch (notification) {
                 case TANK_FIRED:
                     sound.play(TanksSoundProperty.tanksProjectileSound);
@@ -478,6 +487,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
                     sound.play(TanksSoundProperty.blockDestroyedSound);
                     break;
             }
+        }
     }
 
     /**

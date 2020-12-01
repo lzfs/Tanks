@@ -10,7 +10,8 @@ import javafx.scene.media.MediaPlayer;
 public class Sounds {
     public MediaPlayer mainMenu;
     public MediaPlayer mediaPlayer;
-    private boolean muted = false;
+    private boolean mutedMusic = false;
+    private boolean mutedSfx = false;
 
     /**
      * load all SFx and Music
@@ -30,7 +31,7 @@ public class Sounds {
             mediaPlayer.stop();
         }
         mediaPlayer = music;
-        mediaPlayer.setMute(muted);
+        mediaPlayer.setMute(mutedMusic);
         mediaPlayer.setVolume(n);
         mediaPlayer.play();
         mediaPlayer.setAutoPlay(true);
@@ -55,7 +56,7 @@ public class Sounds {
         mediaPlayer.pause();
         MediaPlayer cls = this.mediaPlayer;
         mediaPlayer = sfx;
-        mediaPlayer.setMute(muted);
+        mediaPlayer.setMute(mutedMusic);
         mediaPlayer.setVolume(100.0);
         mediaPlayer.play();
         mediaPlayer.setOnEndOfMedia(new Runnable() {
@@ -73,14 +74,14 @@ public class Sounds {
      * @param m mode of the mute (true==mute,false==unmute)
      */
     public void mute(boolean m) {
-        muted = m;
+        mutedMusic = m;
         mediaPlayer.setMute(m);
     }
 
     /**
      * @return the muted attribute
      */
-    public boolean getMuted() {
-        return muted;
+    public boolean getMutedMusic() {
+        return mutedMusic;
     }
 }
