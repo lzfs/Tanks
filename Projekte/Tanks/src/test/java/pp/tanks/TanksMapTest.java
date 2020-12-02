@@ -51,7 +51,7 @@ public class TanksMapTest {
 
     @Test
     public void existingPlayer() {
-        Tank player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(), new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(1, 1), false));
+        Tank player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(), new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(1, 1), false));
         model.getTanksMap().addTanks(player);
         assertEquals(1, model.getTanksMap().getAllTanks().size());
         assertEquals(player, model.getTanksMap().getAllTanks().get(0));
@@ -120,7 +120,7 @@ public class TanksMapTest {
 
     @Test
     public void endingTest() {
-        Tank player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(),
+        Tank player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
                                       new TankData(new DoubleVec(3,6), 0, 100, MoveDirection.STAY,
                                                    0.0, new DoubleVec(0,1), false));
         model.getTanksMap().addPlayerTank(player);

@@ -35,7 +35,7 @@ public class SingleplayerTest {
 
     @Disabled
     public void movementTest() {
-        player = new PlayersTank(model, 0.3, new LightArmor(), new LightTurret(),
+        player = new PlayersTank(model, new LightArmor(), new LightTurret(),
                 new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
         model.getTanksMap().addPlayerTank(player);
         assertEquals(new DoubleVec(3, 6), player.getPos());
@@ -49,7 +49,7 @@ public class SingleplayerTest {
     @Test
     public void lightTurretTest() {
         long time;
-        player = new PlayersTank(model, 0.3, new HeavyArmor(), new LightTurret(),
+        player = new PlayersTank(model,  new HeavyArmor(), new LightTurret(),
                 new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
         model.getTanksMap().addPlayerTank(player);
         assertEquals(5, model.getTanksMap().getAllTanks().get(0).getTurret().getMagSize());
@@ -76,7 +76,7 @@ public class SingleplayerTest {
     public void normalTurretTest() {
         long time;
         assertEquals(0, model.getTanksMap().getProjectiles().size());
-        player = new PlayersTank(model, 0.3, new HeavyArmor(), new NormalTurret(),
+        player = new PlayersTank(model, new HeavyArmor(), new NormalTurret(),
                 new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertEquals(3, model.getTanksMap().getAllTanks().get(0).getTurret().getMagSize());
@@ -104,7 +104,7 @@ public class SingleplayerTest {
     public void heavyTurretTest() {
         long time;
         assertEquals(0, model.getTanksMap().getProjectiles().size());
-        player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(),
+        player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
                 new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertEquals(1, model.getTanksMap().getAllTanks().get(0).getTurret().getMagSize());
@@ -130,7 +130,7 @@ public class SingleplayerTest {
 
     @Test
     public void collisionBlockTest() {
-        player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(),
+        player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
                 new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertFalse(player.collide(player.getPos()));
@@ -141,7 +141,7 @@ public class SingleplayerTest {
 
     @Test
     public void collisionEnemyTest(){
-        player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(),
+        player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
                 new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertFalse(player.collide(player.getPos()));
@@ -153,7 +153,7 @@ public class SingleplayerTest {
 
     @Test
     public void tankDestroyed(){
-        player = new PlayersTank(model, 0.3, new HeavyArmor(), new HeavyTurret(),
+        player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
                 new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertEquals(player, model.getTanksMap().getAllTanks().get(0));
