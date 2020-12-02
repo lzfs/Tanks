@@ -237,4 +237,12 @@ public abstract class Projectile extends Item<ProjectileData> {
     public boolean visible() {
         return visible;
     }
+
+    /**
+     * for test purposes
+     * @param newFlag new flag var
+     */
+    public void setFlag(long newFlag){
+        flag = newFlag;
+    }
 }
