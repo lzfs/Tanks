@@ -234,7 +234,52 @@ public class TanksMapTest {
     }
 
     @Test
-    public void testBulletDamage(){
+    public void testBulletDamage() {
+        CollisionObserver observer = new CollisionObserver();
+        model.getTanksMap().addObserver(observer);
 
+        PlayersTank playersTank = new PlayersTank(model, new HeavyArmor(), new NormalTurret(), new TankData(new DoubleVec(10, 6), 0, 100, MoveDirection.STAY,
+                0.0, new DoubleVec(4, 6), false));
+        model.getTanksMap().addTanks(playersTank);
+
+        assertEquals(40, playersTank.getArmor().getArmorPoints());
+        HeavyProjectile heavyProjectile = new HeavyProjectile(model, new ProjectileData(new DoubleVec(9.5, 6), 1001, 0,
+                new DoubleVec(10, 6), new DoubleVec(10, 6), ItemEnum.HEAVY_PROJECTILE, false));
+        model.getTanksMap().getHashProjectiles().put(1001, heavyProjectile);
+        heavyProjectile.collision();
+        assertEquals(10, playersTank.getArmor().getArmorPoints());
+
+        playersTank.getArmor().setArmorPoints(40);
+        assertEquals(40, playersTank.getArmor().getArmorPoints());
+        NormalProjectile normalProjectile = new NormalProjectile(model, new ProjectileData(new DoubleVec(9.6, 6), 1002, 1,
+                new DoubleVec(10, 6), new DoubleVec(10, 6), ItemEnum.NORMAL_PROJECTILE, false));
+        model.getTanksMap().getHashProjectiles().put(1002, normalProjectile);
+        normalProjectile.setFlag(0);
+        normalProjectile.processHits();
+        assertEquals(20, playersTank.getArmor().getArmorPoints());
+
+        playersTank.getArmor().setArmorPoints(40);
+        assertEquals(40, playersTank.getArmor().getArmorPoints());
+        LightProjectile lightProjectile = new LightProjectile(model, new ProjectileData(new DoubleVec(9.5, 6), 1003, 2,
+                new DoubleVec(10, 6), new DoubleVec(10, 6), ItemEnum.LIGHT_PROJECTILE, false));
+        model.getTanksMap().getHashProjectiles().put(1003, lightProjectile);
+        lightProjectile.setFlag(0);
+        lightProjectile.processHits();
+        assertEquals(30, playersTank.getArmor().getArmorPoints());
+    }
+
+    @Test
+    public void testLives() {
+        PlayersTank playersTank = new PlayersTank(model, new HeavyArmor(), new NormalTurret(), new TankData(new DoubleVec(10, 6), 0, 3, MoveDirection.STAY,
+                0.0, new DoubleVec(4, 6), false));
+        model.getTanksMap().addTanks(playersTank);
+
+        assertEquals(3, playersTank.getLives());
+        playersTank.decreaseLives();
+        assertEquals(2, playersTank.getLives());
+        playersTank.decreaseLives();
+        assertEquals(1, playersTank.getLives());
+        playersTank.decreaseLives();
+        assertEquals(0, playersTank.getLives());
     }
 }
