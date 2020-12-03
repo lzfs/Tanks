@@ -215,4 +215,66 @@ public class SingleplayerTest {
         enemy.processDamage(100);
         assertTrue(enemy.getData().isDestroyed());
     }
+
+    @Test
+    public void testArmorWeight() {
+        PlayersTank heavy = new PlayersTank(model, new HeavyArmor(), new LightTurret(),
+                                            new TankData(new DoubleVec(3, 4), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+        PlayersTank normal = new PlayersTank(model, new NormalArmor(), new LightTurret(),
+                                             new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+        PlayersTank light = new PlayersTank(model, new LightArmor(), new LightTurret(),
+                                            new TankData(new DoubleVec(3, 8), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+        model.getTanksMap().addPlayerTank(heavy);
+        model.getTanksMap().addPlayerTank(normal);
+        model.getTanksMap().addPlayerTank(light);
+
+        heavy.setMoveDirection(MoveDirection.RIGHT);
+        heavy.setMove(true);
+        heavy.updateMove(2);
+        heavy.setMove(false);
+        assertEquals(new DoubleVec(5,4), heavy.getPos());
+
+        normal.setMoveDirection(MoveDirection.RIGHT);
+        normal.setMove(true);
+        normal.updateMove(6.5);
+        normal.setMove(false);
+        assertEquals(new DoubleVec(15.5,6), normal.getPos());
+
+        light.setMoveDirection(MoveDirection.RIGHT);
+        light.setMove(true);
+        light.updateMove(2);
+        light.setMove(false);
+        assertEquals(new DoubleVec(8,8), light.getPos());
+    }
+
+    @Test
+    public void testTurretWeight(){
+        PlayersTank heavy = new PlayersTank(model, new LightArmor(), new HeavyTurret(),
+                                            new TankData(new DoubleVec(3, 4), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+        PlayersTank normal = new PlayersTank(model, new LightArmor(), new NormalTurret(),
+                                             new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+        PlayersTank light = new PlayersTank(model, new LightArmor(), new LightTurret(),
+                                            new TankData(new DoubleVec(3, 8), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+        model.getTanksMap().addPlayerTank(heavy);
+        model.getTanksMap().addPlayerTank(normal);
+        model.getTanksMap().addPlayerTank(light);
+
+        heavy.setMoveDirection(MoveDirection.RIGHT);
+        heavy.setMove(true);
+        heavy.updateMove(2);
+        heavy.setMove(false);
+        assertEquals(new DoubleVec(5.5,4), heavy.getPos());
+
+        normal.setMoveDirection(MoveDirection.RIGHT);
+        normal.setMove(true);
+        normal.updateMove(9);
+        normal.setMove(false);
+        assertEquals(new DoubleVec(18,6), normal.getPos());
+
+        light.setMoveDirection(MoveDirection.RIGHT);
+        light.setMove(true);
+        light.updateMove(2);
+        light.setMove(false);
+        assertEquals(new DoubleVec(8,8), light.getPos());
+    }
 }
