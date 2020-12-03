@@ -151,6 +151,8 @@ public enum TanksImageProperty {
      */
     tracks,
 
-    oil
+    oil,
+
+    tracksDark
 }
 

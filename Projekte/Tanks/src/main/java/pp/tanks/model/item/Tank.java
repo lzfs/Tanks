@@ -318,18 +318,12 @@ public abstract class Tank extends Item<TankData> {
             Ellipse2D item1 = new Ellipse2D.Double(getPos().x - (effectiveRadius / 2.0), getPos().y - (effectiveRadius / 2.0), effectiveRadius, effectiveRadius);
             Rectangle2D item2 = new Rectangle2D.Double(oil.getPos().x,oil.getPos().y,1.5,1.5);
             boolean intersect = item1.intersects(item2);
-            //System.out.println("intersect " +intersect);
-            if( intersect && inOil) {
-                System.out.println("im in");
-            } else if (intersect==true && inOil==false) {
-                System.out.println("in Oil now");
+            if (intersect && !inOil) {
                 inOil = true;
-            } else if ( intersect==false && inOil==true) {
-                System.out.println("out of Oil now");
+            } else if (!intersect && inOil) {
                 counter=20;
                 inOil = false;
             }
-
         }
     }
 

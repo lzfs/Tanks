@@ -200,7 +200,7 @@ public class VisualizerVisitor implements Visitor {
         if(posTrack.getintensity() == TrackIntensity.NORMAL){
             drawImage(TanksImageProperty.tracks,Shape.DIRECTED_OVAL,Color.RED,1);
         } else if(posTrack.getintensity() == TrackIntensity.OIL) {
-            drawImage(TanksImageProperty.tracks,Shape.DIRECTED_OVAL,Color.RED,1);
+            drawImage(TanksImageProperty.tracksDark,Shape.DIRECTED_OVAL,Color.RED,1);
         }
 
 
