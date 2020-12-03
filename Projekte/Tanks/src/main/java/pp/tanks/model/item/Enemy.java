@@ -40,6 +40,7 @@ public class Enemy extends Tank {
     @Override
     public void update(long serverTime) {
         interpolateTime(serverTime);
+        addTrack();
     }
 
     /**
@@ -60,6 +61,6 @@ public class Enemy extends Tank {
     public static Enemy mkEnemyTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
         Turret ergTurret = Turret.mkTurret(turret);
         Armor ergArmor = Armor.mkArmor(armor);
-        return new Enemy(model, 3, ergArmor, ergTurret, data);
+        return new Enemy(model, 0.9, ergArmor, ergTurret, data); //TODO ggf. effectiveRadius heruntersetzen
     }
 }

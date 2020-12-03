@@ -11,7 +11,7 @@ public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
     public HeavyProjectile(Model model, ProjectileData data) {
-        super(model, 0.25, 30, 5.0, data);
+        super(model, 0.25, 30, 4.0, data);
         this.targetPos = data.getTargetPos();
     }
 

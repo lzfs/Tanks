@@ -16,7 +16,7 @@ import java.awt.geom.Rectangle2D.Double;
  * Abstract base class of all items in a {@linkplain pp.tanks.model.TanksMap}
  */
 public abstract class Item<T extends Data> {
-    public static final long FACTOR_SEC = 1_000_000_000;
+    public static final double FACTOR_SEC = 1e-9;
     protected final Model model;
     protected double effectiveRadius;
     protected boolean destroyed = false;

@@ -5,6 +5,7 @@ import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ import java.util.List;
 public class PlayersTank extends Tank {
     private long latestViewUpdate;
 
-    public PlayersTank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, effectiveRadius, armor, turret, data);
+    public PlayersTank(Model model, Armor armor, Turret turret, TankData data) {
+        super(model, 0.7, armor, turret, data);
         setLives(3);
         if (getLatestOp() != null) latestViewUpdate = getLatestOp().serverTime;
         else System.nanoTime();
@@ -44,7 +45,7 @@ public class PlayersTank extends Tank {
     @Override
     public void update(long serverTime) {
         long tmp = (serverTime - latestViewUpdate);
-        double delta = ((double) tmp) / FACTOR_SEC;
+        double delta = FACTOR_SEC *tmp;
         latestViewUpdate = serverTime;
         if (model.getEngine() == null) {
             interpolateTime(serverTime);
@@ -63,7 +64,7 @@ public class PlayersTank extends Tank {
     public static PlayersTank mkPlayersTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
         Turret ergTurret = Turret.mkTurret(turret);
         Armor ergArmor = Armor.mkArmor(armor);
-        return new PlayersTank(model, 3, ergArmor, ergTurret, data);
+        return new PlayersTank(model, ergArmor, ergTurret, data);
     }
 
     /**
@@ -89,8 +90,10 @@ public class PlayersTank extends Tank {
         if (!collide(newPos)) {
             if (dir != data.getMoveDir()) {
                 super.setMoveDirection(dir);
-                DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
-                if (!model.getEngine().isClientGame()) model.getEngine().getConnection().send(new MoveMessage(item));
+                if (model.getEngine() != null && !model.getEngine().isClientGame()){
+                    DataTimeItem<TankData> item = new DataTimeItem<>(data, System.nanoTime() + model.getEngine().getOffset());
+                    model.getEngine().getConnection().send(new MoveMessage(item));
+                }
             }
             else super.setMoveDirection(dir);
         }
@@ -114,5 +117,11 @@ public class PlayersTank extends Tank {
     @Override
     public void sendTurretUpdate() {
         if (model.getEngine() != null) model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
+    }
+
+    @Override
+    public void destroy(){
+        super.destroy();
+        model.notifyReceivers(TanksNotification.TANK_DESTROYED);
     }
 }

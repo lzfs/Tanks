@@ -1,8 +1,11 @@
 package pp.tanks.model.item;
 
+import pp.tanks.message.data.DataTimeItem;
+import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 import pp.util.IntVec;
 
@@ -67,7 +70,7 @@ public class COMEnemy extends Enemy {
     @Override
     public void update(long serverTime) {
         long tmp = serverTime - latestViewUpdate;
-        double delta = ((double) tmp) / FACTOR_SEC;
+        double delta = FACTOR_SEC * tmp;
         turret.update(delta);
         data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
         if (model.getEngine() != null) {
@@ -260,10 +263,15 @@ public class COMEnemy extends Enemy {
         return res;
     }
 
+
+    /**
+     * Indicates that this enemy has been destroyed.
+     */
     @Override
     public void destroy() {
         data.destroy();
         path.clear();
+        model.notifyReceivers(TanksNotification.TANK_DESTROYED);
         setMoveDirection(MoveDirection.STAY);
     }
 
@@ -283,5 +291,12 @@ public class COMEnemy extends Enemy {
 
     public void setShootable(boolean shootable) {
         this.shootable = shootable;
+    }
+
+    /**
+     *  Reset the Interpolation
+     */
+    public void resetInterpolateTime() {
+        latestViewUpdate=System.nanoTime();
     }
 }

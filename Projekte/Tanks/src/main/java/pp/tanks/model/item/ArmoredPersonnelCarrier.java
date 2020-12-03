@@ -19,7 +19,7 @@ public class ArmoredPersonnelCarrier extends COMEnemy {
     // private final List<DoubleVec> path = new LinkedList<>();
 
     public ArmoredPersonnelCarrier(Model model, TankData data) {
-        super(model, 3, new LightArmor(), new LightTurret(), data);
+        super(model, 1, new LightArmor(), new LightTurret(), data);
     }
 
     /**

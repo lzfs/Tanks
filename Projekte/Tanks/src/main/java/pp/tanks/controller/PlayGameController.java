@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,6 +72,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private PauseMenuMPController pauseMenuMPController = new PauseMenuMPController();
     private final Scene menuMPController = new Scene(pauseMenuMPController);
 
+    private boolean connectionLost = false;
     private boolean wonSP = false;
     private long time = 0;
 
@@ -95,7 +97,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
      */
     @Override
     public void handle(Event e) {
-        if (engine.getView() == null) return;
+        if (engine.getView() == null || connectionLost) return;
         if (e.getEventType() == KeyEvent.KEY_PRESSED) {
             final KeyCode code = ((KeyEvent) e).getCode();
             if (!pressed.contains(code)) {
@@ -134,6 +136,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
      */
     @Override
     public void update() {
+        if (connectionLost) return;
         if (endingMessage != null) gameEnd();
         // process input events that occurred since the last game step
         if (pressed.size() >= 2) {
@@ -156,11 +159,20 @@ public class PlayGameController extends Controller implements ICollisionObserver
 
         if (engine.getMode() != GameMode.MULTIPLAYER) {
             if (engine.getModel().gameWon()) {
-                handleLocalGameWon();
+                if (!wonSP) {
+                    wonSP = true;
+                    time = System.currentTimeMillis();
+                }
+                if (System.currentTimeMillis() - time > 3000) {
+                    time = 0;
+                    wonSP = false;
+                    handleLocalGameWon();
+                }
+
             }
             else if (engine.getModel().gameLost()) {
                 engine.getView().drawLostTank(getTank().getPos());  //TODO geht noch nicht
-                if (wonSP == false) {
+                if (!wonSP) {
                     for (COMEnemy enemy : engine.getModel().getTanksMap().getCOMTanks()) {
                         enemy.setShootable(false);
                     }
@@ -202,6 +214,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
      */
     @Override
     public void entry() {
+        connectionLost = false;
         pressed.clear();
         processed.clear();
         stopWatch.start();
@@ -381,9 +394,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
      * @param list processing projectiles
      */
     public void addServerProjectiles(List<DataTimeItem<ProjectileData>> list) {
-        if (list.size() > 0) {
-            engine.notify(TanksNotification.TANK_FIRED);
-        }
         this.projectiles.addAll(list);
     }
 
@@ -453,6 +463,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
         }
         engine.getModel().getTanksMap().deleteAllObservers();
+        engine.getSaveTank().getPosList().clear();
     }
 
     /**
@@ -634,5 +645,12 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
             LOGGER.log(Level.INFO, "clicked MUSIC");
         }
+    }
+
+    @Override
+    public void lostConnection() {
+        connectionLost = true;
+        Platform.runLater(engine::activateConnectionLostController);
+
     }
 }

@@ -1,6 +1,7 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.Projectile;
 
 import javafx.fxml.FXML;
@@ -102,6 +103,9 @@ public class PauseMenuSPController extends Controller {
         //engine.setScene(engine.playGameController.sceneBackup);
         for( Projectile p :  engine.getModel().getTanksMap().getProjectiles()){
             p.resetInterpolateTime();
+        }
+        for(COMEnemy  comEnemy : engine.getModel().getTanksMap().getCOMTanks()){
+            comEnemy.resetInterpolateTime();
         }
         engine.resumeGame();
     }

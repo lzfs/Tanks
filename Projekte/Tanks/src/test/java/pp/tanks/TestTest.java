@@ -8,7 +8,7 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ModelTest {
+public class TestTest {
     private static final String FILE_NAME = "pp/tanks/maps/map0.xml";
     private Model model;
 

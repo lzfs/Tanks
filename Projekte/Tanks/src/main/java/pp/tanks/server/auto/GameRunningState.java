@@ -232,7 +232,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     @Override
-    public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) { //TODO rückzieh bug
+    public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
         if (dest) {
             tank.destroy();
         }
