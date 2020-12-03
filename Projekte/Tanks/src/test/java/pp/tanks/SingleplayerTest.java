@@ -25,7 +25,6 @@ public class SingleplayerTest {
     private Properties properties = new Properties();
     private PlayersTank player;
 
-
     @BeforeEach
     public void setUp() {
         model = new Model(properties);
@@ -33,24 +32,72 @@ public class SingleplayerTest {
         model.setTanksMap(map);
     }
 
-    @Disabled
+    @Test
     public void movementTest() {
+        DoubleVec startPos = new DoubleVec(6, 6);
         player = new PlayersTank(model, new LightArmor(), new LightTurret(),
-                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
+                                 new TankData(startPos, 0, 3, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
         model.getTanksMap().addPlayerTank(player);
-        assertEquals(new DoubleVec(3, 6), player.getPos());
-        player.setMoveDirection(MoveDirection.DOWN);
-        assertEquals(MoveDirection.DOWN, player.getMoveDir());
+        assertEquals(startPos, player.getPos());
+
+        player.setMoveDirection(MoveDirection.RIGHT);
+        assertEquals(MoveDirection.RIGHT, player.getMoveDir());
         player.setMove(true);
-        player.updateMove(5);
-        //assertEquals(new DoubleVec(3,11), player.getPos());
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(new DoubleVec(11, 6), player.getPos());
+
+        player.setMoveDirection(MoveDirection.LEFT);
+        player.setMove(true);
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(startPos, player.getPos());
+
+        player.setRotation(90);
+        player.setMoveDirection(MoveDirection.DOWN);
+        player.setMove(true);
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(new DoubleVec(6, 11), player.getPos());
+
+        player.setMoveDirection(MoveDirection.UP);
+        player.setMove(true);
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(startPos, player.getPos());
+
+        player.setRotation(45);
+        player.setMoveDirection(MoveDirection.RIGHT_DOWN);
+        player.setMove(true);
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(new DoubleVec(11, 11), player.getPos());
+
+        player.setMoveDirection(MoveDirection.LEFT_UP);
+        player.setMove(true);
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(startPos, player.getPos());
+
+        player.setRotation(135);
+        player.setMoveDirection(MoveDirection.LEFT_DOWN);
+        player.setMove(true);
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(new DoubleVec(1, 11), player.getPos());
+
+        player.setMoveDirection(MoveDirection.RIGHT_UP);
+        player.setMove(true);
+        player.updateMove(2);
+        player.setMove(false);
+        assertEquals(startPos, player.getPos());
     }
 
     @Test
     public void lightTurretTest() {
         long time;
-        player = new PlayersTank(model,  new HeavyArmor(), new LightTurret(),
-                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
+        player = new PlayersTank(model, new HeavyArmor(), new LightTurret(),
+                                 new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false)); //TODO: multiply
         model.getTanksMap().addPlayerTank(player);
         assertEquals(5, model.getTanksMap().getAllTanks().get(0).getTurret().getMagSize());
         assertTrue(model.getTanksMap().getAllTanks().get(0).getTurret().canShoot());
@@ -66,8 +113,8 @@ public class SingleplayerTest {
         assertEquals(1, model.getTanksMap().getProjectiles().size());
 
         firstShot.interpolateData(tmp);
-        firstShot.interpolateTime(time + 1_100_000_000);
-        assertEquals(new DoubleVec(9.51, 6), model.getTanksMap().getProjectiles().get(0).getPos());
+        firstShot.interpolateTime(time + 1_000_000_000);
+        assertEquals(new DoubleVec(10.01, 6), model.getTanksMap().getProjectiles().get(0).getPos());
 
         assertEquals(ItemEnum.LIGHT_PROJECTILE, model.getTanksMap().getProjectiles().get(0).getProjectileData().type);
     }
@@ -77,7 +124,7 @@ public class SingleplayerTest {
         long time;
         assertEquals(0, model.getTanksMap().getProjectiles().size());
         player = new PlayersTank(model, new HeavyArmor(), new NormalTurret(),
-                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+                                 new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertEquals(3, model.getTanksMap().getAllTanks().get(0).getTurret().getMagSize());
         assertTrue(model.getTanksMap().getAllTanks().get(0).getTurret().canShoot());
@@ -93,11 +140,10 @@ public class SingleplayerTest {
         assertEquals(1, model.getTanksMap().getProjectiles().size());
 
         firstShot.interpolateData(tmp);
-        firstShot.interpolateTime(time + 1_100_000_000);
-        assertEquals(new DoubleVec(9.51, 6), model.getTanksMap().getProjectiles().get(0).getPos());
+        firstShot.interpolateTime(time + 1_000_000_000);
+        assertEquals(new DoubleVec(10.01, 6), model.getTanksMap().getProjectiles().get(0).getPos());
 
         assertEquals(ItemEnum.NORMAL_PROJECTILE, model.getTanksMap().getProjectiles().get(0).getProjectileData().type);
-
     }
 
     @Test
@@ -105,7 +151,7 @@ public class SingleplayerTest {
         long time;
         assertEquals(0, model.getTanksMap().getProjectiles().size());
         player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
-                new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+                                 new TankData(new DoubleVec(3, 6), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertEquals(1, model.getTanksMap().getAllTanks().get(0).getTurret().getMagSize());
         assertTrue(model.getTanksMap().getAllTanks().get(0).getTurret().canShoot());
@@ -121,17 +167,16 @@ public class SingleplayerTest {
         assertEquals(1, model.getTanksMap().getProjectiles().size());
 
         firstShot.interpolateData(tmp);
-        firstShot.interpolateTime(time + 1_100_000_000);
-        assertEquals(new DoubleVec(9.51, 6), model.getTanksMap().getProjectiles().get(0).getPos());
+        firstShot.interpolateTime(time + 1_000_000_000);
+        assertEquals(new DoubleVec(8.01, 6), model.getTanksMap().getProjectiles().get(0).getPos());
 
         assertEquals(ItemEnum.HEAVY_PROJECTILE, model.getTanksMap().getProjectiles().get(0).getProjectileData().type);
-
     }
 
     @Test
     public void collisionBlockTest() {
         player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
-                new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+                                 new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertFalse(player.collide(player.getPos()));
         UnbreakableBlock uBlock = new UnbreakableBlock(model, new Data(new DoubleVec(5, 5), 10, false));
@@ -140,21 +185,21 @@ public class SingleplayerTest {
     }
 
     @Test
-    public void collisionEnemyTest(){
+    public void collisionEnemyTest() {
         player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
-                new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+                                 new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertFalse(player.collide(player.getPos()));
         COMEnemy enemy = new ArmoredPersonnelCarrier(model,
-                new TankData(new DoubleVec(5,5), 1, 100, MoveDirection.STAY, 0.0, new DoubleVec(0,1), false));
+                                                     new TankData(new DoubleVec(5, 5), 1, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addCOMTank(enemy);
         assertTrue(player.collide(player.getPos()));
     }
 
     @Test
-    public void tankDestroyed(){
+    public void tankDestroyed() {
         player = new PlayersTank(model, new HeavyArmor(), new HeavyTurret(),
-                new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
+                                 new TankData(new DoubleVec(4.5, 5), 0, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addPlayerTank(player);
         assertEquals(player, model.getTanksMap().getAllTanks().get(0));
         player.processDamage(100);
@@ -162,9 +207,9 @@ public class SingleplayerTest {
     }
 
     @Test
-    public void enemyDestroyed(){
+    public void enemyDestroyed() {
         COMEnemy enemy = new ArmoredPersonnelCarrier(model,
-                new TankData(new DoubleVec(5,5), 1, 100, MoveDirection.STAY, 0.0, new DoubleVec(0,1), false));
+                                                     new TankData(new DoubleVec(5, 5), 1, 100, MoveDirection.STAY, 0.0, new DoubleVec(0, 1), false));
         model.getTanksMap().addCOMTank(enemy);
         assertEquals(enemy, model.getTanksMap().getAllTanks().get(0));
         enemy.processDamage(100);
