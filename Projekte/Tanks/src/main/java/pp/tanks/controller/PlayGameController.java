@@ -2,6 +2,7 @@ package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
 import pp.tanks.message.data.BBData;
+import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
@@ -12,6 +13,7 @@ import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.MoveDirection;
+import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
@@ -239,6 +241,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
                 engine.getModel().setTank(engine.getSaveTank());
             }
         }
+
+        Oil oil=new Oil(engine.getModel(), 3, new Data(new DoubleVec(3, 3), 1234, false));
+        engine.getModel().getTanksMap().addOil(oil);
 
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
         engine.setView(mapview);

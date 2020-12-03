@@ -12,10 +12,12 @@ import javafx.scene.transform.Affine;
 
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
+import pp.tanks.message.data.Data;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.HeavyProjectile;
 import pp.tanks.model.item.Item;
+import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Track;
@@ -98,8 +100,13 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         if (bgImage != null) context.drawImage(bgImage, 0, 0);
 
         // render items
-        List<Track> trackList = model.getTanksMap().getTank(model.getEngine().getPlayerEnum()).getPosList();
 
+
+
+        for(Oil oil : model.getTanksMap().getOilList()) {
+            oil.accept(visualizer);
+        }
+        List<Track> trackList = model.getTanksMap().getTank(model.getEngine().getPlayerEnum()).getPosList();
         for(Track track : trackList){
             visualizer.drawMeATrack(track);
         }

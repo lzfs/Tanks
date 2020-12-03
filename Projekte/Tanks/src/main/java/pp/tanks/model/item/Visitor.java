@@ -21,4 +21,6 @@ public interface Visitor {
     void visit(NormalProjectile normalProjectile);
 
     void visit(HeavyProjectile heavyProjectile);
+
+    void visit(Oil oil);
 }

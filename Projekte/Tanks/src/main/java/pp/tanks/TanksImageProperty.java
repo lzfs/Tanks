@@ -149,6 +149,8 @@ public enum TanksImageProperty {
     /**
      * Path of tracks
      */
-    tracks
+    tracks,
+
+    oil
 }
 

@@ -5,6 +5,7 @@ import pp.tanks.model.item.Block;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.Item;
+import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.ReflectableBlock;
@@ -28,6 +29,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
     private List<BreakableBlock> breakableBlocks = new ArrayList<>();
     private List<UnbreakableBlock> unbreakableBlocks = new ArrayList<>();
+    private List<Oil> oilList = new ArrayList<>();
     private final HashMap<Integer, Projectile> projectiles = new HashMap<>();
     private final HashMap<Integer, Projectile> addedProjectiles = new HashMap<>();
     private final int width;
@@ -235,6 +237,14 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     @Override
     public int size() {
         return playersTanks.size() + breakableBlocks.size() + unbreakableBlocks.size() + reflectableBlocks.size() + projectiles.size() + enemy.size();
+    }
+
+    public List<Oil> getOilList() {
+        return oilList;
+    }
+
+    public void addOil(Oil oil) {
+        oilList.add(oil);
     }
 
     /**

@@ -10,6 +10,7 @@ import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public abstract class Tank extends Item<TankData> {
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
     private double trackRotation=0.0;
+    private boolean inOil=false;
+
+    private int counter=0;
 
 
     protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
@@ -40,7 +44,7 @@ public abstract class Tank extends Item<TankData> {
         this.playerEnum = PlayerEnum.getPlayer(data.getId()); //TODO Com enemys beim schießen
         this.projectileId = playerEnum.projectileID;
         latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime());
-        posList.add(new Track(data.getPos(),data.getRotation()));
+        posList.add(new Track(data.getPos(),data.getRotation(),TrackIntensity.NORMAL));
     }
 
     /**
@@ -80,6 +84,14 @@ public abstract class Tank extends Item<TankData> {
      */
     public void setLatestOp(DataTimeItem<TankData> latestOp) {
         this.latestOp = latestOp;
+    }
+
+    public boolean isInOil() {
+        return inOil;
+    }
+
+    public void setInOil(boolean inOil) {
+        this.inOil = inOil;
     }
 
     /**
@@ -215,6 +227,7 @@ public abstract class Tank extends Item<TankData> {
                 addTrackRotation();
             }
         }
+        OilColission();
     }
 
     /**
@@ -295,6 +308,29 @@ public abstract class Tank extends Item<TankData> {
             }
         }
         return false;
+    }
+
+    /**
+     * //TODO
+     */
+    public void OilColission() {
+        for (Oil oil : model.getTanksMap().getOilList()) {
+            Ellipse2D item1 = new Ellipse2D.Double(getPos().x - (effectiveRadius / 2.0), getPos().y - (effectiveRadius / 2.0), effectiveRadius, effectiveRadius);
+            Rectangle2D item2 = new Rectangle2D.Double(oil.getPos().x,oil.getPos().y,1.5,1.5);
+            boolean intersect = item1.intersects(item2);
+            //System.out.println("intersect " +intersect);
+            if( intersect && inOil) {
+                System.out.println("im in");
+            } else if (intersect==true && inOil==false) {
+                System.out.println("in Oil now");
+                inOil = true;
+            } else if ( intersect==false && inOil==true) {
+                System.out.println("out of Oil now");
+                counter=20;
+                inOil = false;
+            }
+
+        }
     }
 
     /**
@@ -393,24 +429,40 @@ public abstract class Tank extends Item<TankData> {
         return true;
     }
 
+    /**
+     * //TODO
+     */
     public void addTrack() {
         DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
         if (posList.size() == 0) {
-            posList.add(new Track(getPos(), getRotation()));
+            posList.add(new Track(getPos(), getRotation(),TrackIntensity.NORMAL));
         }
         if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
-            posList.add(new Track(refPos, data.getRotation()));
+            if (inOil==false && counter>0){
+                posList.add(new Track(refPos, data.getRotation(),TrackIntensity.OIL));
+                counter--;
+            }else{
+                posList.add(new Track(refPos, data.getRotation(),TrackIntensity.NORMAL));
+            }
             trackRotation = getRotation();
             if (posList.size() > 50) posList.remove(0);
         }
     }
 
+    /**
+     * //TODO
+     */
     public void addTrackRotation() {
         if (posList.size() == 0) {
-            posList.add(new Track(getPos(), getRotation()));
+            posList.add(new Track(getPos(), getRotation(),TrackIntensity.NORMAL));
         }
         if ( Math.abs(getRotation()-trackRotation)>22.4) {
-            posList.add(new Track(getPos(), getRotation()));
+            if (!inOil && counter > 0){
+                posList.add(new Track(getPos(), data.getRotation(),TrackIntensity.OIL));
+                counter--;
+            }else{
+                posList.add(new Track(getPos(), data.getRotation(),TrackIntensity.NORMAL));
+            }
             trackRotation=getRotation();
         }
         //TODO
@@ -418,27 +470,6 @@ public abstract class Tank extends Item<TankData> {
         //distance wird teilweise 4
         if (posList.size() > 50) posList.remove(0);
     }
-    /*
-        public void addTrackRotation(){
-        if (posList.size() == 0) {
-            posList.add(new Track(getPos(), getRotation()));
-        }
-        double currentRot = data.getRotation() % 180;
-        double moveDirRotation = data.getMoveDir().getRotation();
-        double tmp2 = Math.abs(currentRot - moveDirRotation) % 180;
-        //DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
-        System.out.println("winkel abs " + Math.abs(tmp2-trackRotation));
-        System.out.println("distance "+Math.abs(getPos().distance(posList.get(posList.size() - 1).getVec())) );
-        if (Math.abs(getPos().distance(posList.get(posList.size() - 1).getVec())) > 0.1 && Math.abs(tmp2-trackRotation)>15){
-            posList.add(new Track(getPos(), getRotation()));
-            trackRotation=getRotation();
-        }
-        //TODO
-        //nachjustieren
-        //distance wird teilweise 4
-        if (posList.size() > 50) posList.remove(0);
-    }
-     */
 
     public void sendTurretUpdate() {
     }

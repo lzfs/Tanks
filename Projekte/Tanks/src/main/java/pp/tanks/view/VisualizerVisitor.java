@@ -13,9 +13,11 @@ import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.NormalArmor;
 import pp.tanks.model.item.NormalProjectile;
 import pp.tanks.model.item.NormalTurret;
+import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.ReflectableBlock;
 import pp.tanks.model.item.Track;
+import pp.tanks.model.item.TrackIntensity;
 import pp.tanks.model.item.Turret;
 import pp.tanks.model.item.UnbreakableBlock;
 import pp.tanks.model.item.Visitor;
@@ -195,7 +197,13 @@ public class VisualizerVisitor implements Visitor {
         final DoubleVec pos = view.modelToView(posTrack.getVec());
         context.translate(pos.x, pos.y);
         context.rotate((posTrack.getRotation()+90)%360);
-        drawImage(TanksImageProperty.tracks,Shape.DIRECTED_OVAL,Color.RED,1);
+        if(posTrack.getintensity() == TrackIntensity.NORMAL){
+            drawImage(TanksImageProperty.tracks,Shape.DIRECTED_OVAL,Color.RED,1);
+        } else if(posTrack.getintensity() == TrackIntensity.OIL) {
+            drawImage(TanksImageProperty.tracks,Shape.DIRECTED_OVAL,Color.RED,1);
+        }
+
+
         context.setTransform(ori);
     }
 
@@ -336,6 +344,12 @@ public class VisualizerVisitor implements Visitor {
     @Override
     public void visit(HeavyProjectile heavyProjectile) {
         drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
+    }
+
+    @Override
+    public void visit(Oil oil) {
+        //System.out.println("here");
+        drawItemScale(oil,TanksImageProperty.oil,Shape.OVAL, Color.RED,1);
     }
 
     /**
