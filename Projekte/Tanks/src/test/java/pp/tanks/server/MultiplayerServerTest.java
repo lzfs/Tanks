@@ -32,13 +32,6 @@ public class MultiplayerServerTest {
             },
             () -> { //3
                 transmitter.receiveMessage(new UpdateTankConfigMessage(ItemEnum.LIGHT_TURRET, ItemEnum.NORMAL_ARMOR, PlayerEnum.PLAYER2), conn2);
-            },
-            () -> { //4
-
-
-            },
-            () -> { //5
-
             }
     );
 
