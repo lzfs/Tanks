@@ -6,18 +6,12 @@ import pp.network.MessageReceiver;
 import pp.network.Server;
 import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.ClientReadyMessage;
-import pp.tanks.message.client.CollisionMessage;
-import pp.tanks.message.client.CreateNewLobbyMessage;
 import pp.tanks.message.client.IClientInterpreter;
 import pp.tanks.message.client.IClientMessage;
-import pp.tanks.message.client.JoinLobbyXMessage;
-import pp.tanks.message.client.LevelSelectedMessage;
 import pp.tanks.message.client.MoveMessage;
 import pp.tanks.message.client.PingResponse;
-import pp.tanks.message.client.ReadyMessage;
 import pp.tanks.message.client.ShootMessage;
 import pp.tanks.message.client.StartGameMessage;
-import pp.tanks.message.client.TankSelectedMessage;
 import pp.tanks.message.client.TurretUpdateMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.server.IServerMessage;
@@ -83,33 +77,8 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
     }
 
     @Override
-    public void visit(CollisionMessage msg, IConnection<IServerMessage> from) {
-
-    }
-
-    @Override
-    public void visit(CreateNewLobbyMessage msg, IConnection<IServerMessage> from) {
-
-    }
-
-    @Override
-    public void visit(JoinLobbyXMessage msg, IConnection<IServerMessage> from) {
-
-    }
-
-    @Override
-    public void visit(LevelSelectedMessage msg, IConnection<IServerMessage> from) {
-
-    }
-
-    @Override
     public void visit(MoveMessage msg, IConnection<IServerMessage> from) {
         auto.tankMove(msg, from);
-    }
-
-    @Override
-    public void visit(ReadyMessage msg, IConnection<IServerMessage> from) {
-
     }
 
     @Override
@@ -122,10 +91,6 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
         auto.startGame(msg);
     }
 
-    @Override
-    public void visit(TankSelectedMessage msg, IConnection<IServerMessage> from) {
-
-    }
 
     @Override
     public void visit(UpdateTankConfigMessage msg, IConnection<IServerMessage> from) {
