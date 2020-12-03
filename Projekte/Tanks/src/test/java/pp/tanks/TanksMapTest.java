@@ -9,7 +9,6 @@ import pp.tanks.model.TanksMap;
 import pp.tanks.model.item.*;
 import pp.util.DoubleVec;
 
-import java.sql.Ref;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -382,16 +382,18 @@ public abstract class Tank extends Item<TankData> {
         if (tTime > deltaT) {
             if (turnLeft) data.setRotation(latestRot + deltaT * rotationSpeed);
             else data.setRotation(latestRot - deltaT * rotationSpeed);
+            addTrackRotation();
         }
         else {
             double rest = deltaT - tTime;
             data.setRotation(moveDirRotation);
             data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
+            addTrack();
         }
         return true;
     }
 
-    public void addTrack(){
+    public void addTrack() {
         DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
         if (posList.size() == 0) {
             posList.add(new Track(getPos(), getRotation()));
@@ -403,7 +405,7 @@ public abstract class Tank extends Item<TankData> {
         }
     }
 
-    public void addTrackRotation(){
+    public void addTrackRotation() {
         if (posList.size() == 0) {
             posList.add(new Track(getPos(), getRotation()));
         }
