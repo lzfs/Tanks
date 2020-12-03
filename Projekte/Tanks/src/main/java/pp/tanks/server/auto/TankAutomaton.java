@@ -65,7 +65,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * the state when a multiplayer game is started and a second player needs to connect
      */
-    protected final TankState waitingFor2Player = new TankState() {
+    public final TankState waitingFor2Player = new TankState() {
         @Override
         public void entry() {
             TankAutomaton.LOGGER.info("waiting for player 2");
