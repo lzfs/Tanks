@@ -30,19 +30,18 @@ public abstract class Tank extends Item<TankData> {
     public final PlayerEnum playerEnum;
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
-    private double trackRotation=0.0;
-    private int counter=0;
+    private double trackRotation = 0.0;
+    private int counter = 0;
 
-
-    protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, effectiveRadius, data);
+    protected Tank(Model model, Armor armor, Turret turret, TankData data) {
+        super(model, armor.getEffectiveRadius(), data);
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
         this.playerEnum = PlayerEnum.getPlayer(data.getId()); //TODO Com enemys beim schießen
         this.projectileId = playerEnum.projectileID;
         latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime());
-        posList.add(new Track(data.getPos(),data.getRotation(),TrackIntensity.NORMAL));
+        posList.add(new Track(data.getPos(), data.getRotation(), TrackIntensity.NORMAL));
     }
 
     /**
@@ -167,7 +166,6 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     *
      * @return the list with the positions we want to draw
      */
     public List<Track> getPosList() {
@@ -209,10 +207,12 @@ public abstract class Tank extends Item<TankData> {
                     setPos(newPos);
                     addTrack();
                 }
-            } else if (tmp > tmp1) {
+            }
+            else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);
                 addTrackRotation();
-            } else {
+            }
+            else {
                 data.setRotation(currentRot - delta * rotationSpeed);
                 addTrackRotation();
             }
@@ -268,7 +268,6 @@ public abstract class Tank extends Item<TankData> {
         model.notifyReceivers(TanksNotification.TANK_FIRED);
         projectileId++;
         return turret.mkProjectile(this.model, data, targetPos);
-
     }
 
     /**
@@ -306,7 +305,7 @@ public abstract class Tank extends Item<TankData> {
     public void oilCollision() {
         for (Oil oil : model.getTanksMap().getOilList()) {
             if (getPos().distance(oil.getPos()) <= effectiveRadius + oil.effectiveRadius) {
-                counter=20;
+                counter = 20;
                 return;
             }
         }
@@ -320,14 +319,12 @@ public abstract class Tank extends Item<TankData> {
     @Override
     public boolean collisionWith(Item other, DoubleVec newPos) {
         if (getPos() == null || other.isDestroyed()) return false;
-
-        double buffer = 0.05;
-
         if (other instanceof Block) {
             Block block = (Block) other;
-            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2.0), newPos.y - (effectiveRadius / 2.0), effectiveRadius, effectiveRadius);
-            return item1.intersects(other.getPos().x - ((block.getWidth() + buffer) / 2.0), other.getPos().y - ((block.getHeight() + buffer) / 2.0), block.getWidth() + buffer, block.getHeight() + buffer);
-        } else {
+            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - effectiveRadius * 0.75, newPos.y - effectiveRadius * 0.75, effectiveRadius * 1.5, effectiveRadius * 1.5);
+            return item1.intersects(other.getPos().x - block.getWidth() * 0.5, other.getPos().y - block.getHeight() * 0.5, block.getWidth(), block.getHeight());
+        }
+        else {
             return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
@@ -342,7 +339,8 @@ public abstract class Tank extends Item<TankData> {
         if (armor.getArmorPoints() - damage <= 0) {
             armor.setArmorPoints(0);
             destroy();
-        } else {
+        }
+        else {
             armor.takeDamage(damage);
             if (model.getEngine() != null) model.getEngine().notify(TanksNotification.ARMOR_HIT);
         }
@@ -415,14 +413,15 @@ public abstract class Tank extends Item<TankData> {
     public void addTrack() {
         DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
         if (posList.size() == 0) {
-            posList.add(new Track(getPos(), getRotation(),TrackIntensity.NORMAL));
+            posList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
         }
-        if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
-            if (counter>0){
-                posList.add(new Track(refPos, data.getRotation(),TrackIntensity.OIL));
+        if (Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
+            if (counter > 0) {
+                posList.add(new Track(refPos, data.getRotation(), TrackIntensity.OIL));
                 counter--;
-            }else{
-                posList.add(new Track(refPos, data.getRotation(),TrackIntensity.NORMAL));
+            }
+            else {
+                posList.add(new Track(refPos, data.getRotation(), TrackIntensity.NORMAL));
             }
             trackRotation = getRotation();
             if (posList.size() > 50) posList.remove(0);
@@ -434,16 +433,17 @@ public abstract class Tank extends Item<TankData> {
      */
     public void addTrackRotation() {
         if (posList.size() == 0) {
-            posList.add(new Track(getPos(), getRotation(),TrackIntensity.NORMAL));
+            posList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
         }
-        if ( Math.abs(getRotation()-trackRotation)>22.4) {
-            if (counter > 0){
-                posList.add(new Track(getPos(), data.getRotation(),TrackIntensity.OIL));
+        if (Math.abs(getRotation() - trackRotation) > 22.4) {
+            if (counter > 0) {
+                posList.add(new Track(getPos(), data.getRotation(), TrackIntensity.OIL));
                 counter--;
-            }else{
-                posList.add(new Track(getPos(), data.getRotation(),TrackIntensity.NORMAL));
             }
-            trackRotation=getRotation();
+            else {
+                posList.add(new Track(getPos(), data.getRotation(), TrackIntensity.NORMAL));
+            }
+            trackRotation = getRotation();
         }
         //TODO
         //nachjustieren

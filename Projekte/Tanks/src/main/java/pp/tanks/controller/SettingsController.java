@@ -76,6 +76,7 @@ public class SettingsController extends Controller {
             scene = makeScene();
         engine.setScene(scene);
         changeMusic(engine.getTankApp().sounds.getMutedMusic());
+        changeSound(engine.isSoundMuted());
     }
 
     /**

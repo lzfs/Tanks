@@ -41,11 +41,14 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 /**
  * The controller realizing the game state when the game is really running.
@@ -63,7 +66,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
     private final StopWatch stopWatch = new StopWatch();
     private double lastUpdate;
     private Scene scene;
-    private Scene sceneBackup;
     private boolean stopFlag = false;
     public final List<ItemEnum> constructionEnum = new ArrayList<>();
     public final List<TankData> constructionData = new ArrayList<>();
@@ -277,7 +279,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
     @Override
     void exit() {
         LOGGER.info("Exit PlayGameController");
-        sceneBackup = scene;
         scene = null;
         stopWatch.stop();
         pressed.clear();
@@ -455,6 +456,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     public void handleLocalGameWon() {
         engine.setView(null);
         if (engine.getMode() == GameMode.TUTORIAL) {
+            engine.setTutorial(false);
             engine.activateLevelController();
         }
         else {
@@ -476,6 +478,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
         engine.setView(null);
         if (engine.getMode() == GameMode.TUTORIAL) {
             engine.activateLevelController();
+            engine.setTutorial(false);
         }
         else {
             engine.getSaveTank().decreaseLives();

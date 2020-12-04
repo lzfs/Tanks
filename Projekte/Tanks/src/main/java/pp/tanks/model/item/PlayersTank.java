@@ -18,7 +18,7 @@ public class PlayersTank extends Tank {
     private long latestViewUpdate;
 
     public PlayersTank(Model model, Armor armor, Turret turret, TankData data) {
-        super(model, 0.7, armor, turret, data);
+        super(model, armor, turret, data);
         setLives(3);
         if (getLatestOp() != null) latestViewUpdate = getLatestOp().serverTime;
         else System.nanoTime();

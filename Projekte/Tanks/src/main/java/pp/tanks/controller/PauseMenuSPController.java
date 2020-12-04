@@ -119,6 +119,7 @@ public class PauseMenuSPController extends Controller {
         engine.setView(null);
         engine.activateMainMenuController();
         engine.viewUpdate=true;
+        engine.setTutorial(false);
 
     }
 

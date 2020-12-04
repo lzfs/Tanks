@@ -4,10 +4,12 @@ import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Affine;
 
 import pp.tanks.ImageSupport;
@@ -101,13 +103,11 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
 
         // render items
 
-
-
-        for(Oil oil : model.getTanksMap().getOilList()) {
+        for (Oil oil : model.getTanksMap().getOilList()) {
             oil.accept(visualizer);
         }
         List<Track> trackList = model.getTanksMap().getTank(model.getEngine().getPlayerEnum()).getPosList();
-        for(Track track : trackList){
+        for (Track track : trackList) {
             visualizer.drawMeATrack(track);
         }
         for (Item p : model.getTanksMap()) {
@@ -115,13 +115,11 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         }
         if (model.getEngine().getMode() == GameMode.SINGLEPLAYER) {
             model.getTanksMap().getTank(PlayerEnum.PLAYER1).accept(visualizer);
-        } else if (model.getEngine().getMode()==GameMode.MULTIPLAYER) {
+        }
+        else if (model.getEngine().getMode() == GameMode.MULTIPLAYER) {
             PlayerEnum player = model.getEngine().getPlayerEnum();
             model.getTanksMap().getTank(player).accept(visualizer);
         }
-
-
-
 
         for (Projectile p : projectiles) {
             for (int i = 0; i < 5; i++) {
@@ -227,9 +225,8 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         this.progressBar.setProgress(percentage);
     }
 
-    public void drawLostTank(DoubleVec position){
+    public void drawLostTank(DoubleVec position) {
         //TODO
-        drawImage(bigExplosion, position.x,position.y);
-
+        drawImage(bigExplosion, position.x, position.y);
     }
 }

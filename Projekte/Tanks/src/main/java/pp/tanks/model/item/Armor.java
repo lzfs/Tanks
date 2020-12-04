@@ -5,13 +5,16 @@ package pp.tanks.model.item;
  */
 public class Armor {
     private int armorPoints;
-    private int weight;
+    private final int weight;
     protected int maxPoints;
+    private final double effectiveRadius;
 
-    public Armor(int armorPoints, int weight) {
+    public Armor(int armorPoints, int weight,double effectiveRadius) {
         this.armorPoints = armorPoints;
         this.weight = weight;
         this.maxPoints = 100;
+        this.effectiveRadius=effectiveRadius;
+
     }
 
     /**
@@ -51,6 +54,10 @@ public class Armor {
      */
     public void setArmorPoints(int points) {
         this.armorPoints = points;
+    }
+
+    public double getEffectiveRadius() {
+        return effectiveRadius;
     }
 
     /**

@@ -97,6 +97,7 @@ public class TutorialOverviewController extends Controller {
         PlayersTank tank = new PlayersTank(engine.getModel(),  new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
         engine.setSaveTank(tank);
         engine.activatePlayGameController();
+        engine.setTutorial(true);
     }
 }
 

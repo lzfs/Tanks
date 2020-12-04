@@ -23,8 +23,8 @@ public class COMEnemy extends Enemy {
     protected List<DoubleVec> path;
     private List<MoveDirection> dirs;
 
-    protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, effectiveRadius, armor, turret, data);
+    protected COMEnemy(Model model, Armor armor, Turret turret, TankData data) {
+        super(model, armor, turret, data);
         if (model.getEngine() != null) latestViewUpdate = System.nanoTime() + model.getEngine().getOffset();
         else latestViewUpdate = System.nanoTime();
         this.path = new LinkedList<>();
@@ -66,22 +66,25 @@ public class COMEnemy extends Enemy {
      */
     @Override
     public void update(long serverTime) {
-        long tmp = serverTime - latestViewUpdate;
-        double delta = FACTOR_SEC * tmp;
-        turret.update(delta);
-        data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
-        if (model.getEngine() != null) {
-            if (isMoving()) {
-                // move(delta);
-                if (!collide(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)))) {
-                    updateMove(delta);
-                } else {
-                    path.clear();
+        if(!model.getEngine().isTutorial()) {
+            long tmp = serverTime - latestViewUpdate;
+            double delta = FACTOR_SEC * tmp;
+            turret.update(delta);
+            data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
+            if (model.getEngine() != null) {
+                if (isMoving()) {
+                    // move(delta);
+                    if (!collide(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)))) {
+                        updateMove(delta);
+                    }
+                    else {
+                        path.clear();
+                    }
                 }
-            }
-            else {
-                if (!this.isDestroyed()) {
-                    behaviour(delta);
+                else {
+                    if (!this.isDestroyed()) {
+                        behaviour(delta);
+                    }
                 }
             }
         }

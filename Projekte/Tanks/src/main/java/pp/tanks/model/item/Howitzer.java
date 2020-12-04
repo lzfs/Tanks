@@ -23,7 +23,7 @@ public class Howitzer extends COMEnemy {
     private DoubleVec roundedPos;
 
     public Howitzer(Model model, TankData data) {
-        super(model, 1, new HeavyArmor(), new HeavyTurret(), data);
+        super(model, new HeavyArmor(), new HeavyTurret(), data);
         movingCounter = 2;
         this.roundedPos = getHidingBlockPos().add(new DoubleVec(1, 0));
         navigateTo(roundedPos);

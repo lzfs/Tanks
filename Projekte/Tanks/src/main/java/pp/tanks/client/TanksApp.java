@@ -97,6 +97,12 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         else {
             engine.getTankApp().sounds.mute(true);
         }
+        if (soundMuted.value(engine.getModel().getProperties()) == 0) {
+            engine.setSoundMuted(false);
+        }
+        else {
+            engine.setSoundMuted(true);
+        }
     }
 
     /**
@@ -200,7 +206,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
             }
         }
         catch (NumberFormatException e) {
-            //TODO Logger ausgabe
+            LOGGER.info("Exception: " + e.getMessage());
             throw e;
             //setInfoText(Resources.getString("port.number.must.be.an.integer"));
         }
@@ -286,7 +292,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         engine.getController().playerDisconnected();
     }
 
-    public Stage getStage(){
+    public Stage getStage() {
         return stage;
     }
 }

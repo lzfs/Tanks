@@ -20,7 +20,7 @@ public class TankDestroyer extends COMEnemy {
     private final List<DoubleVec> path = new LinkedList<>();
 
     public TankDestroyer(Model model, TankData data) {
-        super(model, 1, new NormalArmor(), new NormalTurret(), data);
+        super(model, new NormalArmor(), new NormalTurret(), data);
     }
 
     /**

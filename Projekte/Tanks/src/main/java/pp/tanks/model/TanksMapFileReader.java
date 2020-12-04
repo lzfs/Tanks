@@ -131,40 +131,6 @@ class TanksMapFileReader {
                     map.addReflectableBlocks(rB);
                     break;
                 }
-
-                case "playersTank": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    PlayersTank pT = new PlayersTank(model,  new Armor(20, 5), new LightTurret(), new TankData(tmpPos, 1000, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
-                    map.addTanks(pT);
-                    break;
-                }
-
-                case "enemy": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    break;
-                }
-                case "apc": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos, 0010, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-                    ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model, data);
-                    map.addTanks(apc);
-                    break;
-                }
-                case "howitzer": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos, 0100, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-                    Howitzer howitzer = new Howitzer(model, data);
-                    map.addTanks(howitzer);
-                    break;
-                }
                 case "oil": {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
@@ -172,15 +138,6 @@ class TanksMapFileReader {
                     Data data = new Data(tmpPos,1234,false);
                     Oil oil = new Oil(model,0.2,data);
                     map.addOil(oil);
-                    break;
-                }
-                case "tankDestroyer": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos, 0001, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-                    TankDestroyer tankDestroyer = new TankDestroyer(model, data);
-                    map.addTanks(tankDestroyer);
                     break;
                 }
                 case "enemyCounter":

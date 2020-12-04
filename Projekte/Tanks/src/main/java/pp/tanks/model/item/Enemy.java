@@ -12,8 +12,8 @@ public class Enemy extends Tank {
     private double animationTime;
     private DoubleVec targetPos;
 
-    protected Enemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, effectiveRadius, armor, turret, data);
+    protected Enemy(Model model, Armor armor, Turret turret, TankData data) {
+        super(model, armor, turret, data);
     }
 
     /**
@@ -61,6 +61,6 @@ public class Enemy extends Tank {
     public static Enemy mkEnemyTank(Model model, ItemEnum turret, ItemEnum armor, TankData data) {
         Turret ergTurret = Turret.mkTurret(turret);
         Armor ergArmor = Armor.mkArmor(armor);
-        return new Enemy(model, 0.9, ergArmor, ergTurret, data); //TODO ggf. effectiveRadius heruntersetzen
+        return new Enemy(model, ergArmor, ergTurret, data); //TODO ggf. effectiveRadius heruntersetzen
     }
 }

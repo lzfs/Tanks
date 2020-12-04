@@ -77,6 +77,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private int mapCounter = 0;
     private long animationTime;
     private boolean soundMuted = false;
+    private boolean isTutorial=false;
 
     /**
      * Creates a new engine
@@ -163,6 +164,22 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
      */
     public int getMapCounter() {
         return mapCounter;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isTutorial() {
+        return isTutorial;
+    }
+
+    /**
+     *
+     * @param tutorial
+     */
+    public void setTutorial(boolean tutorial) {
+        isTutorial = tutorial;
     }
 
     /**
