@@ -170,7 +170,7 @@ class TanksMapFileReader {
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
                     Data data = new Data(tmpPos,1234,false);
-                    Oil oil = new Oil(model,2,data);
+                    Oil oil = new Oil(model,0.2,data);
                     map.addOil(oil);
                     break;
                 }

@@ -1,7 +1,5 @@
 package pp.tanks.model.item;
 
-import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
@@ -11,7 +9,6 @@ import pp.util.IntVec;
 
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -170,7 +167,7 @@ public class COMEnemy extends Enemy {
             data.setRotation(currentRot - delta * rotationSpeed);
             addTrackRotation();
         }
-        OilColission();
+        oilCollision();
     }
 
     /**

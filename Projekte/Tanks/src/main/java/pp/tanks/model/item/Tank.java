@@ -31,8 +31,6 @@ public abstract class Tank extends Item<TankData> {
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
     private double trackRotation=0.0;
-    private boolean inOil=false;
-
     private int counter=0;
 
 
@@ -84,14 +82,6 @@ public abstract class Tank extends Item<TankData> {
      */
     public void setLatestOp(DataTimeItem<TankData> latestOp) {
         this.latestOp = latestOp;
-    }
-
-    public boolean isInOil() {
-        return inOil;
-    }
-
-    public void setInOil(boolean inOil) {
-        this.inOil = inOil;
     }
 
     /**
@@ -227,7 +217,7 @@ public abstract class Tank extends Item<TankData> {
                 addTrackRotation();
             }
         }
-        OilColission();
+        oilCollision();
     }
 
     /**
@@ -313,16 +303,11 @@ public abstract class Tank extends Item<TankData> {
     /**
      * //TODO
      */
-    public void OilColission() {
+    public void oilCollision() {
         for (Oil oil : model.getTanksMap().getOilList()) {
-            Ellipse2D item1 = new Ellipse2D.Double(getPos().x - (effectiveRadius / 2.0), getPos().y - (effectiveRadius / 2.0), effectiveRadius, effectiveRadius);
-            Rectangle2D item2 = new Rectangle2D.Double(oil.getPos().x,oil.getPos().y,1.5,1.5);
-            boolean intersect = item1.intersects(item2);
-            if (intersect && !inOil) {
-                inOil = true;
-            } else if (!intersect && inOil) {
+            if (getPos().distance(oil.getPos()) <= effectiveRadius + oil.effectiveRadius) {
                 counter=20;
-                inOil = false;
+                return;
             }
         }
     }
@@ -419,7 +404,7 @@ public abstract class Tank extends Item<TankData> {
             data.setRotation(moveDirRotation);
             data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
             addTrack();
-            OilColission();
+            oilCollision();
         }
         return true;
     }
@@ -433,7 +418,7 @@ public abstract class Tank extends Item<TankData> {
             posList.add(new Track(getPos(), getRotation(),TrackIntensity.NORMAL));
         }
         if(Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
-            if (inOil==false && counter>0){
+            if (counter>0){
                 posList.add(new Track(refPos, data.getRotation(),TrackIntensity.OIL));
                 counter--;
             }else{
@@ -452,7 +437,7 @@ public abstract class Tank extends Item<TankData> {
             posList.add(new Track(getPos(), getRotation(),TrackIntensity.NORMAL));
         }
         if ( Math.abs(getRotation()-trackRotation)>22.4) {
-            if (!inOil && counter > 0){
+            if (counter > 0){
                 posList.add(new Track(getPos(), data.getRotation(),TrackIntensity.OIL));
                 counter--;
             }else{

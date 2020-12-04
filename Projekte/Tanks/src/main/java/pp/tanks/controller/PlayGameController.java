@@ -367,6 +367,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
         for (DataTimeItem<ProjectileData> item : tmpList) {
             Projectile p = getTanksMap().getHashProjectiles().get(item.data.id);
             if (p == null) {
+                engine.notify(TanksNotification.TANK_FIRED);
                 p = Projectile.mkProjectile(engine.getModel(), item.data);
                 engine.getModel().getTanksMap().addProjectile(p);
             }
