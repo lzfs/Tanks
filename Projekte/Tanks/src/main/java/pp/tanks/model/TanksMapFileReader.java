@@ -165,6 +165,15 @@ class TanksMapFileReader {
                     map.addTanks(howitzer);
                     break;
                 }
+                case "oil": {
+                    tx = getIntAttribute("x", 0);
+                    ty = getIntAttribute("y", 0);
+                    tmpPos = new DoubleVec(tx, ty);
+                    Data data = new Data(tmpPos,1234,false);
+                    Oil oil = new Oil(model,2,data);
+                    map.addOil(oil);
+                    break;
+                }
                 case "tankDestroyer": {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);

@@ -75,4 +75,6 @@
    <uBlock x="11" y="4"></uBlock>
    <rBlock x="11" y="6"></rBlock>
    <bBlock x="11" y="8"></bBlock>
+   <oil x="3" y="3"></oil>
+   <oil x="18" y="7"></oil>
 </map>

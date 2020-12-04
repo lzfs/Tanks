@@ -115,6 +115,9 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         }
         if (model.getEngine().getMode() == GameMode.SINGLEPLAYER) {
             model.getTanksMap().getTank(PlayerEnum.PLAYER1).accept(visualizer);
+        } else if (model.getEngine().getMode()==GameMode.MULTIPLAYER) {
+            PlayerEnum player = model.getEngine().getPlayerEnum();
+            model.getTanksMap().getTank(player).accept(visualizer);
         }
 
 

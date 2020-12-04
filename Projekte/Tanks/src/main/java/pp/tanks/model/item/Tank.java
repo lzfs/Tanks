@@ -419,6 +419,7 @@ public abstract class Tank extends Item<TankData> {
             data.setRotation(moveDirRotation);
             data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
             addTrack();
+            OilColission();
         }
         return true;
     }

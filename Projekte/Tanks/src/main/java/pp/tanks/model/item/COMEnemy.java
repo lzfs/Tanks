@@ -170,6 +170,7 @@ public class COMEnemy extends Enemy {
             data.setRotation(currentRot - delta * rotationSpeed);
             addTrackRotation();
         }
+        OilColission();
     }
 
     /**

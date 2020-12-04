@@ -242,9 +242,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
         }
 
-        Oil oil=new Oil(engine.getModel(), 3, new Data(new DoubleVec(3, 3), 1234, false));
-        engine.getModel().getTanksMap().addOil(oil);
-
         TanksMapView mapview = new TanksMapView(engine.getModel(), engine.getImages());
         engine.setView(mapview);
 
