@@ -93,7 +93,6 @@ public abstract class Navigator<N extends WithDistance<N>> {
                 }
             }
         }
-
         // no path to end found
         return null;
     }

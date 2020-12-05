@@ -2,6 +2,9 @@ package pp.tanks.message.server;
 
 import pp.tanks.server.GameMode;
 
+/**
+ * Message send if a game is ending
+ */
 public class GameEndingMessage implements IServerMessage {
     public final GameMode mode;
     public final boolean won;

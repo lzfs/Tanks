@@ -9,7 +9,7 @@ import pp.tanks.server.GameMode;
  */
 public class ClientReadyMessage implements IClientMessage {
 
-    public ClientReadyMessage() { }
+    public ClientReadyMessage() {}
 
     /**
      * Method to accept a visitor

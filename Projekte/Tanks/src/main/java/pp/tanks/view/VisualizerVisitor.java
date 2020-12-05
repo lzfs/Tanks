@@ -50,6 +50,10 @@ import java.util.List;
  * Item visitor that adds visual representations of items to the tanks map view
  */
 public class VisualizerVisitor implements Visitor {
+
+    /**
+     * Enumeration for the shape that drawable items can have
+     */
     private enum Shape {RECTANGLE, OVAL, DIRECTED_OVAL}
 
     private final TanksMapView view;
@@ -58,17 +62,19 @@ public class VisualizerVisitor implements Visitor {
         this.view = view;
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     *
+     * @param playersTank the player Tank
+     */
     @Override
     public void visit(PlayersTank playersTank) {
-
         boolean destroyed = playersTank.isDestroyed();
-
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(playersTank.getPos());
         context.translate(pos.x, pos.y);
         if (!destroyed) {
-            //context.rotate(-90);
             context.rotate((playersTank.getRotation() + 90) % 360);
             context.scale(0.7, 0.7);
 
@@ -103,122 +109,38 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
-    public void fadeAThing(){
-        /*
-        KeyFrame keyFrame1On = new KeyFrame(Duration.seconds(0), new KeyValue(imageView.imageProperty(), image1));
-        KeyFrame startFadeOut = new KeyFrame(Duration.seconds(0.2), new KeyValue(imageView.opacityProperty(), 1.0));
-        KeyFrame endFadeOut = new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.opacityProperty(), 0.0));
-        //KeyFrame keyFrame2On = new KeyFrame(Duration.seconds(0.5), new KeyValue(imageView.imageProperty(), image2));
-        KeyFrame endFadeIn = new KeyFrame(Duration.seconds(0.8), new KeyValue(imageView.opacityProperty(), 1.0));
-        Timeline timelineOn = new Timeline(keyFrame1On, startFadeOut, endFadeOut, keyFrame2On, endFadeIn);
-
-
-        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
-
-        ImageView imageView = new ImageView(view.getImages().getImage(TanksImageProperty.armor1));
-        imageView.setX(pos.x);
-        imageView.setY(pos.y);
-        FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
-        ft.setFromValue(1.0);
-        ft.setToValue(0.3);
-        ft.setCycleCount(4);
-        ft.setAutoReverse(true);
-        ft.play();
-
-        System.out.println("WHOOp");
-
-        rect.setArcHeight(50);
-        rect.setArcWidth(50);
-        rect.setFill(Color.VIOLET);
-
-        FadeTransition ft = new FadeTransition(Duration.millis(3000), rect);
-        ft.setFromValue(1.0);
-        ft.setToValue(0.3);
-        ft.setCycleCount(4);
-        ft.setAutoReverse(true);
-       ft.play();
-
-
-        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
-        final GraphicsContext context = view.getGraphicsContext2D();
-        final Affine ori = context.getTransform();
-        context.translate(pos.x, pos.y);
-
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(0.1);
-        context.setEffect(colorAdjust);
-
-        drawImage(TanksImageProperty.armor1,Shape.DIRECTED_OVAL,Color.RED,1);
-        context.setTransform(ori);
-
-
-
-        final GraphicsContext context = view.getGraphicsContext2D();
-        final Affine ori = context.getTransform();
-        context.translate(pos.x, pos.y);
-
-        ColorAdjust colorAdjust = new ColorAdjust();
-        colorAdjust.setBrightness(0.1);
-        context.setEffect(colorAdjust);
-
-        drawImage(TanksImageProperty.armor1,Shape.DIRECTED_OVAL,Color.RED,1);
-        context.setTransform(ori);
-
-
-          final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
-        final GraphicsContext context = view.getGraphicsContext2D();
-        final Affine ori = context.getTransform();
-        context.translate(pos.x, pos.y);
-
-
-        final DoubleVec pos = view.modelToView(new DoubleVec(6,6));
-        ImageView imageView = new ImageView(view.getImages().getImage(TanksImageProperty.armor1));
-        imageView.setX(pos.x);
-        imageView.setY(pos.y);
-        //imageView.setOpacity();
-        FadeTransition ft = new FadeTransition(Duration.millis(3000), imageView);
-        ft.setFromValue(1.0);
-        ft.setToValue(0.3);
-        ft.setCycleCount(4);
-        ft.setAutoReverse(true);
-        ft.play();
-         */
-
-    }
-
-
     /**
      * Draw a track behind the tank
-     * @param posTrack
+     *
+     * @param posTrack the Track
      */
     public void drawMeATrack(Track posTrack) {
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(posTrack.getVec());
         context.translate(pos.x, pos.y);
-        context.rotate((posTrack.getRotation()+90)%360);
-        if(posTrack.getintensity() == TrackIntensity.NORMAL){
-            drawImage(TanksImageProperty.tracks,Shape.DIRECTED_OVAL,Color.RED,1);
-        } else if(posTrack.getintensity() == TrackIntensity.OIL) {
-            drawImage(TanksImageProperty.tracksDark,Shape.DIRECTED_OVAL,Color.RED,1);
+        context.rotate((posTrack.getRotation() + 90) % 360);
+        if (posTrack.getintensity() == TrackIntensity.NORMAL) {
+            drawImage(TanksImageProperty.tracks, Shape.DIRECTED_OVAL, Color.RED, 1);
         }
-
-
+        else if (posTrack.getintensity() == TrackIntensity.OIL) {
+            drawImage(TanksImageProperty.tracksDark, Shape.DIRECTED_OVAL, Color.RED, 1);
+        }
         context.setTransform(ori);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     *
+     * @param enemy the enemy Tank
+     */
     @Override
     public void visit(Enemy enemy) {
-
         List<Track> posList = enemy.getPosList();
-
-        for(Track posTrack : posList) {
+        for (Track posTrack : posList) {
             drawMeATrack(posTrack);
         }
-        /*
-        drawItem(enemy, TanksImageProperty.armor2, Shape.RECTANGLE, Color.BLUE);
-         */
-        Boolean destroyed = enemy.isDestroyed();
+        boolean destroyed = enemy.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
@@ -226,7 +148,6 @@ public class VisualizerVisitor implements Visitor {
         context.translate(pos.x, pos.y);
 
         if (!destroyed) {
-            //context.rotate(-90);
             context.rotate((enemy.getRotation() + 90) % 360);
             context.scale(0.7, 0.7);
 
@@ -240,7 +161,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-
 
             context.rotate(-enemy.getRotation());
             context.rotate(enemy.getData().getTurretDir().angle());
@@ -262,13 +182,15 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
-
+    /**
+     * visit method for the Visitor-Pattern
+     *
+     * @param comEnemy the comEnemy Tank
+     */
     @Override
     public void visit(COMEnemy comEnemy) {
-
         List<Track> posList = comEnemy.getPosList();
-
-        for(Track posTrack : posList) {
+        for (Track posTrack : posList) {
             drawMeATrack(posTrack);
         }
 
@@ -310,6 +232,10 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param bBlock the bBlock
+     */
     @Override
     public void visit(BreakableBlock bBlock) {
         if (!bBlock.isDestroyed()) {
@@ -317,16 +243,28 @@ public class VisualizerVisitor implements Visitor {
         }
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param rBlock the rBlock
+     */
     @Override
     public void visit(ReflectableBlock rBlock) {
         drawItemScale(rBlock, TanksImageProperty.rBlock, Shape.RECTANGLE, Color.BLUE, 0.9);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param uBlock the Unbreakable Block
+     */
     @Override
     public void visit(UnbreakableBlock uBlock) {
         drawItemScale(uBlock, TanksImageProperty.uBlock, Shape.RECTANGLE, Color.BLUE, 0.9);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param lightProjectile the lightProjectile
+     */
     @Override
     public void visit(LightProjectile lightProjectile) {
         if (lightProjectile.visible()) {
@@ -334,6 +272,10 @@ public class VisualizerVisitor implements Visitor {
         }
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param normalProjectile the normalProctile
+     */
     @Override
     public void visit(NormalProjectile normalProjectile) {
         if (normalProjectile.visible()) {
@@ -341,15 +283,22 @@ public class VisualizerVisitor implements Visitor {
         }
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param heavyProjectile the heavyProjectile
+     */
     @Override
     public void visit(HeavyProjectile heavyProjectile) {
         drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param oil the Oil
+     */
     @Override
     public void visit(Oil oil) {
-        //System.out.println("here");
-        drawItemScale(oil,TanksImageProperty.oil,Shape.OVAL, Color.RED,1);
+        drawItemScale(oil, TanksImageProperty.oil, Shape.OVAL, Color.RED, 1);
     }
 
     /**
@@ -387,19 +336,6 @@ public class VisualizerVisitor implements Visitor {
         drawImage(prop, shape, color, 1);
         context.setTransform(ori);
     }
-
-    /*
-    // this method can probably be deleted
-    private void drawItem(Item item, TanksImageProperty prop, Shape shape, Color color, double angle) {
-        final GraphicsContext context = view.getGraphicsContext2D();
-        final Affine ori = context.getTransform();
-        final DoubleVec pos = view.modelToView(item.getPos());
-        context.translate(pos.x, pos.y);
-        context.rotate(angle);
-        drawImage(prop, shape, color);
-        context.setTransform(ori);
-    }
-     */
 
     /**
      * Draws an image if such an image has been configured.

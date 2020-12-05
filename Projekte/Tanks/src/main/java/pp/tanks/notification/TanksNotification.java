@@ -20,9 +20,8 @@ public enum TanksNotification {
      * Indicates that a block has been destroyed
      */
     BLOCK_DESTROYED,
-
-
+    /**
+     * Indicates that a tank has been hit by a projectile
+     */
     ARMOR_HIT,
-
-
 }

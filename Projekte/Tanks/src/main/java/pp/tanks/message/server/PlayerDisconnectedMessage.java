@@ -1,5 +1,8 @@
 package pp.tanks.message.server;
 
+/**
+ * Message send if a Player disconnect in a multiplayer game
+ */
 public class PlayerDisconnectedMessage implements IServerMessage {
 
     /**

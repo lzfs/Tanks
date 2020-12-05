@@ -2,6 +2,9 @@ package pp.tanks.message.server;
 
 import java.io.Serializable;
 
+/**
+ * interface for all Server Messages
+ */
 public interface IServerMessage extends Serializable {
 
     /**

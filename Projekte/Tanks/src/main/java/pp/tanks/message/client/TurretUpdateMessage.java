@@ -4,6 +4,9 @@ import pp.network.IConnection;
 import pp.tanks.message.server.IServerMessage;
 import pp.util.DoubleVec;
 
+/**
+ * Message used to update the turret direction of the tank
+ */
 public class TurretUpdateMessage implements IClientMessage {
     public final int id;
     public final DoubleVec turDir;
