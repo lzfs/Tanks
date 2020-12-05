@@ -91,18 +91,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         stage.getIcons().add(engine.getImages().getImage(TanksImageProperty.greenTank));
         sounds.setMusic(sounds.mainMenu);
 
-        if (musicMuted.value(engine.getModel().getProperties()) == 0) {
-            engine.getTankApp().sounds.mute(false);
-        }
-        else {
-            engine.getTankApp().sounds.mute(true);
-        }
-        if (soundMuted.value(engine.getModel().getProperties()) == 0) {
-            engine.setSoundMuted(false);
-        }
-        else {
-            engine.setSoundMuted(true);
-        }
+        engine.getTankApp().sounds.mute(musicMuted.value(engine.getModel().getProperties()) != 0);
+        engine.setSoundMuted(soundMuted.value(engine.getModel().getProperties()) != 0);
     }
 
     /**

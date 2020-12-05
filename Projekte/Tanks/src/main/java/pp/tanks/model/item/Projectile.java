@@ -125,8 +125,7 @@ public abstract class Projectile extends Item<ProjectileData> {
      */
     @Override
     public void update(long serverTime) {
-        interpolateTime(serverTime);//TODO was ist mit der Flag
-        //data.setPos(data.getPos().add(data.getDir().mult(delta * speed)));
+        interpolateTime(serverTime);
         if (System.nanoTime() - flag > 100000000) {
             flag = 0;
         }
@@ -211,13 +210,12 @@ public abstract class Projectile extends Item<ProjectileData> {
     }
 
     @Override
-    public boolean interpolateTime(long time) {
-        if (latestOp == null || latestOp.data.getDir().equals(STAY)) return false;
+    public void interpolateTime(long time) {
+        if (latestOp == null || latestOp.data.getDir().equals(STAY)) return;
         long tmp = (time - latestOp.serverTime);
         double deltaT = FACTOR_SEC * tmp;
         data.setPos(latestOp.getPos().add(latestOp.data.getDir().mult(deltaT * speed)));
         latestInterpolate = time;
-        return true;
     }
 
     /**

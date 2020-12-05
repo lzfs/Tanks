@@ -32,20 +32,6 @@ public class COMEnemy extends Enemy {
     }
 
     /**
-     * method for test cases to check if the COMEnemy can shoot
-     */
-    public void cheatShoot() {
-        //TODO
-    }
-
-    /**
-     * method for test cases to check if the COMEnemy can move
-     */
-    public void cheatMove(DoubleVec pos) {
-        //TODO
-    }
-
-    /**
      * shoots a projectile
      *
      * @param pos target-position
@@ -70,7 +56,7 @@ public class COMEnemy extends Enemy {
             long tmp = serverTime - latestViewUpdate;
             double delta = FACTOR_SEC * tmp;
             turret.update(delta);
-            data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos())); //TODO maybe change this
+            data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos()));
             if (model.getEngine() != null) {
                 if (isMoving()) {
                     // move(delta);
@@ -112,10 +98,8 @@ public class COMEnemy extends Enemy {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
-     * @param vec
-     * @return
+     * @param vec  only if this double Vector is a Vector associated in the MoveDirection Enum
+     * @return the MoveDirection to a given DoubleVector
      */
     public static MoveDirection getMoveDirToVec(DoubleVec vec) {
         if (vec.equals(MoveDirection.UP.getVec())) {
@@ -157,7 +141,7 @@ public class COMEnemy extends Enemy {
         double moveDirRotation = data.getMoveDir().getRotation();
         double tmp = (currentRot - moveDirRotation + 180) % 180;
         double tmp1 = (moveDirRotation - currentRot + 180) % 180;
-        double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
+        double tmp2 = Math.abs(currentRot - moveDirRotation) % 180;
         if (tmp2 < 5) {
             setRotation(moveDirRotation);
             move(delta);
@@ -275,10 +259,8 @@ public class COMEnemy extends Enemy {
     }
 
     /**
-     * TODO doc
-     *
-     * @param pos
-     * @return
+     * @param pos the position to check
+     * @return if pos is within the map
      */
     public boolean isWithinMap(DoubleVec pos) {
         return !(model.getTanksMap().getHeight() > pos.y) && model.getTanksMap().getHeight() >= 0 && !(model.getTanksMap().getWidth() > pos.x) && model.getTanksMap().getWidth() >= 0;

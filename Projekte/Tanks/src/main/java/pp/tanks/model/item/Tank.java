@@ -10,7 +10,6 @@ import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public abstract class Tank extends Item<TankData> {
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
-        this.playerEnum = PlayerEnum.getPlayer(data.getId()); //TODO Com enemys beim schießen
+        this.playerEnum = PlayerEnum.getPlayer(data.getId());
         this.projectileId = playerEnum.projectileID;
         latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime());
         posList.add(new Track(data.getPos(), data.getRotation(), TrackIntensity.NORMAL));
@@ -173,12 +172,6 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * Called once per frame. Used for updating this item's position etc.
-     * TODO: what the heck is with this comment?
-     * //@param delta time in seconds since the last update call
-     */
-
-    /**
      * updates destruction-status
      *
      * @param bool boolean of new status
@@ -300,7 +293,7 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * //TODO
+     * Process the collision with an oil item
      */
     public void oilCollision() {
         for (Oil oil : model.getTanksMap().getOilList()) {
@@ -375,11 +368,10 @@ public abstract class Tank extends Item<TankData> {
      * the interpolateTime methode calculates the time for a interpolated movement
      *
      * @param time for calculation
-     * @return returns a boolean while the movement is calculated valid
      */
     @Override
-    public boolean interpolateTime(long time) {
-        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
+    public void interpolateTime(long time) {
+        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return;
         double latestSec = FACTOR_SEC * latestOp.serverTime;
         double deltaT = FACTOR_SEC * (time - latestOp.serverTime);
 
@@ -404,11 +396,10 @@ public abstract class Tank extends Item<TankData> {
             addTrack();
             oilCollision();
         }
-        return true;
     }
 
     /**
-     * //TODO
+     * Add a new Track to a List of Track named posList
      */
     public void addTrack() {
         DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
@@ -429,7 +420,7 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * //TODO
+     * Added the rotation of a track
      */
     public void addTrackRotation() {
         if (posList.size() == 0) {
@@ -445,9 +436,6 @@ public abstract class Tank extends Item<TankData> {
             }
             trackRotation = getRotation();
         }
-        //TODO
-        //nachjustieren
-        //distance wird teilweise 4
         if (posList.size() > 50) posList.remove(0);
     }
 

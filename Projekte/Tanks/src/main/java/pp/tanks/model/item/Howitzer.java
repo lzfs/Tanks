@@ -52,9 +52,7 @@ public class Howitzer extends COMEnemy {
     }
 
     /**
-     * TODO doc
-     *
-     * @return
+     * @return a block to hide behind
      */
     public DoubleVec getHidingBlockPos() {
         for (int col = model.getTanksMap().getWidth() - 3; col > 2; col--) {

@@ -207,9 +207,8 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
-     * @param progressBar
+     * Set a Progress bar
+     * @param progressBar a reference to the progress bar
      */
     public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
@@ -217,8 +216,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
+     * Set the percentage of the progress bar
      * @param percentage
      */
     public void updateProgressBar(double percentage) {
@@ -226,7 +224,6 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     }
 
     public void drawLostTank(DoubleVec position) {
-        //TODO
         drawImage(bigExplosion, position.x, position.y);
     }
 }

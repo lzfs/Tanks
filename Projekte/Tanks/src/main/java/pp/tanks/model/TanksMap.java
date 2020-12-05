@@ -271,7 +271,6 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
                 removed.add(item);
         breakableBlocks.removeAll(removed);
         projectiles.entrySet().removeIf(e -> removed.contains(e.getValue()));
-        //model.getEngine().getView().addExplosion(entry.getValue()); //TODO in die destroy?
 
     }
 
@@ -332,8 +331,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
+     * Notify the observers
      * @param proj
      * @param tank
      * @param damage
@@ -347,7 +345,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Notify the breakable Block observers
      *
      * @param proj
      * @param block
@@ -362,7 +360,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Notify the Projectile observers
      *
      * @param proj1
      * @param proj2
@@ -375,7 +373,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Add new Items to the HashMap
      */
     public void updateHashMap() {
         for (Item<? extends Data> item : this) {

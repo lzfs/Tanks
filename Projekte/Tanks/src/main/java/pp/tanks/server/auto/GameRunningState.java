@@ -76,8 +76,8 @@ public class GameRunningState extends TankState implements ICollisionObserver {
                 }
             }
             makeDatLists(dat);
-            processProjectiles(timeStart + step * (i + 1), new ArrayList<>(projectileDat));
-            processTanks(timeStart + step * (i + 1), new ArrayList<>(tankDat));
+            processProjectiles(new ArrayList<>(projectileDat));
+            processTanks(new ArrayList<>(tankDat));
             processTurretUpdates();
             projectileDat.clear();
             tankDat.clear();
@@ -160,12 +160,10 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
-     * @param time
+     * Use a List of Tanks to give it to the players
      * @param tmp
      */
-    private void processTanks(long time, List<DataTimeItem<TankData>> tmp) {
+    private void processTanks(List<DataTimeItem<TankData>> tmp) {
         if (tmp.size() != 0) {
             for (DataTimeItem<TankData> d : tmp) {
                 int id = d.data.getId();
@@ -179,12 +177,11 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Add Projectiles to map and player
      *
-     * @param time
      * @param tmp
      */
-    private void processProjectiles(long time, List<DataTimeItem<ProjectileData>> tmp) {
+    private void processProjectiles(List<DataTimeItem<ProjectileData>> tmp) {
 
         if (tmp.size() != 0) {
             for (DataTimeItem<ProjectileData> d : tmp) {
@@ -194,7 +191,6 @@ public class GameRunningState extends TankState implements ICollisionObserver {
                 if (gameMode == GameMode.MULTIPLAYER) {
                     parent.getPlayers().get(r.getEnemy().tankID).projectiles.add(r);
                 }
-                //r.interpolateTime(time);
             }
         }
     }
@@ -278,7 +274,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
     }
 
-    public boolean isGameEnd() { //TODO Tutorial and Debug mode
+    public boolean isGameEnd() {
         if (gameMode == GameMode.SINGLEPLAYER) {
             if (model.gameWon()) {
                 parent.getPlayers().get(0).setGameWon(true);

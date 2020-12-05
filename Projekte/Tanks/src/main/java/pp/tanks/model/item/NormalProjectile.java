@@ -14,14 +14,6 @@ public class NormalProjectile extends Projectile {
     }
 
     /**
-     * method for test cases
-     */
-    @Override
-    public void isVisible() {
-        //TODO
-    }
-
-    /**
      * Method to accept a visitor
      *
      * @param v visitor to be used

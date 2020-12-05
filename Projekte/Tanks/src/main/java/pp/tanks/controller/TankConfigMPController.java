@@ -441,7 +441,7 @@ public class TankConfigMPController extends Controller {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Is called when player connects and enables the Ready Button
      */
     public void playerConnected() {
         if (playerConnected) return;
@@ -486,7 +486,7 @@ public class TankConfigMPController extends Controller {
     }
 
     /**
-     * TODO: addJavaDoc
+     * Activates PlayGameController when both players are ready and synchronized
      */
     @Override
     public void synchronizationFinished() {

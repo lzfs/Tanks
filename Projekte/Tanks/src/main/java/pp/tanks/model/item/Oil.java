@@ -16,11 +16,6 @@ public class Oil extends Item<Data> {
         super(model, effectiveRadius, data);
     }
 
-    @Override
-    public void isVisible() {
-
-    }
-
     /**
      * Method to accept a visitor
      *
@@ -42,8 +37,7 @@ public class Oil extends Item<Data> {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
+     * Does nothing because it is unnecessary in oil
      * @param item
      */
     @Override
@@ -52,13 +46,10 @@ public class Oil extends Item<Data> {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
+     * return false because it is unnecessary in oil
      * @param serverTime
-     * @return
      */
     @Override
-    public boolean interpolateTime(long serverTime) {
-        return false;
+    public void interpolateTime(long serverTime) {
     }
 }

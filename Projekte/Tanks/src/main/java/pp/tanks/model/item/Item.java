@@ -2,15 +2,10 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
-import pp.tanks.message.data.Data;
 import pp.util.DoubleVec;
 
-import javafx.geometry.Rectangle2D;
-
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D.Double;
 
 /**
  * Abstract base class of all items in a {@linkplain pp.tanks.model.TanksMap}
@@ -123,8 +118,6 @@ public abstract class Item<T extends Data> {
         data.destroy();
     }
 
-    public abstract void isVisible();
-
     /**
      * Method to accept a visitor
      *
@@ -140,19 +133,16 @@ public abstract class Item<T extends Data> {
     public abstract void update(long serverTime);
 
     /**
-     * TODO: add JavaDoc
-     *
+     * Interpolates the Data
      * @param item
      */
     public abstract void interpolateData(DataTimeItem<T> item);
 
     /**
-     * TODO: add JavaDoc
-     *
+     * Interpolates the time
      * @param serverTime
-     * @return
      */
-    public abstract boolean interpolateTime(long serverTime);
+    public abstract void interpolateTime(long serverTime);
 
     /**
      * for thomases (god's) will

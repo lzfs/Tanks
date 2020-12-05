@@ -168,7 +168,7 @@ public class Player {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Send all Messages to Players
      */
     public void sendMessages() {
         if (!projectiles.isEmpty() || !tanks.isEmpty() || !blocks.isEmpty()) {
@@ -201,7 +201,7 @@ public class Player {
      */
     public void sendEndingMessage(GameMode mode) {
         connection.send(new GameEndingMessage(mode, gameWon));
-    } //TODO
+    }
 
     /**
      * called when player lost connection

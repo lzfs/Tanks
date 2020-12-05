@@ -175,7 +175,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
 
             }
             else if (engine.getModel().gameLost()) {
-                engine.getView().drawLostTank(getTank().getPos());  //TODO geht noch nicht
+                engine.getView().drawLostTank(getTank().getPos());
                 if (!wonSP) {
                     for (COMEnemy enemy : engine.getModel().getTanksMap().getCOMTanks()) {
                         enemy.setShootable(false);
@@ -190,7 +190,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
                 }
             }
             else if (pressed.contains(KeyCode.ESCAPE)) {
-                engine.activatePauseMenuSPController(); //TODO
+                engine.activatePauseMenuSPController();
             }
         }
         else {
@@ -380,7 +380,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     }
 
     /**
-     * TODO: add JavaDoc
+     * Calls for all tanks the function which interpolates its Data
      */
     private void processEnemyTanks() {
         if (tanks.isEmpty()) return;

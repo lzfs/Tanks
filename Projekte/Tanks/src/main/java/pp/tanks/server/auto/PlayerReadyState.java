@@ -127,8 +127,7 @@ public class PlayerReadyState extends TankState {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
+     * Set up a Mulptiplayer Game
      * @param model
      */
     public void multiplayerGame(Model model) {

@@ -42,14 +42,6 @@ public abstract class Block<T extends Data> extends Item<T> {
     }
 
     /**
-     * method for test cases
-     */
-    @Override
-    public void isVisible() {
-        //TODO
-    }
-
-    /**
      * Called once per frame. Used for updating this item's position etc.
      *
      * @param serverTime the synced nanotime of the server
@@ -63,8 +55,7 @@ public abstract class Block<T extends Data> extends Item<T> {
     }
 
     @Override
-    public boolean interpolateTime(long serverTime) {
-        return false;
+    public void interpolateTime(long serverTime) {
     }
 }
 

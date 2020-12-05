@@ -202,7 +202,7 @@ public class TankConfigSPController extends Controller {
         LOGGER.log(Level.INFO, "clicked CONFIRM");
 
         DoubleVec position = new DoubleVec(3, 6);
-        PlayersTank tank = new PlayersTank(engine.getModel(),  armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0, 0), false)); //TODO id
+        PlayersTank tank = new PlayersTank(engine.getModel(),  armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0, 0), false));
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
         engine.setMode(GameMode.SINGLEPLAYER);

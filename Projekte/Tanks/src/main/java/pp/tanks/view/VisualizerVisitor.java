@@ -188,7 +188,7 @@ public class VisualizerVisitor implements Visitor {
 
 
     /**
-     *  //TODO
+     * Draw a track behind the tank
      * @param posTrack
      */
     public void drawMeATrack(Track posTrack) {

@@ -103,7 +103,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock(model, new BBData(tmpPos, counter, 20, false))); //TODO
+                    map.addBreakableBlock(new BreakableBlock(model, new BBData(tmpPos, counter, 20, false)));
                     counter += 1;
                     break;
 
@@ -113,7 +113,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, counter, false)); //TODO
+                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, counter, false));
                     counter += 1;
                     uB.setPos(tmpPos);
                     map.addUnbreakableBlock(uB);
@@ -125,7 +125,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, counter, false)); //TODO
+                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, counter, false));
                     counter += 1;
                     rB.setPos(tmpPos);
                     map.addReflectableBlocks(rB);

@@ -256,23 +256,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * activate the playGameController
-     * convenience method to start the level again if the player tank gets destroyed
-     * TODO maybe we need to change that later on
-     */
-    public void activateGameLostController() {
-        setController(playGameController);
-    }
-
-    /**
-     * activate the GameWonController
-     * TODO use the missionXCompleteControllers and make them generic
-     */
-    public void activateGameWonController() {
-        setController(mission1CompleteController);
-    }
-
-    /**
      * activate the GameWonMPController
      */
     public void activateGameWonMPController() {
@@ -367,7 +350,7 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * TODO: add JavaDoc
+     * sets the save Tank to set Tank in engine
      *
      * @param tank
      */

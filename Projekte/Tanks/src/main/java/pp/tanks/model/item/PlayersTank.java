@@ -25,14 +25,6 @@ public class PlayersTank extends Tank {
     }
 
     /**
-     * method for test cases
-     */
-    @Override
-    public void isVisible() {
-        //TODO
-    }
-
-    /**
      * Method to accept a visitor
      *
      * @param v visitor to be used
@@ -100,8 +92,7 @@ public class PlayersTank extends Tank {
     }
 
     /**
-     * TODO: add JavaDoc
-     *
+     * Interpolates the Data
      * @param item represents the given DataTimeItem-object
      */
     @Override
