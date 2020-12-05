@@ -38,6 +38,13 @@ public class GameOverMPController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return GAME_OVER_MP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the game is over.
      */
     @Override
@@ -54,13 +61,6 @@ public class GameOverMPController extends Controller {
     @Override
     public void exit() {
         LOGGER.log(Level.INFO, "EXIT GameOverMPController");
-    }
-
-    /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return GAME_OVER_MP_FXML;
     }
 
     /**

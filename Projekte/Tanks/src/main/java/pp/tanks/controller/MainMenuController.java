@@ -31,13 +31,13 @@ public class MainMenuController extends Controller {
     }
 
     /**
-     * the button for the Singleplayer
+     * the button for the Singleplayer mode
      */
     @FXML
     private Button singlePlayer;
 
     /**
-     * the button for the Multiplayer
+     * the button for the Multiplayer mode
      */
     @FXML
     private Button multiPlayer;
@@ -68,6 +68,13 @@ public class MainMenuController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return MENU_CONTROL_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the game is started.
      */
     @Override
@@ -80,18 +87,11 @@ public class MainMenuController extends Controller {
 
     /**
      * This method is called whenever this controller is deactivated,
-     * i.e., when the users clicked any of the buttons.
+     * i.e., when the users clicked any of the buttons in the main menu.
      */
     @Override
     public void exit() {
         LOGGER.log(Level.INFO, "EXIT MainMenuController");
-    }
-
-    /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return MENU_CONTROL_FXML;
     }
 
     /**
@@ -119,7 +119,6 @@ public class MainMenuController extends Controller {
     @FXML
     private void singlePlayer() {
         LOGGER.log(Level.INFO, "clicked SINGLEPLAYER");
-        System.out.println("Client connected to SP");
         engine.activateLevelController();
     }
 

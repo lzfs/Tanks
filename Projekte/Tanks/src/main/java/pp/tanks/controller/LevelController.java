@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The controller displaying the levels the user can choose from.
+ * The controller displaying the levels (tutorial or regular game) the user can choose from.
  */
 public class LevelController extends Controller {
     private static final Logger LOGGER = Logger.getLogger(LevelController.class.getName());
@@ -62,6 +62,13 @@ public class LevelController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return LEVEL_SP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the user clicked "Singleplayer" in the main menu.
      */
     @Override
@@ -79,13 +86,6 @@ public class LevelController extends Controller {
     @Override
     public void exit() {
         LOGGER.log(Level.INFO, "EXIT LevelController");
-    }
-
-    /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return LEVEL_SP_FXML;
     }
 
     /**

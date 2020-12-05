@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The controller realizing the game state when the credits list is shown.
+ * The controller realizing the game state when the credits are shown.
  */
 public class CreditsController extends Controller {
     private static final Logger LOGGER = Logger.getLogger(CreditsController.class.getName());
@@ -43,6 +43,13 @@ public class CreditsController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getFileName() {
+        return CREDITS_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the credits are shown.
      */
     @Override
@@ -51,13 +58,6 @@ public class CreditsController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
-    }
-
-    /**
-     * @return the name of the used file as a String
-     */
-    public String getFileName() {
-        return CREDITS_FXML;
     }
 
     /**
@@ -76,18 +76,6 @@ public class CreditsController extends Controller {
     private void back() {
         LOGGER.log(Level.INFO, "GO TO MainMenuController");
         engine.activateMainMenuController();
-    }
-
-    /**
-     * Thread is tired, he sleeps now.
-     */
-    private void sleep() {
-        try {
-            Thread.sleep(20);
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
 

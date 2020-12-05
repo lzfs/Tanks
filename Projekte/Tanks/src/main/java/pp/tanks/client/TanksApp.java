@@ -256,7 +256,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(SetPlayerMessage msg) {
         engine.setPlayerEnum(msg.player);
         this.player = msg.player;
-        System.out.println(msg.player);
+        LOGGER.log(Level.INFO, "player: " + msg.player);
     }
 
     /**

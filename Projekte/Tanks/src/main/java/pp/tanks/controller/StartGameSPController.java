@@ -74,6 +74,13 @@ public class StartGameSPController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getString() {
+        return START_GAME_SP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the first mission is completed.
      */
@@ -93,8 +100,8 @@ public class StartGameSPController extends Controller {
             File currentFile = new File(absolutePath);
             setLevelInformation(currentFile);
         }
-        catch (IOException | XMLStreamException ex) {
-            System.out.println(ex.getMessage());
+        catch (IOException | XMLStreamException e) {
+            LOGGER.log(Level.INFO, "error: " + e.getMessage());
         }
     }
 
@@ -108,22 +115,18 @@ public class StartGameSPController extends Controller {
     }
 
     /**
-     * @return the name of the used file as a String
-     */
-    public String getString() {
-        return START_GAME_SP_FXML;
-    }
-
-    /**
      * method for the startGameSP button
      */
     @FXML
     private void startGameSP() {
-
         engine.setMode(GameMode.SINGLEPLAYER);
         engine.getSaveTank().getArmor().setArmorPoints(engine.getSaveTank().getArmor().getMaxPoints());
-        if (engine.getMapCounter() == 1) loadLevelOne();
-        else loadLevelTwo();
+        if (engine.getMapCounter() == 1) {
+            loadLevelOne();
+        }
+        else {
+            loadLevelTwo();
+        }
 
         LOGGER.log(Level.INFO, "clicked START_GAME_SP");
         engine.activatePlayGameController();
@@ -148,7 +151,7 @@ public class StartGameSPController extends Controller {
                     switch (elemName) {
                         case "enemyCounter": {
                             if (enemyTanksText == null) {
-                                System.out.println("text null");
+                                LOGGER.log(Level.INFO, "text is null");
                             }
                             enemyTanksText.setText(String.valueOf(getIntAttribute("v", 0, xtr)));
                         }
@@ -184,7 +187,7 @@ public class StartGameSPController extends Controller {
                 return Integer.parseInt(value);
             }
             catch (NumberFormatException e) {
-                LOGGER.warning("Attribute " + name + " should be an int, but has value " + value);
+                LOGGER.log(Level.INFO, "Attribute " + name + " should be an int, but has value " + value);
                 return defaultValue;
             }
     }
@@ -216,9 +219,9 @@ public class StartGameSPController extends Controller {
      * called when level two gets loaded
      */
     private void loadLevelTwo() {
-        TankData enemy1 = new TankData(new DoubleVec(20, 2), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         TankData enemy2 = new TankData(new DoubleVec(20, 6), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy3 = new TankData(new DoubleVec(20, 10), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy3 = new TankData(new DoubleVec(20, 8), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
         engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.TANK_DESTROYER));
         engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2, enemy3));
     }

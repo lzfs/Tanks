@@ -48,7 +48,6 @@ public class TankConfigSPController extends Controller {
     private final List<Integer> cadence = new ArrayList<>(Arrays.asList(1, 3, 5));
 
     private final List<Armor> armorList = new ArrayList<>(Arrays.asList(new LightArmor(), new NormalArmor(), new HeavyArmor()));
-
     private final List<Turret> turretsList = new ArrayList<>(Arrays.asList(new LightTurret(), new NormalTurret(), new HeavyTurret()));
 
     /**
@@ -146,6 +145,13 @@ public class TankConfigSPController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return TANK_CONFIG_SP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the the player chose a level in the Level-Selection-Menu.
      */
@@ -179,13 +185,6 @@ public class TankConfigSPController extends Controller {
     }
 
     /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return TANK_CONFIG_SP_FXML;
-    }
-
-    /**
      * method for the back button
      */
     @FXML
@@ -200,9 +199,8 @@ public class TankConfigSPController extends Controller {
     @FXML
     private void confirm() {
         LOGGER.log(Level.INFO, "clicked CONFIRM");
-
         DoubleVec position = new DoubleVec(3, 6);
-        PlayersTank tank = new PlayersTank(engine.getModel(),  armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0, 0), false));
+        PlayersTank tank = new PlayersTank(engine.getModel(), armorList.get(counterArmor), turretsList.get(counterTurret), new TankData(position, 0, 20, MoveDirection.STAY, 0.0, new DoubleVec(0, 0), false));
         engine.setSaveTank(tank);
         engine.setMapCounter(1);
         engine.setMode(GameMode.SINGLEPLAYER);
@@ -217,11 +215,9 @@ public class TankConfigSPController extends Controller {
     @FXML
     private void turretButtonRight() {
         counterTurret += 1;
-
         if (counterTurret >= turrets.size()) {
             counterTurret = 0;
         }
-
         harmChart.setImage(charts.get(counterTurret));
         image1.setImage(turrets.get(counterTurret));
         magazineSizeText.setText(magazine.get(counterTurret).toString());
@@ -234,7 +230,6 @@ public class TankConfigSPController extends Controller {
     @FXML
     private void turretButtonLeft() {
         counterTurret -= 1;
-
         if (counterTurret < 0) {
             counterTurret = turrets.size() - 1;
         }
@@ -250,12 +245,10 @@ public class TankConfigSPController extends Controller {
     @FXML
     private void armorButtonRight() {
         counterArmor += 1;
-
         if (counterArmor >= armors.size()) {
             counterArmor = 0;
         }
         image2.setImage(armors.get(counterArmor));
-
         changeCharts();
     }
 
@@ -265,13 +258,10 @@ public class TankConfigSPController extends Controller {
     @FXML
     private void armorButtonLeft() {
         counterArmor -= 1;
-
         if (counterArmor < 0) {
             counterArmor = armors.size() - 1;
         }
-
         image2.setImage(armors.get(counterArmor));
-
         changeCharts();
     }
 
