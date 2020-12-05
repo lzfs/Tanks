@@ -9,6 +9,7 @@ import java.io.Serializable;
  * Message interface for network transfer
  */
 public interface IClientMessage extends Serializable {
+
     /**
      * Method to accept a visitor
      *

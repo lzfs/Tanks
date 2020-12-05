@@ -11,6 +11,11 @@ public class GameEndingMessage implements IServerMessage {
         this.won = won;
     }
 
+    /**
+     * Method to accept a visitor
+     *
+     * @param interpreter visitor to be used
+     */
     @Override
     public void accept(IServerInterpreter interpreter) {
         interpreter.visit(this);

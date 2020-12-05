@@ -369,6 +369,15 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
+    /**
+     * Draws an item as an image or, if the image is missing, as the specified shape and scales them.
+     *
+     * @param item  the item to be drawn
+     * @param prop  the property specifying the image
+     * @param shape the shape, which is drawn if the image is missing
+     * @param color the color, which is used if the image is missing
+     * @param scale the scale, which is used on the image
+     */
     private void drawItemScale(Item item, TanksImageProperty prop, Shape shape, Color color, double scale) {
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();

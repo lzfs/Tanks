@@ -151,8 +151,14 @@ public enum TanksImageProperty {
      */
     tracks,
 
+    /**
+     * Path of oil field
+     */
     oil,
 
+    /**
+     * Path of tracksDark
+     */
     tracksDark
 }
 

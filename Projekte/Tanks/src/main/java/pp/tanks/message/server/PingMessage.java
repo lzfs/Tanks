@@ -1,5 +1,8 @@
 package pp.tanks.message.server;
 
+/**
+ * used to measure the ping
+ */
 public class PingMessage implements IServerMessage {
 
     /**

@@ -49,15 +49,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     private Connection<IClientMessage, IServerMessage> connection;
     public final Sounds sounds = new Sounds();
     private PlayerEnum player;
-
     private long offset;
     private long latency;
-
     public final Properties properties = new Properties();
     private Engine engine;
-
     private Stage stage;
-    private MainMenuController mainMenuControl;
 
     /**
      * create a new TankApp
@@ -90,7 +86,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         engine.gameLoop();
         stage.getIcons().add(engine.getImages().getImage(TanksImageProperty.greenTank));
         sounds.setMusic(sounds.mainMenu);
-
         engine.getTankApp().sounds.mute(musicMuted.value(engine.getModel().getProperties()) != 0);
         engine.setSoundMuted(soundMuted.value(engine.getModel().getProperties()) != 0);
     }
@@ -101,7 +96,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      * @param fileName the name of the file as a String
      */
     private void load(String fileName) {
-        // first load properties using class loader
         try {
             final InputStream resource = ClassLoader.getSystemClassLoader().getResourceAsStream(fileName);
             if (resource == null)
@@ -114,8 +108,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         catch (IOException e) {
             LOGGER.log(Level.WARNING, e.getMessage(), e);
         }
-
-        // and now try to read the properties file
         final File file = new File(fileName);
         if (file.exists() && file.isFile() && file.canRead()) {
             LOGGER.info("try to read file " + fileName);
@@ -158,7 +150,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      */
     @Override
     public void onConnectionClosed(IConnection<IClientMessage> conn) {
-        //System.exit(0);
         LOGGER.info("Server connection lost");
         engine.getController().lostConnection();
         connection.shutdown();
@@ -170,11 +161,12 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
      */
     public void joinGame() throws IOException {
         joinGame("127.0.0.1", "1234");
-        //joinGame("137.193.138.79", "1234");
     }
 
     /**
      * Establishes a connection to an online server
+     * @param ipAddress the IP we want to connect on
+     * @param portString the port we want to connect on
      */
     public void joinGame(String ipAddress, String portString) throws IOException {
         if (connection != null) {
@@ -198,7 +190,6 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         catch (NumberFormatException e) {
             LOGGER.info("Exception: " + e.getMessage());
             throw e;
-            //setInfoText(Resources.getString("port.number.must.be.an.integer"));
         }
         catch (IllegalArgumentException | IOException e) {
             LOGGER.info("when creating the Client: " + e.getMessage()); //NON-NLS
@@ -207,6 +198,8 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     }
 
     /**
+     * Return the Connection
+     *
      * @return conection
      */
     public Connection<IClientMessage, IServerMessage> getConnection() {
@@ -214,12 +207,19 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     }
 
     /**
+     * Return the Offset
+     *
      * @return offset
      */
     public long getOffset() {
         return offset;
     }
 
+    /**
+     * Return the latency
+     *
+     * @return latency
+     */
     public long getLatency() {
         return latency;
     }
@@ -233,7 +233,7 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
     public void visit(SynchronizeMessage msg) {
         this.offset = msg.nanoOffset;
         this.latency = msg.latency;
-        System.out.println(" offset: " + msg.nanoOffset + "\nlatency: " + msg.latency);
+        LOGGER.info(" offset: " + msg.nanoOffset + "\nlatency: " + msg.latency);
         engine.getController().synchronizationFinished();
     }
 
@@ -247,6 +247,11 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         connection.send(new PingResponse(System.nanoTime()));
     }
 
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the SetPlayerMessage we receive
+     */
     @Override
     public void visit(SetPlayerMessage msg) {
         engine.setPlayerEnum(msg.player);
@@ -254,17 +259,32 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         System.out.println(msg.player);
     }
 
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the Tank Update Message for the Multiplayer Tank Config
+     */
     @Override
     public void visit(ServerTankUpdateMessage msg) {
         engine.tankConfigMPController.playerConnected();
         engine.tankConfigMPController.serverUpdate(msg);
     }
 
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the Starting Message that tells us to start the Game
+     */
     @Override
     public void visit(StartingMultiplayerMessage msg) {
         engine.tankConfigMPController.startGame(msg);
     }
 
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the ModelMessage that updates our TanksMap
+     */
     @Override
     public void visit(ModelMessage msg) {
         engine.playGameController.addServerEnemyData(msg.tanks);
@@ -272,18 +292,24 @@ public class TanksApp extends Application implements MessageReceiver<IServerMess
         engine.playGameController.addServerBBlockData(msg.blocks);
     }
 
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the GameEnding Message
+     */
     @Override
     public void visit(GameEndingMessage msg) {
         engine.playGameController.setGameEnd(msg);
     }
 
+    /**
+     * method used by the visitor to react to this message
+     *
+     * @param msg the PlayerDisconnect Message
+     */
     @Override
     public void visit(PlayerDisconnectedMessage msg) {
         engine.getController().playerDisconnected();
-    }
-
-    public Stage getStage() {
-        return stage;
     }
 }
 

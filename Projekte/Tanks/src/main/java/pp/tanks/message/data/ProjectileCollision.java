@@ -2,6 +2,9 @@ package pp.tanks.message.data;
 
 import java.io.Serializable;
 
+/**
+ * Message send if a Projectile collides
+ */
 public class ProjectileCollision implements Comparable<ProjectileCollision>, Serializable {
     public final int id1;
     public final int id2;

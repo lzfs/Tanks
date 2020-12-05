@@ -3,6 +3,9 @@ package pp.tanks.message.server;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.ItemEnum;
 
+/**
+ * sends the client the enums of their own, and the enemy tank
+ */
 public class StartingMultiplayerMessage implements IServerMessage {
     public final ItemEnum enemyTurret;
     public final ItemEnum enemyArmor;

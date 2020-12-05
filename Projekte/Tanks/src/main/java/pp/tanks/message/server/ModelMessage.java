@@ -7,6 +7,9 @@ import pp.tanks.message.data.TankData;
 
 import java.util.List;
 
+/**
+ * represents all of the changes and updates
+ */
 public class ModelMessage implements IServerMessage {
     public final List<DataTimeItem<TankData>> tanks;
     public final List<DataTimeItem<ProjectileData>> projectile;

@@ -223,6 +223,10 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         this.progressBar.setProgress(percentage);
     }
 
+    /**
+     * draws an extra image if the player dies
+     * @param position the position of the image
+     */
     public void drawLostTank(DoubleVec position) {
         drawImage(bigExplosion, position.x, position.y);
     }

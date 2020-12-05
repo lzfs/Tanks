@@ -2,7 +2,6 @@ package pp.tanks.controller;
 
 import pp.network.Connection;
 import pp.tanks.*;
-import pp.tanks.client.MiniController;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
@@ -62,8 +61,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final GameWonMPController gameWonMPController;
     public final ConnectionLostController connectionLostController;
 
-    public final MiniController miniController; // for testing
-
     private final Stage stage;
     private final Model model;
     private final ImageSupport<TanksImageProperty> images;
@@ -104,8 +101,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.gameOverMPController = new GameOverMPController(this);
         this.gameWonMPController = new GameWonMPController(this);
         this.connectionLostController = new ConnectionLostController(this);
-
-        this.miniController = new MiniController(tankApp);
 
         this.tankApp = tankApp;
         this.stage = stage;

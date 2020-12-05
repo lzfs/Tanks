@@ -23,7 +23,6 @@ import java.util.logging.Logger;
  */
 public abstract class SoundSupport<E extends Enum<E>> {
     protected static final Logger LOGGER = Logger.getLogger(SoundSupport.class.getName());
-
     private final Map<E, AudioClip> audioClips;
 
     /**
