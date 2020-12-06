@@ -34,25 +34,25 @@ public class SearchGameServerConfigController extends Controller {
     private Button search;
 
     /**
-     * text-field for ip-address
+     * the text-field for the ip-address
      */
     @FXML
     private TextField ipField;
 
     /**
-     * text-field for port
+     * the text-field for the port
      */
     @FXML
     private TextField portField;
 
     /**
-     * information-text
+     * text to display information for the user
      */
     @FXML
     private Text infoText;
 
     /**
-     * back button
+     * the button to go back
      */
     @FXML
     private Button back;
@@ -65,6 +65,13 @@ public class SearchGameServerConfigController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getFileName() {
+        return SEARCH_GAME_SERVER_CONFIG_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the the user clicks on "search game" in the lobby.
      */
@@ -74,13 +81,6 @@ public class SearchGameServerConfigController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
-    }
-
-    /**
-     * @return the name of the used file as a String
-     */
-    public String getFileName() {
-        return SEARCH_GAME_SERVER_CONFIG_FXML;
     }
 
     /**
@@ -102,16 +102,19 @@ public class SearchGameServerConfigController extends Controller {
             engine.getTankApp().joinGame(getIpAddress(), getPort());
         }
         catch (NumberFormatException e) {
-            infoText.setText("Falscher Port!");
+            infoText.setText("Falscher Port.");
             return;
         }
         catch (IllegalArgumentException | IOException e) {
-            infoText.setText("Server existiert nicht!");
+            infoText.setText("Der Server existiert nicht.");
             return;
         }
         engine.activateTankConfigMPController();
     }
 
+    /**
+     * method for the back button
+     */
     @FXML
     private void back() {
         engine.activateLobbyController();

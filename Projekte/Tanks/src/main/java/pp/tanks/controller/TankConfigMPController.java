@@ -45,11 +45,6 @@ public class TankConfigMPController extends Controller {
     private final List<Integer> magazine = new ArrayList<>(Arrays.asList(5, 3, 1));
     private final List<Integer> cadence = new ArrayList<>(Arrays.asList(1, 3, 5));
 
-    /*
-    private final List<Armor> armorList = new ArrayList<>(Arrays.asList(new LightArmor(), new NormalArmor(), new HeavyArmor()));
-    private final List<Turret> turretList = new ArrayList<>(Arrays.asList(new LightTurret(), new NormalTurret(), new HeavyTurret()));
-     */
-
     private List<ItemEnum> turretList = new ArrayList(Arrays.asList(ItemEnum.LIGHT_TURRET, ItemEnum.NORMAL_TURRET, ItemEnum.HEAVY_TURRET));
     private List<ItemEnum> armorList = new ArrayList(Arrays.asList(ItemEnum.LIGHT_ARMOR, ItemEnum.NORMAL_ARMOR, ItemEnum.HEAVY_ARMOR));
 
@@ -201,6 +196,13 @@ public class TankConfigMPController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return TANK_CONFIG_MP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the the player chose a level in the Level-Selection-Menu.
      */
@@ -238,13 +240,6 @@ public class TankConfigMPController extends Controller {
     @Override
     public void exit() {
         LOGGER.log(Level.INFO, "EXIT TankConfigMPController");
-    }
-
-    /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return TANK_CONFIG_MP_FXML;
     }
 
     /**
@@ -319,13 +314,9 @@ public class TankConfigMPController extends Controller {
     @FXML
     private void armorButtonRight() {
         ownArmorCounter += 1;
-
         ownArmorCounter = ownArmorCounter % 3;
-
         ownArmorImage.setImage(armors.get(ownArmorCounter));
-
         currentArmor = armorList.get(ownArmorCounter);
-
         changeOwnCharts();
         engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getPlayerEnum()));
     }
@@ -336,15 +327,11 @@ public class TankConfigMPController extends Controller {
     @FXML
     private void armorButtonLeft() {
         ownArmorCounter -= 1;
-
         if (ownArmorCounter < 0) {
             ownArmorCounter = armorList.size() - 1;
         }
-
         ownArmorImage.setImage(armors.get(ownArmorCounter));
-
         currentArmor = armorList.get(ownArmorCounter);
-
         changeOwnCharts();
         engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getPlayerEnum()));
     }
@@ -441,7 +428,7 @@ public class TankConfigMPController extends Controller {
     }
 
     /**
-     * Is called when player connects and enables the Ready Button
+     * Is called when player connects and enables the ready Button
      */
     public void playerConnected() {
         if (playerConnected) return;
@@ -514,6 +501,9 @@ public class TankConfigMPController extends Controller {
         playerConnected = false;
     }
 
+    /**
+     * is called when the connection is lost
+     */
     @Override
     public void lostConnection() {
         Platform.runLater(engine::activateConnectionLostController);

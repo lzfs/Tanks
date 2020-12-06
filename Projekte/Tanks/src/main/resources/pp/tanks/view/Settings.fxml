@@ -13,9 +13,9 @@
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="256.0" minWidth="10.0" prefWidth="227.33333333333331" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="98.99999618530273" minHeight="10.0" prefHeight="98.99999618530273" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="154.33333333333331" minHeight="10.0" prefHeight="127.66666666666667" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="132.0" minHeight="10.0" prefHeight="98.33333333333331" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="122.33333333333333" minHeight="10.0" prefHeight="122.33333333333333" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="154.33333333333331" minHeight="10.0" prefHeight="113.99999999999999" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="132.0" minHeight="10.0" prefHeight="94.66666666666669" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="95.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>

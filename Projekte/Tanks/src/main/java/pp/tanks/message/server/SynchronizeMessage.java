@@ -1,5 +1,8 @@
 package pp.tanks.message.server;
 
+/**
+ * Message send to synchronize the clients with each other
+ */
 public class SynchronizeMessage implements IServerMessage {
     public final long nanoOffset;
     public final long latency;

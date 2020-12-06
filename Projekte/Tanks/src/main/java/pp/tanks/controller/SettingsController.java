@@ -67,6 +67,13 @@ public class SettingsController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getString() {
+        return SETTINGS_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the user clicked on settings in the main menu.
      */
@@ -86,13 +93,6 @@ public class SettingsController extends Controller {
     @Override
     public void exit() {
         LOGGER.log(Level.INFO, "EXIT SettingsController");
-    }
-
-    /**
-     * @return the name of the used file as a String
-     */
-    public String getString() {
-        return SETTINGS_FXML;
     }
 
     /**
@@ -122,6 +122,9 @@ public class SettingsController extends Controller {
         changeMusic(engine.getTankApp().sounds.getMutedMusic());
     }
 
+    /**
+     * the method that actually changes the state of the music as well as the music image
+     */
     public void changeMusic(boolean mute) {
         if (mute) {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
@@ -146,6 +149,9 @@ public class SettingsController extends Controller {
         LOGGER.log(Level.INFO, "clicked MUSIC");
     }
 
+    /**
+     * the method that actually changes the state of the sound as well as the sound image
+     */
     public void changeSound(boolean mute) {
         if (mute) {
             soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));

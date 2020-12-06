@@ -34,18 +34,13 @@ import static pp.tanks.TanksImageProperty.explosion;
  */
 public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     private static final Logger LOGGER = Logger.getLogger(TanksMapView.class.getName());
-
     private static final Font TEXT_FONT = new Font(13);
-    private static final Font HINT_FONT = new Font(16);
     static final int FIELD_SIZE = 50;
     static final int HALF_FIELD_SIZE = FIELD_SIZE / 2;
-
     private final Model model;
     private final ImageSupport<TanksImageProperty> images;
     private final VisualizerVisitor visualizer;
-
     private final List<Projectile> projectiles = new ArrayList<>();
-
     private ProgressBar progressBar;
 
     /**
@@ -201,6 +196,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
 
     /**
      * Set a Progress bar
+     *
      * @param progressBar a reference to the progress bar
      */
     public void setProgressBar(ProgressBar progressBar) {
@@ -210,12 +206,17 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
 
     /**
      * Set the percentage of the progress bar
+     *
      * @param percentage
      */
     public void updateProgressBar(double percentage) {
         this.progressBar.setProgress(percentage);
     }
 
+    /**
+     * draws an extra image if the player dies
+     * @param position the position of the image
+     */
     public void drawLostTank(DoubleVec position) {
         drawImage(bigExplosion, position.x, position.y);
     }

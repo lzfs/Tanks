@@ -11,7 +11,6 @@ public class Sounds {
     public MediaPlayer mainMenu;
     public MediaPlayer mediaPlayer;
     private boolean mutedMusic = false;
-    private boolean mutedSfx = false;
 
     /**
      * load all SFx and Music
@@ -43,27 +42,6 @@ public class Sounds {
             @Override
             public void run() {
                 setMusic(mediaPlayer);
-            }
-        });
-    }
-
-    /**
-     * init SFx
-     *
-     * @param sfx SFx to play
-     */
-    public void setSfx(MediaPlayer sfx) {
-        mediaPlayer.pause();
-        MediaPlayer cls = this.mediaPlayer;
-        mediaPlayer = sfx;
-        mediaPlayer.setMute(mutedMusic);
-        mediaPlayer.setVolume(100.0);
-        mediaPlayer.play();
-        mediaPlayer.setOnEndOfMedia(new Runnable() {
-            @Override
-            public void run() {
-                mediaPlayer = cls;
-                mediaPlayer.play();
             }
         });
     }

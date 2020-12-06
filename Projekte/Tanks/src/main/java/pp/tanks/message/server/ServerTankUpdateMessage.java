@@ -2,6 +2,9 @@ package pp.tanks.message.server;
 
 import pp.tanks.model.item.ItemEnum;
 
+/**
+ * used in the Multiplayer Configuration
+ */
 public class ServerTankUpdateMessage implements IServerMessage {
     public final ItemEnum turret;
     public final ItemEnum armor;

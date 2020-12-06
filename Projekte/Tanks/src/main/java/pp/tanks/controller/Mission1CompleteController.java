@@ -44,6 +44,13 @@ public class Mission1CompleteController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getFileName() {
+        return MISSION_1_COMPLETE_SP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the first mission is completed.
      */
     @Override
@@ -63,26 +70,18 @@ public class Mission1CompleteController extends Controller {
     }
 
     /**
-     * @return the name of the used file as a String
-     */
-    public String getFileName() {
-        return MISSION_1_COMPLETE_SP_FXML;
-    }
-
-    /**
      * method for the next button
      */
     @FXML
     private void next() {
         LOGGER.log(Level.INFO, "clicked NEXT");
-
         engine.setMapCounter(2);
         loadLevelTwo();
         engine.activatePlayGameController();
     }
 
     /**
-     * loads level two of the game
+     * loads the second level of the game
      */
     private void loadLevelTwo() {
         TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);

@@ -56,20 +56,23 @@ public class PlayGameController extends Controller implements ICollisionObserver
     public static final KeyCode S = KeyCode.S;
     public static final KeyCode D = KeyCode.D;
 
-    private final List<KeyCode> pressed = new ArrayList<>();
-    private final Set<KeyCode> processed = new HashSet<>();
-    private final StopWatch stopWatch = new StopWatch();
+    private final List<KeyCode> pressed;
+    private final Set<KeyCode> processed;
+
+    private final StopWatch stopWatch;
     private double lastUpdate;
     private Scene scene;
     private boolean stopFlag = false;
-    public final List<ItemEnum> constructionEnum = new ArrayList<>();
-    public final List<TankData> constructionData = new ArrayList<>();
-    private final List<DataTimeItem<ProjectileData>> projectiles = new ArrayList<>();
-    private final List<DataTimeItem<TankData>> tanks = new ArrayList<>();
-    private final List<BBData> bbDataList = new ArrayList<>();
-    private GameEndingMessage endingMessage = null;
-    private PauseMenuMPController pauseMenuMPController = new PauseMenuMPController();
-    private final Scene menuMPController = new Scene(pauseMenuMPController);
+
+    public final List<ItemEnum> constructionEnum;
+    public final List<TankData> constructionData;
+    private final List<DataTimeItem<ProjectileData>> projectiles;
+    private final List<DataTimeItem<TankData>> tanks;
+    private final List<BBData> bbDataList;
+
+    private GameEndingMessage endingMessage;
+    private PauseMenuMPController pauseMenuMPController;
+    private final Scene menuMPController;
 
     private boolean connectionLost = false;
     private boolean wonSP = false;
@@ -82,6 +85,17 @@ public class PlayGameController extends Controller implements ICollisionObserver
      */
     public PlayGameController(Engine engine) {
         super(engine);
+        this.pressed = new ArrayList<>();
+        this.processed = new HashSet<>();
+        this.stopWatch = new StopWatch();
+        this.constructionEnum = new ArrayList<>();
+        this.constructionData = new ArrayList<>();
+        this.projectiles = new ArrayList<>();
+        this.tanks = new ArrayList<>();
+        this.bbDataList = new ArrayList<>();
+        this.endingMessage = null;
+        this.pauseMenuMPController = new PauseMenuMPController();
+        this.menuMPController = new Scene(pauseMenuMPController);
     }
 
     /**
@@ -89,6 +103,20 @@ public class PlayGameController extends Controller implements ICollisionObserver
      */
     private TanksMap getTanksMap() {
         return engine.getModel().getTanksMap();
+    }
+
+    /**
+     * @return the players tank
+     */
+    private Tank getTank() {
+        return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
+    }
+
+    /**
+     * getter method for the scene
+     */
+    public Scene getScene() {
+        return scene;
     }
 
     /**
@@ -122,10 +150,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
             double x1 = event.getX();
             double y1 = event.getY();
             DoubleVec dir = engine.getView().viewToModel(x1, y1).sub(getTank().getPos());
-            //maybe norm
-            //getTank().getTurret().setDirection(dir.normalize());
             getTank().getData().setTurretDir(dir.normalize());
-            //für model umwandeln und turret als DoubleVec übergeben
         }
     }
 
@@ -167,7 +192,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
                     wonSP = false;
                     handleLocalGameWon();
                 }
-
             }
             else if (engine.getModel().gameLost()) {
                 engine.getView().drawLostTank(getTank().getPos());
@@ -281,7 +305,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     }
 
     /**
-     * Resumes the Game
+     * Resumes the Game, sets the view and the progressBar
      */
     public void resumeGame() {
         stopWatch.start();
@@ -340,17 +364,6 @@ public class PlayGameController extends Controller implements ICollisionObserver
             getTank().setMove(true);
             getTank().setMoveDirection(MoveDirection.RIGHT);
         }
-    }
-
-    /**
-     * @return the players tank
-     */
-    private Tank getTank() {
-        return engine.getModel().getTanksMap().getTank(engine.getPlayerEnum());
-    }
-
-    public Scene getScene() {
-        return scene;
     }
 
     /**
@@ -428,9 +441,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
     }
 
     /**
-     * ends a game
-     *
-     * @param msg
+     * ends the game
      */
     public void setGameEnd(GameEndingMessage msg) {
         endingMessage = msg;
@@ -488,6 +499,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         engine.getSaveTank().getTracksPosList().clear();
     }
 
+    /**
+     * used for collision between a projectile and a tank
+     */
     @Override
     public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
         if (dest) {
@@ -499,6 +513,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         proj.destroy();
     }
 
+    /**
+     * used for collision between a projectile and a breakable block
+     */
     @Override
     public void notifyProjBBlock(Projectile proj, BreakableBlock block, int damage, boolean dest) {
         if (dest) {
@@ -510,6 +527,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
         proj.destroy();
     }
 
+    /**
+     * used for collision between a projectile and another projectile
+     */
     @Override
     public void notifyProjProj(Projectile proj1, Projectile proj2) {
         proj1.destroy();
@@ -524,9 +544,16 @@ public class PlayGameController extends Controller implements ICollisionObserver
         engine.gameWonMPController.playerDisconnected();
     }
 
+    /**
+     * The controller displaying the pause menu for the multiplayer.
+     * The game does not pause while you are in this controller.
+     */
     private class PauseMenuMPController extends GridPane {
         private static final String PAUSE_MENU_MP_FXML = "PauseMenuMP.fxml"; //NON-NLS
 
+        /**
+         * create a new PauseMenuMPController
+         */
         PauseMenuMPController() {
             final URL location = getClass().getResource(PAUSE_MENU_MP_FXML);
             FXMLLoader fxmlLoader = new FXMLLoader(location);
@@ -590,6 +617,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
             changeSound(engine.isSoundMuted());
         }
 
+        /**
+         * the method that actually changes the state of the sound as well as the sound image
+         */
         public void changeSound(boolean mute) {
             if (mute) {
                 soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
@@ -623,6 +653,9 @@ public class PlayGameController extends Controller implements ICollisionObserver
             changeMusic(engine.getTankApp().sounds.getMutedMusic());
         }
 
+        /**
+         * the method that actually changes the state of the music as well as the music image
+         */
         public void changeMusic(boolean mute) {
             if (mute) {
                 musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
@@ -648,10 +681,12 @@ public class PlayGameController extends Controller implements ICollisionObserver
         }
     }
 
+    /**
+     * is called when the connection is lost
+     */
     @Override
     public void lostConnection() {
         connectionLost = true;
         Platform.runLater(engine::activateConnectionLostController);
-
     }
 }

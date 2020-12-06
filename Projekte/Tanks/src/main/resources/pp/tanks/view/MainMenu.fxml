@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -12,11 +13,11 @@
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="145.0" minWidth="10.0" prefWidth="25.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="163.66665903727215" minHeight="10.0" prefHeight="157.66665903727215" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="97.66666666666667" minHeight="10.0" prefHeight="65.00000762939453" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="108.0" minHeight="10.0" prefHeight="49.00000000000003" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="130.00001525878906" minHeight="10.0" prefHeight="62.333333333333314" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="107.33333333333331" minHeight="10.0" prefHeight="68.33333333333331" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
         <Button fx:id="settings" mnemonicParsing="false" onAction="#settings" prefHeight="45.0" prefWidth="420.0" text="Einstellungen" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -27,7 +28,7 @@
          <font>
             <Font size="18.0" />
          </font></Button>
-        <Button fx:id="singlePlayer" mnemonicParsing="false" onAction="#singlePlayer" prefHeight="45.0" prefWidth="290.0" text="Singleplayer" GridPane.columnIndex="1">
+        <Button fx:id="singlePlayer" mnemonicParsing="false" onAction="#singlePlayer" prefHeight="45.0" prefWidth="290.0" text="Singleplayer" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
          <font>
             <Font size="18.0" />
          </font></Button>
@@ -35,16 +36,19 @@
          <font>
             <Font size="18.0" />
          </font></Button>
-        <Button fx:id="quitGame" mnemonicParsing="false" onAction="#quitGame" prefHeight="45.0" prefWidth="297.0" text="Spiel verlassen" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Button fx:id="quitGame" mnemonicParsing="false" onAction="#quitGame" prefHeight="45.0" prefWidth="297.0" text="Spiel verlassen" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
          <font>
             <Font size="18.0" />
          </font></Button>
-        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panzerkiste" wrappingWidth="264.1367173194885" GridPane.halignment="CENTER">
+        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Panzerkiste" textAlignment="CENTER" wrappingWidth="361.1366868019104" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
             <font>
-                <Font name="System Bold" size="48.0" />
+                <Font name="System Bold" size="64.0" />
             </font>
+         <GridPane.margin>
+            <Insets top="10.0" />
+         </GridPane.margin>
         </Text>
-        <ImageView fitHeight="309.0" fitWidth="309.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
+        <ImageView fitHeight="348.0" fitWidth="438.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2">
             <image>
                 <Image url="@../client/images/mainMenuGraphic.png" />
             </image>

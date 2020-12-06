@@ -32,11 +32,20 @@ public class Controller {
      *
      * @param event the event that happened and that is passed to this controller.
      */
-    public void handle(Event event) { }
+    public void handle(Event event) {}
 
-    public void synchronizationFinished() { }
+    /**
+     * used to start an action after both players are synchronized
+     */
+    public void synchronizationFinished() {}
 
+    /**
+     * used to indicate if a player is disconnected
+     */
     public void playerDisconnected() {}
 
-    public void lostConnection() { }
+    /**
+     * used to indicate that a connection was lost
+     */
+    public void lostConnection() {}
 }

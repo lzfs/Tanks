@@ -11,15 +11,15 @@
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="507.3333333333333" minWidth="10.0" prefWidth="507.3333333333333" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="200.33333333333334" minHeight="10.0" prefHeight="171.33333333333334" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="195.00000000000003" minHeight="10.0" prefHeight="167.00000000000003" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="200.33333333333334" minHeight="10.0" prefHeight="175.33333333333334" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="195.00000000000003" minHeight="10.0" prefHeight="163.33333333333334" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff541f" height="194.0" stroke="#ffffffa3" strokeType="INSIDE" width="509.0" GridPane.valignment="TOP">
             <GridPane.margin>
                 <Insets top="40.0" />
             </GridPane.margin></Rectangle>
-        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Game Over!" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Niederlage!" wrappingWidth="263.1796875" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
             <font>
                 <Font name="System Bold" size="48.0" />
             </font>
