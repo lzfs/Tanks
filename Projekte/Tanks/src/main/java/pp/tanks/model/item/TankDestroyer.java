@@ -15,7 +15,6 @@ import java.util.List;
  * so its working best in combination with a APC, which drives towards the current position of the playersTank
  */
 public class TankDestroyer extends COMEnemy {
-    private final List<DoubleVec> path = new LinkedList<>();
 
     public TankDestroyer(Model model, TankData data) {
         super(model, new NormalArmor(), new NormalTurret(), data);
@@ -35,25 +34,16 @@ public class TankDestroyer extends COMEnemy {
             Tank playersTank = model.getTanksMap().getTank(player1);
             DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(2));
             DoubleVec targetPosReverse = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(-2));
-            DoubleVec vec22 = new DoubleVec(2, 2);
-            if (playersTank.getMoveDir() != MoveDirection.STAY) {
-                if (isWithinMap(targetPos)) {
-                    navigateTo(targetPos);
-                } else if (isWithinMap(targetPosReverse)) {
-                    navigateTo(targetPosReverse);
-                } else if (isWithinMap(playersTank.getPos().add(vec22))) {
-                    navigateTo(playersTank.getPos().add(vec22));
-                } else {
-                    navigateTo(playersTank.getPos().sub(vec22));
-                }
+            DoubleVec vec22 = new DoubleVec(0, 2);
+            if (isWithinMap(targetPos) && targetPos != playersTank.getPos()) {
+                navigateTo(targetPos);
+            } else if (isWithinMap(targetPosReverse) && targetPos != playersTank.getPos()) {
+                navigateTo(targetPosReverse);
+            } else if (isWithinMap(playersTank.getPos().add(vec22))) {
+                navigateTo(playersTank.getPos().add(vec22));
+            } else {
+                navigateTo(playersTank.getPos().sub(vec22));
             }
         }
-    }
-
-    /**
-     * Returns the path the droid shall follow.
-     */
-    public List<DoubleVec> getPath() {
-        return Collections.unmodifiableList(path);
     }
 }

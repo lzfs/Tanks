@@ -187,7 +187,6 @@ public abstract class Tank extends Item<TankData> {
      */
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
-        DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed * 2));
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
@@ -274,7 +273,6 @@ public abstract class Tank extends Item<TankData> {
     public boolean collide(DoubleVec pos) {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
             if (this != tank && collisionWith(tank, pos, buffer)) {
-                //setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
                 stopMovement();
                 setMove(false);
                 return true;
@@ -422,6 +420,8 @@ public abstract class Tank extends Item<TankData> {
     public void destroy() {
         data.destroy();
         counter = 0;
+        data.setLifePoints(0);
+        armor.setArmorPoints(0);
     }
 
     public void sendTurretUpdate() {

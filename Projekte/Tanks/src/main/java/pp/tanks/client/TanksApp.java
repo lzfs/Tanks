@@ -5,7 +5,6 @@ import pp.network.IConnection;
 import pp.network.MessageReceiver;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.controller.Engine;
-import pp.tanks.controller.MainMenuController;
 import pp.tanks.message.client.ClientReadyMessage;
 import pp.tanks.message.client.IClientMessage;
 import pp.tanks.message.client.PingResponse;

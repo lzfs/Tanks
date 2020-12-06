@@ -136,7 +136,7 @@ public class VisualizerVisitor implements Visitor {
      */
     @Override
     public void visit(Enemy enemy) {
-        List<Track> posList = enemy.getPosList();
+        List<Track> posList = enemy.getTracksPosList();
         for (Track posTrack : posList) {
             drawMeATrack(posTrack);
         }
@@ -189,7 +189,7 @@ public class VisualizerVisitor implements Visitor {
      */
     @Override
     public void visit(COMEnemy comEnemy) {
-        List<Track> posList = comEnemy.getPosList();
+        List<Track> posList = comEnemy.getTracksPosList();
         for (Track posTrack : posList) {
             drawMeATrack(posTrack);
         }
