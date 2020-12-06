@@ -1,6 +1,13 @@
 package pp.tanks.controller;
 
+import pp.tanks.message.data.TankData;
+import pp.tanks.model.item.ItemEnum;
+import pp.tanks.model.item.MoveDirection;
+import pp.util.DoubleVec;
+
 import javafx.event.Event;
+
+import java.util.List;
 
 /**
  * Base class of all controllers of the tanks game
@@ -48,4 +55,26 @@ public class Controller {
      * used to indicate that a connection was lost
      */
     public void lostConnection() {}
+
+    /**
+     * loads the second level of the game
+     */
+    protected void loadLevelTwo() {
+        TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy2 = new TankData(new DoubleVec(20, 8), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy3 = new TankData(new DoubleVec(10, 6), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.TANK_DESTROYER));
+        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2, enemy3));
+    }
+
+    /**
+     * called when level one gets loaded
+     */
+    protected void loadLevelOne() {
+        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        TankData enemy2 = new TankData(new DoubleVec(20, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
+        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER));
+        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2));
+    }
+
 }

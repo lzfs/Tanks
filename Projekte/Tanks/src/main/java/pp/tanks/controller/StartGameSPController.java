@@ -204,25 +204,4 @@ public class StartGameSPController extends Controller {
                 return xtr.getAttributeValue(i);
         return null;
     }
-
-    /**
-     * called when level one gets loaded
-     */
-    private void loadLevelOne() {
-        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER));
-        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2));
-    }
-
-    /**
-     * called when level two gets loaded
-     */
-    private void loadLevelTwo() {
-        TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 6), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy3 = new TankData(new DoubleVec(20, 8), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.TANK_DESTROYER));
-        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2, enemy3));
-    }
 }

@@ -80,15 +80,5 @@ public class Mission1CompleteController extends Controller {
         engine.activatePlayGameController();
     }
 
-    /**
-     * loads the second level of the game
-     */
-    private void loadLevelTwo() {
-        TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 8), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy3 = new TankData(new DoubleVec(10, 6), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.TANK_DESTROYER));
-        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2, enemy3));
-    }
 }
 

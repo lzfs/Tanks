@@ -166,7 +166,7 @@ public class TanksMapTest {
 
         HeavyProjectile heavyProjectile = new HeavyProjectile(model, new ProjectileData(new DoubleVec(10, 6), 1001, 0,
                 new DoubleVec(10, 6), new DoubleVec(10, 6), ItemEnum.HEAVY_PROJECTILE, false));
-        heavyProjectile.collision();
+        heavyProjectile.collide();
         assertTrue(heavyProjectile.getData().isDestroyed());
     }
 
@@ -245,7 +245,7 @@ public class TanksMapTest {
         HeavyProjectile heavyProjectile = new HeavyProjectile(model, new ProjectileData(new DoubleVec(9.5, 6), 1001, 0,
                 new DoubleVec(10, 6), new DoubleVec(10, 6), ItemEnum.HEAVY_PROJECTILE, false));
         model.getTanksMap().getHashProjectiles().put(1001, heavyProjectile);
-        heavyProjectile.collision();
+        heavyProjectile.collide();
         assertEquals(10, playersTank.getArmor().getArmorPoints());
 
         playersTank.getArmor().setArmorPoints(40);
