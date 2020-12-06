@@ -161,7 +161,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     /**
      * Use a List of Tanks to give it to the players and updates the server map
      *
-     * @param tmp
+     * @param tmp the Tanks to process
      */
     private void processTanks(List<DataTimeItem<TankData>> tmp) {
         if (tmp.size() != 0) {
@@ -177,7 +177,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     /**
      * Add Projectiles to map and player
      *
-     * @param tmp
+     * @param tmp he projectiles to process
      */
     private void processProjectiles(List<DataTimeItem<ProjectileData>> tmp) {
         if (tmp.size() != 0) {
@@ -190,6 +190,9 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
     }
 
+    /**
+     * processes the turret updates
+     */
     private void processTurretUpdates() {
         if (turretUpdates.isEmpty()) return;
         TurretUpdateMessage[] tmp = turretUpdates.toArray(new TurretUpdateMessage[turretUpdates.size()]);
@@ -218,10 +221,10 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     /**
      * supplies the players with the updated projectile and the updated tank (necessary after collisions)
      *
-     * @param proj
-     * @param tank
-     * @param damage
-     * @param dest
+     * @param proj the projectile involved in the collision
+     * @param tank the tank involved in the collision
+     * @param damage the damage dealt
+     * @param dest if the tank is destroyed
      */
     @Override
     public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
@@ -244,10 +247,10 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     /**
      * supplies the players with the updated projectile and the updated BBlock (necessary after collisions)
      *
-     * @param proj
-     * @param block
-     * @param damage
-     * @param dest
+     * @param proj the projectile involved in the collision
+     * @param block the block involved in the collision
+     * @param damage the damage dealt
+     * @param dest if the block is destroyed
      */
     @Override
     public void notifyProjBBlock(Projectile proj, BreakableBlock block, int damage, boolean dest) {
@@ -269,8 +272,8 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     /**
      * supplies the players with the updated projectiles (necessary after collisions)
      *
-     * @param proj1
-     * @param proj2
+     * @param proj1 the projectile1 involved in the collision
+     * @param proj2 the projectile2 involved in the collision
      */
     @Override
     public void notifyProjProj(Projectile proj1, Projectile proj2) {
@@ -306,7 +309,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     /**
      * In case of a disconnect while playing the opposing player wins
      *
-     * @param conn
+     * @param conn to be closed
      */
     @Override
     public void playerDisconnected(IConnection<IServerMessage> conn) {

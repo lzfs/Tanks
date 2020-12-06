@@ -117,25 +117,6 @@ public class PlayerReadyState extends TankState {
         parent.goToState(containingState().synchronize);
     }
 
-    /**
-     * loads new model depending on the gamemode
-     *
-     * @param gameMode chosen gamemode
-     * @return new model
-     */
-    public Model loadModel(GameMode gameMode) {
-        Model model = new Model(parent.getProperties());
-        if (gameMode == GameMode.TUTORIAL) {
-            model.loadMap("map0.xml");
-        }
-        else if (gameMode == GameMode.SINGLEPLAYER) {
-            model.loadMap("map1.xml");
-        }
-        else {
-            model.loadMap("map1.xml");
-        }
-        return model;
-    }
 
     /**
      * Sets up a Multiplayer Game with the customized tank configurations
