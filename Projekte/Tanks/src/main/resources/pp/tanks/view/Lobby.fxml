@@ -12,9 +12,10 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="162.66666666666666" minHeight="10.0" prefHeight="156.66666666666666" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="154.33333333333331" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="133.66666666666669" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="147.0" minHeight="10.0" prefHeight="135.33333333333337" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="154.33333333333331" minHeight="10.0" prefHeight="39.33333333333334" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="133.66666666666669" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="147.0" minHeight="10.0" prefHeight="36.66666666666666" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="147.0" minHeight="10.0" prefHeight="119.33333333333331" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Lobby wählen" GridPane.columnIndex="1" GridPane.halignment="CENTER">
@@ -22,17 +23,17 @@
                 <Font name="System Bold" size="48.0" />
             </font>
         </Text>
-        <Button fx:id="back" mnemonicParsing="false" onAction="#back" text="Zurück" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+        <Button fx:id="back" mnemonicParsing="false" onAction="#back" text="Zurück" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
             <font>
                 <Font size="17.0" />
             </font>
         </Button>
-        <Button fx:id="searchForGame" mnemonicParsing="false" onAction="#searchForGame" text="Spiel suchen" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+        <Button fx:id="searchForGame" mnemonicParsing="false" onAction="#searchForGame" text="Spiel suchen" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
             <font>
                 <Font size="17.0" />
             </font>
         </Button>
-        <Button fx:id="createGame" mnemonicParsing="false" onAction="#createGame" text="Spiel erstellen" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+        <Button fx:id="createGame" mnemonicParsing="false" onAction="#createGame" text="Spiel erstellen" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
             <font>
                 <Font size="17.0" />
             </font>
