@@ -168,7 +168,7 @@ public class SingleplayerTest {
 
         firstShot.interpolateData(tmp);
         firstShot.interpolateTime(time + 1_000_000_000);
-        assertEquals(new DoubleVec(8.01, 6), model.getTanksMap().getProjectiles().get(0).getPos());
+        assertEquals(new DoubleVec(10.01, 6), model.getTanksMap().getProjectiles().get(0).getPos());
 
         assertEquals(ItemEnum.HEAVY_PROJECTILE, model.getTanksMap().getProjectiles().get(0).getProjectileData().type);
     }
@@ -236,9 +236,9 @@ public class SingleplayerTest {
 
         normal.setMoveDirection(MoveDirection.RIGHT);
         normal.setMove(true);
-        normal.updateMove(6.5);
+        normal.updateMove(6);
         normal.setMove(false);
-        assertEquals(new DoubleVec(15.5,6), normal.getPos());
+        assertEquals(new DoubleVec(13,6), normal.getPos());
 
         light.setMoveDirection(MoveDirection.RIGHT);
         light.setMove(true);

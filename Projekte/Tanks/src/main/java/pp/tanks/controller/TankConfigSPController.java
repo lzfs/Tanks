@@ -44,6 +44,7 @@ public class TankConfigSPController extends Controller {
     private final List<Image> turrets = new ArrayList<>();
     private final List<Image> armors = new ArrayList<>();
     private final List<Image> charts = new ArrayList<>();
+    private final List<Image> minCharts = new ArrayList<>();
 
     private final List<Integer> magazine = new ArrayList<>(Arrays.asList(5, 3, 1));
     private final List<Integer> cadence = new ArrayList<>(Arrays.asList(1, 3, 5));
@@ -180,6 +181,14 @@ public class TankConfigSPController extends Controller {
         charts.add(engine.getImages().getImage(TanksImageProperty.chart1));
         charts.add(engine.getImages().getImage(TanksImageProperty.chart2));
         charts.add(engine.getImages().getImage(TanksImageProperty.chart3));
+        charts.add(engine.getImages().getImage(TanksImageProperty.chart4));
+        charts.add(engine.getImages().getImage(TanksImageProperty.chart5));
+        charts.add(engine.getImages().getImage(TanksImageProperty.chart6));
+
+        minCharts.add(engine.getImages().getImage(TanksImageProperty.chart1));
+        minCharts.add(engine.getImages().getImage(TanksImageProperty.chart3));
+        minCharts.add(engine.getImages().getImage(TanksImageProperty.chart6));
+
         image1.setImage(turrets.get(counterTurret));
         image2.setImage(armors.get(counterArmor));
     }
@@ -227,10 +236,7 @@ public class TankConfigSPController extends Controller {
         if (counterTurret >= turrets.size()) {
             counterTurret = 0;
         }
-        harmChart.setImage(charts.get(counterTurret));
-        image1.setImage(turrets.get(counterTurret));
-        magazineSizeText.setText(magazine.get(counterTurret).toString());
-        cadenceText.setText(cadence.get(counterTurret).toString() + "s");
+        changeCharts();
     }
 
     /**
@@ -242,10 +248,7 @@ public class TankConfigSPController extends Controller {
         if (counterTurret < 0) {
             counterTurret = turrets.size() - 1;
         }
-        harmChart.setImage(charts.get(counterTurret));
-        image1.setImage(turrets.get(counterTurret));
-        magazineSizeText.setText(magazine.get(counterTurret).toString());
-        cadenceText.setText(cadence.get(counterTurret).toString() + "s");
+        changeCharts();
     }
 
     /**
@@ -257,7 +260,6 @@ public class TankConfigSPController extends Controller {
         if (counterArmor >= armors.size()) {
             counterArmor = 0;
         }
-        image2.setImage(armors.get(counterArmor));
         changeCharts();
     }
 
@@ -270,27 +272,21 @@ public class TankConfigSPController extends Controller {
         if (counterArmor < 0) {
             counterArmor = armors.size() - 1;
         }
-        image2.setImage(armors.get(counterArmor));
         changeCharts();
     }
 
     /**
      * change the displayed charts
-     * used in the methods for the armor buttons
      */
     private void changeCharts() {
-        if (counterArmor == 0) {
-            armorChart.setImage(charts.get(0));
-            speedChart.setImage(charts.get(2));
-        }
-        else if (counterArmor == 1) {
-            armorChart.setImage(charts.get(1));
-            speedChart.setImage(charts.get(1));
-        }
-        else {
-            armorChart.setImage(charts.get(2));
-            speedChart.setImage(charts.get(0));
-        }
+        harmChart.setImage(minCharts.get(counterTurret));
+        image1.setImage(turrets.get(counterTurret));
+        magazineSizeText.setText(magazine.get(counterTurret).toString());
+        cadenceText.setText(cadence.get(counterTurret).toString() + "s");
+        image2.setImage(armors.get(counterArmor));
+        armorChart.setImage(minCharts.get(counterArmor));
+        int chartIdx = (armorList.get(counterArmor).getWeight() + turretsList.get(counterTurret).getWeight()) / 5 -2;
+        speedChart.setImage(charts.get((chartIdx-5)*(-1)));
     }
 
     /**
