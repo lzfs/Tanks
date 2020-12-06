@@ -20,5 +20,10 @@ public enum TanksSoundProperty {
      * Path to the sound file played when a block gets destroyed
      */
     blockDestroyedSound,
+
+    /**
+     * Path to the sound file played when a player gets hit
+     */
+    armorHit,
 }
 

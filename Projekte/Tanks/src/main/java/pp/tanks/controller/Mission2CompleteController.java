@@ -38,6 +38,13 @@ public class Mission2CompleteController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getFileName() {
+        return MISSION_2_COMPLETE_SP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the second mission is completed.
      */
     @Override
@@ -54,13 +61,6 @@ public class Mission2CompleteController extends Controller {
     @Override
     public void exit() {
         LOGGER.log(Level.INFO, "EXIT Mission2CompleteController");
-    }
-
-    /**
-     * @return the name of the used file as a String
-     */
-    public String getFileName() {
-        return MISSION_2_COMPLETE_SP_FXML;
     }
 
     /**

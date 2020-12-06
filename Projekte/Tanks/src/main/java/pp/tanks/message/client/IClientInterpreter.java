@@ -12,23 +12,11 @@ public interface IClientInterpreter {
 
     void visit(PingResponse msg, IConnection<IServerMessage> from);
 
-    void visit(CollisionMessage msg, IConnection<IServerMessage> from);
-
-    void visit(CreateNewLobbyMessage msg, IConnection<IServerMessage> from);
-
-    void visit(JoinLobbyXMessage msg, IConnection<IServerMessage> from);
-
-    void visit(LevelSelectedMessage msg, IConnection<IServerMessage> from);
-
     void visit(MoveMessage msg, IConnection<IServerMessage> from);
-
-    void visit(ReadyMessage msg, IConnection<IServerMessage> from);
 
     void visit(ShootMessage msg, IConnection<IServerMessage> from);
 
     void visit(StartGameMessage msg, IConnection<IServerMessage> from);
-
-    void visit(TankSelectedMessage msg, IConnection<IServerMessage> from);
 
     void visit(UpdateTankConfigMessage msg, IConnection<IServerMessage> from);
 

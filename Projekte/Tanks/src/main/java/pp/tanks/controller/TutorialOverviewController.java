@@ -49,6 +49,13 @@ public class TutorialOverviewController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getFileName() {
+        return TUTORIAL_OVERVIEW_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the user clicked on tutorial.
      */
@@ -58,13 +65,6 @@ public class TutorialOverviewController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
-    }
-
-    /**
-     * @return the name of the used file as a String
-     */
-    public String getFileName() {
-        return TUTORIAL_OVERVIEW_FXML;
     }
 
     /**
@@ -94,9 +94,10 @@ public class TutorialOverviewController extends Controller {
         engine.setMode(GameMode.TUTORIAL);
         engine.setMapCounter(0);
         loadLevelTutorial();
-        PlayersTank tank = new PlayersTank(engine.getModel(), 3, new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
+        PlayersTank tank = new PlayersTank(engine.getModel(), new LightArmor(), new LightTurret(), new TankData(new DoubleVec(3, 6), 0, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
         engine.setSaveTank(tank);
         engine.activatePlayGameController();
+        engine.setTutorial(true);
     }
 }
 

@@ -1,6 +1,7 @@
 package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
+import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.Projectile;
 
 import javafx.fxml.FXML;
@@ -62,17 +63,25 @@ public class PauseMenuSPController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return PAUSE_MENU_SP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the user pressed ESC during the game.
      */
     @Override
     public void entry() {
         LOGGER.log(Level.INFO, "ENTRY PauseMenuSPController");
-        engine.viewUpdate=false;
+        engine.viewUpdate = false;
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
-        changeMusic(engine.getTankApp().sounds.getMuted());
+        changeMusic(engine.getTankApp().sounds.getMutedMusic());
+        changeSound(engine.isSoundMuted());
     }
 
     /**
@@ -85,22 +94,17 @@ public class PauseMenuSPController extends Controller {
     }
 
     /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return PAUSE_MENU_SP_FXML;
-    }
-
-    /**
      * method to continue the game
      */
     @FXML
     private void continueGame() {
-        engine.viewUpdate=true;
+        engine.viewUpdate = true;
         LOGGER.log(Level.INFO, "clicked CONTINUE_GAME");
-        //engine.setScene(engine.playGameController.sceneBackup);
-        for( Projectile p :  engine.getModel().getTanksMap().getProjectiles()){
+        for (Projectile p : engine.getModel().getTanksMap().getProjectiles()) {
             p.resetInterpolateTime();
+        }
+        for (COMEnemy comEnemy : engine.getModel().getTanksMap().getCOMTanks()) {
+            comEnemy.resetInterpolateTime();
         }
         engine.resumeGame();
     }
@@ -113,28 +117,42 @@ public class PauseMenuSPController extends Controller {
         LOGGER.log(Level.INFO, "clicked MAIN_MENU");
         engine.setView(null);
         engine.activateMainMenuController();
-        engine.viewUpdate=true;
-
+        engine.viewUpdate = true;
+        engine.setTutorial(false);
     }
 
     /**
      * method for the sound button
      */
     @FXML
-    private void sound() {
-        // TODO fix this when TankSoundProperty is done
-        if (engine.getTankApp().sounds.getMuted()) {
-            engine.getTankApp().sounds.mute(false);
-        }
-        else {
-            engine.getTankApp().sounds.mute(true);
-        }
+    private void soundClicked() {
+        engine.setSoundMuted(!engine.isSoundMuted());
+        changeSound(engine.isSoundMuted());
+    }
 
-        if (engine.getTankApp().sounds.getMuted()) {
+    /**
+     * the method that actually changes the state of the sound as well as the sound image
+     */
+    public void changeSound(boolean mute) {
+        if (mute) {
             soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));
+            engine.getTankApp().properties.setProperty("soundMuted", "1");
+            try {
+                engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
+            }
         }
         else {
             soundImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOn));
+            engine.getTankApp().properties.setProperty("soundMuted", "0");
+            try {
+                engine.getTankApp().properties.store(new FileOutputStream("tanks.properties"), null);
+            }
+            catch (IOException e) {
+                LOGGER.log(Level.INFO, e.getMessage());
+            }
         }
         LOGGER.log(Level.INFO, "clicked SOUND");
     }
@@ -144,10 +162,14 @@ public class PauseMenuSPController extends Controller {
      */
     @FXML
     private void music() {
-        engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMuted());
-        changeMusic(engine.getTankApp().sounds.getMuted());
+        engine.getTankApp().sounds.mute(!engine.getTankApp().sounds.getMutedMusic());
+        changeMusic(engine.getTankApp().sounds.getMutedMusic());
     }
 
+    /**
+     * the method that actually changes the state of the music as well as the music image
+     *
+     */
     public void changeMusic(boolean mute) {
         if (mute) {
             musicImage.setImage(engine.getImages().getImage(TanksImageProperty.soundOff));

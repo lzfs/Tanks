@@ -38,6 +38,13 @@ public class ConnectionLostController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return CONNECTION_LOST_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the connection is lost.
      */
     @Override
@@ -57,14 +64,7 @@ public class ConnectionLostController extends Controller {
     }
 
     /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return CONNECTION_LOST_FXML;
-    }
-
-    /**
-     * method for the back button
+     * method for the lobby button
      */
     @FXML
     private void lobby() {

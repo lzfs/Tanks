@@ -1,6 +1,5 @@
 package pp.tanks.view;
 
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressBar;
@@ -11,11 +10,12 @@ import javafx.scene.text.Font;
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.model.Model;
-import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.HeavyProjectile;
 import pp.tanks.model.item.Item;
+import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
+import pp.tanks.model.item.Track;
 import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 import pp.tanks.server.GameMode;
@@ -34,18 +34,13 @@ import static pp.tanks.TanksImageProperty.explosion;
  */
 public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     private static final Logger LOGGER = Logger.getLogger(TanksMapView.class.getName());
-
     private static final Font TEXT_FONT = new Font(13);
-    private static final Font HINT_FONT = new Font(16);
     static final int FIELD_SIZE = 50;
     static final int HALF_FIELD_SIZE = FIELD_SIZE / 2;
-
     private final Model model;
     private final ImageSupport<TanksImageProperty> images;
     private final VisualizerVisitor visualizer;
-
     private final List<Projectile> projectiles = new ArrayList<>();
-
     private ProgressBar progressBar;
 
     /**
@@ -95,11 +90,23 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         if (bgImage != null) context.drawImage(bgImage, 0, 0);
 
         // render items
+
+        for (Oil oil : model.getTanksMap().getOilList()) {
+            oil.accept(visualizer);
+        }
+        List<Track> trackList = model.getTanksMap().getTank(model.getEngine().getPlayerEnum()).getTracksPosList();
+        for (Track track : trackList) {
+            visualizer.drawMeATrack(track);
+        }
         for (Item p : model.getTanksMap()) {
             p.accept(visualizer);
         }
         if (model.getEngine().getMode() == GameMode.SINGLEPLAYER) {
             model.getTanksMap().getTank(PlayerEnum.PLAYER1).accept(visualizer);
+        }
+        else if (model.getEngine().getMode() == GameMode.MULTIPLAYER) {
+            PlayerEnum player = model.getEngine().getPlayerEnum();
+            model.getTanksMap().getTank(player).accept(visualizer);
         }
 
         for (Projectile p : projectiles) {
@@ -188,9 +195,9 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Set a Progress bar
      *
-     * @param progressBar
+     * @param progressBar a reference to the progress bar
      */
     public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
@@ -198,11 +205,19 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Set the percentage of the progress bar
      *
      * @param percentage
      */
     public void updateProgressBar(double percentage) {
         this.progressBar.setProgress(percentage);
+    }
+
+    /**
+     * draws an extra image if the player dies
+     * @param position the position of the image
+     */
+    public void drawLostTank(DoubleVec position) {
+        drawImage(bigExplosion, position.x, position.y);
     }
 }

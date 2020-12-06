@@ -2,21 +2,16 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
-import pp.tanks.message.data.ProjectileData;
 import pp.tanks.model.Model;
-import pp.tanks.message.data.Data;
 import pp.util.DoubleVec;
 
-import javafx.geometry.Rectangle2D;
-
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D.Double;
 
 /**
  * Abstract base class of all items in a {@linkplain pp.tanks.model.TanksMap}
  */
 public abstract class Item<T extends Data> {
-    public static final long FACTOR_SEC = 1_000_000_000;
+    public static final double FACTOR_SEC = 1e-9;
     protected final Model model;
     protected double effectiveRadius;
     protected boolean destroyed = false;
@@ -69,51 +64,20 @@ public abstract class Item<T extends Data> {
         return data.isDestroyed();
     }
 
-    /*
-     * Checks whether there is a collision with another item
-     *
-     * @param other the item which is checked for a collision
-     *//*
-    public boolean collisionWith(Item other) {
-        if (getPos() == null || other.isDestroyed()) return false;
-
-        double height = 0.5;
-        double width = 0.5;
-
-        if (other instanceof Projectile && this instanceof Projectile) {
-            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
-        }
-        else if (other instanceof Projectile) {
-            return (Math.abs(getPos().x - other.getPos().x) <= width + other.getEffectiveRadius())
-                   && (Math.abs(getPos().y - other.getPos().y) <= height + other.getEffectiveRadius());
-        }
-        else if (this instanceof Projectile) {
-            return (Math.abs(getPos().x - other.getPos().x) <= width + this.getEffectiveRadius())
-                   && (Math.abs(getPos().y - other.getPos().y) <= height + this.getEffectiveRadius());
-        }
-        else {
-            Rectangle2D item1 = new Rectangle2D(this.getPos().x - width, this.getPos().y - height, 2 * width, 2 * height);
-            Rectangle2D item2 = new Rectangle2D(other.getPos().x - width, other.getPos().y - height, 2 * width, 2 * height);
-            return item1.intersects(item2);
-        }
-    }
-    */
-
     /**
      * Checks whether there is a collision with another item
      *
      * @param other the item which is checked for a collision
      */
-    public boolean collisionWith(Item other, DoubleVec newPos) {
+    public boolean collisionWith(Item other, DoubleVec newPos, double buffer) {
         if (getPos() == null || other.isDestroyed() || this.isDestroyed()) return false;
-
         if (other instanceof Block) {
             Block block = (Block) other;
-            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
-            return item1.intersects(other.getPos().x - (block.getWidth() / 2.0), other.getPos().y - (block.getHeight() / 2.0), block.getWidth(), block.getHeight());
-        }
-        else {
-            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+            double bufferedER = effectiveRadius + buffer;
+            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - bufferedER * 0.5, newPos.y - bufferedER * 0.5, bufferedER, bufferedER);
+            return item1.intersects(other.getPos().x - block.getWidth() * 0.5, other.getPos().y - block.getHeight() * 0.5, block.getWidth(), block.getHeight());
+        } else {
+            return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
 
@@ -123,8 +87,6 @@ public abstract class Item<T extends Data> {
     public void destroy() {
         data.destroy();
     }
-
-    public abstract void isVisible();
 
     /**
      * Method to accept a visitor
@@ -141,22 +103,22 @@ public abstract class Item<T extends Data> {
     public abstract void update(long serverTime);
 
     /**
-     * TODO: add JavaDoc
+     * Interpolates the Data
      *
      * @param item
      */
     public abstract void interpolateData(DataTimeItem<T> item);
 
     /**
-     * TODO: add JavaDoc
+     * Interpolates the time
      *
      * @param serverTime
-     * @return
      */
-    public abstract boolean interpolateTime(long serverTime);
+    public abstract void interpolateTime(long serverTime);
 
     /**
      * for thomases (god's) will
      */
-    public void processDamage(int damage) {}
+    public void processDamage(int damage) {
+    }
 }

@@ -23,8 +23,27 @@
 .text{
     -fx-background-color: #424242;
     -fx-text-fill:#ffffff;
+    -fx-text-alignment: center;
 }
 
 .text-area {
     -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-text-alignment: center;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-text-alignment: center;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+    -fx-text-alignment: center;
+}
+
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+    -fx-text-alignment: center;
 }

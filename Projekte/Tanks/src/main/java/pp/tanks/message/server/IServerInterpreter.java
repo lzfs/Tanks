@@ -1,5 +1,8 @@
 package pp.tanks.message.server;
 
+/**
+ * Interface for a Server Interpreter following the <em>visitor design pattern</em>.
+ */
 public interface IServerInterpreter {
 
     void visit(SynchronizeMessage msg);

@@ -97,7 +97,6 @@ public class DroidsMapView extends Canvas implements DroidsNotificationReceiver 
                 p.accept(debug);
         }
 
-        //
         context.setFont(TEXT_FONT);
         context.setFill(Color.WHITE);
         context.setFont(TEXT_FONT);

@@ -2,9 +2,7 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
-import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
-import pp.util.IntVec;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -17,10 +15,9 @@ import java.util.List;
  * so its working best in combination with a APC, which drives towards the current position of the playersTank
  */
 public class TankDestroyer extends COMEnemy {
-    private final List<DoubleVec> path = new LinkedList<>();
 
     public TankDestroyer(Model model, TankData data) {
-        super(model, 3, new NormalArmor(), new NormalTurret(), data);
+        super(model, new NormalArmor(), new NormalTurret(), data);
     }
 
     /**
@@ -31,28 +28,22 @@ public class TankDestroyer extends COMEnemy {
     @Override
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
-        if (!shootIsBlocked() && canShoot() && Math.random() < 0.8) {
+        if (shootIsBlocked() && canShoot() && Math.random() < 0.8) {
             shoot(model.getTanksMap().getTank(player1).getPos());
-        }
-        else if (path == null || path.isEmpty()) {
+        } else if (path == null || path.isEmpty()) {
             Tank playersTank = model.getTanksMap().getTank(player1);
             DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(2));
             DoubleVec targetPosReverse = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(-2));
-            if (playersTank.getMoveDir() != MoveDirection.STAY) {
-                if (isWithinMap(targetPos)) {
-                    navigateTo(targetPos);
-                }
-                else if (isWithinMap(targetPosReverse)) {
-                    navigateTo(targetPosReverse);
-                }
+            DoubleVec vec22 = new DoubleVec(0, 2);
+            if (isWithinMap(targetPos) && targetPos != playersTank.getPos()) {
+                navigateTo(targetPos);
+            } else if (isWithinMap(targetPosReverse) && targetPos != playersTank.getPos()) {
+                navigateTo(targetPosReverse);
+            } else if (isWithinMap(playersTank.getPos().add(vec22))) {
+                navigateTo(playersTank.getPos().add(vec22));
+            } else {
+                navigateTo(playersTank.getPos().sub(vec22));
             }
         }
-    }
-
-    /**
-     * Returns the path the droid shall follow.
-     */
-    public List<DoubleVec> getPath() {
-        return Collections.unmodifiableList(path);
     }
 }

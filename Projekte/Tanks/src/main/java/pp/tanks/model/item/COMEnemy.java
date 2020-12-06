@@ -3,12 +3,12 @@ package pp.tanks.model.item;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
 import pp.tanks.model.item.navigation.Navigator;
+import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 import pp.util.IntVec;
 
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,30 +18,17 @@ import java.util.List;
 public class COMEnemy extends Enemy {
     public final PlayerEnum player1 = PlayerEnum.PLAYER1;
     private long latestViewUpdate;
+    private boolean shootable = true;
 
     protected List<DoubleVec> path;
     private List<MoveDirection> dirs;
 
-    protected COMEnemy(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, effectiveRadius, armor, turret, data);
+    protected COMEnemy(Model model, Armor armor, Turret turret, TankData data) {
+        super(model, armor, turret, data);
         if (model.getEngine() != null) latestViewUpdate = System.nanoTime() + model.getEngine().getOffset();
         else latestViewUpdate = System.nanoTime();
         this.path = new LinkedList<>();
         this.dirs = new ArrayList<>();
-    }
-
-    /**
-     * method for test cases to check if the COMEnemy can shoot
-     */
-    public void cheatShoot() {
-        //TODO
-    }
-
-    /**
-     * method for test cases to check if the COMEnemy can move
-     */
-    public void cheatMove(DoubleVec pos) {
-        //TODO
     }
 
     /**
@@ -51,7 +38,7 @@ public class COMEnemy extends Enemy {
      */
     @Override
     public void shoot(DoubleVec pos) {
-        if (canShoot() && !this.isDestroyed()) {
+        if (canShoot() && !this.isDestroyed() && shootable) {
             turret.shoot();
             Projectile projectile = super.makeProjectile(pos);
             model.getTanksMap().addProjectile(projectile);
@@ -65,20 +52,20 @@ public class COMEnemy extends Enemy {
      */
     @Override
     public void update(long serverTime) {
-        long tmp = serverTime - latestViewUpdate;
-        double delta = ((double) tmp) / FACTOR_SEC;
-        turret.update(delta);
-        if (model.getEngine() != null) {
-            if (isMoving()) {
-                // move(delta);
-                if (!collide(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)))) {
-                    updateMove(delta);
-                } else {
-                    path.clear();
-                }
-            }
-            else {
-                if (!this.isDestroyed()) {
+        if (!model.getEngine().isTutorial()) {
+            long tmp = serverTime - latestViewUpdate;
+            double delta = FACTOR_SEC * tmp;
+            turret.update(delta);
+            data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos()));
+            if (model.getEngine() != null) {
+                if (isMoving() && !isDestroyed()) {
+                    if (!collide(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)))) {
+                        updateMove(delta);
+                        behaviour(delta);
+                    } else {
+                        path.clear();
+                    }
+                } else if (!this.isDestroyed()) {
                     behaviour(delta);
                 }
             }
@@ -86,57 +73,28 @@ public class COMEnemy extends Enemy {
         latestViewUpdate = serverTime;
     }
 
-    public void move(double delta) {
-        if (path != null && !path.isEmpty()) {
-            final DoubleVec target = path.get(0);
-            if (getPos().distance(target) < 0.05) {
-                setPos(target);
-                path.remove(0);
-                if (path.size() >= 1) {
-                    setMoveDirection(getMoveDirToVec(path.get(0).sub(target)));
-                }
-            }
-            else {
-                setPos(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)));
-            }
-        }
-        else {
-            setMove(false);
-        }
-    }
-
     /**
-     * TODO: add JavaDoc
-     *
-     * @param vec
-     * @return
+     * @param vec only if this double Vector is a Vector associated in the MoveDirection Enum
+     * @return the MoveDirection to a given DoubleVector
      */
     public static MoveDirection getMoveDirToVec(DoubleVec vec) {
         if (vec.equals(MoveDirection.UP.getVec())) {
             return MoveDirection.UP;
-        }
-        else if (vec.equals(MoveDirection.DOWN.getVec())) {
+        } else if (vec.equals(MoveDirection.DOWN.getVec())) {
             return MoveDirection.DOWN;
-        }
-        else if (vec.equals(MoveDirection.LEFT.getVec())) {
+        } else if (vec.equals(MoveDirection.LEFT.getVec())) {
             return MoveDirection.LEFT;
-        }
-        else if (vec.equals(MoveDirection.RIGHT.getVec())) {
+        } else if (vec.equals(MoveDirection.RIGHT.getVec())) {
             return MoveDirection.RIGHT;
-        }
-        else if (vec.equals(MoveDirection.RIGHT_DOWN.getVec())) {
+        } else if (vec.equals(MoveDirection.RIGHT_DOWN.getVec())) {
             return MoveDirection.RIGHT_DOWN;
-        }
-        else if (vec.equals(MoveDirection.RIGHT_UP.getVec())) {
+        } else if (vec.equals(MoveDirection.RIGHT_UP.getVec())) {
             return MoveDirection.RIGHT_UP;
-        }
-        else if (vec.equals(MoveDirection.LEFT_DOWN.getVec())) {
+        } else if (vec.equals(MoveDirection.LEFT_DOWN.getVec())) {
             return MoveDirection.LEFT_DOWN;
-        }
-        else if (vec.equals(MoveDirection.LEFT_UP.getVec())) {
+        } else if (vec.equals(MoveDirection.LEFT_UP.getVec())) {
             return MoveDirection.LEFT_UP;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -151,17 +109,32 @@ public class COMEnemy extends Enemy {
         double moveDirRotation = data.getMoveDir().getRotation();
         double tmp = (currentRot - moveDirRotation + 180) % 180;
         double tmp1 = (moveDirRotation - currentRot + 180) % 180;
-        double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
+        double tmp2 = Math.abs(currentRot - moveDirRotation) % 180;
         if (tmp2 < 5) {
             setRotation(moveDirRotation);
-            move(delta);
-        }
-        else if (tmp > tmp1) {
+            if (path != null && !path.isEmpty()) {
+                final DoubleVec target = path.get(0);
+                if (getPos().distance(target) < 0.05) {
+                    setPos(target);
+                    path.remove(0);
+                    if (path.size() >= 1) {
+                        setMoveDirection(getMoveDirToVec(path.get(0).sub(target)));
+                    }
+                } else {
+                    setPos(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)));
+                    addTrack();
+                }
+            } else {
+                setMove(false);
+            }
+        } else if (tmp > tmp1) {
             data.setRotation(currentRot + delta * rotationSpeed);
-        }
-        else {
+            addTrackRotation();
+        } else {
             data.setRotation(currentRot - delta * rotationSpeed);
+            addTrackRotation();
         }
+        oilCollision();
     }
 
     /**
@@ -169,7 +142,8 @@ public class COMEnemy extends Enemy {
      *
      * @param delta
      */
-    public void behaviour(double delta) {}
+    public void behaviour(double delta) {
+    }
 
     /**
      * Method to accept a visitor
@@ -207,12 +181,12 @@ public class COMEnemy extends Enemy {
                 Block block = other;
                 Ellipse2D item1 = new Ellipse2D.Double(pos.x - (effectiveRadius / 2), pos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
                 if (item1.intersects(other.getPos().x - (block.getWidth() / 2.0), other.getPos().y - (block.getHeight() / 2.0), block.getWidth(), block.getHeight())) {
-                    return true;
+                    return false;
                 }
             }
             pos = pos.add(dir);
         }
-        return false;
+        return true;
     }
 
     /**
@@ -239,34 +213,32 @@ public class COMEnemy extends Enemy {
     }
 
     /**
-     * Normalizes the specified angle such the returned angle lies in the range -180 degrees
-     * to 180 degrees.
-     *
-     * @param angle an angle in degrees
-     * @return returns an angle equivalent to {@code angle} that lies in the range -180
-     * degrees to 180 degrees.
+     * Indicates that this enemy has been destroyed.
      */
-    static double normalizeAngle(double angle) {
-        final double res = angle % 360.;
-        if (res < -180.) return res + 360.;
-        else if (res > 180.) return res - 360.;
-        return res;
-    }
-
     @Override
     public void destroy() {
         data.destroy();
         path.clear();
+        model.notifyReceivers(TanksNotification.TANK_DESTROYED);
         setMoveDirection(MoveDirection.STAY);
     }
 
     /**
-     * TODO doc
-     *
-     * @param pos
-     * @return
+     * @param pos the position to check
+     * @return if pos is within the map
      */
     public boolean isWithinMap(DoubleVec pos) {
         return !(model.getTanksMap().getHeight() > pos.y) && model.getTanksMap().getHeight() >= 0 && !(model.getTanksMap().getWidth() > pos.x) && model.getTanksMap().getWidth() >= 0;
+    }
+
+    public void setShootable(boolean shootable) {
+        this.shootable = shootable;
+    }
+
+    /**
+     * Reset the Interpolation
+     */
+    public void resetInterpolateTime() {
+        latestViewUpdate = System.nanoTime();
     }
 }

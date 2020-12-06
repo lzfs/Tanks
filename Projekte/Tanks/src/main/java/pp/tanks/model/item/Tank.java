@@ -9,7 +9,8 @@ import pp.tanks.message.data.TankData;
 import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
-import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import static pp.tanks.model.item.MoveDirection.*;
 
@@ -17,27 +18,29 @@ import static pp.tanks.model.item.MoveDirection.*;
  * abstract base class of all tanks in a {@linkplain pp.tanks.model.TanksMap}
  */
 public abstract class Tank extends Item<TankData> {
+    protected List<Track> tracksPosList = new ArrayList<Track>();
     protected Turret turret;
     protected Armor armor;
     protected double speed;
     protected double rotationSpeed = 150;
-    protected double turretRotationSpeed = 1000;
     private int lives = 1;
     public final PlayerEnum playerEnum;
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
-    private long latestInterpolate;
-    private DoubleVec lastTurretDir = new DoubleVec(0, 0);
-    protected DoubleVec newTurretDir = new DoubleVec(1, 0);
+    private double trackRotation = 0.0;
+    protected double buffer;
+    private int counter = 0;
 
-    protected Tank(Model model, double effectiveRadius, Armor armor, Turret turret, TankData data) {
-        super(model, 1, data);
+    protected Tank(Model model, Armor armor, Turret turret, TankData data) {
+        super(model, armor.getEffectiveRadius(), data);
         this.armor = armor;
         this.turret = turret;
         this.speed = calculateSpeed();
-        this.playerEnum = PlayerEnum.getPlayer(data.getId()); //TODO Com enemys beim schießen
+        this.playerEnum = PlayerEnum.getPlayer(data.getId());
         this.projectileId = playerEnum.projectileID;
+        this.buffer = 0.25;
         latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime());
+        tracksPosList.add(new Track(data.getPos(), data.getRotation(), TrackIntensity.NORMAL));
     }
 
     /**
@@ -162,10 +165,11 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * Called once per frame. Used for updating this item's position etc.
-     * TODO: what the heck is with this comment?
-     * //@param delta time in seconds since the last update call
+     * @return the list with the positions we want to draw
      */
+    public List<Track> getTracksPosList() {
+        return tracksPosList;
+    }
 
     /**
      * updates destruction-status
@@ -183,53 +187,28 @@ public abstract class Tank extends Item<TankData> {
      */
     public void updateMove(double delta) {
         DoubleVec newPos = getPos().add(getMoveDir().getVec().mult(delta * speed));
-        DoubleVec newPos2 = getPos().add(getMoveDir().getVec().mult(delta * speed * 2));
-
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
             double tmp = (currentRot - moveDirRotation + 180) % 180;
             double tmp1 = (moveDirRotation - currentRot + 180) % 180;
-            double tmp2 = Math.abs(currentRot - moveDirRotation) % 180; //TODO
+            double tmp2 = Math.abs(currentRot - moveDirRotation) % 180;
             if (tmp2 < 4) {
                 data.setRotation(moveDirRotation);
                 if (!collide(newPos)) {
                     setPos(newPos);
+                    addTrack();
                 }
-            }
-            else if (tmp > tmp1) {
+            } else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);
-            }
-            else {
+                addTrackRotation();
+            } else {
                 data.setRotation(currentRot - delta * rotationSpeed);
+                addTrackRotation();
             }
         }
+        oilCollision();
     }
-
-    //haben latest OP
-    //wenn nachricht an server
-    //dataTime item an sich selbst geben
-    //berechenen angefangen und wann fertig
-    //delta größer als deltaT also zeit die ich bräuchte
-    //iwas iwo abziehen
-
-    //es kommt bewegunsgänderung
-    //hat Data
-    //und latestOP  (bräuchte er eigentlich nicht)
-    //wenn stopmovement oder setmovedirection
-    //das datatime item als latestOP abspeichern
-    //delta winkel berechnen  (der zu drehende winkel)
-    //wie lange ich bräuchte kann ich mir deltaT für dauer der drehung berechnen
-    //deltaT abspeichern
-    //iwo oben ne deltaZeit
-    //deltaZeit+=delta
-    //ist deltazeit kleiner als deltaT?
-    //=> current rotation dreh dings
-    //berechnen speichern
-    //deltazeit=deltaT
-    // deltazeit- deltaT=minizeit
-    //setRotation auf moveDirdirection
-    //setPosition(alte + direction * speed*minizeit
 
     /**
      * Method to accept a visitor
@@ -247,8 +226,8 @@ public abstract class Tank extends Item<TankData> {
         if (canShoot() && !this.isDestroyed()) {
             turret.shoot();
             Projectile projectile = makeProjectile(pos);
-            ShootMessage msg = new ShootMessage(new DataTimeItem<ProjectileData>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
-            if (!model.getEngine().isClientGame()) {
+            if (model.getEngine() != null && !model.getEngine().isClientGame()) {
+                ShootMessage msg = new ShootMessage(new DataTimeItem<ProjectileData>(projectile.data, System.nanoTime() + model.getEngine().getOffset()));
                 model.getEngine().getConnection().send(msg);
                 model.getEngine().getConnection().send(new TurretUpdateMessage(data.id, data.getTurretDir()));
             }
@@ -279,7 +258,6 @@ public abstract class Tank extends Item<TankData> {
         model.notifyReceivers(TanksNotification.TANK_FIRED);
         projectileId++;
         return turret.mkProjectile(this.model, data, targetPos);
-
     }
 
     /**
@@ -292,18 +270,17 @@ public abstract class Tank extends Item<TankData> {
     /**
      * handles the movement of the tank if it collides with other tanks or blocks in the map
      */
-    protected boolean collide(DoubleVec pos) {
+    public boolean collide(DoubleVec pos) {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
-            if (this != tank && collisionWith(tank, pos)) {
-                //setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
-                setMoveDirection(STAY);
+            if (this != tank && collisionWith(tank, pos, buffer)) {
+                stopMovement();
                 setMove(false);
                 return true;
             }
         }
         for (Block block : model.getTanksMap().getBlocks()) {
-            if (collisionWith(block, pos)) {
-                setMoveDirection(STAY);
+            if (collisionWith(block, pos, buffer)) {
+                stopMovement();
                 setMove(false);
                 return true;
             }
@@ -312,23 +289,14 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * Checks whether there is a collision with another item
-     *
-     * @param other the item which is checked for a collision
+     * Process the collision with an oil item
      */
-    @Override
-    public boolean collisionWith(Item other, DoubleVec newPos) {
-        if (getPos() == null || other.isDestroyed()) return false;
-
-        double buffer = 0.05;
-
-        if (other instanceof Block) {
-            Block block = (Block) other;
-            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2.0), newPos.y - (effectiveRadius / 2.0), effectiveRadius, effectiveRadius);
-            return item1.intersects(other.getPos().x - ((block.getWidth() + buffer) / 2.0), other.getPos().y - ((block.getHeight() + buffer) / 2.0), block.getWidth() + buffer, block.getHeight() + buffer);
-        }
-        else {
-            return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+    public void oilCollision() {
+        for (Oil oil : model.getTanksMap().getOilList()) {
+            if (getPos().distance(oil.getPos()) <= effectiveRadius + oil.effectiveRadius) {
+                counter = 20;
+                return;
+            }
         }
     }
 
@@ -342,9 +310,9 @@ public abstract class Tank extends Item<TankData> {
         if (armor.getArmorPoints() - damage <= 0) {
             armor.setArmorPoints(0);
             destroy();
-        }
-        else {
+        } else {
             armor.takeDamage(damage);
+            if (model.getEngine() != null) model.getEngine().notify(TanksNotification.ARMOR_HIT);
         }
         data.setLifePoints(armor.getArmorPoints());
     }
@@ -359,7 +327,8 @@ public abstract class Tank extends Item<TankData> {
     /**
      * over written in PlayersTank
      */
-    public void stopMovement() {}
+    public void stopMovement() {
+    }
 
     /**
      * makes a copy of the interpolating Data-object and overwrites the current data
@@ -376,50 +345,86 @@ public abstract class Tank extends Item<TankData> {
      * the interpolateTime methode calculates the time for a interpolated movement
      *
      * @param time for calculation
-     * @return returns a boolean while the movement is calculated valid
      */
     @Override
-    public boolean interpolateTime(long time) {
-        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return false;
-        long tmp = (time - latestOp.serverTime);
-        double latestSec = ((double) latestOp.serverTime) / FACTOR_SEC;
-        double deltaT = ((double) tmp) / FACTOR_SEC;
-        if (model.getEngine() != null) tmp = tmp + model.getEngine().getAnimationTime();
-        double latestRot = (latestOp.data.getRotation() + 180) % 180;
+    public void interpolateTime(long time) {
+        if (latestOp == null || latestOp.data.getMoveDir().equals(STAY)) return;
+        double latestSec = FACTOR_SEC * latestOp.serverTime;
+        double deltaT = FACTOR_SEC * (time - latestOp.serverTime);
+
+        double latestRot = latestOp.data.getRotation();
         double moveDirRotation = latestOp.data.getMoveDir().getRotation();
 
-        double tmp0 = (latestRot - moveDirRotation + 180) % 180;
-        double tmp1 = (moveDirRotation - latestRot + 180) % 180;
+        double turnRightAngle = (latestRot - moveDirRotation + 180) % 180;
+        double turnLeftAngle = (moveDirRotation - latestRot + 180) % 180;
+        boolean turnLeft = turnRightAngle > turnLeftAngle;
+        double turnBy = Math.min(turnRightAngle, turnLeftAngle);
+        double tTime = ((turnBy + latestSec * rotationSpeed) / rotationSpeed) - latestSec;
 
-        if (tmp0 > tmp1) {
-            double tFin = (tmp1 + latestSec * rotationSpeed) / rotationSpeed;
-            double tTime = (tFin - latestSec);
-            if (tTime > deltaT) {
-                data.setRotation(latestRot + deltaT * rotationSpeed);
-            }
-            else {
-                double rest = deltaT - tTime;
-                data.setRotation(moveDirRotation);
-                data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
-            }
+        if (tTime > deltaT) {
+            if (turnLeft) data.setRotation(latestRot + deltaT * rotationSpeed);
+            else data.setRotation(latestRot - deltaT * rotationSpeed);
+            addTrackRotation();
+        } else {
+            double rest = deltaT - tTime;
+            data.setRotation(moveDirRotation);
+            data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
+            addTrack();
+            oilCollision();
         }
-        else {
-            double tFin = (tmp0 + latestSec * rotationSpeed) / rotationSpeed;
-            double tTime = (tFin - latestSec);
-            if (tTime > deltaT) {
-                data.setRotation(latestRot - deltaT * rotationSpeed);
-            }
-            else {
-                double rest = deltaT - tTime;
-                data.setRotation(moveDirRotation);
-                data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
-            }
-        }
-
-        //data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(deltaT * speed)));
-        latestInterpolate = time;
-        return true;
     }
 
-    public void sendTurretUpdate() { }
+    /**
+     * Add a new Track to a List of Track named posList
+     */
+    public void addTrack() {
+        DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
+        if (tracksPosList.size() == 0) {
+            tracksPosList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
+        }
+        if (Math.abs(refPos.distance(tracksPosList.get(tracksPosList.size() - 1).getVec())) > 0.3) {
+            if (counter > 0) {
+                tracksPosList.add(new Track(refPos, data.getRotation(), TrackIntensity.OIL));
+                counter--;
+            } else {
+                tracksPosList.add(new Track(refPos, data.getRotation(), TrackIntensity.NORMAL));
+            }
+            trackRotation = getRotation();
+            if (tracksPosList.size() > 50) tracksPosList.remove(0);
+        }
+    }
+
+    /**
+     * Added the rotation of a track
+     */
+    public void addTrackRotation() {
+        if (tracksPosList.size() == 0) {
+            tracksPosList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
+        }
+        if (Math.abs(getRotation() - trackRotation) > 22.4) {
+            if (counter > 0) {
+                tracksPosList.add(new Track(getPos(), data.getRotation(), TrackIntensity.OIL));
+                counter--;
+            } else {
+                tracksPosList.add(new Track(getPos(), data.getRotation(), TrackIntensity.NORMAL));
+            }
+            trackRotation = getRotation();
+        }
+        if (tracksPosList.size() > 50) tracksPosList.remove(0);
+    }
+
+    /**
+     * Indicates that this item has been destroyed.
+     */
+    @Override
+    public void destroy() {
+        data.destroy();
+        counter = 0;
+        data.setLifePoints(0);
+        armor.setArmorPoints(0);
+    }
+
+    public void sendTurretUpdate() {
+
+    }
 }

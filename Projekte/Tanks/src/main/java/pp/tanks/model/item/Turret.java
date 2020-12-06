@@ -10,8 +10,6 @@ import java.util.Arrays;
  * base class of turret that are placed on a tank
  */
 public abstract class Turret {
-    //private int damage;
-    //private int bounced;
     private final int weight;
     private final double reloadTime;
     private final double[] mag;
@@ -20,8 +18,6 @@ public abstract class Turret {
     public final ItemEnum projectileType;
 
     public Turret(int weight, double reloadTime, int mag, double cadence, ItemEnum projectileType) {
-        //this.damage = damage;
-        //this.bounced = bounced;
         this.weight = weight;
         this.reloadTime = reloadTime;
         this.mag = new double[mag];
@@ -92,8 +88,8 @@ public abstract class Turret {
     /**
      * creates a new projectile
      *
-     * @param model  TODO
-     * @param data   TODO
+     * @param model
+     * @param data
      * @param target new target-position
      * @return
      */

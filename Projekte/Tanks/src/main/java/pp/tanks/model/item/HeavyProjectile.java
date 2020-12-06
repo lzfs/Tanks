@@ -11,16 +11,8 @@ public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
     public HeavyProjectile(Model model, ProjectileData data) {
-        super(model, 0.25, 30, 5.0, data);
+        super(model, 30, 6.0, data);
         this.targetPos = data.getTargetPos();
-    }
-
-    /**
-     * method for test cases
-     */
-    @Override
-    public void isVisible() {
-        //TODO
     }
 
     /**
@@ -41,68 +33,43 @@ public class HeavyProjectile extends Projectile {
         interpolateTime(serverTime);
         if (getPos().distance(targetPos) <= 0.3) {
             setPos(targetPos);
-        }
-        if (getPos().x == targetPos.x && getPos().y == targetPos.y) {
             this.effectiveRadius = 1;
-            collision();
+            collide();
             destroy();
         }
     }
 
     /**
-     * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
+     *   Does nothing here. Exists because the map calls process hits
      */
-    public void processHits() {}
+    public void processHits() {
+    }
 
     /**
-     * TODO add fitting JavaDoc
+     * Checks if HeavyProjectile collides with tank or block and process the damage then
      */
-    public void collision() {
+    public void collide() {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
-            if (collisionWith(tank, getPos())) {
+            if (collisionWith(tank, getPos(), buffer)) {
                 tank.processDamage(damage);
                 destroy();
                 return;
             }
         }
-        for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
-            if (collisionWith(bblock, getPos())) {
-                bblock.processDamage(damage);
+        for (BreakableBlock bBlock : model.getTanksMap().getBreakableBlocks()) {
+            if (collisionWith(bBlock, getPos(), buffer)) {
+                bBlock.processDamage(damage);
+                destroy();
+                return;
+            }
+        }
+        for (Projectile projectile : model.getTanksMap().getProjectiles()) {
+            if (collisionWith(projectile, getPos(), buffer)) {
+                projectile.destroy();
                 destroy();
                 return;
             }
         }
         destroy();
     }
-    /*
-    public void processHits() {
-
-        for (Tank tank : model.getTanksMap().getTanks()) {
-            if (collisionWith(tank) && flag == 0) {
-                tank.processDamage(damage);
-                destroy();
-                return;
-            }
-        }
-        for (BreakableBlock bblock : model.getTanksMap().getBreakableBlocks()) {
-            if (collisionWith(bblock)) {
-                bblock.reduce(damage);
-                destroy();
-                return;
-            }
-        }
-        for (ReflectableBlock rBlock : model.getTanksMap().getReflectable()) {
-            if (collisionWith(rBlock)) {
-                reflect();
-                return;
-            }
-        }
-        for (UnbreakableBlock uBlock : model.getTanksMap().getUnbreakableBlocks()) {
-            if (collisionWith(uBlock)) {
-                destroy();
-            }
-        }
-    }
-
-         */
 }

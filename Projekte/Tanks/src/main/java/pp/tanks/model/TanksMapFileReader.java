@@ -103,7 +103,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    map.addBreakableBlock(new BreakableBlock(model, new BBData(tmpPos, counter, 20, false))); //TODO
+                    map.addBreakableBlock(new BreakableBlock(model, new BBData(tmpPos, counter, 20, false)));
                     counter += 1;
                     break;
 
@@ -113,7 +113,7 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, counter, false)); //TODO
+                    UnbreakableBlock uB = new UnbreakableBlock(model, new Data(tmpPos, counter, false));
                     counter += 1;
                     uB.setPos(tmpPos);
                     map.addUnbreakableBlock(uB);
@@ -125,53 +125,19 @@ class TanksMapFileReader {
                     tmpPos = new DoubleVec(tx, ty);
                     if (!occupied.add(pos))
                         error("Multiple objects were created at same position in playable area.");
-                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, counter, false)); //TODO
+                    ReflectableBlock rB = new ReflectableBlock(model, new Data(tmpPos, counter, false));
                     counter += 1;
                     rB.setPos(tmpPos);
                     map.addReflectableBlocks(rB);
                     break;
                 }
-
-                case "playersTank": {
+                case "oil": {
                     tx = getIntAttribute("x", 0);
                     ty = getIntAttribute("y", 0);
                     tmpPos = new DoubleVec(tx, ty);
-                    PlayersTank pT = new PlayersTank(model, 3, new Armor(20, 5), new LightTurret(), new TankData(tmpPos, 1000, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false));
-                    map.addTanks(pT);
-                    break;
-                }
-
-                case "enemy": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    break;
-                }
-                case "apc": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos, 0010, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-                    ArmoredPersonnelCarrier apc = new ArmoredPersonnelCarrier(model, data);
-                    map.addTanks(apc);
-                    break;
-                }
-                case "howitzer": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos, 0100, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-                    Howitzer howitzer = new Howitzer(model, data);
-                    map.addTanks(howitzer);
-                    break;
-                }
-                case "tankDestroyer": {
-                    tx = getIntAttribute("x", 0);
-                    ty = getIntAttribute("y", 0);
-                    tmpPos = new DoubleVec(tx, ty);
-                    TankData data = new TankData(tmpPos, 0001, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-                    TankDestroyer tankDestroyer = new TankDestroyer(model, data);
-                    map.addTanks(tankDestroyer);
+                    Data data = new Data(tmpPos,1234,false);
+                    Oil oil = new Oil(model,0.2,data);
+                    map.addOil(oil);
                     break;
                 }
                 case "enemyCounter":

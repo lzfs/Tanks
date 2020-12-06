@@ -1,13 +1,10 @@
 package pp.tanks.model;
 
-import pp.tanks.message.data.ProjectileCollision;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
 
 public interface ICollisionObserver {
-
-    //void notify(ProjectileCollision coll);
 
     void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest);
 

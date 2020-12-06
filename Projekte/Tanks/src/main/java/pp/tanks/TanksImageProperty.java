@@ -52,6 +52,36 @@ public enum TanksImageProperty {
     chart3,
 
     /**
+     * Path of the chart4 image
+     */
+    chart4,
+
+    /**
+     * Path of the chart5 image
+     */
+    chart5,
+
+    /**
+     * Path of the chart6 image
+     */
+    chart6,
+
+    /**
+     * Path of the chart7 image
+     */
+    chart7,
+
+    /**
+     * Path of the chart8 image
+     */
+    chart8,
+
+    /**
+     * Path of the chart9 image
+     */
+    chart9,
+
+    /**
      * Path of the cursor image
      */
     cursor,
@@ -144,6 +174,21 @@ public enum TanksImageProperty {
     /**
      * Path of small armor2 image (used for the tank configuration)
      */
-    armor2Small
+    armor2Small,
+
+    /**
+     * Path of tracks
+     */
+    tracks,
+
+    /**
+     * Path of oil field
+     */
+    oil,
+
+    /**
+     * Path of tracksDark
+     */
+    tracksDark
 }
 

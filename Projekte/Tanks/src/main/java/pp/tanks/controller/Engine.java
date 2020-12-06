@@ -2,7 +2,6 @@ package pp.tanks.controller;
 
 import pp.network.Connection;
 import pp.tanks.*;
-import pp.tanks.client.MiniController;
 import pp.tanks.client.TanksApp;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.TanksSoundProperty;
@@ -29,6 +28,7 @@ import pp.tanks.view.TanksMapView;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -62,8 +62,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     public final GameWonMPController gameWonMPController;
     public final ConnectionLostController connectionLostController;
 
-    public final MiniController miniController; // for testing
-
     private final Stage stage;
     private final Model model;
     private final ImageSupport<TanksImageProperty> images;
@@ -76,6 +74,8 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     private PlayerEnum playerEnum = PlayerEnum.PLAYER1;
     private int mapCounter = 0;
     private long animationTime;
+    private boolean soundMuted = false;
+    private boolean isTutorial = false;
 
     /**
      * Creates a new engine
@@ -103,8 +103,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.gameWonMPController = new GameWonMPController(this);
         this.connectionLostController = new ConnectionLostController(this);
 
-        this.miniController = new MiniController(tankApp);
-
         this.tankApp = tankApp;
         this.stage = stage;
         this.model = new Model(properties);
@@ -126,42 +124,213 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
 
         setController(mainMenuController);
         this.menuView = MenuView.makeView(stage, mainMenuController.getFileName(), mainMenuController);
-
         this.view = null;
-        // new TanksMapView(model, images)
-
         stage.addEventHandler(InputEvent.ANY, this);
-    /*
-        // setController(mainMenuController);
-        stage.setScene(new Scene(view));
-        // accept all events, which are forwarded to the current controller
-        stage.addEventHandler(InputEvent.ANY, this);
-        stage.show();
-     */
     }
 
     /**
-     * updates mapCounter
-     *
-     * @param counter new number
+     * setter method for the mapCounter
      */
     public void setMapCounter(int counter) {
         this.mapCounter = counter;
     }
 
+    /**
+     * getter method for the mapCounter
+     */
+    public int getMapCounter() {
+        return mapCounter;
+    }
+
+    /**
+     * setter method for the mapCounter
+     */
     public void setSaveEnemyTank(Enemy enemyTank) {
         this.saveEnemyTank = enemyTank;
     }
 
+    /**
+     * getter method for the mapCounter
+     */
     public Enemy getSaveEnemyTank() {
         return saveEnemyTank;
     }
 
     /**
-     * @return mapCounter
+     * getter method for the isTutorial flag
      */
-    public int getMapCounter() {
-        return mapCounter;
+    public boolean isTutorial() {
+        return isTutorial;
+    }
+
+    /**
+     * setter method for the isTutorial flag
+     */
+    public void setTutorial(boolean tutorial) {
+        isTutorial = tutorial;
+    }
+
+    /**
+     * setter method for the saveTank
+     */
+    public void setSaveTank(Tank tank) {
+        this.saveTank = tank;
+    }
+
+    /**
+     * getter method for the saveTank
+     */
+    public Tank getSaveTank() {
+        return this.saveTank;
+    }
+
+    /**
+     * setter method for the game mode
+     */
+    public void setMode(GameMode mode) {
+        this.mode = mode;
+    }
+
+    /**
+     * getter method for the game mode
+     */
+    public GameMode getMode() {
+        return this.mode;
+    }
+
+    /**
+     * getter method to show if the sound is muted
+     */
+    public boolean isSoundMuted() {
+        return soundMuted;
+    }
+
+    /**
+     * setter method to mute/unmute the sound
+     */
+    public void setSoundMuted(boolean soundMuted) {
+        this.soundMuted = soundMuted;
+    }
+
+    /**
+     * Sets the specified scene and changes the UI that way.
+     *
+     * @param scene the scene to be shown in the stage of the game.
+     */
+    void setScene(Scene scene) {
+        stage.setScene(scene);
+        stage.sizeToScene();
+    }
+
+    /**
+     * make a view that is suitable for the specified controller
+     *
+     * @param nameOfFile the file you want to load from
+     * @param controller the type of the controller
+     * @return the newly created view
+     */
+    public MenuView getViewForController(String nameOfFile, Controller controller) {
+        this.menuView = MenuView.makeView(stage, nameOfFile, controller);
+        return this.menuView;
+    }
+
+    /**
+     * getter method for the menuView
+     */
+    public MenuView getMenuView() {
+        return this.menuView;
+    }
+
+    /**
+     * getter method for the game view
+     */
+    public TanksMapView getView() {
+        return this.view;
+    }
+
+    /**
+     * setter method for the game view
+     */
+    public void setView(TanksMapView view) {
+        this.view = view;
+    }
+
+    /**
+     * getter metho for the tankApp
+     */
+    public TanksApp getTankApp() {
+        return this.tankApp;
+    }
+
+    /**
+     * getter method for the images used with ImageSupport
+     */
+    public ImageSupport<TanksImageProperty> getImages() {
+        return images;
+    }
+
+    /**
+     * getter method for the model of the game
+     */
+    public Model getModel() {
+        return this.model;
+    }
+
+    /**
+     * getter method for the playerEnum
+     */
+    public PlayerEnum getPlayerEnum() {
+        return playerEnum;
+    }
+
+    /**
+     * setter method for the playerEnum
+     */
+    public void setPlayerEnum(PlayerEnum playerEnum) {
+        this.playerEnum = playerEnum;
+    }
+
+    /**
+     * convenience method to get the offset from the tankApp
+     */
+    public long getOffset() {
+        return getTankApp().getOffset();
+    }
+
+    /**
+     * convenience method to get the latency from the tankApp
+     */
+    public long getLatency() {
+        return getTankApp().getLatency();
+    }
+
+    /**
+     * convenience method to get the connection from the tankApp
+     */
+    public Connection<IClientMessage, IServerMessage> getConnection() {
+        return getTankApp().getConnection();
+    }
+
+    /**
+     * getter method for the current controller
+     */
+    public Controller getController() {
+        return controller;
+    }
+
+    /**
+     * checks if the current game is in singleplayer mode
+     */
+    public boolean isClientGame() {
+        if (this.mode == null) throw new IllegalStateException("No game mode is set.");
+        return this.mode != GameMode.MULTIPLAYER;
+    }
+
+    /**
+     * getter method for the animationTime
+     */
+    public long getAnimationTime() {
+        return animationTime;
     }
 
     /**
@@ -238,23 +407,6 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * activate the playGameController
-     * convenience method to start the level again if the player tank gets destroyed
-     * TODO maybe we need to change that later on
-     */
-    public void activateGameLostController() {
-        setController(playGameController);
-    }
-
-    /**
-     * activate the GameWonController
-     * TODO use the missionXCompleteControllers and make them generic
-     */
-    public void activateGameWonController() {
-        setController(mission1CompleteController);
-    }
-
-    /**
      * activate the GameWonMPController
      */
     public void activateGameWonMPController() {
@@ -304,14 +456,14 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * activate the Mission1CompleteSPController
+     * activate the Mission1CompleteController
      */
     public void activateMission1CompleteController() {
         setController(mission1CompleteController);
     }
 
     /**
-     * activate the Mission2CompleteSPController
+     * activate the Mission2CompleteController
      */
     public void activateMission2CompleteController() {
         setController(mission2CompleteController);
@@ -342,42 +494,13 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
         this.controller.entry();
     }
 
+    /**
+     * method to resume the game after exiting the pause menu in the game
+     */
     public void resumeGame() {
         this.controller.exit();
         this.controller = playGameController;
         playGameController.resumeGame();
-    }
-
-    /**
-     * TODO: add JavaDoc
-     *
-     * @param tank
-     */
-    public void setSaveTank(Tank tank) {
-        this.saveTank = tank;
-    }
-
-    /**
-     * @return savedTank
-     */
-    public Tank getSaveTank() {
-        return this.saveTank;
-    }
-
-    /**
-     * updates gamemode
-     *
-     * @param mode new gamemode
-     */
-    public void setMode(GameMode mode) {
-        this.mode = mode;
-    }
-
-    /**
-     * @return gamemode
-     */
-    public GameMode getMode() {
-        return this.mode;
     }
 
     /**
@@ -392,81 +515,13 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
     }
 
     /**
-     * Sets the specified scene and changes the UI that way.
-     *
-     * @param scene the scene to be shown in the stage of the game.
-     */
-    void setScene(Scene scene) {
-        //Image image = images.getImage(TankImageProperty.cursor);
-        //scene.setCursor(new ImageCursor(image));
-        //---------------------------------
-
-        stage.setScene(scene);
-        stage.sizeToScene();
-    }
-
-    /**
-     * make a view that is suitable for the specified controller
-     *
-     * @param nameOfFile the file you want to load from
-     * @param controller the type of the controller
-     * @return the newly created view
-     */
-    public MenuView getViewForController(String nameOfFile, Controller controller) {
-        this.menuView = MenuView.makeView(stage, nameOfFile, controller);
-        return this.menuView;
-    }
-
-    /**
-     * @return the menuView
-     */
-    public MenuView getMenuView() {
-        return this.menuView;
-    }
-
-    /**
-     * @return the view
-     */
-    public TanksMapView getView() {
-        return this.view;
-    }
-
-    /**
-     * @param view the view to set
-     */
-    public void setView(TanksMapView view) {
-        this.view = view;
-    }
-
-    /**
-     * @return the tank app
-     */
-    public TanksApp getTankApp() {
-        return this.tankApp;
-    }
-
-    /**
-     * @return the images
-     */
-    public ImageSupport<TanksImageProperty> getImages() {
-        return images;
-    }
-
-    /**
-     * @return the model of the game
-     */
-    public Model getModel() {
-        return this.model;
-    }
-
-    /**
      * Subscriber method according to the subscriber pattern. The method plays audio clips depending on the
      * specified notification if sound is not muted.
      */
     @Override
     public void notify(TanksNotification notification) {
         LOGGER.finer("received " + notification);
-        if (!getModel().isMuted())
+        if (!soundMuted) {
             switch (notification) {
                 case TANK_FIRED:
                     sound.play(TanksSoundProperty.tanksProjectileSound);
@@ -477,59 +532,19 @@ public class Engine implements EventHandler<Event>, TanksNotificationReceiver {
                 case BLOCK_DESTROYED:
                     sound.play(TanksSoundProperty.blockDestroyedSound);
                     break;
+                case ARMOR_HIT:
+                    sound.play(TanksSoundProperty.armorHit);
+                    break;
             }
+        }
     }
 
     /**
-     * @return playerEnum
+     * calculates the animation time
      */
-    public PlayerEnum getPlayerEnum() {
-        return playerEnum;
-    }
-
-    /**
-     * updates PlayerEnum
-     *
-     * @param playerEnum new playerEnum
-     */
-    public void setPlayerEnum(PlayerEnum playerEnum) {
-        this.playerEnum = playerEnum;
-    }
-
-    /**
-     * @return offset
-     */
-    public long getOffset() {
-        return getTankApp().getOffset();
-    }
-
-    public long getLatency() {
-        return getTankApp().getLatency();
-    }
-
-    /**
-     * @return connection
-     */
-    public Connection<IClientMessage, IServerMessage> getConnection() {
-        return getTankApp().getConnection();
-    }
-
-    public Controller getController() {
-        return controller;
-    }
-
-    public boolean isClientGame() {
-        if (this.mode == null) throw new IllegalStateException("No game mode is set");
-        return this.mode != GameMode.MULTIPLAYER;
-    }
-
     public void computeAnimationTime() {
         long tmp = getLatency();
         animationTime = -1 * tmp;
-        System.out.println(animationTime);
-    }
-
-    public long getAnimationTime() {
-        return animationTime;
+        LOGGER.log(Level.INFO, "animation time: " + animationTime);
     }
 }

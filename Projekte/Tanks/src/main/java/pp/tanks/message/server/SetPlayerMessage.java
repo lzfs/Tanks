@@ -2,6 +2,9 @@ package pp.tanks.message.server;
 
 import pp.tanks.model.item.PlayerEnum;
 
+/**
+ * tells the client which player enum he got
+ */
 public class SetPlayerMessage implements IServerMessage {
     public final PlayerEnum player;
 

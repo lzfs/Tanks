@@ -74,6 +74,13 @@ public class StartGameSPController extends Controller {
     }
 
     /**
+     * @return the name of the used file as a String
+     */
+    public String getString() {
+        return START_GAME_SP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the first mission is completed.
      */
@@ -87,14 +94,14 @@ public class StartGameSPController extends Controller {
         }
         flag = true;
 
-        String path = "Tanks/src/main/resources/pp/tanks/maps/" + "map" + engine.getMapCounter() + ".xml";
+        String path = "Tanks/src/main/resources/pp/tanks/model/" + "map" + engine.getMapCounter() + ".xml";
         String absolutePath = FileSystems.getDefault().getPath(path).normalize().toAbsolutePath().toString();
         try {
             File currentFile = new File(absolutePath);
-            readFile(currentFile);
+            setLevelInformation(currentFile);
         }
-        catch (IOException | XMLStreamException ex) {
-            System.out.println(ex.getMessage());
+        catch (IOException | XMLStreamException e) {
+            LOGGER.log(Level.INFO, "error: " + e.getMessage());
         }
     }
 
@@ -108,22 +115,18 @@ public class StartGameSPController extends Controller {
     }
 
     /**
-     * @return the name of the used file as a String
-     */
-    public String getString() {
-        return START_GAME_SP_FXML;
-    }
-
-    /**
      * method for the startGameSP button
      */
     @FXML
     private void startGameSP() {
-
         engine.setMode(GameMode.SINGLEPLAYER);
         engine.getSaveTank().getArmor().setArmorPoints(engine.getSaveTank().getArmor().getMaxPoints());
-        if (engine.getMapCounter() == 1) loadLevelOne();
-        else loadLevelTwo();
+        if (engine.getMapCounter() == 1) {
+            loadLevelOne();
+        }
+        else {
+            loadLevelTwo();
+        }
 
         LOGGER.log(Level.INFO, "clicked START_GAME_SP");
         engine.activatePlayGameController();
@@ -136,7 +139,7 @@ public class StartGameSPController extends Controller {
      * @throws IOException        if the file doesn't exist, cannot be opened, or any other IO error occurred.
      * @throws XMLStreamException if the file is no valid xml file
      */
-    public void readFile(File file) throws IOException, XMLStreamException {
+    public void setLevelInformation(File file) throws IOException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         Reader reader = new FileReader(file);
         XMLStreamReader xtr = factory.createXMLStreamReader(reader);
@@ -148,7 +151,7 @@ public class StartGameSPController extends Controller {
                     switch (elemName) {
                         case "enemyCounter": {
                             if (enemyTanksText == null) {
-                                System.out.println("text null");
+                                LOGGER.log(Level.INFO, "text is null");
                             }
                             enemyTanksText.setText(String.valueOf(getIntAttribute("v", 0, xtr)));
                         }
@@ -184,7 +187,7 @@ public class StartGameSPController extends Controller {
                 return Integer.parseInt(value);
             }
             catch (NumberFormatException e) {
-                LOGGER.warning("Attribute " + name + " should be an int, but has value " + value);
+                LOGGER.log(Level.INFO, "Attribute " + name + " should be an int, but has value " + value);
                 return defaultValue;
             }
     }
@@ -200,26 +203,5 @@ public class StartGameSPController extends Controller {
             if (xtr.getAttributeLocalName(i).equals(name))
                 return xtr.getAttributeValue(i);
         return null;
-    }
-
-    /**
-     * called when level one gets loaded
-     */
-    private void loadLevelOne() {
-        TankData enemy1 = new TankData(new DoubleVec(18, 7), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 5), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER));
-        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2));
-    }
-
-    /**
-     * called when level two gets loaded
-     */
-    private void loadLevelTwo() {
-        TankData enemy1 = new TankData(new DoubleVec(20, 4), 1, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy2 = new TankData(new DoubleVec(20, 6), 2, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        TankData enemy3 = new TankData(new DoubleVec(20, 8), 3, 20, MoveDirection.STAY, 0, new DoubleVec(0, 0), false);
-        engine.playGameController.constructionEnum.addAll(List.of(ItemEnum.ACP, ItemEnum.HOWITZER, ItemEnum.TANK_DESTROYER));
-        engine.playGameController.constructionData.addAll(List.of(enemy1, enemy2, enemy3));
     }
 }

@@ -65,7 +65,7 @@ public class TankAutomaton extends TankStateMachine {
     /**
      * the state when a multiplayer game is started and a second player needs to connect
      */
-    protected final TankState waitingFor2Player = new TankState() {
+    public final TankState waitingFor2Player = new TankState() {
         @Override
         public void entry() {
             TankAutomaton.LOGGER.info("waiting for player 2");
@@ -122,21 +122,6 @@ public class TankAutomaton extends TankStateMachine {
      */
     public final PlayingState playingState = new PlayingState(this);
 
-    // has to be in Model
-
-    /**
-     * Returns the player representing the client with the specified connection.
-     *
-     * @param conn the connection to the client
-     */
-    Player getPlayer(IConnection<IServerMessage> conn) {
-        final Optional<Player> player = players.stream().filter(p -> p.getConnection() == conn).findAny();
-        if (player.isPresent())
-            return player.get();
-        LOGGER.severe("no player found with connection " + conn); //NON-NLS
-        //System.out.println("no player found with connection" + conn);
-        return null;
-    }
 
     /**
      * @return list of all players
@@ -150,13 +135,6 @@ public class TankAutomaton extends TankStateMachine {
         return null;
     }
 
-    /**
-     * @return automaton
-     */
-    @Override
-    TankAutomaton getAuto() {
-        return this;
-    }
 
     @Override
     public TankState init() {

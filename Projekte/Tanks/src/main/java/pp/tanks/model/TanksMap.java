@@ -5,6 +5,7 @@ import pp.tanks.model.item.Block;
 import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.Item;
+import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.ReflectableBlock;
@@ -28,6 +29,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     private List<ReflectableBlock> reflectableBlocks = new ArrayList<>();
     private List<BreakableBlock> breakableBlocks = new ArrayList<>();
     private List<UnbreakableBlock> unbreakableBlocks = new ArrayList<>();
+    private List<Oil> oilList = new ArrayList<>();
     private final HashMap<Integer, Projectile> projectiles = new HashMap<>();
     private final HashMap<Integer, Projectile> addedProjectiles = new HashMap<>();
     private final int width;
@@ -68,7 +70,8 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         return tmp.get(i);
     }
 
-    /**
+    //TODO: Sorry: Test if game works without this two methods
+    /*
      * Checks whether the position (x,y) can be reached from the specified position pos where (x,y) is guaranteed
      * to be a neighbor of pos. This method takes into account that one must not make a diagonal move across a corner
      * of a blocked field, i.e., a field with an obstacle.
@@ -76,7 +79,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
      * @param startPos  the starting Position
      * @param targetPos the Position you go to
      * @return true or false
-     */
+
     public boolean accessibleFrom(DoubleVec startPos, DoubleVec targetPos) {
         if (blocked(startPos)) return false;
         if (targetPos.x == startPos.x || targetPos.y == startPos.y) return true;
@@ -84,12 +87,12 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         return !blocked(new DoubleVec(startPos.x, targetPos.y)) && !blocked(new DoubleVec(targetPos.x, startPos.y));
     }
 
-    /**
+
      * Returns whether the specified position is blocked by an obstacle
      *
      * @param pos the targeted position
      * @return true or false
-     */
+
     private boolean blocked(DoubleVec pos) {
         for (Item obs : getBlocks()) {
             if (obs.getPos().equals(pos)) {
@@ -102,7 +105,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
             }
         }
         return false;
-    }
+    }*/
 
     /**
      * Returns all tanks still alive
@@ -195,7 +198,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
      * @return the list of all projectiles
      */
     public List<Projectile> getProjectiles() {
-        return Collections.unmodifiableList(new ArrayList<>(projectiles.values()));
+        return List.copyOf(projectiles.values());
     }
 
     public HashMap<Integer, Projectile> getHashProjectiles() {
@@ -237,6 +240,14 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         return playersTanks.size() + breakableBlocks.size() + unbreakableBlocks.size() + reflectableBlocks.size() + projectiles.size() + enemy.size();
     }
 
+    public List<Oil> getOilList() {
+        return oilList;
+    }
+
+    public void addOil(Oil oil) {
+        oilList.add(oil);
+    }
+
     /**
      * Called once per frame. This method calls the update method of each item in this map and removes items that
      * cease to exist.
@@ -261,7 +272,6 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
                 removed.add(item);
         breakableBlocks.removeAll(removed);
         projectiles.entrySet().removeIf(e -> removed.contains(e.getValue()));
-        //model.getEngine().getView().addExplosion(entry.getValue()); //TODO in die destroy?
 
     }
 
@@ -271,8 +281,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     public void addTanks(Tank tank) {
         if (tank instanceof COMEnemy) {
             enemy.add((COMEnemy) tank);
-        }
-        else {
+        } else {
             playersTanks.add(tank);
         }
     }
@@ -322,7 +331,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Notify the observers
      *
      * @param proj
      * @param tank
@@ -337,7 +346,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Notify the breakable Block observers
      *
      * @param proj
      * @param block
@@ -352,7 +361,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Notify the Projectile observers
      *
      * @param proj1
      * @param proj2
@@ -365,7 +374,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     }
 
     /**
-     * TODO: add JavaDoc
+     * Add new Items to the HashMap
      */
     public void updateHashMap() {
         for (Item<? extends Data> item : this) {

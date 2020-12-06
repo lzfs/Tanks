@@ -46,6 +46,9 @@ public class LobbyController extends Controller {
     @FXML
     private Button back;
 
+    /**
+     * the text to display information for the user
+     */
     @FXML
     private Text infoText;
 
@@ -57,8 +60,16 @@ public class LobbyController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return LOBBY_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated,
      * i.e., when the user clicked "Multiplayer" in the main menu.
+     * The default value for the infoText is an empty string.
      */
     @Override
     public void entry() {
@@ -75,13 +86,6 @@ public class LobbyController extends Controller {
     @Override
     public void exit() {
         LOGGER.log(Level.INFO, "EXIT LobbyController");
-    }
-
-    /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return LOBBY_FXML;
     }
 
     /**
@@ -112,11 +116,10 @@ public class LobbyController extends Controller {
             engine.getTankApp().joinGame();
         }
         catch (IllegalArgumentException | IOException e) {
-            infoText.setText("Es läuft kein Server auf ihrem System!");
+            infoText.setText("Auf ihrem System wurde kein Server gestartet.");
             return;
         }
-        System.out.println("Client connected to MP");
-
+        LOGGER.log(Level.INFO, "Client connected to MP");
         engine.activateTankConfigMPController();
     }
 }

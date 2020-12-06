@@ -1,18 +1,13 @@
 package pp.tanks.server.auto;
 
 import pp.network.IConnection;
-import pp.tanks.message.client.BackMessage;
 import pp.tanks.message.client.StartGameMessage;
 import pp.tanks.message.client.UpdateTankConfigMessage;
 import pp.tanks.message.data.TankData;
 import pp.tanks.message.server.IServerMessage;
-import pp.tanks.message.server.PlayerDisconnectedMessage;
 import pp.tanks.message.server.ServerTankUpdateMessage;
-import pp.tanks.message.server.SetPlayerMessage;
 import pp.tanks.message.server.StartingMultiplayerMessage;
 import pp.tanks.model.Model;
-import pp.tanks.model.item.ArmoredPersonnelCarrier;
-import pp.tanks.model.item.Howitzer;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.MoveDirection;
 import pp.tanks.model.item.PlayerEnum;
@@ -20,9 +15,6 @@ import pp.tanks.model.item.PlayersTank;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 import pp.util.DoubleVec;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerReadyState extends TankState {
     private final TankAutomaton parent;
@@ -39,6 +31,9 @@ public class PlayerReadyState extends TankState {
         return this.parent;
     }
 
+    /**
+     * Method called upon entering the state
+     */
     @Override
     public void entry() {
         for (Player pl : parent.getPlayers()) {
@@ -61,23 +56,35 @@ public class PlayerReadyState extends TankState {
         parent.getLogger().info("Player Ready State");
     }
 
+    /**
+     * when a player backs out of a lobby, his connection is terminated and the server-state is updated
+     *
+     * @param conn the connection that closed
+     */
     @Override
     public void back(IConnection<IServerMessage> conn) {
         containingState().getPlayers().removeIf(p -> p.getConnection() == conn);
         conn.shutdown();
-        //for (Player p : parent.getPlayers()) {
-        //p.getConnection().shutdown();
-        //}
         Player lastPlayer = parent.getPlayers().get(0);
         lastPlayer.otherPlayerDisconnected();
         containingState().goToState(parent.waitingFor2Player);
     }
 
+    /**
+     * called when a player disconnected, starts the back routine
+     *
+     * @param conn the connection to be terminated
+     */
     @Override
     public void playerDisconnected(IConnection<IServerMessage> conn) {
         back(conn);
     }
 
+    /**
+     * Used to correctly send the new TankConfig from one player to another
+     *
+     * @param msg the UpdateTankConfigMessage
+     */
     @Override
     public void updateTankConfig(UpdateTankConfigMessage msg) {
         if (msg.player == PlayerEnum.PLAYER1) {
@@ -86,6 +93,10 @@ public class PlayerReadyState extends TankState {
         else parent.getPlayers().get(0).getConnection().send(new ServerTankUpdateMessage(msg.turret, msg.armor));
     }
 
+    /**
+     * initialises the in game parameters and starts the synchronize routine for the players so that the interpolation can work effectively
+     * @param msg the StartGameMessage
+     */
     @Override
     public void startGame(StartGameMessage msg) {
         Player p = parent.getPlayers().get(msg.player.tankID);
@@ -106,28 +117,9 @@ public class PlayerReadyState extends TankState {
         parent.goToState(containingState().synchronize);
     }
 
-    /**
-     * loads new model depending on the gamemode
-     *
-     * @param gameMode chosen gamemode
-     * @return new model
-     */
-    public Model loadModel(GameMode gameMode) {
-        Model model = new Model(parent.getProperties());
-        if (gameMode == GameMode.TUTORIAL) {
-            model.loadMap("map0.xml");
-        }
-        else if (gameMode == GameMode.SINGLEPLAYER) {
-            model.loadMap("map1.xml");
-        }
-        else {
-            model.loadMap("map1.xml");
-        }
-        return model;
-    }
 
     /**
-     * TODO: add JavaDoc
+     * Sets up a Multiplayer Game with the customized tank configurations
      *
      * @param model
      */

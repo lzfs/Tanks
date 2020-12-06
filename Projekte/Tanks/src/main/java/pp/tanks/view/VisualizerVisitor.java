@@ -13,22 +13,47 @@ import pp.tanks.model.item.LightTurret;
 import pp.tanks.model.item.NormalArmor;
 import pp.tanks.model.item.NormalProjectile;
 import pp.tanks.model.item.NormalTurret;
+import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayersTank;
 import pp.tanks.model.item.ReflectableBlock;
+import pp.tanks.model.item.Track;
+import pp.tanks.model.item.TrackIntensity;
 import pp.tanks.model.item.Turret;
 import pp.tanks.model.item.UnbreakableBlock;
 import pp.tanks.model.item.Visitor;
 import pp.util.DoubleVec;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
+import javafx.util.Duration;
+
+import javax.imageio.ImageIO;
+import java.awt.AlphaComposite;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Item visitor that adds visual representations of items to the tanks map view
  */
 public class VisualizerVisitor implements Visitor {
+
+    /**
+     * Enumeration for the shape that drawable items can have
+     */
     private enum Shape {RECTANGLE, OVAL, DIRECTED_OVAL}
 
     private final TanksMapView view;
@@ -37,18 +62,19 @@ public class VisualizerVisitor implements Visitor {
         this.view = view;
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     *
+     * @param playersTank the player Tank
+     */
     @Override
     public void visit(PlayersTank playersTank) {
-
-        Boolean destroyed = playersTank.isDestroyed();
-
+        boolean destroyed = playersTank.isDestroyed();
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(playersTank.getPos());
         context.translate(pos.x, pos.y);
-
         if (!destroyed) {
-            //context.rotate(-90);
             context.rotate((playersTank.getRotation() + 90) % 360);
             context.scale(0.7, 0.7);
 
@@ -62,7 +88,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
             context.rotate(-playersTank.getRotation());
             context.rotate(playersTank.getData().getTurretDir().angle());
@@ -77,7 +102,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
             drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
@@ -85,13 +109,38 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
+    /**
+     * Draw a track behind the tank
+     *
+     * @param posTrack the Track
+     */
+    public void drawMeATrack(Track posTrack) {
+        final GraphicsContext context = view.getGraphicsContext2D();
+        final Affine ori = context.getTransform();
+        final DoubleVec pos = view.modelToView(posTrack.getVec());
+        context.translate(pos.x, pos.y);
+        context.rotate((posTrack.getRotation() + 90) % 360);
+        if (posTrack.getintensity() == TrackIntensity.NORMAL) {
+            drawImage(TanksImageProperty.tracks, Shape.DIRECTED_OVAL, Color.RED, 1);
+        }
+        else if (posTrack.getintensity() == TrackIntensity.OIL) {
+            drawImage(TanksImageProperty.tracksDark, Shape.DIRECTED_OVAL, Color.RED, 1);
+        }
+        context.setTransform(ori);
+    }
+
+    /**
+     * visit method for the Visitor-Pattern
+     *
+     * @param enemy the enemy Tank
+     */
     @Override
     public void visit(Enemy enemy) {
-
-        /*
-        drawItem(enemy, TanksImageProperty.armor2, Shape.RECTANGLE, Color.BLUE);
-         */
-        Boolean destroyed = enemy.isDestroyed();
+        List<Track> posList = enemy.getTracksPosList();
+        for (Track posTrack : posList) {
+            drawMeATrack(posTrack);
+        }
+        boolean destroyed = enemy.isDestroyed();
 
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
@@ -99,7 +148,6 @@ public class VisualizerVisitor implements Visitor {
         context.translate(pos.x, pos.y);
 
         if (!destroyed) {
-            //context.rotate(-90);
             context.rotate((enemy.getRotation() + 90) % 360);
             context.scale(0.7, 0.7);
 
@@ -113,7 +161,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
 
             context.rotate(-enemy.getRotation());
             context.rotate(enemy.getData().getTurretDir().angle());
@@ -128,7 +175,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
             drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
@@ -136,20 +182,26 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     *
+     * @param comEnemy the comEnemy Tank
+     */
     @Override
     public void visit(COMEnemy comEnemy) {
-        boolean destroyed = comEnemy.isDestroyed();
+        List<Track> posList = comEnemy.getTracksPosList();
+        for (Track posTrack : posList) {
+            drawMeATrack(posTrack);
+        }
 
+        boolean destroyed = comEnemy.isDestroyed();
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
         final DoubleVec pos = view.modelToView(comEnemy.getPos());
         context.translate(pos.x, pos.y);
-
         if (!destroyed) {
-            //context.rotate(-90);
             context.rotate((comEnemy.getRotation() + 90) % 360);
             context.scale(0.7, 0.7);
-
             Armor armor = comEnemy.getArmor();
             if (armor instanceof LightArmor) {
                 drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN, 0.9);
@@ -160,8 +212,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.armor3, Shape.DIRECTED_OVAL, Color.GREEN, 0.65);
             }
-            //drawImage(TanksImageProperty.armor1, Shape.DIRECTED_OVAL, Color.GREEN);
-
             context.rotate(-comEnemy.getRotation());
             context.rotate(comEnemy.getData().getTurretDir().angle());
 
@@ -175,7 +225,6 @@ public class VisualizerVisitor implements Visitor {
             else {
                 drawImage(TanksImageProperty.turret3, Shape.DIRECTED_OVAL, Color.GREEN, 1);
             }
-            //drawImage(TanksImageProperty.turrettest,Shape.RECTANGLE,Color.GREEN);
         }
         else {
             drawImage(TanksImageProperty.tankDestroyed, Shape.DIRECTED_OVAL, Color.GREEN, 1);
@@ -183,6 +232,10 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param bBlock the bBlock
+     */
     @Override
     public void visit(BreakableBlock bBlock) {
         if (!bBlock.isDestroyed()) {
@@ -190,31 +243,39 @@ public class VisualizerVisitor implements Visitor {
         }
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param rBlock the rBlock
+     */
     @Override
     public void visit(ReflectableBlock rBlock) {
         drawItemScale(rBlock, TanksImageProperty.rBlock, Shape.RECTANGLE, Color.BLUE, 0.9);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param uBlock the Unbreakable Block
+     */
     @Override
     public void visit(UnbreakableBlock uBlock) {
         drawItemScale(uBlock, TanksImageProperty.uBlock, Shape.RECTANGLE, Color.BLUE, 0.9);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param lightProjectile the lightProjectile
+     */
     @Override
     public void visit(LightProjectile lightProjectile) {
-        //bullets drehen
-        //final GraphicsContext context = view.getGraphicsContext2D();
-        //final Affine ori = context.getTransform();
-        //final DoubleVec pos = view.modelToView(lightProjectile.getPos());
-        //context.translate(pos.x, pos.y);
-        //context.rotate(lightProjectile.getProjectileData().getDir().angle());
         if (lightProjectile.visible()) {
             drawItem(lightProjectile, TanksImageProperty.lightBullet, Shape.OVAL, Color.GRAY);
         }
-
-        //context.setTransform(ori);
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param normalProjectile the normalProctile
+     */
     @Override
     public void visit(NormalProjectile normalProjectile) {
         if (normalProjectile.visible()) {
@@ -222,9 +283,22 @@ public class VisualizerVisitor implements Visitor {
         }
     }
 
+    /**
+     * visit method for the Visitor-Pattern
+     * @param heavyProjectile the heavyProjectile
+     */
     @Override
     public void visit(HeavyProjectile heavyProjectile) {
         drawItem(heavyProjectile, TanksImageProperty.heavyBullet, Shape.OVAL, Color.RED);
+    }
+
+    /**
+     * visit method for the Visitor-Pattern
+     * @param oil the Oil
+     */
+    @Override
+    public void visit(Oil oil) {
+        drawItemScale(oil, TanksImageProperty.oil, Shape.OVAL, Color.RED, 1);
     }
 
     /**
@@ -244,6 +318,15 @@ public class VisualizerVisitor implements Visitor {
         context.setTransform(ori);
     }
 
+    /**
+     * Draws an item as an image or, if the image is missing, as the specified shape and scales them.
+     *
+     * @param item  the item to be drawn
+     * @param prop  the property specifying the image
+     * @param shape the shape, which is drawn if the image is missing
+     * @param color the color, which is used if the image is missing
+     * @param scale the scale, which is used on the image
+     */
     private void drawItemScale(Item item, TanksImageProperty prop, Shape shape, Color color, double scale) {
         final GraphicsContext context = view.getGraphicsContext2D();
         final Affine ori = context.getTransform();
@@ -253,19 +336,6 @@ public class VisualizerVisitor implements Visitor {
         drawImage(prop, shape, color, 1);
         context.setTransform(ori);
     }
-
-    /*
-    // this method can probably be deleted
-    private void drawItem(Item item, TanksImageProperty prop, Shape shape, Color color, double angle) {
-        final GraphicsContext context = view.getGraphicsContext2D();
-        final Affine ori = context.getTransform();
-        final DoubleVec pos = view.modelToView(item.getPos());
-        context.translate(pos.x, pos.y);
-        context.rotate(angle);
-        drawImage(prop, shape, color);
-        context.setTransform(ori);
-    }
-     */
 
     /**
      * Draws an image if such an image has been configured.

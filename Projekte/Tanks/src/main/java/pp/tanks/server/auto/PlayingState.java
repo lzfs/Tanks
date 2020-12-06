@@ -4,16 +4,19 @@ import pp.tanks.model.Model;
 import pp.tanks.server.GameMode;
 import pp.tanks.server.Player;
 
-import java.util.logging.Logger;
-
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Playing State from statechart build as a statemachine to host two substates.
  */
 public class PlayingState extends TankStateMachine {
-    private final TankAutomaton parent;
 
+    /**
+     * The substates
+     */
+    private final TankAutomaton parent;
+    private TankState gameRunning;
     /**
      * Constructor to PlayingState class
      *
@@ -22,12 +25,6 @@ public class PlayingState extends TankStateMachine {
     public PlayingState(TankAutomaton parent) {
         this.parent = parent;
     }
-
-    /**
-     * The two substates
-     */
-    final TankState playerDisconnect = new PlayerDisconnectState(this);
-    private TankState gameRunning;
 
     /**
      * initializes a new game

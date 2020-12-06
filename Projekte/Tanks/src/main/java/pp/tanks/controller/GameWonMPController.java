@@ -39,6 +39,13 @@ public class GameWonMPController extends Controller {
     }
 
     /**
+     * @return the name of the file as a String
+     */
+    public String getFileName() {
+        return GAME_WON_MP_FXML;
+    }
+
+    /**
      * This method is called whenever this controller is activated, i.e., when the is won.
      */
     @Override
@@ -58,13 +65,6 @@ public class GameWonMPController extends Controller {
     }
 
     /**
-     * @return the name of the file as a String
-     */
-    public String getFileName() {
-        return GAME_WON_MP_FXML;
-    }
-
-    /**
      * method for the lobby button
      */
     @FXML
@@ -73,12 +73,13 @@ public class GameWonMPController extends Controller {
         engine.activateTankConfigMPController();
         if (disconnected) engine.tankConfigMPController.playerDisconnected();
         disconnected = false;
-
     }
 
+    /**
+     * used to indicate that the player disconnected
+     */
     @Override
     public void playerDisconnected() {
-        //System.out.println("Drin");
         disconnected = true;
     }
 }

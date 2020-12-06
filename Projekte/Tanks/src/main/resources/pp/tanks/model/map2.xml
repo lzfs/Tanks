@@ -106,4 +106,7 @@
    <bBlock x="12" y="9"></bBlock>
    <rBlock x="13" y="9"></rBlock>
 
+   <oil x="2" y="3"></oil>
+   <oil x="11" y="5"></oil>
+
 </map>

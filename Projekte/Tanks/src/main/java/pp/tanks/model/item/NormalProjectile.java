@@ -10,15 +10,7 @@ import pp.util.DoubleVec;
 public class NormalProjectile extends Projectile {
 
     public NormalProjectile(Model model, ProjectileData data) {
-        super(model, 0.25, 20, 5.0, data);
-    }
-
-    /**
-     * method for test cases
-     */
-    @Override
-    public void isVisible() {
-        //TODO
+        super(model,20, 6.0, data);
     }
 
     /**

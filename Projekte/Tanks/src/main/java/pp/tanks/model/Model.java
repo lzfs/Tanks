@@ -7,28 +7,21 @@ import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * Represents the game model.
  */
 public class Model {
     private static final Logger LOGGER = Logger.getLogger(Model.class.getName());
-    public static final String MUTED = "muted";
     private final Properties props;
-    private final Preferences prefs = Preferences.userNodeForPackage(Model.class);
     private final List<TanksNotificationReceiver> receivers = new ArrayList<>();
     private TanksMap map;
-    private boolean muted = prefs.getBoolean(MUTED, false);
     private long latestUpdate;
     private Engine engine;
 
@@ -39,23 +32,6 @@ public class Model {
      */
     public Model(Properties props) {
         this.props = props;
-    }
-
-    /**
-     * Returns whether sound is muted.
-     */
-    public boolean isMuted() {
-        return muted;
-    }
-
-    /**
-     * Mutes or unmutes the sound depending on the specified value.
-     *
-     * @param muted the sound is muted if and only if this value is true.
-     */
-    public void setMuted(boolean muted) {
-        this.muted = muted;
-        prefs.put(MUTED, String.valueOf(muted));
     }
 
     /**
@@ -92,8 +68,7 @@ public class Model {
 
         try {
             setTanksMap(new TanksMapFileReader(this).readFile(stream));
-        }
-        catch (IOException | XMLStreamException ex) {
+        } catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
             System.out.println("APOKALYPSE");
         }
