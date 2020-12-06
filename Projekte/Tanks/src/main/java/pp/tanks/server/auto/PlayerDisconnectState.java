@@ -27,8 +27,6 @@ public class PlayerDisconnectState extends TankState {
 
     /**
      * Method called upon entering the state
-     *
-     * @return Atm just a println statement to let us know that we entered the state successfully
      */
     @Override
     public void entry() {

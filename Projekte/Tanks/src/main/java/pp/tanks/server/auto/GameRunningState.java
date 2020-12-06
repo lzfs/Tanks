@@ -36,13 +36,13 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     private final PlayingState parent;
     private final Queue<DataTimeItem<? extends Data>> buffer = new PriorityBlockingQueue<>();
     private final Queue<TurretUpdateMessage> turretUpdates = new ArrayBlockingQueue<>(5);
-    private DataTimeItem<? extends Data>[] working;
-    private final Thread workWhatEver = new Thread(this::workBuff);
     private final GameMode gameMode;
-    private Timer timer;
     private final List<DataTimeItem<TankData>> tankDat = new ArrayList<>();
     private final List<DataTimeItem<ProjectileData>> projectileDat = new ArrayList<>();
+    private DataTimeItem<? extends Data>[] working;
+    private Timer timer;
     private boolean gameEnded = false;
+    private final Thread workInputsThread = new Thread(this::workBuff);
 
     /**
      * Constructor of the GameRunningState
@@ -56,8 +56,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     /**
-     * method used to process the messages that were contained in the buffer list, currently
-     * only printing out the data
+     * method used to process the messages that were contained in the buffer list, then sends the results to the Players.
      */
     public void workBuff() {
         if (gameEnded) return;
@@ -107,8 +106,8 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     /**
-     * Method called upon entering the State. Current implementation only for testing the Timer function,
-     * which is run with every 100ms. After that time, the added messages are processed
+     * Method called upon entering the State. Sets up the workingThread and configures the timer used to sequence
+     * the inputs and the player-update-frequency
      */
     @Override
     public void entry() {
@@ -121,7 +120,7 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             public void run() {
                 working = buffer.toArray(new DataTimeItem[buffer.size()]);
                 buffer.clear();
-                workWhatEver.run();
+                workInputsThread.run();
             }
         }, 100, 100);
     }
@@ -160,7 +159,8 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     }
 
     /**
-     * Use a List of Tanks to give it to the players
+     * Use a List of Tanks to give it to the players and updates the server map
+     *
      * @param tmp
      */
     private void processTanks(List<DataTimeItem<TankData>> tmp) {
@@ -168,10 +168,8 @@ public class GameRunningState extends TankState implements ICollisionObserver {
             for (DataTimeItem<TankData> d : tmp) {
                 int id = d.data.getId();
                 model.getTanksMap().getTank(PlayerEnum.getPlayer(id)).interpolateData(d);
-                if (gameMode == GameMode.MULTIPLAYER) {
-                    if (id == 0) parent.getPlayers().get(1).tanks.add((Tank) model.getTanksMap().get(id));
-                    else parent.getPlayers().get(0).tanks.add((Tank) model.getTanksMap().get(id));
-                }
+                if (id == 0) parent.getPlayers().get(1).tanks.add((Tank) model.getTanksMap().get(id));
+                else parent.getPlayers().get(0).tanks.add((Tank) model.getTanksMap().get(id));
             }
         }
     }
@@ -182,15 +180,12 @@ public class GameRunningState extends TankState implements ICollisionObserver {
      * @param tmp
      */
     private void processProjectiles(List<DataTimeItem<ProjectileData>> tmp) {
-
         if (tmp.size() != 0) {
             for (DataTimeItem<ProjectileData> d : tmp) {
                 Projectile r = Projectile.mkProjectile(model, d.data.mkCopy());
                 model.getTanksMap().getAddedProjectiles().put(d.data.getId(), r);
                 r.interpolateData(d);
-                if (gameMode == GameMode.MULTIPLAYER) {
-                    parent.getPlayers().get(r.getEnemy().tankID).projectiles.add(r);
-                }
+                parent.getPlayers().get(r.getEnemy().tankID).projectiles.add(r);
             }
         }
     }
@@ -200,12 +195,11 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         TurretUpdateMessage[] tmp = turretUpdates.toArray(new TurretUpdateMessage[turretUpdates.size()]);
         turretUpdates.clear();
         for (TurretUpdateMessage msg : tmp) {
-            Tank tank =  model.getTanksMap().getTank(PlayerEnum.getPlayer(msg.id));
+            Tank tank = model.getTanksMap().getTank(PlayerEnum.getPlayer(msg.id));
             tank.getLatestOp().data.setTurretDir(msg.turDir);
             int idEn = msg.id == 0 ? 1 : 0;
             if (!parent.getPlayers().get(idEn).tanks.contains(tank)) parent.getPlayers().get(idEn).tanks.add(tank);
         }
-
     }
 
     /**
@@ -216,17 +210,19 @@ public class GameRunningState extends TankState implements ICollisionObserver {
     private void makeDatLists(List<DataTimeItem<? extends Data>> dat) {
         if (dat.size() == 0) return;
         for (DataTimeItem<? extends Data> item : dat) {
-            if (gameMode == GameMode.SINGLEPLAYER || gameMode == GameMode.TUTORIAL) {
-                if (item.getId() < 1) tankDat.add((DataTimeItem<TankData>) item);
-                else projectileDat.add((DataTimeItem<ProjectileData>) item);
-            }
-            if (gameMode == GameMode.MULTIPLAYER) {
-                if (item.getId() < 2) tankDat.add((DataTimeItem<TankData>) item);
-                else projectileDat.add((DataTimeItem<ProjectileData>) item);
-            }
+            if (item.getId() < 2) tankDat.add((DataTimeItem<TankData>) item);
+            else projectileDat.add((DataTimeItem<ProjectileData>) item);
         }
     }
 
+    /**
+     * supplies the players with the updated projectile and the updated tank (necessary after collisions)
+     *
+     * @param proj
+     * @param tank
+     * @param damage
+     * @param dest
+     */
     @Override
     public void notifyProjTank(Projectile proj, Tank tank, int damage, boolean dest) {
         if (dest) {
@@ -245,6 +241,14 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
     }
 
+    /**
+     * supplies the players with the updated projectile and the updated BBlock (necessary after collisions)
+     *
+     * @param proj
+     * @param block
+     * @param damage
+     * @param dest
+     */
     @Override
     public void notifyProjBBlock(Projectile proj, BreakableBlock block, int damage, boolean dest) {
         if (dest) {
@@ -262,6 +266,12 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
     }
 
+    /**
+     * supplies the players with the updated projectiles (necessary after collisions)
+     *
+     * @param proj1
+     * @param proj2
+     */
     @Override
     public void notifyProjProj(Projectile proj1, Projectile proj2) {
         proj1.destroy();
@@ -274,28 +284,30 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         }
     }
 
+    /**
+     * sets the winning players game to won
+     *
+     * @return true if game is finished
+     */
     public boolean isGameEnd() {
-        if (gameMode == GameMode.SINGLEPLAYER) {
-            if (model.gameWon()) {
+        if (model.gameFinished()) {
+            if (model.getTanksMap().get(0).isDestroyed()) {
+                parent.getPlayers().get(1).setGameWon(true);
+            }
+            else {
                 parent.getPlayers().get(0).setGameWon(true);
-                return true;
             }
-            else return false;
+            return true;
         }
-        else if (gameMode == GameMode.MULTIPLAYER) {
-            if (model.gameFinished()) {
-                if (model.getTanksMap().get(0).isDestroyed()) {
-                    parent.getPlayers().get(1).setGameWon(true);
-                }
-                else {
-                    parent.getPlayers().get(0).setGameWon(true);
-                }
-                return true;
-            }
-        }
+
         return false;
     }
 
+    /**
+     * In case of a disconnect while playing the opposing player wins
+     *
+     * @param conn
+     */
     @Override
     public void playerDisconnected(IConnection<IServerMessage> conn) {
         parent.getPlayers().removeIf(p -> p.getConnection() == conn);
@@ -304,10 +316,12 @@ public class GameRunningState extends TankState implements ICollisionObserver {
         lastPlayer.otherPlayerDisconnected();
         lastPlayer.setGameWon(true);
         lastPlayer.sendEndingMessage(gameMode);
-
         parent.goToState(parent.containingState().waitingFor2Player);
     }
 
+    /**
+     * receives the turret-updates and adds them to the appropriate list
+     */
     @Override
     public void turretUpdate(TurretUpdateMessage msg) {
         turretUpdates.add(msg);
