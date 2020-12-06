@@ -11,7 +11,7 @@ public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
     public HeavyProjectile(Model model, ProjectileData data) {
-        super(model, 0.25, 30, 6.0, data);
+        super(model, 30, 6.0, data);
         this.targetPos = data.getTargetPos();
     }
 
@@ -43,8 +43,8 @@ public class HeavyProjectile extends Projectile {
      *   Does nothing here. Exists because the map calls process hits
      */
     public void processHits() {
-
     }
+
     /**
      * Checks if HeavyProjectile collides with tank or block and process the damage then
      */

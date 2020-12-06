@@ -73,7 +73,8 @@ public abstract class Item<T extends Data> {
         if (getPos() == null || other.isDestroyed() || this.isDestroyed()) return false;
         if (other instanceof Block) {
             Block block = (Block) other;
-            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - effectiveRadius * (1-buffer), newPos.y - effectiveRadius * (1-buffer), effectiveRadius * (1+buffer*2), effectiveRadius * (1+buffer*2));
+            double bufferedER = effectiveRadius + buffer;
+            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - bufferedER * 0.5, newPos.y - bufferedER * 0.5, bufferedER, bufferedER);
             return item1.intersects(other.getPos().x - block.getWidth() * 0.5, other.getPos().y - block.getHeight() * 0.5, block.getWidth(), block.getHeight());
         } else {
             return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;

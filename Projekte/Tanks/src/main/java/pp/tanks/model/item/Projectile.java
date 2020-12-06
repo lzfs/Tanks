@@ -18,13 +18,13 @@ public abstract class Projectile extends Item<ProjectileData> {
     private boolean visible = true;
     protected double buffer;
 
-    public Projectile(Model model, double effectiveRadius, int damage, Double speed, ProjectileData data) {
-        super(model, effectiveRadius, data);
+    public Projectile(Model model, int damage, Double speed, ProjectileData data) {
+        super(model, 0.3, data);
         this.data = data;
         this.damage = damage;
         this.speed = speed;
         this.flag = System.nanoTime();
-        this.buffer = 0;
+        this.buffer = 0.2;
         if (model.getEngine() != null)
             latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime() + model.getEngine().getOffset());
         for (Block i : model.getTanksMap().getBlocks()) {
@@ -42,17 +42,20 @@ public abstract class Projectile extends Item<ProjectileData> {
         while (!collisionWith(model.getTanksMap().getReflectable().get(i), getPos(), buffer)) {
             i++;
         }
+        DoubleVec dir = new DoubleVec(latestOp.data.getDir().x, latestOp.data.getDir().y);
+        DoubleVec pos = getPos();
         ReflectableBlock rBlock = model.getTanksMap().getReflectable().get(i);
-        double width = rBlock.getWidth() / 2;
-        double height = rBlock.getHeight() / 2;
-        if (getPos().x >= rBlock.getPos().x + width || getPos().x <= rBlock.getPos().x - width) {
+        double width = rBlock.getWidth() * 0.5 + 0.2;
+        double height = rBlock.getHeight() * 0.5 + 0.2;
+        if (Math.abs(pos.x - rBlock.getPos().x) > width) {
             //right and left
-            latestOp.data.setDir(new DoubleVec(latestOp.data.getDir().x * (-1), latestOp.data.getDir().y));
-        } else if (getPos().y >= rBlock.getPos().y + height || getPos().y <= rBlock.getPos().y - height) {
+            latestOp.data.setDir(new DoubleVec(- dir.x, dir.y));
+        } else if (Math.abs(pos.y - rBlock.getPos().y) > height) {
             //above and below
-            latestOp.data.setDir(new DoubleVec(latestOp.data.getDir().x, latestOp.data.getDir().y * (-1)));
+            latestOp.data.setDir(new DoubleVec(dir.x, - dir.y));
         } else {
-            latestOp.data.setDir(new DoubleVec(latestOp.data.getDir().x * (-1), latestOp.data.getDir().y * (-1)));
+            System.out.println("else");
+            latestOp.data.setDir(dir.mult(-1));
         }
         latestOp.data.setPos(getPos().add(latestOp.data.getDir().mult(0.5)));
         setPos(latestOp.data.getPos());

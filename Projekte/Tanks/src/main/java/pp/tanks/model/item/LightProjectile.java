@@ -9,7 +9,7 @@ import pp.tanks.model.Model;
 public class LightProjectile extends Projectile {
 
     public LightProjectile(Model model, ProjectileData data) {
-        super(model, 0.25, 10, 6.0, data);
+        super(model, 10, 6.0, data);
     }
 
     /**
