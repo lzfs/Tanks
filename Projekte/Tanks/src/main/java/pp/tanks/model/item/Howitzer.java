@@ -40,7 +40,8 @@ public class Howitzer extends COMEnemy {
         }
 
         if (canShoot() && Math.random() < 0.8 && flag == 0) {
-            shoot(model.getTanksMap().getTank(player1).getPos());
+            MoveDirection playersDir = model.getTanksMap().getTank(player1).getMoveDir();
+            shoot(model.getTanksMap().getTank(player1).getPos().add(playersDir.getVec().mult(0.7)));
             if(getPos().distance(roundedPos) < 0.1) {
                 setPos(roundedPos.add(new DoubleVec(0.1, 0)));
             }

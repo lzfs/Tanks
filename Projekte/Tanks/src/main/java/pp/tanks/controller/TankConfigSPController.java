@@ -162,6 +162,8 @@ public class TankConfigSPController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
+        counterTurret = 0;
+        counterArmor = 0;
 
         turrets.clear();
         armors.clear();
@@ -178,6 +180,8 @@ public class TankConfigSPController extends Controller {
         charts.add(engine.getImages().getImage(TanksImageProperty.chart1));
         charts.add(engine.getImages().getImage(TanksImageProperty.chart2));
         charts.add(engine.getImages().getImage(TanksImageProperty.chart3));
+        image1.setImage(turrets.get(counterTurret));
+        image2.setImage(armors.get(counterArmor));
     }
 
     /**
