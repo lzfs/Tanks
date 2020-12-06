@@ -415,6 +415,16 @@ public abstract class Tank extends Item<TankData> {
         if (tracksPosList.size() > 50) tracksPosList.remove(0);
     }
 
+    /**
+     * Indicates that this item has been destroyed.
+     */
+    @Override
+    public void destroy() {
+        data.destroy();
+        counter = 0;
+    }
+
     public void sendTurretUpdate() {
+
     }
 }

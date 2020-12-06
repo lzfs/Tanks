@@ -18,10 +18,12 @@ public class Howitzer extends COMEnemy {
     private final List<DoubleVec> path = new LinkedList<>();
     private final List<Block> usedBlocks = new ArrayList<>();
     private DoubleVec roundedPos;
+    private int flag;
 
     public Howitzer(Model model, TankData data) {
         super(model, new HeavyArmor(), new HeavyTurret(), data);
         this.roundedPos = getHidingBlockPos().add(new DoubleVec(1, 0));
+        this.flag = 200;
         navigateTo(roundedPos);
     }
 
@@ -33,10 +35,16 @@ public class Howitzer extends COMEnemy {
     @Override
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
-        if (canShoot() && Math.random() < 0.8) {
+        if(flag > 0) {
+            flag -= 1;
+        }
+
+        if (canShoot() && Math.random() < 0.8 && flag == 0) {
             shoot(model.getTanksMap().getTank(player1).getPos());
-            setPos(roundedPos.add(new DoubleVec(0.1, 0)));
-        } else if (path == null || path.isEmpty()) {
+            if(getPos().distance(roundedPos) < 0.1) {
+                setPos(roundedPos.add(new DoubleVec(0.1, 0)));
+            }
+        } else if ((path == null || path.isEmpty()) && !isMoving()) {
             if (model.getTanksMap().getTank(player1).getPos().distance(this.getPos()) < 5) {
                 roundedPos = getHidingBlockPos().add(new DoubleVec(1, 0));
                 navigateTo(roundedPos);

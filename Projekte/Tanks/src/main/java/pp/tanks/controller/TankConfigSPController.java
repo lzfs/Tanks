@@ -1,5 +1,6 @@
 package pp.tanks.controller;
 
+import pp.tanks.SoundSupport;
 import pp.tanks.TanksImageProperty;
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.item.Armor;
@@ -155,6 +156,10 @@ public class TankConfigSPController extends Controller {
         if (scene == null)
             scene = makeScene();
         engine.setScene(scene);
+
+        turrets.clear();
+        armors.clear();
+        charts.clear();
 
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret1));
         turrets.add(engine.getImages().getImage(TanksImageProperty.turret2));

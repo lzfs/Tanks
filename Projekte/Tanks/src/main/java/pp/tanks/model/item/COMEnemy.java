@@ -58,16 +58,15 @@ public class COMEnemy extends Enemy {
             turret.update(delta);
             data.setTurretDir(model.getTanksMap().get(0).getData().getPos().sub(data.getPos()));
             if (model.getEngine() != null) {
-                if (isMoving()) {
+                if (isMoving() && !isDestroyed()) {
                     if (!collide(getPos().add(getMoveDir().getVec().normalize().mult(speed * delta)))) {
                         updateMove(delta);
+                        behaviour(delta);
                     } else {
                         path.clear();
                     }
-                } else {
-                    if (!this.isDestroyed()) {
-                        behaviour(delta);
-                    }
+                } else if (!this.isDestroyed()) {
+                    behaviour(delta);
                 }
             }
         }
