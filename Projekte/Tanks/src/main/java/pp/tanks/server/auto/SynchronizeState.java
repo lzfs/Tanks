@@ -15,10 +15,10 @@ import java.util.List;
  */
 public class SynchronizeState extends TankState {
     private final TankAutomaton parent;
+    private final List<Player> players;
     private int counter = 0;
     private long nanoTime1;
     private int playerCount = 0;
-    private final List<Player> players;
 
     public SynchronizeState(TankAutomaton parent) {
         this.parent = parent;
@@ -93,6 +93,9 @@ public class SynchronizeState extends TankState {
         }
     }
 
+    /**
+     * exits the state, resets counters
+     */
     @Override
     public void exit() {
         counter = 0;

@@ -25,6 +25,10 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
     private IServer<IClientMessage, ? extends IConnection<IServerMessage>> server;
     final TankAutomaton auto = new TankAutomaton(this);
 
+    /**
+     * starts all the multiplayer fun
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(DEFAULT_PORT);
@@ -54,12 +58,20 @@ public class TanksServer implements MessageReceiver<IClientMessage, IConnection<
         server = null;
     }
 
+    /**
+     * visitor accept method for receiving incoming messages
+     * @param message the message object
+     * @param conn    the connection that received the message
+     */
     @Override
     public void receiveMessage(IClientMessage message, IConnection<IServerMessage> conn) {
-        //System.out.println("msg: " + message.toString() + " conn: " + conn);
         message.accept(this, conn);
     }
 
+    /**
+     * Called when a connection got closed
+     * @param conn the connection that has been closed
+     */
     @Override
     public void onConnectionClosed(IConnection<IServerMessage> conn) {
         auto.playerDisconnected(conn);

@@ -24,19 +24,17 @@ import java.util.List;
  * The task of the class is defined in the following methods.
  */
 public class Player {
-    private final IConnection<IServerMessage> connection;
-
-    private final List<Long> ping = new ArrayList<>();
-    private final List<Long> nano = new ArrayList<>();
-    private String infoText = "";
-    //private ClientState state = ClientState.INIT;
-    private ItemEnum turret = null;
-    private ItemEnum armor = null;
-    private boolean ready;
-    public PlayerEnum playerEnum;
     public final List<Projectile> projectiles = new ArrayList<>();
     public final List<Tank> tanks = new ArrayList<>();
     public final List<BreakableBlock> blocks = new ArrayList<>();
+    private final IConnection<IServerMessage> connection;
+    private final List<Long> ping = new ArrayList<>();
+    private final List<Long> nano = new ArrayList<>();
+    public PlayerEnum playerEnum;
+    private String infoText = "";
+    private ItemEnum turret = null;
+    private ItemEnum armor = null;
+    private boolean ready;
     private boolean gameWon = false;
 
     /**
@@ -93,6 +91,11 @@ public class Player {
         return nano.get(indexPing);
     }
 
+    /**
+     * searches for the smallest ping that can then be used to set the games latency
+     *
+     * @return the smallest ping
+     */
     public long getLatency() {
         long smallestPing = ping.get(0);
         for (long lat : ping) {
@@ -102,10 +105,10 @@ public class Player {
     }
 
     /**
-     * sets the info text to be displayed
+     * @return turret-type
      */
-    public void setInfoText(String infoText) {
-        this.infoText = infoText;
+    public ItemEnum getTurret() {
+        return turret;
     }
 
     /**
@@ -118,26 +121,19 @@ public class Player {
     }
 
     /**
+     * @return armor-type
+     */
+    public ItemEnum getArmor() {
+        return armor;
+    }
+
+    /**
      * updates armor
      *
      * @param armor new type
      */
     public void setArmor(ItemEnum armor) {
         this.armor = armor;
-    }
-
-    /**
-     * @return turret-type
-     */
-    public ItemEnum getTurret() {
-        return turret;
-    }
-
-    /**
-     * @return armor-type
-     */
-    public ItemEnum getArmor() {
-        return armor;
     }
 
     /**
@@ -154,12 +150,17 @@ public class Player {
         this.ready = ready;
     }
 
+    /**
+     * sets the gameWon boolean
+     *
+     * @param gameWon the new gameWon boolean
+     */
     public void setGameWon(boolean gameWon) {
         this.gameWon = gameWon;
     }
 
     /**
-     * deletes all projectiles on the list
+     * resets all ingame-object lists of the player
      */
     public void reset() {
         this.projectiles.clear();
@@ -168,7 +169,7 @@ public class Player {
     }
 
     /**
-     * Send all Messages to Players
+     * Sends the ModelMessage to the Clients
      */
     public void sendMessages() {
         if (!projectiles.isEmpty() || !tanks.isEmpty() || !blocks.isEmpty()) {
@@ -197,17 +198,17 @@ public class Player {
     /**
      * sends new ending Message
      *
-     * @param mode gamemode
+     * @param mode gamemode to be put in the message
      */
     public void sendEndingMessage(GameMode mode) {
         connection.send(new GameEndingMessage(mode, gameWon));
     }
 
     /**
-     * called when player lost connection
+     * called when opposing player lost connection
      */
     public void otherPlayerDisconnected() {
-        playerEnum = PlayerEnum.PLAYER1; // Da lag der Fiesch
+        playerEnum = PlayerEnum.PLAYER1;
         getConnection().send(new SetPlayerMessage(PlayerEnum.PLAYER1));
         getConnection().send(new PlayerDisconnectedMessage());
         ping.clear();

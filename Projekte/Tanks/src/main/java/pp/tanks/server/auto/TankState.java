@@ -14,13 +14,6 @@ import pp.tanks.message.server.IServerMessage;
 public abstract class TankState extends StateSupport<TankState> {
 
     /**
-     * @return the automaton this state belongs to
-     */
-    TankAutomaton getAuto() {
-        return containingState().getAuto();
-    }
-
-    /**
      * is called when a player sends a ClientReadyMsg and is received by the server
      *
      * @param msg  the ClientReadyMsg
@@ -93,6 +86,11 @@ public abstract class TankState extends StateSupport<TankState> {
         handle(s -> s.playerDisconnected(conn));
     }
 
+    /**
+     * called when a turret-update is received
+     *
+     * @param msg
+     */
     public void turretUpdate(TurretUpdateMessage msg) {
         handle(s -> s.turretUpdate(msg));
     }

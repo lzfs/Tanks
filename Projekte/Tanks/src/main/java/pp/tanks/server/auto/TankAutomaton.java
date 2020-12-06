@@ -122,21 +122,6 @@ public class TankAutomaton extends TankStateMachine {
      */
     public final PlayingState playingState = new PlayingState(this);
 
-    // has to be in Model
-
-    /**
-     * Returns the player representing the client with the specified connection.
-     *
-     * @param conn the connection to the client
-     */
-    Player getPlayer(IConnection<IServerMessage> conn) {
-        final Optional<Player> player = players.stream().filter(p -> p.getConnection() == conn).findAny();
-        if (player.isPresent())
-            return player.get();
-        LOGGER.severe("no player found with connection " + conn); //NON-NLS
-        //System.out.println("no player found with connection" + conn);
-        return null;
-    }
 
     /**
      * @return list of all players
@@ -150,13 +135,6 @@ public class TankAutomaton extends TankStateMachine {
         return null;
     }
 
-    /**
-     * @return automaton
-     */
-    @Override
-    TankAutomaton getAuto() {
-        return this;
-    }
 
     @Override
     public TankState init() {
