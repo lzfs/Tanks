@@ -11,10 +11,10 @@ import java.util.logging.Logger;
  * Playing State from statechart build as a statemachine to host two substates.
  */
 public class PlayingState extends TankStateMachine {
+
     /**
-     * The two substates
+     * The substates
      */
-    final TankState playerDisconnect = new PlayerDisconnectState(this);
     private final TankAutomaton parent;
     private TankState gameRunning;
     /**
