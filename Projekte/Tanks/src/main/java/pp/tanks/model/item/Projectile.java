@@ -45,8 +45,8 @@ public abstract class Projectile extends Item<ProjectileData> {
         DoubleVec dir = new DoubleVec(latestOp.data.getDir().x, latestOp.data.getDir().y);
         DoubleVec pos = getPos();
         ReflectableBlock rBlock = model.getTanksMap().getReflectable().get(i);
-        double width = rBlock.getWidth() * 0.5 + 0.2;
-        double height = rBlock.getHeight() * 0.5 + 0.2;
+        double width = rBlock.getWidth() * 0.5;
+        double height = rBlock.getHeight() * 0.5;
         if (Math.abs(pos.x - rBlock.getPos().x) > width) {
             //right and left
             latestOp.data.setDir(new DoubleVec(- dir.x, dir.y));
