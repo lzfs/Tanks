@@ -9,7 +9,6 @@ import pp.tanks.message.data.TankData;
 import pp.tanks.notification.TanksNotification;
 import pp.util.DoubleVec;
 
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,17 +18,17 @@ import static pp.tanks.model.item.MoveDirection.*;
  * abstract base class of all tanks in a {@linkplain pp.tanks.model.TanksMap}
  */
 public abstract class Tank extends Item<TankData> {
-    protected List<Track> posList = new ArrayList<Track>();
+    protected List<Track> tracksPosList = new ArrayList<Track>();
     protected Turret turret;
     protected Armor armor;
     protected double speed;
     protected double rotationSpeed = 150;
-    protected double turretRotationSpeed = 1000;
     private int lives = 1;
     public final PlayerEnum playerEnum;
     private int projectileId;
     private DataTimeItem<TankData> latestOp;
     private double trackRotation = 0.0;
+    protected double buffer;
     private int counter = 0;
 
     protected Tank(Model model, Armor armor, Turret turret, TankData data) {
@@ -39,8 +38,9 @@ public abstract class Tank extends Item<TankData> {
         this.speed = calculateSpeed();
         this.playerEnum = PlayerEnum.getPlayer(data.getId());
         this.projectileId = playerEnum.projectileID;
+        this.buffer = 0.25;
         latestOp = new DataTimeItem<>(data.mkCopy(), System.nanoTime());
-        posList.add(new Track(data.getPos(), data.getRotation(), TrackIntensity.NORMAL));
+        tracksPosList.add(new Track(data.getPos(), data.getRotation(), TrackIntensity.NORMAL));
     }
 
     /**
@@ -167,8 +167,8 @@ public abstract class Tank extends Item<TankData> {
     /**
      * @return the list with the positions we want to draw
      */
-    public List<Track> getPosList() {
-        return posList;
+    public List<Track> getTracksPosList() {
+        return tracksPosList;
     }
 
     /**
@@ -200,12 +200,10 @@ public abstract class Tank extends Item<TankData> {
                     setPos(newPos);
                     addTrack();
                 }
-            }
-            else if (tmp > tmp1) {
+            } else if (tmp > tmp1) {
                 data.setRotation(currentRot + delta * rotationSpeed);
                 addTrackRotation();
-            }
-            else {
+            } else {
                 data.setRotation(currentRot - delta * rotationSpeed);
                 addTrackRotation();
             }
@@ -275,7 +273,7 @@ public abstract class Tank extends Item<TankData> {
      */
     public boolean collide(DoubleVec pos) {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
-            if (this != tank && collisionWith(tank, pos)) {
+            if (this != tank && collisionWith(tank, pos, buffer)) {
                 //setPos(getPos().sub(getMoveDir().getVec().mult(0.01)));
                 stopMovement();
                 setMove(false);
@@ -283,7 +281,7 @@ public abstract class Tank extends Item<TankData> {
             }
         }
         for (Block block : model.getTanksMap().getBlocks()) {
-            if (collisionWith(block, pos)) {
+            if (collisionWith(block, pos, buffer)) {
                 stopMovement();
                 setMove(false);
                 return true;
@@ -305,24 +303,6 @@ public abstract class Tank extends Item<TankData> {
     }
 
     /**
-     * Checks whether there is a collision with another item
-     *
-     * @param other the item which is checked for a collision
-     */
-    @Override
-    public boolean collisionWith(Item other, DoubleVec newPos) {
-        if (getPos() == null || other.isDestroyed()) return false;
-        if (other instanceof Block) {
-            Block block = (Block) other;
-            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - effectiveRadius * 0.75, newPos.y - effectiveRadius * 0.75, effectiveRadius * 1.5, effectiveRadius * 1.5);
-            return item1.intersects(other.getPos().x - block.getWidth() * 0.5, other.getPos().y - block.getHeight() * 0.5, block.getWidth(), block.getHeight());
-        }
-        else {
-            return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
-        }
-    }
-
-    /**
      * reduces armor points if the tank was hit by a projectile
      *
      * @param damage incoming damage-data
@@ -332,8 +312,7 @@ public abstract class Tank extends Item<TankData> {
         if (armor.getArmorPoints() - damage <= 0) {
             armor.setArmorPoints(0);
             destroy();
-        }
-        else {
+        } else {
             armor.takeDamage(damage);
             if (model.getEngine() != null) model.getEngine().notify(TanksNotification.ARMOR_HIT);
         }
@@ -388,8 +367,7 @@ public abstract class Tank extends Item<TankData> {
             if (turnLeft) data.setRotation(latestRot + deltaT * rotationSpeed);
             else data.setRotation(latestRot - deltaT * rotationSpeed);
             addTrackRotation();
-        }
-        else {
+        } else {
             double rest = deltaT - tTime;
             data.setRotation(moveDirRotation);
             data.setPos(latestOp.getPos().add(latestOp.data.getMoveDir().getVec().mult(rest * speed)));
@@ -403,19 +381,18 @@ public abstract class Tank extends Item<TankData> {
      */
     public void addTrack() {
         DoubleVec refPos = getPos().sub(getMoveDir().getVec().mult(0.2));
-        if (posList.size() == 0) {
-            posList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
+        if (tracksPosList.size() == 0) {
+            tracksPosList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
         }
-        if (Math.abs(refPos.distance(posList.get(posList.size() - 1).getVec())) > 0.3) {
+        if (Math.abs(refPos.distance(tracksPosList.get(tracksPosList.size() - 1).getVec())) > 0.3) {
             if (counter > 0) {
-                posList.add(new Track(refPos, data.getRotation(), TrackIntensity.OIL));
+                tracksPosList.add(new Track(refPos, data.getRotation(), TrackIntensity.OIL));
                 counter--;
-            }
-            else {
-                posList.add(new Track(refPos, data.getRotation(), TrackIntensity.NORMAL));
+            } else {
+                tracksPosList.add(new Track(refPos, data.getRotation(), TrackIntensity.NORMAL));
             }
             trackRotation = getRotation();
-            if (posList.size() > 50) posList.remove(0);
+            if (tracksPosList.size() > 50) tracksPosList.remove(0);
         }
     }
 
@@ -423,20 +400,19 @@ public abstract class Tank extends Item<TankData> {
      * Added the rotation of a track
      */
     public void addTrackRotation() {
-        if (posList.size() == 0) {
-            posList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
+        if (tracksPosList.size() == 0) {
+            tracksPosList.add(new Track(getPos(), getRotation(), TrackIntensity.NORMAL));
         }
         if (Math.abs(getRotation() - trackRotation) > 22.4) {
             if (counter > 0) {
-                posList.add(new Track(getPos(), data.getRotation(), TrackIntensity.OIL));
+                tracksPosList.add(new Track(getPos(), data.getRotation(), TrackIntensity.OIL));
                 counter--;
-            }
-            else {
-                posList.add(new Track(getPos(), data.getRotation(), TrackIntensity.NORMAL));
+            } else {
+                tracksPosList.add(new Track(getPos(), data.getRotation(), TrackIntensity.NORMAL));
             }
             trackRotation = getRotation();
         }
-        if (posList.size() > 50) posList.remove(0);
+        if (tracksPosList.size() > 50) tracksPosList.remove(0);
     }
 
     public void sendTurretUpdate() {

@@ -1,22 +1,15 @@
 package pp.tanks.view;
 
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.transform.Affine;
 
 import pp.tanks.ImageSupport;
 import pp.tanks.TanksImageProperty;
-import pp.tanks.message.data.Data;
 import pp.tanks.model.Model;
-import pp.tanks.model.item.Enemy;
 import pp.tanks.model.item.HeavyProjectile;
 import pp.tanks.model.item.Item;
 import pp.tanks.model.item.Oil;
@@ -106,7 +99,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
         for (Oil oil : model.getTanksMap().getOilList()) {
             oil.accept(visualizer);
         }
-        List<Track> trackList = model.getTanksMap().getTank(model.getEngine().getPlayerEnum()).getPosList();
+        List<Track> trackList = model.getTanksMap().getTank(model.getEngine().getPlayerEnum()).getTracksPosList();
         for (Track track : trackList) {
             visualizer.drawMeATrack(track);
         }

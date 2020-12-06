@@ -7,16 +7,12 @@ import pp.tanks.notification.TanksNotification;
 import pp.tanks.notification.TanksNotificationReceiver;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * Represents the game model.
@@ -72,8 +68,7 @@ public class Model {
 
         try {
             setTanksMap(new TanksMapFileReader(this).readFile(stream));
-        }
-        catch (IOException | XMLStreamException ex) {
+        } catch (IOException | XMLStreamException ex) {
             System.out.println(ex.getMessage());
             System.out.println("APOKALYPSE");
         }

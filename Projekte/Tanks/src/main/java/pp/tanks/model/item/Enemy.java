@@ -32,7 +32,6 @@ public class Enemy extends Tank {
     @Override
     public void update(long serverTime) {
         interpolateTime(serverTime);
-        //addTrack();
     }
 
     /**

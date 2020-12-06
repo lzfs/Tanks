@@ -23,27 +23,11 @@ import pp.tanks.model.item.UnbreakableBlock;
 import pp.tanks.model.item.Visitor;
 import pp.util.DoubleVec;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Affine;
-import javafx.util.Duration;
 
-import javax.imageio.ImageIO;
-import java.awt.AlphaComposite;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -210,7 +194,7 @@ public class VisualizerVisitor implements Visitor {
     @Override
     public void visit(Enemy enemy) {
 
-        List<Track> posList = enemy.getPosList();
+        List<Track> posList = enemy.getTracksPosList();
 
         for(Track posTrack : posList) {
             drawMeATrack(posTrack);
@@ -266,7 +250,7 @@ public class VisualizerVisitor implements Visitor {
     @Override
     public void visit(COMEnemy comEnemy) {
 
-        List<Track> posList = comEnemy.getPosList();
+        List<Track> posList = comEnemy.getTracksPosList();
 
         for(Track posTrack : posList) {
             drawMeATrack(posTrack);

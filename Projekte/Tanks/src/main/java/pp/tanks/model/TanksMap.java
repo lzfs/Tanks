@@ -70,7 +70,8 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         return tmp.get(i);
     }
 
-    /**
+    //TODO: Sorry: Test if game works without this two methods
+    /*
      * Checks whether the position (x,y) can be reached from the specified position pos where (x,y) is guaranteed
      * to be a neighbor of pos. This method takes into account that one must not make a diagonal move across a corner
      * of a blocked field, i.e., a field with an obstacle.
@@ -78,7 +79,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
      * @param startPos  the starting Position
      * @param targetPos the Position you go to
      * @return true or false
-     */
+
     public boolean accessibleFrom(DoubleVec startPos, DoubleVec targetPos) {
         if (blocked(startPos)) return false;
         if (targetPos.x == startPos.x || targetPos.y == startPos.y) return true;
@@ -86,12 +87,12 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
         return !blocked(new DoubleVec(startPos.x, targetPos.y)) && !blocked(new DoubleVec(targetPos.x, startPos.y));
     }
 
-    /**
+
      * Returns whether the specified position is blocked by an obstacle
      *
      * @param pos the targeted position
      * @return true or false
-     */
+
     private boolean blocked(DoubleVec pos) {
         for (Item obs : getBlocks()) {
             if (obs.getPos().equals(pos)) {
@@ -104,7 +105,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
             }
         }
         return false;
-    }
+    }*/
 
     /**
      * Returns all tanks still alive
@@ -197,7 +198,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
      * @return the list of all projectiles
      */
     public List<Projectile> getProjectiles() {
-        return Collections.unmodifiableList(new ArrayList<>(projectiles.values()));
+        return List.copyOf(projectiles.values());
     }
 
     public HashMap<Integer, Projectile> getHashProjectiles() {
@@ -280,8 +281,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
     public void addTanks(Tank tank) {
         if (tank instanceof COMEnemy) {
             enemy.add((COMEnemy) tank);
-        }
-        else {
+        } else {
             playersTanks.add(tank);
         }
     }
@@ -332,6 +332,7 @@ public class TanksMap extends AbstractList<Item<? extends Data>> {
 
     /**
      * Notify the observers
+     *
      * @param proj
      * @param tank
      * @param damage

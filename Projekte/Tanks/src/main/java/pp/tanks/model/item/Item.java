@@ -64,50 +64,19 @@ public abstract class Item<T extends Data> {
         return data.isDestroyed();
     }
 
-    /*
-     * Checks whether there is a collision with another item
-     *
-     * @param other the item which is checked for a collision
-     *//*
-    public boolean collisionWith(Item other) {
-        if (getPos() == null || other.isDestroyed()) return false;
-
-        double height = 0.5;
-        double width = 0.5;
-
-        if (other instanceof Projectile && this instanceof Projectile) {
-            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
-        }
-        else if (other instanceof Projectile) {
-            return (Math.abs(getPos().x - other.getPos().x) <= width + other.getEffectiveRadius())
-                   && (Math.abs(getPos().y - other.getPos().y) <= height + other.getEffectiveRadius());
-        }
-        else if (this instanceof Projectile) {
-            return (Math.abs(getPos().x - other.getPos().x) <= width + this.getEffectiveRadius())
-                   && (Math.abs(getPos().y - other.getPos().y) <= height + this.getEffectiveRadius());
-        }
-        else {
-            Rectangle2D item1 = new Rectangle2D(this.getPos().x - width, this.getPos().y - height, 2 * width, 2 * height);
-            Rectangle2D item2 = new Rectangle2D(other.getPos().x - width, other.getPos().y - height, 2 * width, 2 * height);
-            return item1.intersects(item2);
-        }
-    }
-    */
-
     /**
      * Checks whether there is a collision with another item
      *
      * @param other the item which is checked for a collision
      */
-    public boolean collisionWith(Item other, DoubleVec newPos) {
+    public boolean collisionWith(Item other, DoubleVec newPos, double buffer) {
         if (getPos() == null || other.isDestroyed() || this.isDestroyed()) return false;
-
         if (other instanceof Block) {
             Block block = (Block) other;
-            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - (effectiveRadius / 2), newPos.y - (effectiveRadius / 2), effectiveRadius, effectiveRadius);
-            return item1.intersects(other.getPos().x - (block.getWidth() / 2.0), other.getPos().y - (block.getHeight() / 2.0), block.getWidth(), block.getHeight());
+            Ellipse2D item1 = new Ellipse2D.Double(newPos.x - effectiveRadius * (1-buffer), newPos.y - effectiveRadius * (1-buffer), effectiveRadius * (1+buffer*2), effectiveRadius * (1+buffer*2));
+            return item1.intersects(other.getPos().x - block.getWidth() * 0.5, other.getPos().y - block.getHeight() * 0.5, block.getWidth(), block.getHeight());
         } else {
-            return getPos().distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
+            return newPos.distance(other.getPos()) <= effectiveRadius + other.effectiveRadius;
         }
     }
 
@@ -134,12 +103,14 @@ public abstract class Item<T extends Data> {
 
     /**
      * Interpolates the Data
+     *
      * @param item
      */
     public abstract void interpolateData(DataTimeItem<T> item);
 
     /**
      * Interpolates the time
+     *
      * @param serverTime
      */
     public abstract void interpolateTime(long serverTime);

@@ -2,9 +2,7 @@ package pp.tanks.model.item;
 
 import pp.tanks.message.data.TankData;
 import pp.tanks.model.Model;
-import pp.tanks.model.item.navigation.Navigator;
 import pp.util.DoubleVec;
-import pp.util.IntVec;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -31,18 +29,16 @@ public class TankDestroyer extends COMEnemy {
     @Override
     public void behaviour(double delta) {
         getData().setTurretDir(model.getTanksMap().getTank(player1).getPos().sub(this.getPos()));
-        if (!shootIsBlocked() && canShoot() && Math.random() < 0.8) {
+        if (shootIsBlocked() && canShoot() && Math.random() < 0.8) {
             shoot(model.getTanksMap().getTank(player1).getPos());
-        }
-        else if (path == null || path.isEmpty()) {
+        } else if (path == null || path.isEmpty()) {
             Tank playersTank = model.getTanksMap().getTank(player1);
             DoubleVec targetPos = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(2));
             DoubleVec targetPosReverse = playersTank.getPos().add(playersTank.getMoveDir().getVec().mult(-2));
             if (playersTank.getMoveDir() != MoveDirection.STAY) {
                 if (isWithinMap(targetPos)) {
                     navigateTo(targetPos);
-                }
-                else if (isWithinMap(targetPosReverse)) {
+                } else if (isWithinMap(targetPosReverse)) {
                     navigateTo(targetPosReverse);
                 }
             }

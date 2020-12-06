@@ -2,7 +2,6 @@ package pp.tanks.controller;
 
 import pp.tanks.TanksImageProperty;
 import pp.tanks.message.data.BBData;
-import pp.tanks.message.data.Data;
 import pp.tanks.message.data.DataTimeItem;
 import pp.tanks.message.data.ProjectileData;
 import pp.tanks.message.data.TankData;
@@ -13,7 +12,6 @@ import pp.tanks.model.item.BreakableBlock;
 import pp.tanks.model.item.COMEnemy;
 import pp.tanks.model.item.ItemEnum;
 import pp.tanks.model.item.MoveDirection;
-import pp.tanks.model.item.Oil;
 import pp.tanks.model.item.PlayerEnum;
 import pp.tanks.model.item.Projectile;
 import pp.tanks.model.item.Tank;
@@ -41,14 +39,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
 
 /**
  * The controller realizing the game state when the game is really running.
@@ -468,7 +463,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
         }
         engine.getModel().getTanksMap().deleteAllObservers();
-        engine.getSaveTank().getPosList().clear();
+        engine.getSaveTank().getTracksPosList().clear();
     }
 
     /**
@@ -490,7 +485,7 @@ public class PlayGameController extends Controller implements ICollisionObserver
             }
         }
         engine.getModel().getTanksMap().deleteAllObservers();
-        engine.getSaveTank().getPosList().clear();
+        engine.getSaveTank().getTracksPosList().clear();
     }
 
     @Override

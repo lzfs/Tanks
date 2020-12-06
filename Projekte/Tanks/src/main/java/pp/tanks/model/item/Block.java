@@ -9,8 +9,8 @@ import pp.tanks.notification.TanksNotification;
  * base class for blocks
  */
 public abstract class Block<T extends Data> extends Item<T> {
-    private double width;
-    private double height;
+    private final double width;
+    private final double height;
 
     public Block(Model model, T data) {
         super(model, 0.9, data);
@@ -47,7 +47,8 @@ public abstract class Block<T extends Data> extends Item<T> {
      * @param serverTime the synced nanotime of the server
      */
     @Override
-    public void update(long serverTime) {}
+    public void update(long serverTime) {
+    }
 
     @Override
     public void interpolateData(DataTimeItem<T> item) {

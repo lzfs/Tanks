@@ -11,7 +11,7 @@ public class HeavyProjectile extends Projectile {
     private DoubleVec targetPos;
 
     public HeavyProjectile(Model model, ProjectileData data) {
-        super(model, 0.25, 30, 4.0, data);
+        super(model, 0.25, 30, 6.0, data);
         this.targetPos = data.getTargetPos();
     }
 
@@ -34,36 +34,37 @@ public class HeavyProjectile extends Projectile {
         if (getPos().distance(targetPos) <= 0.3) {
             setPos(targetPos);
             this.effectiveRadius = 1;
-            collision();
+            collide();
             destroy();
         }
     }
 
     /**
-     * Checks if the projectile hits an obstacle or an enemy. Projectiles are destroyed that way.
+     *   Does nothing here. Exists because the map calls process hits
      */
-    public void processHits() {}
+    public void processHits() {
 
+    }
     /**
      * Checks if HeavyProjectile collides with tank or block and process the damage then
      */
-    public void collision() {
+    public void collide() {
         for (Tank tank : model.getTanksMap().getAllTanks()) {
-            if (collisionWith(tank, getPos())) {
+            if (collisionWith(tank, getPos(), buffer)) {
                 tank.processDamage(damage);
                 destroy();
                 return;
             }
         }
         for (BreakableBlock bBlock : model.getTanksMap().getBreakableBlocks()) {
-            if (collisionWith(bBlock, getPos())) {
+            if (collisionWith(bBlock, getPos(), buffer)) {
                 bBlock.processDamage(damage);
                 destroy();
                 return;
             }
         }
         for (Projectile projectile : model.getTanksMap().getProjectiles()) {
-            if (collisionWith(projectile, getPos())) {
+            if (collisionWith(projectile, getPos(), buffer)) {
                 projectile.destroy();
                 destroy();
                 return;

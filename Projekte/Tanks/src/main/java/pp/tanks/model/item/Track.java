@@ -8,10 +8,10 @@ public class Track {
     private double rotation;
     private TrackIntensity intensity;
 
-    public Track(DoubleVec vec, double rotation,TrackIntensity intensity) {
-        this.vec=vec;
-        this.rotation=rotation;
-        this.intensity=intensity;
+    public Track(DoubleVec vec, double rotation, TrackIntensity intensity) {
+        this.vec = vec;
+        this.rotation = rotation;
+        this.intensity = intensity;
     }
 
     public DoubleVec getVec() {

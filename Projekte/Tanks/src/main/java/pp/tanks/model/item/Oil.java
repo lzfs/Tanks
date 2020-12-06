@@ -38,6 +38,7 @@ public class Oil extends Item<Data> {
 
     /**
      * Does nothing because it is unnecessary in oil
+     *
      * @param item
      */
     @Override
@@ -47,6 +48,7 @@ public class Oil extends Item<Data> {
 
     /**
      * return false because it is unnecessary in oil
+     *
      * @param serverTime
      */
     @Override

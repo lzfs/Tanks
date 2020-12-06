@@ -8,9 +8,9 @@ import pp.util.DoubleVec;
 public enum MoveDirection {
     UP(0, -1, 90), DOWN(0, 1, 90), LEFT(-1, 0, 0), RIGHT(1, 0, 0), LEFT_UP(-1, -1, 45), RIGHT_UP(1, -1, 135), LEFT_DOWN(-1, 1, 135), RIGHT_DOWN(1, 1, 45), STAY(0, 0, 0);
 
-    private int x;
-    private int y;
-    private double rotation;
+    private final int x;
+    private final int y;
+    private final double rotation;
 
     MoveDirection(int x, int y, double rotation) {
         this.x = x;
@@ -35,7 +35,9 @@ public enum MoveDirection {
     /**
      * @return current rotation
      */
-    public double getRotation() {return this.rotation;}
+    public double getRotation() {
+        return this.rotation;
+    }
 
     /**
      * @return vector as DoubleVec
@@ -43,13 +45,4 @@ public enum MoveDirection {
     public DoubleVec getVec() {
         return new DoubleVec(this.x, this.y);
     }
-
-    /*
-    public MoveDirection getEq(MoveDirection dir){
-        if( dir == UP || dir==DOWN){
-
-        }
-    }
-
-     */
 }
