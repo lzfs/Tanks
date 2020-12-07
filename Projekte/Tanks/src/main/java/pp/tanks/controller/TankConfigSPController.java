@@ -191,6 +191,7 @@ public class TankConfigSPController extends Controller {
 
         image1.setImage(turrets.get(counterTurret));
         image2.setImage(armors.get(counterArmor));
+        speedChart.setImage(charts.get(charts.size()-1));
     }
 
     /**
