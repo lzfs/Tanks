@@ -240,9 +240,12 @@ public class TankConfigMPController extends Controller {
         minCharts.add(engine.getImages().getImage(TanksImageProperty.chart1));
         minCharts.add(engine.getImages().getImage(TanksImageProperty.chart3));
         minCharts.add(engine.getImages().getImage(TanksImageProperty.chart6));
-        int chartIdx = (armorWeightList.get(ownArmorCounter) + turretWeightList.get(ownTurretCounter)) / 5 -2;
+       /* int chartIdx = (armorWeightList.get(ownArmorCounter) + turretWeightList.get(ownTurretCounter)) / 5 -2;
         speedChartPlayer1.setImage(charts.get((chartIdx-5)*(-1)));
         engine.getTankApp().getConnection().send(new UpdateTankConfigMessage(currentTurret, currentArmor, engine.getPlayerEnum()));
+        */
+        changeOwnCharts();
+        changeOpponentCharts();
     }
 
     /**
