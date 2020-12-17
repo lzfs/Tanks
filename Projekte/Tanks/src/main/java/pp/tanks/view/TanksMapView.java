@@ -113,7 +113,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
             model.getTanksMap().getTank(player).accept(visualizer);
         }
 
-        for (Map.Entry<Projectile,Double> item : projectiles.entrySet()) {
+        /*for (Map.Entry<Projectile,Double> item : projectiles.entrySet()) {
             Projectile p = item.getKey();
             Double time = item.getValue();
             if(time>0){
@@ -128,7 +128,21 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
                 projectiles.remove(p);
             }
 
-        }
+        }*/
+        new HashMap<>(projectiles).forEach((p, time) -> {
+            if (time > 0) {
+                if (p instanceof HeavyProjectile) {
+                    drawImage(bigExplosion, p.getPos().x, p.getPos().y);
+                }
+                else {
+                    drawImage(explosion, p.getPos().x, p.getPos().y);
+                }
+                projectiles.put(p, time - 1);
+            }
+            else {
+                projectiles.remove(p);
+            }
+        });
 
         /*
         for (Projectile p : projectiles.entrySet()) {
@@ -200,7 +214,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     }
 
     public void addExplosion(Projectile projectile) {
-        projectiles.put(projectile,3.0);
+        projectiles.put(projectile,5.0);
     }
 
     /**
