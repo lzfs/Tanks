@@ -22,7 +22,10 @@ import pp.tanks.server.GameMode;
 import pp.util.DoubleVec;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static pp.tanks.TanksImageProperty.backgroundImage;
@@ -40,7 +43,8 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     private final Model model;
     private final ImageSupport<TanksImageProperty> images;
     private final VisualizerVisitor visualizer;
-    private final List<Projectile> projectiles = new ArrayList<>();
+    //HashMap<String, String> capitalCities = new HashMap<String, String>();
+    private final HashMap<Projectile, Double> projectiles = new HashMap<Projectile, Double>();
     private ProgressBar progressBar;
 
     /**
@@ -109,7 +113,25 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
             model.getTanksMap().getTank(player).accept(visualizer);
         }
 
-        for (Projectile p : projectiles) {
+        for (Map.Entry<Projectile,Double> item : projectiles.entrySet()) {
+            Projectile p = item.getKey();
+            Double time = item.getValue();
+            if(time>0){
+                if (p instanceof HeavyProjectile) {
+                    drawImage(bigExplosion, p.getPos().x, p.getPos().y);
+                }
+                else {
+                    drawImage(explosion, p.getPos().x, p.getPos().y);
+                }
+                projectiles.put(p,time-1);
+            } else {
+                projectiles.remove(p);
+            }
+
+        }
+
+        /*
+        for (Projectile p : projectiles.entrySet()) {
             for (int i = 0; i < 5; i++) {
                 if (p instanceof HeavyProjectile) {
                     drawImage(bigExplosion, p.getPos().x, p.getPos().y);
@@ -119,7 +141,8 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
                 }
             }
         }
-        projectiles.clear();
+         */
+        //projectiles.clear();
 
         context.setFont(TEXT_FONT);
         context.setFill(Color.WHITE);
@@ -177,7 +200,7 @@ public class TanksMapView extends Canvas implements TanksNotificationReceiver {
     }
 
     public void addExplosion(Projectile projectile) {
-        projectiles.add(projectile);
+        projectiles.put(projectile,3.0);
     }
 
     /**
