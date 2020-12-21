@@ -68,6 +68,8 @@ public abstract class Item<T extends Data> {
      * Checks whether there is a collision with another item
      *
      * @param other the item which is checked for a collision
+     * @param newPos the next calculated position from this item (for collision prediction)
+     * @param buffer a value added to the effective radius for animation purposes
      */
     public boolean collisionWith(Item other, DoubleVec newPos, double buffer) {
         if (getPos() == null || other.isDestroyed() || this.isDestroyed()) return false;

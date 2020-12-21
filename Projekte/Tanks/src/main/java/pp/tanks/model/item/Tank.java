@@ -18,6 +18,7 @@ import static pp.tanks.model.item.MoveDirection.*;
  * abstract base class of all tanks in a {@linkplain pp.tanks.model.TanksMap}
  */
 public abstract class Tank extends Item<TankData> {
+    private static final int MAGIC_CONST = 4;
     protected List<Track> tracksPosList = new ArrayList<Track>();
     protected Turret turret;
     protected Armor armor;
@@ -190,16 +191,16 @@ public abstract class Tank extends Item<TankData> {
         if (isMoving() && !data.isDestroyed() && data.getMoveDir() != STAY) {
             double currentRot = data.getRotation() % 180;
             double moveDirRotation = data.getMoveDir().getRotation();
-            double tmp = (currentRot - moveDirRotation + 180) % 180;
-            double tmp1 = (moveDirRotation - currentRot + 180) % 180;
-            double tmp2 = Math.abs(currentRot - moveDirRotation) % 180;
-            if (tmp2 < 4) {
+            double turnRight = (currentRot - moveDirRotation + 180) % 180;
+            double turnLeft = (moveDirRotation - currentRot + 180) % 180;
+            double rest = Math.abs(currentRot - moveDirRotation) % 180;
+            if (rest < MAGIC_CONST) {
                 data.setRotation(moveDirRotation);
                 if (!collide(newPos)) {
                     setPos(newPos);
                     addTrack();
                 }
-            } else if (tmp > tmp1) {
+            } else if (turnRight > turnLeft) {
                 data.setRotation(currentRot + delta * rotationSpeed);
                 addTrackRotation();
             } else {
