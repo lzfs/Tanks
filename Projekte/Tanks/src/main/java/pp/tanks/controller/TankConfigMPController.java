@@ -276,10 +276,6 @@ public class TankConfigMPController extends Controller {
         LOGGER.log(Level.INFO, "clicked READY");
 
         engine.getTankApp().getConnection().send(new StartGameMessage(currentTurret, currentArmor, GameMode.MULTIPLAYER, engine.getPlayerEnum()));
-        ownArmorCounter = 0;
-        ownTurretCounter = 0;
-        opponentArmorCounter = 0;
-        opponentTurretCounter = 0;
         readyButton.setDisable(true);
         player2ReadyText.setText("Warten auf Spieler 2");
         turretButtonLeft.setDisable(true);
